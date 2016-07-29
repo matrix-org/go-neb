@@ -10,7 +10,6 @@ import (
 	"golang.org/x/oauth2"
 	"regexp"
 	"strconv"
-	"strings"
 )
 
 // Matches alphanumeric then a /, then more alphanumeric then a #, then a number.
@@ -29,14 +28,7 @@ func (s *githubService) ServiceType() string   { return "github" }
 func (s *githubService) RoomIDs() []string     { return s.Rooms }
 func (s *githubService) Plugin(roomID string) plugin.Plugin {
 	return plugin.Plugin{
-		Commands: []plugin.Command{
-			plugin.Command{
-				Path: []string{"github"},
-				Command: func(roomID, userID string, args []string) (interface{}, error) {
-					return &matrix.TextMessage{"m.notice", strings.Join(args, " ")}, nil
-				},
-			},
-		},
+		Commands: []plugin.Command{},
 		Expansions: []plugin.Expansion{
 			plugin.Expansion{
 				Regexp: regexp.MustCompile(ownerRepoIssueRegex),
@@ -69,6 +61,9 @@ func (s *githubService) Plugin(roomID string) plugin.Plugin {
 	}
 }
 
+// githubClient returns a github Client which can perform Github API operations.
+// If `token` is empty, a non-authenticated client will be created. This should be
+// used sparingly where possible as you only get 60 requests/hour like that (IP locked).
 func githubClient(token string) *github.Client {
 	var tokenSource oauth2.TokenSource
 	if token != "" {
