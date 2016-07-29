@@ -72,3 +72,28 @@ check that the server is still running.
     curl -X GET localhost:4050/test
 
     {}
+
+# Developing on go-neb.
+
+There's a bunch more tools this project uses when developing in order to do things like linting. Some of them are bundled with go (fmt and vet) but some are not. You should install the ones which are not:
+
+```bash
+go get github.com/golang/lint/golint
+go get github.com/fzipp/gocyclo
+```
+
+You can then install the pre-commit hook:
+
+```bash
+./hooks/install.sh
+```
+
+## Viewing the API docs.
+
+```
+# Start a documentation server listening on :6060
+GOPATH=$GOPATH:$(pwd) godoc -v -http=localhost:6060 &
+
+# Open up the documentation for go-neb in a browser.
+sensible-browser http://localhost/pkg/github.com/matrix-org/go-neb
+```

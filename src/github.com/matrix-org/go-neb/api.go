@@ -2,9 +2,9 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/matrix-org/go-neb/errors"
 	"github.com/matrix-org/go-neb/clients"
 	"github.com/matrix-org/go-neb/database"
+	"github.com/matrix-org/go-neb/errors"
 	"net/http"
 )
 
