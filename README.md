@@ -1,3 +1,19 @@
+# Building go-neb
+
+Go-neb is built using `gb` (https://getgb.io/). To build go-neb:
+
+```bash
+# Install gb
+go get github.com/constabulary/gb/...
+
+# Clone the go-neb repository
+git clone https://github.com/matrix-org/go-neb
+cd go-neb
+
+# Build go-neb
+gb build github.com/matrix-org/go-neb
+```
+
 # Running go-neb
 
 Go-neb uses environment variables to configure its database and bind address.
