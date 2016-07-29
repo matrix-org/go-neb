@@ -17,8 +17,8 @@ type Clients struct {
 	clients  map[string]clientEntry
 }
 
-// Make a new collection of matrix clients
-func Make(db *database.ServiceDB) *Clients {
+// New makes a new collection of matrix clients
+func New(db *database.ServiceDB) *Clients {
 	clients := &Clients{
 		db:      db,
 		clients: make(map[string]clientEntry),

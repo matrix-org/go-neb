@@ -22,7 +22,7 @@ func main() {
 		log.Panic(err)
 	}
 
-	clients := clients.Make(db)
+	clients := clients.New(db)
 	if err := clients.Start(); err != nil {
 		log.Panic(err)
 	}
