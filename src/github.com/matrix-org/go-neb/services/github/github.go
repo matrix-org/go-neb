@@ -6,8 +6,10 @@ import (
 	"github.com/google/go-github/github"
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/plugin"
+	"github.com/matrix-org/go-neb/services/github/webhook"
 	"github.com/matrix-org/go-neb/types"
 	"golang.org/x/oauth2"
+	"net/http"
 	"regexp"
 	"strconv"
 )
@@ -59,6 +61,10 @@ func (s *githubService) Plugin(roomID string) plugin.Plugin {
 			},
 		},
 	}
+}
+func (s *githubService) OnReceiveWebhook(w http.ResponseWriter, req http.Request) {
+	// defer entirely to the webhook package
+	webhook.OnReceiveRequest(w, req, "")
 }
 
 // githubClient returns a github Client which can perform Github API operations.

@@ -4,6 +4,7 @@ import (
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/plugin"
 	"github.com/matrix-org/go-neb/types"
+	"net/http"
 	"strings"
 )
 
@@ -28,6 +29,9 @@ func (e *echoService) Plugin(roomID string) plugin.Plugin {
 			},
 		},
 	}
+}
+func (e *echoService) OnReceiveWebhook(w http.ResponseWriter, req http.Request) {
+	w.WriteHeader(200) // Do nothing
 }
 
 func init() {
