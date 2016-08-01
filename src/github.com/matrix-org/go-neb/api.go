@@ -7,12 +7,25 @@ import (
 	"github.com/matrix-org/go-neb/errors"
 	"github.com/matrix-org/go-neb/types"
 	"net/http"
+	"strings"
 )
 
 type heartbeatHandler struct{}
 
 func (*heartbeatHandler) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError) {
 	return &struct{}{}, nil
+}
+
+func handleWebhook(w http.ResponseWriter, req *http.Request) {
+	segments := strings.Split(req.URL.Path, "/")
+	// last path segment is the service type which we will pass the incoming request to
+	srvType := segments[len(segments)-1]
+	service := types.CreateService("", srvType)
+	if service == nil {
+		w.WriteHeader(404)
+		return
+	}
+	service.OnReceiveWebhook(w, req)
 }
 
 type configureClientHandler struct {

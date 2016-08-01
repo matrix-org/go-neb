@@ -32,7 +32,7 @@ type Service interface {
 	ServiceType() string
 	RoomIDs() []string
 	Plugin(roomID string) plugin.Plugin
-	OnReceiveWebhook(w http.ResponseWriter, req http.Request)
+	OnReceiveWebhook(w http.ResponseWriter, req *http.Request)
 }
 
 var servicesByType = map[string]func(string) Service{}

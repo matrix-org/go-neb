@@ -62,7 +62,7 @@ func (s *githubService) Plugin(roomID string) plugin.Plugin {
 		},
 	}
 }
-func (s *githubService) OnReceiveWebhook(w http.ResponseWriter, req http.Request) {
+func (s *githubService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request) {
 	// defer entirely to the webhook package
 	webhook.OnReceiveRequest(w, req, "")
 }

@@ -16,7 +16,7 @@ import (
 
 // OnReceiveRequest processes incoming github webhook requests. The secretToken
 // parameter is optional.
-func OnReceiveRequest(w http.ResponseWriter, r http.Request, secretToken string) {
+func OnReceiveRequest(w http.ResponseWriter, r *http.Request, secretToken string) {
 	// Verify the HMAC signature if NEB was configured with a secret token
 	eventType := r.Header.Get("X-GitHub-Event")
 	signatureSHA1 := r.Header.Get("X-Hub-Signature")
