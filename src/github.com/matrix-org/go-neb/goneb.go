@@ -6,6 +6,7 @@ import (
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/server"
 	_ "github.com/matrix-org/go-neb/services/echo"
+	_ "github.com/matrix-org/go-neb/services/github"
 	_ "github.com/mattn/go-sqlite3"
 	"net/http"
 	_ "net/http/pprof"
