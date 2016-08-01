@@ -5,6 +5,7 @@ import (
 	"github.com/matrix-org/go-neb/clients"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/errors"
+	"github.com/matrix-org/go-neb/types"
 	"net/http"
 )
 
@@ -24,7 +25,7 @@ func (s *configureClientHandler) OnIncomingRequest(req *http.Request) (interface
 		return nil, &errors.HTTPError{nil, "Unsupported Method", 405}
 	}
 
-	var body database.ClientConfig
+	var body types.ClientConfig
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
 		return nil, &errors.HTTPError{err, "Error parsing request JSON", 400}
 	}
@@ -39,8 +40,8 @@ func (s *configureClientHandler) OnIncomingRequest(req *http.Request) (interface
 	}
 
 	return &struct {
-		OldClient database.ClientConfig
-		NewClient database.ClientConfig
+		OldClient types.ClientConfig
+		NewClient types.ClientConfig
 	}{oldClient, body}, nil
 }
 
@@ -67,7 +68,7 @@ func (s *configureServiceHandler) OnIncomingRequest(req *http.Request) (interfac
 		return nil, &errors.HTTPError{nil, `Must supply a "ID", a "Type" and a "Config"`, 400}
 	}
 
-	service := database.CreateService(body.ID, body.Type)
+	service := types.CreateService(body.ID, body.Type)
 	if service == nil {
 		return nil, &errors.HTTPError{nil, "Unknown service type", 400}
 	}
@@ -89,7 +90,7 @@ func (s *configureServiceHandler) OnIncomingRequest(req *http.Request) (interfac
 	return &struct {
 		ID        string
 		Type      string
-		OldConfig database.Service
-		NewConfig database.Service
+		OldConfig types.Service
+		NewConfig types.Service
 	}{body.ID, body.Type, oldService, service}, nil
 }

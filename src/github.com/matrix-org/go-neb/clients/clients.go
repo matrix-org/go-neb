@@ -5,6 +5,7 @@ import (
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/plugin"
+	"github.com/matrix-org/go-neb/types"
 	"net/url"
 	"sync"
 )
@@ -37,7 +38,7 @@ func (c *Clients) Client(userID string) (*matrix.Client, error) {
 }
 
 // Update updates the config for a matrix client
-func (c *Clients) Update(config database.ClientConfig) (database.ClientConfig, error) {
+func (c *Clients) Update(config types.ClientConfig) (types.ClientConfig, error) {
 	_, old, err := c.updateClientInDB(config)
 	return old.config, err
 }
@@ -68,7 +69,7 @@ func (c *Clients) Start() error {
 }
 
 type clientEntry struct {
-	config database.ClientConfig
+	config types.ClientConfig
 	client *matrix.Client
 }
 
@@ -105,7 +106,7 @@ func (c *Clients) loadClientFromDB(userID string) (entry clientEntry, err error)
 	return
 }
 
-func (c *Clients) updateClientInDB(newConfig database.ClientConfig) (new clientEntry, old clientEntry, err error) {
+func (c *Clients) updateClientInDB(newConfig types.ClientConfig) (new clientEntry, old clientEntry, err error) {
 	c.dbMutex.Lock()
 	defer c.dbMutex.Unlock()
 
@@ -136,7 +137,7 @@ func (c *Clients) updateClientInDB(newConfig database.ClientConfig) (new clientE
 	return
 }
 
-func (c *Clients) newClient(config database.ClientConfig) (*matrix.Client, error) {
+func (c *Clients) newClient(config types.ClientConfig) (*matrix.Client, error) {
 
 	homeserverURL, err := url.Parse(config.HomeserverURL)
 	if err != nil {

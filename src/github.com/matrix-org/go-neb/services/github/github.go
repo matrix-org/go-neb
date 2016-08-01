@@ -4,9 +4,9 @@ import (
 	"fmt"
 	log "github.com/Sirupsen/logrus"
 	"github.com/google/go-github/github"
-	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/plugin"
+	"github.com/matrix-org/go-neb/types"
 	"golang.org/x/oauth2"
 	"regexp"
 	"strconv"
@@ -91,7 +91,7 @@ func ownerRepoNumberFromText(ownerRepoNumberText string) (string, string, int, e
 }
 
 func init() {
-	database.RegisterService(func(serviceID string) database.Service {
+	types.RegisterService(func(serviceID string) types.Service {
 		return &githubService{id: serviceID}
 	})
 }
