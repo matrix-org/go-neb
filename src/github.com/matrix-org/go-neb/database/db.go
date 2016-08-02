@@ -95,11 +95,12 @@ func (d *ServiceDB) LoadServicesInRoom(serviceUserID, roomID string) (services [
 	return
 }
 
-// LoadThirdPartyAuthsForUser loads all the third-party credentials that the given userID
-// has linked to the given Service. Returns an empty list if there are no credentials.
-func (d *ServiceDB) LoadThirdPartyAuthsForUser(srv types.Service, userID string) (tpas []ThirdPartyAuth, err error) {
+// LoadThirdPartyAuth loads third-party credentials that the given userID
+// has linked to the given resource. Returns sql.ErrNoRows if there are no
+// credentials for the given resource/user combination.
+func (d *ServiceDB) LoadThirdPartyAuth(resource, userID string) (tpa ThirdPartyAuth, err error) {
 	err = runTransaction(d.db, func(txn *sql.Tx) error {
-		tpas, err = selectThirdPartyAuthsForUserTxn(txn, srv.ServiceType(), userID)
+		tpa, err = selectThirdPartyAuthTxn(txn, resource, userID)
 		if err != nil {
 			return err
 		}
@@ -114,27 +115,18 @@ func (d *ServiceDB) LoadThirdPartyAuthsForUser(srv types.Service, userID string)
 // will be inserted. The previous auth is returned.
 func (d *ServiceDB) StoreThirdPartyAuth(tpa ThirdPartyAuth) (old ThirdPartyAuth, err error) {
 	err = runTransaction(d.db, func(txn *sql.Tx) error {
-		var olds []ThirdPartyAuth
-		var hasOld bool
-		olds, err = selectThirdPartyAuthsForUserTxn(txn, tpa.ServiceType, tpa.UserID)
-		for _, o := range olds {
-			if o.UserID == tpa.UserID && o.Resource == tpa.Resource {
-				old = o
-				hasOld = true
-				break
-			}
-		}
+		old, err = selectThirdPartyAuthTxn(txn, tpa.Resource, tpa.UserID)
 		now := time.Now().UnixNano() / 1000000
 
-		if err != nil {
-			return err
-		} else if hasOld {
-			tpa.TimeUpdatedMs = now
-			return updateThirdPartyAuthTxn(txn, tpa)
-		} else {
+		if err == sql.ErrNoRows {
 			tpa.TimeAddedMs = now
 			tpa.TimeUpdatedMs = now
 			return insertThirdPartyAuthTxn(txn, tpa)
+		} else if err != nil {
+			return err
+		} else {
+			tpa.TimeUpdatedMs = now
+			return updateThirdPartyAuthTxn(txn, tpa)
 		}
 	})
 	return
