@@ -13,3 +13,10 @@ Random TODOs as I think of them:
    yourself. Python NEB did it by giving you a key-value store which you could
    chuck config info for a room into: I wonder how useful that would be for
    Go-NEB?
+
+ - The service ID as it stands feels mingy. There are times I want to execute
+   Service code without knowing a service ID (e.g. processing webhooks, executing
+   auth code, etc) so I have to use "" just to create a Service :( Also, it feels
+   wrong to defer responsibility for knowing what a valid service ID is to the
+   caller of the /configureService API. How the hell do they know which IDs have
+   been taken?!
