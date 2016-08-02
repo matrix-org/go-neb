@@ -212,6 +212,7 @@ func selectRoomServicesTxn(txn *sql.Tx, serviceUserID, roomID string) (serviceID
 	return
 }
 
+// ThirdPartyAuth represents a third_party_auth data row.
 type ThirdPartyAuth struct {
 	// The ID of the matrix user who has authed with the third party
 	UserID string
@@ -227,9 +228,9 @@ type ThirdPartyAuth struct {
 	// ServiceType knows how to parse this data.
 	AuthJSON []byte
 	// When the row was initially inserted.
-	TimeAddedMs int
+	TimeAddedMs int64
 	// When the row was last updated.
-	TimeUpdatedMs int
+	TimeUpdatedMs int64
 }
 
 const selectThirdPartyAuthSQL = `
@@ -237,8 +238,8 @@ SELECT resource, auth_json, time_added_ms, time_updated_ms FROM third_party_auth
 WHERE user_id=$1 AND service_type=$2
 `
 
-func selectThirdPartyAuthsForUserTxn(txn *sql.Tx, service types.Service, userID string) (auths []ThirdPartyAuth, err error) {
-	rows, err := txn.Query(selectThirdPartyAuthSQL, userID, service.ServiceType())
+func selectThirdPartyAuthsForUserTxn(txn *sql.Tx, serviceType, userID string) (auths []ThirdPartyAuth, err error) {
+	rows, err := txn.Query(selectThirdPartyAuthSQL, userID, serviceType)
 	if err != nil {
 		return
 	}
@@ -249,7 +250,7 @@ func selectThirdPartyAuthsForUserTxn(txn *sql.Tx, service types.Service, userID 
 			return
 		}
 		tpa.UserID = userID
-		tpa.ServiceType = service.ServiceType()
+		tpa.ServiceType = serviceType
 		auths = append(auths, tpa)
 	}
 	return

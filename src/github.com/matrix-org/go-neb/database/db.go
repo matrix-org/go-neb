@@ -95,6 +95,51 @@ func (d *ServiceDB) LoadServicesInRoom(serviceUserID, roomID string) (services [
 	return
 }
 
+// LoadThirdPartyAuthsForUser loads all the third-party credentials that the given userID
+// has linked to the given Service. Returns an empty list if there are no credentials.
+func (d *ServiceDB) LoadThirdPartyAuthsForUser(srv types.Service, userID string) (tpas []ThirdPartyAuth, err error) {
+	err = runTransaction(d.db, func(txn *sql.Tx) error {
+		tpas, err = selectThirdPartyAuthsForUserTxn(txn, srv.ServiceType(), userID)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+	return
+}
+
+// StoreThirdPartyAuth stores the ThirdPartyAuth for the given Service. Updates the
+// time added/updated values.
+// If the auth already exists then it will be updated, otherwise a new auth
+// will be inserted. The previous auth is returned.
+func (d *ServiceDB) StoreThirdPartyAuth(tpa ThirdPartyAuth) (old ThirdPartyAuth, err error) {
+	err = runTransaction(d.db, func(txn *sql.Tx) error {
+		var olds []ThirdPartyAuth
+		var hasOld bool
+		olds, err = selectThirdPartyAuthsForUserTxn(txn, tpa.ServiceType, tpa.UserID)
+		for _, o := range olds {
+			if o.UserID == tpa.UserID && o.Resource == tpa.Resource {
+				old = o
+				hasOld = true
+				break
+			}
+		}
+		now := time.Now().UnixNano() / 1000000
+
+		if err != nil {
+			return err
+		} else if hasOld {
+			tpa.TimeUpdatedMs = now
+			return updateThirdPartyAuthTxn(txn, tpa)
+		} else {
+			tpa.TimeAddedMs = now
+			tpa.TimeUpdatedMs = now
+			return insertThirdPartyAuthTxn(txn, tpa)
+		}
+	})
+	return
+}
+
 // StoreService stores a service into the database either by inserting a new
 // service or updating an existing service. Returns the old service if there
 // was one.
