@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"github.com/matrix-org/go-neb/types"
 	"time"
 )
 
@@ -61,7 +62,7 @@ const selectMatrixClientConfigSQL = `
 SELECT client_json FROM matrix_clients WHERE user_id = $1
 `
 
-func selectMatrixClientConfigTxn(txn *sql.Tx, userID string) (config ClientConfig, err error) {
+func selectMatrixClientConfigTxn(txn *sql.Tx, userID string) (config types.ClientConfig, err error) {
 	var configJSON []byte
 	err = txn.QueryRow(selectMatrixClientConfigSQL, userID).Scan(&configJSON)
 	if err != nil {
@@ -77,7 +78,7 @@ INSERT INTO matrix_clients(
 ) VALUES ($1, $2, '', $3, $4)
 `
 
-func insertMatrixClientConfigTxn(txn *sql.Tx, now time.Time, config ClientConfig) error {
+func insertMatrixClientConfigTxn(txn *sql.Tx, now time.Time, config types.ClientConfig) error {
 	t := now.UnixNano() / 1000000
 	configJSON, err := json.Marshal(&config)
 	if err != nil {
@@ -92,7 +93,7 @@ UPDATE matrix_clients SET client_json = $1, time_updated_ms = $2
 	WHERE user_id = $3
 `
 
-func updateMatrixClientConfigTxn(txn *sql.Tx, now time.Time, config ClientConfig) error {
+func updateMatrixClientConfigTxn(txn *sql.Tx, now time.Time, config types.ClientConfig) error {
 	t := now.UnixNano() / 1000000
 	configJSON, err := json.Marshal(&config)
 	if err != nil {
@@ -107,14 +108,14 @@ SELECT service_type, service_json FROM services
 	WHERE service_id = $1
 `
 
-func selectServiceTxn(txn *sql.Tx, serviceID string) (Service, error) {
+func selectServiceTxn(txn *sql.Tx, serviceID string) (types.Service, error) {
 	var serviceType string
 	var serviceJSON []byte
 	row := txn.QueryRow(selectServiceSQL, serviceID)
 	if err := row.Scan(&serviceType, &serviceJSON); err != nil {
 		return nil, err
 	}
-	service := CreateService(serviceID, serviceType)
+	service := types.CreateService(serviceID, serviceType)
 	if service == nil {
 		return nil, fmt.Errorf("Cannot create services of type %s", serviceType)
 	}
@@ -129,7 +130,7 @@ UPDATE services SET service_type=$1, service_json=$2, time_updated_ms=$3
 	WHERE service_id=$4
 `
 
-func updateServiceTxn(txn *sql.Tx, now time.Time, service Service) error {
+func updateServiceTxn(txn *sql.Tx, now time.Time, service types.Service) error {
 	serviceJSON, err := json.Marshal(service)
 	if err != nil {
 		return err
@@ -148,7 +149,7 @@ INSERT INTO services(
 ) VALUES ($1, $2, $3, $4, $5)
 `
 
-func insertServiceTxn(txn *sql.Tx, now time.Time, service Service) error {
+func insertServiceTxn(txn *sql.Tx, now time.Time, service types.Service) error {
 	serviceJSON, err := json.Marshal(service)
 	if err != nil {
 		return err

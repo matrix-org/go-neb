@@ -1,8 +1,9 @@
-package database
+package types
 
 import (
 	"errors"
 	"github.com/matrix-org/go-neb/plugin"
+	"net/http"
 	"net/url"
 )
 
@@ -31,6 +32,7 @@ type Service interface {
 	ServiceType() string
 	RoomIDs() []string
 	Plugin(roomID string) plugin.Plugin
+	OnReceiveWebhook(w http.ResponseWriter, req *http.Request)
 }
 
 var servicesByType = map[string]func(string) Service{}

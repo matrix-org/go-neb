@@ -4,10 +4,12 @@ import (
 	"fmt"
 	log "github.com/Sirupsen/logrus"
 	"github.com/google/go-github/github"
-	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/plugin"
+	"github.com/matrix-org/go-neb/services/github/webhook"
+	"github.com/matrix-org/go-neb/types"
 	"golang.org/x/oauth2"
+	"net/http"
 	"regexp"
 	"strconv"
 )
@@ -60,6 +62,10 @@ func (s *githubService) Plugin(roomID string) plugin.Plugin {
 		},
 	}
 }
+func (s *githubService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request) {
+	// defer entirely to the webhook package
+	webhook.OnReceiveRequest(w, req, "")
+}
 
 // githubClient returns a github Client which can perform Github API operations.
 // If `token` is empty, a non-authenticated client will be created. This should be
@@ -91,7 +97,7 @@ func ownerRepoNumberFromText(ownerRepoNumberText string) (string, string, int, e
 }
 
 func init() {
-	database.RegisterService(func(serviceID string) database.Service {
+	types.RegisterService(func(serviceID string) types.Service {
 		return &githubService{id: serviceID}
 	})
 }

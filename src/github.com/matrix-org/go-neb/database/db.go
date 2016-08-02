@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"github.com/matrix-org/go-neb/matrix"
+	"github.com/matrix-org/go-neb/types"
 	"sort"
 	"time"
 )
@@ -29,7 +30,7 @@ func Open(databaseType, databaseURL string) (serviceDB *ServiceDB, err error) {
 // StoreMatrixClientConfig stores the Matrix client config for a bot service.
 // If a config already exists then it will be updated, otherwise a new config
 // will be inserted. The previous config is returned.
-func (d *ServiceDB) StoreMatrixClientConfig(config ClientConfig) (oldConfig ClientConfig, err error) {
+func (d *ServiceDB) StoreMatrixClientConfig(config types.ClientConfig) (oldConfig types.ClientConfig, err error) {
 	err = runTransaction(d.db, func(txn *sql.Tx) error {
 		oldConfig, err = selectMatrixClientConfigTxn(txn, config.UserID)
 		now := time.Now()
@@ -56,7 +57,7 @@ func (d *ServiceDB) LoadServiceUserIds() (userIDsToRooms map[string][]string, er
 
 // LoadMatrixClientConfig loads a Matrix client config from the database.
 // Returns sql.ErrNoRows if the client isn't in the database.
-func (d *ServiceDB) LoadMatrixClientConfig(userID string) (config ClientConfig, err error) {
+func (d *ServiceDB) LoadMatrixClientConfig(userID string) (config types.ClientConfig, err error) {
 	err = runTransaction(d.db, func(txn *sql.Tx) error {
 		config, err = selectMatrixClientConfigTxn(txn, userID)
 		return err
@@ -66,7 +67,7 @@ func (d *ServiceDB) LoadMatrixClientConfig(userID string) (config ClientConfig, 
 
 // LoadService loads a service from the database.
 // Returns sql.ErrNoRows if the service isn't in the database.
-func (d *ServiceDB) LoadService(serviceID string) (service Service, err error) {
+func (d *ServiceDB) LoadService(serviceID string) (service types.Service, err error) {
 	err = runTransaction(d.db, func(txn *sql.Tx) error {
 		service, err = selectServiceTxn(txn, serviceID)
 		return err
@@ -76,7 +77,7 @@ func (d *ServiceDB) LoadService(serviceID string) (service Service, err error) {
 
 // LoadServicesInRoom loads all the bot services configured for a room.
 // Returns the empty list if there aren't any services configured.
-func (d *ServiceDB) LoadServicesInRoom(serviceUserID, roomID string) (services []Service, err error) {
+func (d *ServiceDB) LoadServicesInRoom(serviceUserID, roomID string) (services []types.Service, err error) {
 	err = runTransaction(d.db, func(txn *sql.Tx) error {
 		serviceIDs, err := selectRoomServicesTxn(txn, serviceUserID, roomID)
 		if err != nil {
@@ -97,7 +98,7 @@ func (d *ServiceDB) LoadServicesInRoom(serviceUserID, roomID string) (services [
 // StoreService stores a service into the database either by inserting a new
 // service or updating an existing service. Returns the old service if there
 // was one.
-func (d *ServiceDB) StoreService(service Service, client *matrix.Client) (oldService Service, err error) {
+func (d *ServiceDB) StoreService(service types.Service, client *matrix.Client) (oldService types.Service, err error) {
 	err = runTransaction(d.db, func(txn *sql.Tx) error {
 		oldService, err = selectServiceTxn(txn, service.ServiceID())
 		if err != nil && err != sql.ErrNoRows {
