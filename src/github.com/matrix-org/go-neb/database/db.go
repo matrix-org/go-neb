@@ -95,6 +95,38 @@ func (d *ServiceDB) LoadServicesInRoom(serviceUserID, roomID string) (services [
 	return
 }
 
+// LoadThirdPartyAuth loads third-party credentials that the given userID
+// has linked to the given resource. Returns sql.ErrNoRows if there are no
+// credentials for the given resource/user combination.
+func (d *ServiceDB) LoadThirdPartyAuth(resource, userID string) (tpa types.ThirdPartyAuth, err error) {
+	err = runTransaction(d.db, func(txn *sql.Tx) error {
+		tpa, err = selectThirdPartyAuthTxn(txn, resource, userID)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+	return
+}
+
+// StoreThirdPartyAuth stores the ThirdPartyAuth for the given Service. Updates the
+// time added/updated values.
+// If the auth already exists then it will be updated, otherwise a new auth
+// will be inserted. The previous auth is returned.
+func (d *ServiceDB) StoreThirdPartyAuth(tpa types.ThirdPartyAuth) (old types.ThirdPartyAuth, err error) {
+	err = runTransaction(d.db, func(txn *sql.Tx) error {
+		old, err = selectThirdPartyAuthTxn(txn, tpa.Resource, tpa.UserID)
+		if err == sql.ErrNoRows {
+			return insertThirdPartyAuthTxn(txn, tpa)
+		} else if err != nil {
+			return err
+		} else {
+			return updateThirdPartyAuthTxn(txn, tpa)
+		}
+	})
+	return
+}
+
 // StoreService stores a service into the database either by inserting a new
 // service or updating an existing service. Returns the old service if there
 // was one.

@@ -17,6 +17,32 @@ func (*heartbeatHandler) OnIncomingRequest(req *http.Request) (interface{}, *err
 	return &struct{}{}, nil
 }
 
+type configureAuthHandler struct {
+	db *database.ServiceDB
+}
+
+func (*configureAuthHandler) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError) {
+	if req.Method != "POST" {
+		return nil, &errors.HTTPError{nil, "Unsupported Method", 405}
+	}
+	var tpa types.ThirdPartyAuth
+	if err := json.NewDecoder(req.Body).Decode(&tpa); err != nil {
+		return nil, &errors.HTTPError{err, "Error parsing request JSON", 400}
+	}
+
+	am := types.GetAuthModule(tpa.Type)
+	if am == nil {
+		return nil, &errors.HTTPError{nil, "Bad auth type: " + tpa.Type, 400}
+	}
+
+	err := am.Process(tpa)
+	if err != nil {
+		return nil, &errors.HTTPError{err, "Failed to persist auth", 500}
+	}
+
+	return nil, nil
+}
+
 type webhookHandler struct {
 	db      *database.ServiceDB
 	clients *clients.Clients
