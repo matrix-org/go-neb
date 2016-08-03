@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS matrix_clients (
 
 CREATE TABLE IF NOT EXISTS third_party_auth (
 	user_id TEXT NOT NULL,
+	type TEXT NOT NULL,
 	resource TEXT NOT NULL,
 	auth_json TEXT NOT NULL,
 	time_added_ms BIGINT NOT NULL,
@@ -211,45 +212,27 @@ func selectRoomServicesTxn(txn *sql.Tx, serviceUserID, roomID string) (serviceID
 	return
 }
 
-// ThirdPartyAuth represents a third_party_auth data row.
-type ThirdPartyAuth struct {
-	// The ID of the matrix user who has authed with the third party
-	UserID string
-	// The location of the third party resource e.g. "github.com".
-	// This is mainly relevant for decentralised services like JIRA which
-	// may have many different locations (e.g. "matrix.org/jira") for the
-	// same ServiceType ("jira").
-	Resource string
-	// An opaque JSON blob of stored auth data.
-	AuthJSON []byte
-	// When the row was initially inserted.
-	TimeAddedMs int64
-	// When the row was last updated.
-	TimeUpdatedMs int64
-}
-
 const selectThirdPartyAuthSQL = `
-SELECT auth_json, time_added_ms, time_updated_ms FROM third_party_auth
-WHERE user_id=$1 AND resource=$2
+SELECT type, auth_json FROM third_party_auth WHERE user_id=$1 AND resource=$2
 `
 
-func selectThirdPartyAuthTxn(txn *sql.Tx, resource, userID string) (tpa ThirdPartyAuth, err error) {
+func selectThirdPartyAuthTxn(txn *sql.Tx, resource, userID string) (tpa types.ThirdPartyAuth, err error) {
 	tpa.Resource = resource
 	tpa.UserID = userID
-	err = txn.QueryRow(selectThirdPartyAuthSQL, userID, resource).Scan(
-		&tpa.AuthJSON, &tpa.TimeAddedMs, &tpa.TimeUpdatedMs)
+	err = txn.QueryRow(selectThirdPartyAuthSQL, userID, resource).Scan(&tpa.Type, &tpa.AuthJSON)
 	return
 }
 
 const insertThirdPartyAuthSQL = `
 INSERT INTO third_party_auth(
-	user_id, resource, auth_json, time_added_ms, time_updated_ms
-) VALUES($1, $2, $3, $4, $5)
+	user_id, type, resource, auth_json, time_added_ms, time_updated_ms
+) VALUES($1, $2, $3, $4, $5, $6)
 `
 
-func insertThirdPartyAuthTxn(txn *sql.Tx, tpa ThirdPartyAuth) (err error) {
-	_, err = txn.Exec(insertThirdPartyAuthSQL, tpa.UserID, tpa.Resource,
-		tpa.AuthJSON, tpa.TimeAddedMs, tpa.TimeUpdatedMs)
+func insertThirdPartyAuthTxn(txn *sql.Tx, tpa types.ThirdPartyAuth) (err error) {
+	timeAddedMs := time.Now().UnixNano() / 1000000
+	_, err = txn.Exec(insertThirdPartyAuthSQL, tpa.UserID, tpa.Type, tpa.Resource,
+		[]byte(tpa.AuthJSON), timeAddedMs, timeAddedMs)
 	return
 }
 
@@ -258,8 +241,9 @@ UPDATE third_party_auth SET auth_json=$1, time_updated_ms=$2
 	WHERE user_id=$3 AND resource=$4
 `
 
-func updateThirdPartyAuthTxn(txn *sql.Tx, tpa ThirdPartyAuth) (err error) {
-	_, err = txn.Exec(updateThirdPartyAuthSQL, tpa.AuthJSON, tpa.TimeUpdatedMs,
+func updateThirdPartyAuthTxn(txn *sql.Tx, tpa types.ThirdPartyAuth) (err error) {
+	timeUpdatedMs := time.Now().UnixNano() / 1000000
+	_, err = txn.Exec(updateThirdPartyAuthSQL, []byte(tpa.AuthJSON), timeUpdatedMs,
 		tpa.UserID, tpa.Resource)
 	return err
 }

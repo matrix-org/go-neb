@@ -98,7 +98,7 @@ func (d *ServiceDB) LoadServicesInRoom(serviceUserID, roomID string) (services [
 // LoadThirdPartyAuth loads third-party credentials that the given userID
 // has linked to the given resource. Returns sql.ErrNoRows if there are no
 // credentials for the given resource/user combination.
-func (d *ServiceDB) LoadThirdPartyAuth(resource, userID string) (tpa ThirdPartyAuth, err error) {
+func (d *ServiceDB) LoadThirdPartyAuth(resource, userID string) (tpa types.ThirdPartyAuth, err error) {
 	err = runTransaction(d.db, func(txn *sql.Tx) error {
 		tpa, err = selectThirdPartyAuthTxn(txn, resource, userID)
 		if err != nil {
@@ -113,19 +113,14 @@ func (d *ServiceDB) LoadThirdPartyAuth(resource, userID string) (tpa ThirdPartyA
 // time added/updated values.
 // If the auth already exists then it will be updated, otherwise a new auth
 // will be inserted. The previous auth is returned.
-func (d *ServiceDB) StoreThirdPartyAuth(tpa ThirdPartyAuth) (old ThirdPartyAuth, err error) {
+func (d *ServiceDB) StoreThirdPartyAuth(tpa types.ThirdPartyAuth) (old types.ThirdPartyAuth, err error) {
 	err = runTransaction(d.db, func(txn *sql.Tx) error {
 		old, err = selectThirdPartyAuthTxn(txn, tpa.Resource, tpa.UserID)
-		now := time.Now().UnixNano() / 1000000
-
 		if err == sql.ErrNoRows {
-			tpa.TimeAddedMs = now
-			tpa.TimeUpdatedMs = now
 			return insertThirdPartyAuthTxn(txn, tpa)
 		} else if err != nil {
 			return err
 		} else {
-			tpa.TimeUpdatedMs = now
 			return updateThirdPartyAuthTxn(txn, tpa)
 		}
 	})

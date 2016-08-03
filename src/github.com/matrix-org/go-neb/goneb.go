@@ -2,6 +2,7 @@ package main
 
 import (
 	log "github.com/Sirupsen/logrus"
+	"github.com/matrix-org/go-neb/auth"
 	"github.com/matrix-org/go-neb/clients"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/server"
@@ -28,9 +29,12 @@ func main() {
 		log.Panic(err)
 	}
 
+	auth.RegisterModules(db)
+
 	http.Handle("/test", server.MakeJSONAPI(&heartbeatHandler{}))
 	http.Handle("/admin/configureClient", server.MakeJSONAPI(&configureClientHandler{db: db, clients: clients}))
 	http.Handle("/admin/configureService", server.MakeJSONAPI(&configureServiceHandler{db: db, clients: clients}))
+	http.Handle("/admin/configureAuth", server.MakeJSONAPI(&configureAuthHandler{db: db}))
 	http.HandleFunc("/services/hooks/", handleWebhook)
 
 	http.ListenAndServe(bindAddress, nil)
