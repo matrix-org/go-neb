@@ -18,7 +18,8 @@ func (*heartbeatHandler) OnIncomingRequest(req *http.Request) (interface{}, *err
 }
 
 type webhookHandler struct {
-	db *database.ServiceDB
+	db      *database.ServiceDB
+	clients *clients.Clients
 }
 
 func (wh *webhookHandler) handle(w http.ResponseWriter, req *http.Request) {
@@ -31,7 +32,14 @@ func (wh *webhookHandler) handle(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(404)
 		return
 	}
-	service.OnReceiveWebhook(w, req)
+	cli, err := wh.clients.Client(service.ServiceUserID())
+	if err != nil {
+		log.WithError(err).WithField("user_id", service.ServiceUserID()).Print(
+			"Failed to retrieve matrix client instance")
+		w.WriteHeader(500)
+		return
+	}
+	service.OnReceiveWebhook(w, req, cli)
 }
 
 type configureClientHandler struct {
