@@ -8,23 +8,26 @@ import (
 	"fmt"
 	log "github.com/Sirupsen/logrus"
 	"github.com/google/go-github/github"
+	"github.com/matrix-org/go-neb/errors"
+	"github.com/matrix-org/go-neb/matrix"
 	"html"
 	"io/ioutil"
 	"net/http"
 	"strings"
 )
 
-// OnReceiveRequest processes incoming github webhook requests. The secretToken
-// parameter is optional.
-func OnReceiveRequest(w http.ResponseWriter, r *http.Request, secretToken string) {
+// OnReceiveRequest processes incoming github webhook requests and returns a
+// matrix message to send, along with parsed repo information.
+// The secretToken, if supplied, will be used to verify the request is from
+// Github. If it isn't, an error is returned.
+func OnReceiveRequest(r *http.Request, secretToken string) (string, *github.Repository, *matrix.HTMLMessage, *errors.HTTPError) {
 	// Verify the HMAC signature if NEB was configured with a secret token
 	eventType := r.Header.Get("X-GitHub-Event")
 	signatureSHA1 := r.Header.Get("X-Hub-Signature")
 	content, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.WithError(err).Print("Failed to read Github webhook body")
-		w.WriteHeader(400)
-		return
+		return "", nil, nil, &errors.HTTPError{nil, "Failed to parse body", 400}
 	}
 	// Verify request if a secret token has been supplied.
 	if secretToken != "" {
@@ -34,16 +37,14 @@ func OnReceiveRequest(w http.ResponseWriter, r *http.Request, secretToken string
 		if err != nil {
 			log.WithError(err).WithField("X-Hub-Signature", sigHex).Print(
 				"Failed to decode signature as hex.")
-			w.WriteHeader(400)
-			return
+			return "", nil, nil, &errors.HTTPError{nil, "Failed to decode signature", 400}
 		}
 
 		if !checkMAC([]byte(content), sigBytes, []byte(secretToken)) {
 			log.WithFields(log.Fields{
 				"X-Hub-Signature": signatureSHA1,
 			}).Print("Received Github event which failed MAC check.")
-			w.WriteHeader(403)
-			return
+			return "", nil, nil, &errors.HTTPError{nil, "Bad signature", 403}
 		}
 	}
 
@@ -55,16 +56,11 @@ func OnReceiveRequest(w http.ResponseWriter, r *http.Request, secretToken string
 	htmlStr, repo, err := parseGithubEvent(eventType, content)
 	if err != nil {
 		log.WithError(err).Print("Failed to parse github event")
-		w.WriteHeader(500)
-		return
+		return "", nil, nil, &errors.HTTPError{nil, "Failed to parse github event", 500}
 	}
 
-	if err := handleWebhookEvent(eventType, htmlStr, repo); err != nil {
-		log.WithError(err).Print("Failed to handle Github webhook event")
-		w.WriteHeader(500)
-		return
-	}
-	w.WriteHeader(200)
+	msg := matrix.GetHTMLMessage("m.notice", htmlStr)
+	return eventType, repo, &msg, nil
 }
 
 // checkMAC reports whether messageMAC is a valid HMAC tag for message.
@@ -120,10 +116,6 @@ func parseGithubEvent(eventType string, data []byte) (string, *github.Repository
 		return prReviewCommentHTMLMessage(ev), ev.Repo, nil
 	}
 	return "", nil, fmt.Errorf("Unrecognized event type")
-}
-
-func handleWebhookEvent(eventType string, htmlStr string, repo *github.Repository) error {
-	return nil
 }
 
 func pullRequestHTMLMessage(p github.PullRequestEvent) string {

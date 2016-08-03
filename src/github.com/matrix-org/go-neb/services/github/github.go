@@ -63,8 +63,17 @@ func (s *githubService) Plugin(roomID string) plugin.Plugin {
 	}
 }
 func (s *githubService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request) {
-	// defer entirely to the webhook package
-	webhook.OnReceiveRequest(w, req, "")
+	evType, repo, msg, err := webhook.OnReceiveRequest(req, "")
+	if err != nil {
+		w.WriteHeader(err.Code)
+		return
+	}
+	log.WithFields(log.Fields{
+		"type": evType,
+		"msg":  msg,
+		"repo": repo,
+	}).Print("Sending notification")
+	w.WriteHeader(200)
 }
 
 // githubClient returns a github Client which can perform Github API operations.
