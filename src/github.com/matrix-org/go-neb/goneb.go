@@ -35,7 +35,8 @@ func main() {
 	http.Handle("/admin/configureClient", server.MakeJSONAPI(&configureClientHandler{db: db, clients: clients}))
 	http.Handle("/admin/configureService", server.MakeJSONAPI(&configureServiceHandler{db: db, clients: clients}))
 	http.Handle("/admin/configureAuth", server.MakeJSONAPI(&configureAuthHandler{db: db}))
-	http.HandleFunc("/services/hooks/", handleWebhook)
+	wh := &webhookHandler{db: db}
+	http.HandleFunc("/services/hooks/", wh.handle)
 
 	http.ListenAndServe(bindAddress, nil)
 }
