@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	log "github.com/Sirupsen/logrus"
 	"github.com/matrix-org/go-neb/clients"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/errors"
@@ -16,12 +17,17 @@ func (*heartbeatHandler) OnIncomingRequest(req *http.Request) (interface{}, *err
 	return &struct{}{}, nil
 }
 
-func handleWebhook(w http.ResponseWriter, req *http.Request) {
+type webhookHandler struct {
+	db *database.ServiceDB
+}
+
+func (wh *webhookHandler) handle(w http.ResponseWriter, req *http.Request) {
 	segments := strings.Split(req.URL.Path, "/")
-	// last path segment is the service type which we will pass the incoming request to
-	srvType := segments[len(segments)-1]
-	service := types.CreateService("", srvType)
-	if service == nil {
+	// last path segment is the service ID which we will pass the incoming request to
+	srvID := segments[len(segments)-1]
+	service, err := wh.db.LoadService(srvID)
+	if err != nil {
+		log.WithError(err).WithField("service_id", srvID).Print("Failed to load service")
 		w.WriteHeader(404)
 		return
 	}
