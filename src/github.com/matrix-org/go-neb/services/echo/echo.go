@@ -30,7 +30,7 @@ func (e *echoService) Plugin(roomID string) plugin.Plugin {
 		},
 	}
 }
-func (e *echoService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request) {
+func (e *echoService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client) {
 	w.WriteHeader(200) // Do nothing
 }
 

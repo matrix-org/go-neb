@@ -22,7 +22,7 @@ type Clients struct {
 func New(db *database.ServiceDB) *Clients {
 	clients := &Clients{
 		db:      db,
-		clients: make(map[string]clientEntry),
+		clients: make(map[string]clientEntry), // user_id => clientEntry
 	}
 	return clients
 }

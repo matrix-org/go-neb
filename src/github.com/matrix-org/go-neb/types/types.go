@@ -3,6 +3,7 @@ package types
 import (
 	"encoding/json"
 	"errors"
+	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/plugin"
 	"net/http"
 	"net/url"
@@ -33,7 +34,7 @@ type Service interface {
 	ServiceType() string
 	RoomIDs() []string
 	Plugin(roomID string) plugin.Plugin
-	OnReceiveWebhook(w http.ResponseWriter, req *http.Request)
+	OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client)
 }
 
 var servicesByType = map[string]func(string) Service{}

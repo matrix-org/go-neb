@@ -21,13 +21,19 @@ var ownerRepoIssueRegex = regexp.MustCompile("([A-z0-9-_]+)/([A-z0-9-_]+)#([0-9]
 type githubService struct {
 	id     string
 	UserID string
-	Rooms  []string
+	Rooms  map[string][]string // room_id => ["push","issue","pull_request"]
 }
 
 func (s *githubService) ServiceUserID() string { return s.UserID }
 func (s *githubService) ServiceID() string     { return s.id }
 func (s *githubService) ServiceType() string   { return "github" }
-func (s *githubService) RoomIDs() []string     { return s.Rooms }
+func (s *githubService) RoomIDs() []string {
+	var keys []string
+	for k := range s.Rooms {
+		keys = append(keys, k)
+	}
+	return keys
+}
 func (s *githubService) Plugin(roomID string) plugin.Plugin {
 	return plugin.Plugin{
 		Commands: []plugin.Command{},
@@ -62,9 +68,36 @@ func (s *githubService) Plugin(roomID string) plugin.Plugin {
 		},
 	}
 }
-func (s *githubService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request) {
-	// defer entirely to the webhook package
-	webhook.OnReceiveRequest(w, req, "")
+func (s *githubService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client) {
+	evType, repo, msg, err := webhook.OnReceiveRequest(req, "")
+	if err != nil {
+		w.WriteHeader(err.Code)
+		return
+	}
+
+	for roomID, notif := range s.Rooms {
+		notifyRoom := false
+		for _, notifyType := range notif {
+			if evType == notifyType {
+				notifyRoom = true
+				break
+			}
+		}
+		if notifyRoom {
+			log.WithFields(log.Fields{
+				"type":    evType,
+				"msg":     msg,
+				"repo":    repo,
+				"room_id": roomID,
+			}).Print("Sending notification to room")
+			_, e := cli.SendMessageEvent(roomID, "m.room.message", msg)
+			if e != nil {
+				log.WithError(e).WithField("room_id", roomID).Print(
+					"Failed to send notification to room.")
+			}
+		}
+	}
+	w.WriteHeader(200)
 }
 
 // githubClient returns a github Client which can perform Github API operations.
