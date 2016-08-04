@@ -35,16 +35,6 @@ CREATE TABLE IF NOT EXISTS matrix_clients (
 	UNIQUE(user_id)
 );
 
-CREATE TABLE IF NOT EXISTS third_party_auth (
-	user_id TEXT NOT NULL,
-	type TEXT NOT NULL,
-	resource TEXT NOT NULL,
-	auth_json TEXT NOT NULL,
-	time_added_ms BIGINT NOT NULL,
-	time_updated_ms BIGINT NOT NULL,
-	UNIQUE(user_id, resource)
-);
-
 CREATE TABLE IF NOT EXISTS auth_realms (
 	realm_id TEXT NOT NULL,
 	realm_type TEXT NOT NULL,
@@ -219,42 +209,6 @@ func selectRoomServicesTxn(txn *sql.Tx, serviceUserID, roomID string) (serviceID
 		serviceIDs = append(serviceIDs, serviceID)
 	}
 	return
-}
-
-const selectThirdPartyAuthSQL = `
-SELECT type, auth_json FROM third_party_auth WHERE user_id=$1 AND resource=$2
-`
-
-func selectThirdPartyAuthTxn(txn *sql.Tx, resource, userID string) (tpa types.ThirdPartyAuth, err error) {
-	tpa.Resource = resource
-	tpa.UserID = userID
-	err = txn.QueryRow(selectThirdPartyAuthSQL, userID, resource).Scan(&tpa.Type, &tpa.AuthJSON)
-	return
-}
-
-const insertThirdPartyAuthSQL = `
-INSERT INTO third_party_auth(
-	user_id, type, resource, auth_json, time_added_ms, time_updated_ms
-) VALUES($1, $2, $3, $4, $5, $6)
-`
-
-func insertThirdPartyAuthTxn(txn *sql.Tx, tpa types.ThirdPartyAuth) (err error) {
-	timeAddedMs := time.Now().UnixNano() / 1000000
-	_, err = txn.Exec(insertThirdPartyAuthSQL, tpa.UserID, tpa.Type, tpa.Resource,
-		[]byte(tpa.AuthJSON), timeAddedMs, timeAddedMs)
-	return
-}
-
-const updateThirdPartyAuthSQL = `
-UPDATE third_party_auth SET auth_json=$1, time_updated_ms=$2
-	WHERE user_id=$3 AND resource=$4
-`
-
-func updateThirdPartyAuthTxn(txn *sql.Tx, tpa types.ThirdPartyAuth) (err error) {
-	timeUpdatedMs := time.Now().UnixNano() / 1000000
-	_, err = txn.Exec(updateThirdPartyAuthSQL, []byte(tpa.AuthJSON), timeUpdatedMs,
-		tpa.UserID, tpa.Resource)
-	return err
 }
 
 const insertRealmSQL = `
