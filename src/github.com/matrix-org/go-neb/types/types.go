@@ -1,6 +1,7 @@
 package types
 
 import (
+	"encoding/json"
 	"errors"
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/plugin"
@@ -58,6 +59,7 @@ func CreateService(serviceID, serviceType string) Service {
 type AuthRealm interface {
 	ID() string
 	Type() string
+	AuthSession(userID string, config json.RawMessage) AuthSession
 }
 
 var realmsByType = map[string]func(string) AuthRealm{}
@@ -75,4 +77,11 @@ func CreateAuthRealm(realmID, realmType string) AuthRealm {
 		return nil
 	}
 	return f(realmID)
+}
+
+// AuthSession represents a single authentication session between a user and
+// an auth realm.
+type AuthSession interface {
+	UserID() string
+	RealmID() string
 }
