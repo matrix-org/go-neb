@@ -318,9 +318,12 @@ func selectAuthSessionTxn(txn *sql.Tx, realmID, userID string) (types.AuthSessio
 	if err := json.Unmarshal(realmJSON, realm); err != nil {
 		return nil, err
 	}
-	session := realm.AuthSession(userID, json.RawMessage(sessionJSON))
+	session := realm.AuthSession(userID, realmID)
 	if session == nil {
 		return nil, fmt.Errorf("Cannot create session for given realm")
+	}
+	if err := json.Unmarshal(sessionJSON, session); err != nil {
+		return nil, err
 	}
 	return session, nil
 }
