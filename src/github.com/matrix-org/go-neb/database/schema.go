@@ -44,6 +44,15 @@ CREATE TABLE IF NOT EXISTS third_party_auth (
 	time_updated_ms BIGINT NOT NULL,
 	UNIQUE(user_id, resource)
 );
+
+CREATE TABLE IF NOT EXISTS auth_realms (
+	realm_id TEXT NOT NULL,
+	realm_type TEXT NOT NULL,
+	realm_json TEXT NOT NULL,
+	time_added_ms BIGINT NOT NULL,
+	time_updated_ms BIGINT NOT NULL,
+	UNIQUE(realm_id)
+);
 `
 
 const selectServiceUserIDsSQL = `
@@ -245,5 +254,63 @@ func updateThirdPartyAuthTxn(txn *sql.Tx, tpa types.ThirdPartyAuth) (err error) 
 	timeUpdatedMs := time.Now().UnixNano() / 1000000
 	_, err = txn.Exec(updateThirdPartyAuthSQL, []byte(tpa.AuthJSON), timeUpdatedMs,
 		tpa.UserID, tpa.Resource)
+	return err
+}
+
+const insertRealmSQL = `
+INSERT INTO auth_realms(
+	realm_id, realm_type, realm_json, time_added_ms, time_updated_ms
+) VALUES ($1, $2, $3, $4, $5)
+`
+
+func insertRealmTxn(txn *sql.Tx, now time.Time, realm types.AuthRealm) error {
+	realmJSON, err := json.Marshal(realm)
+	if err != nil {
+		return err
+	}
+	t := now.UnixNano() / 1000000
+	_, err = txn.Exec(
+		insertRealmSQL,
+		realm.ID(), realm.Type(), realmJSON, t, t,
+	)
+	return err
+}
+
+const selectRealmSQL = `
+SELECT realm_type, realm_json FROM auth_realms WHERE realm_id = $1
+`
+
+func selectRealmTxn(txn *sql.Tx, realmID string) (types.AuthRealm, error) {
+	var realmType string
+	var realmJSON []byte
+	row := txn.QueryRow(selectRealmSQL, realmID)
+	if err := row.Scan(&realmType, &realmJSON); err != nil {
+		return nil, err
+	}
+	realm := types.CreateAuthRealm(realmID, realmType)
+	if realm == nil {
+		return nil, fmt.Errorf("Cannot create realm of type %s", realmType)
+	}
+	if err := json.Unmarshal(realmJSON, realm); err != nil {
+		return nil, err
+	}
+	return realm, nil
+}
+
+const updateRealmSQL = `
+UPDATE auth_realms SET realm_type=$1, realm_json=$2, time_updated_ms=$3
+	WHERE realm_id=$4
+`
+
+func updateRealmTxn(txn *sql.Tx, now time.Time, realm types.AuthRealm) error {
+	realmJSON, err := json.Marshal(realm)
+	if err != nil {
+		return err
+	}
+	t := now.UnixNano() / 1000000
+	_, err = txn.Exec(
+		updateRealmSQL, realm.Type(), realmJSON, t,
+		realm.ID(),
+	)
 	return err
 }
