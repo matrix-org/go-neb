@@ -23,6 +23,7 @@ func main() {
 	if err != nil {
 		log.Panic(err)
 	}
+	database.SetServiceDB(db)
 
 	clients := clients.New(db)
 	if err := clients.Start(); err != nil {
@@ -33,7 +34,7 @@ func main() {
 	http.Handle("/admin/configureClient", server.MakeJSONAPI(&configureClientHandler{db: db, clients: clients}))
 	http.Handle("/admin/configureService", server.MakeJSONAPI(&configureServiceHandler{db: db, clients: clients}))
 	http.Handle("/admin/configureAuthRealm", server.MakeJSONAPI(&configureAuthRealmHandler{db: db}))
-	http.Handle("/admin/configureAuthSession", server.MakeJSONAPI(&configureAuthSessionHandler{db: db}))
+	http.Handle("/admin/requestAuthSession", server.MakeJSONAPI(&requestAuthSessionHandler{db: db}))
 	wh := &webhookHandler{db: db, clients: clients}
 	http.HandleFunc("/services/hooks/", wh.handle)
 

@@ -59,7 +59,8 @@ func CreateService(serviceID, serviceType string) Service {
 type AuthRealm interface {
 	ID() string
 	Type() string
-	AuthSession(userID string, config json.RawMessage) AuthSession
+	AuthSession(userID, realmID string) AuthSession
+	RequestAuthSession(userID string, config json.RawMessage) interface{}
 }
 
 var realmsByType = map[string]func(string) AuthRealm{}

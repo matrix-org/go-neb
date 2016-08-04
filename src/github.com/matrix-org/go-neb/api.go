@@ -17,11 +17,11 @@ func (*heartbeatHandler) OnIncomingRequest(req *http.Request) (interface{}, *err
 	return &struct{}{}, nil
 }
 
-type configureAuthSessionHandler struct {
+type requestAuthSessionHandler struct {
 	db *database.ServiceDB
 }
 
-func (h *configureAuthSessionHandler) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError) {
+func (h *requestAuthSessionHandler) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError) {
 	if req.Method != "POST" {
 		return nil, &errors.HTTPError{nil, "Unsupported Method", 405}
 	}
@@ -43,21 +43,12 @@ func (h *configureAuthSessionHandler) OnIncomingRequest(req *http.Request) (inte
 		return nil, &errors.HTTPError{err, "Unknown RealmID", 400}
 	}
 
-	session := realm.AuthSession(body.UserID, body.Config)
-	if session == nil {
-		return nil, &errors.HTTPError{nil, "Failed to create auth session", 500}
+	response := realm.RequestAuthSession(body.UserID, body.Config)
+	if response == nil {
+		return nil, &errors.HTTPError{nil, "Failed to request auth session", 500}
 	}
 
-	old, err := h.db.StoreAuthSession(session)
-	if err != nil {
-		return nil, &errors.HTTPError{err, "Failed to store auth session", 500}
-	}
-
-	return &struct {
-		RealmType  string
-		OldSession types.AuthSession
-		Session    types.AuthSession
-	}{realm.Type(), old, session}, nil
+	return response, nil
 }
 
 type configureAuthRealmHandler struct {
