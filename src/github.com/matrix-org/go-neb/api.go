@@ -17,30 +17,47 @@ func (*heartbeatHandler) OnIncomingRequest(req *http.Request) (interface{}, *err
 	return &struct{}{}, nil
 }
 
-type configureAuthHandler struct {
+type configureAuthRealmHandler struct {
 	db *database.ServiceDB
 }
 
-func (*configureAuthHandler) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError) {
+func (h *configureAuthRealmHandler) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError) {
 	if req.Method != "POST" {
 		return nil, &errors.HTTPError{nil, "Unsupported Method", 405}
 	}
-	var tpa types.ThirdPartyAuth
-	if err := json.NewDecoder(req.Body).Decode(&tpa); err != nil {
+	var body struct {
+		ID     string
+		Type   string
+		Config json.RawMessage
+	}
+	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
 		return nil, &errors.HTTPError{err, "Error parsing request JSON", 400}
 	}
 
-	am := types.GetAuthModule(tpa.Type)
-	if am == nil {
-		return nil, &errors.HTTPError{nil, "Bad auth type: " + tpa.Type, 400}
+	if body.ID == "" || body.Type == "" || body.Config == nil {
+		return nil, &errors.HTTPError{nil, `Must supply a "ID", a "Type" and a "Config"`, 400}
 	}
 
-	err := am.Process(tpa)
+	realm := types.CreateAuthRealm(body.ID, body.Type)
+	if realm == nil {
+		return nil, &errors.HTTPError{nil, "Unknown realm type", 400}
+	}
+
+	if err := json.Unmarshal(body.Config, realm); err != nil {
+		return nil, &errors.HTTPError{err, "Error parsing config JSON", 400}
+	}
+
+	oldRealm, err := h.db.StoreAuthRealm(realm)
 	if err != nil {
-		return nil, &errors.HTTPError{err, "Failed to persist auth", 500}
+		return nil, &errors.HTTPError{err, "Error storing realm", 500}
 	}
 
-	return nil, nil
+	return &struct {
+		ID        string
+		Type      string
+		OldConfig types.AuthRealm
+		NewConfig types.AuthRealm
+	}{body.ID, body.Type, oldRealm, realm}, nil
 }
 
 type webhookHandler struct {

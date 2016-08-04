@@ -191,6 +191,33 @@ func (d *ServiceDB) StoreService(service types.Service, client *matrix.Client) (
 	return
 }
 
+// LoadAuthRealm loads an AuthRealm from the database.
+// Returns sql.ErrNoRows if the realm isn't in the database.
+func (d *ServiceDB) LoadAuthRealm(realmID string) (realm types.AuthRealm, err error) {
+	err = runTransaction(d.db, func(txn *sql.Tx) error {
+		realm, err = selectRealmTxn(txn, realmID)
+		return err
+	})
+	return
+}
+
+// StoreAuthRealm stores the given AuthRealm, clobbering based on the realm ID.
+// This function updates the time added/updated values. The previous realm, if any, is
+// returned.
+func (d *ServiceDB) StoreAuthRealm(realm types.AuthRealm) (old types.AuthRealm, err error) {
+	err = runTransaction(d.db, func(txn *sql.Tx) error {
+		old, err = selectRealmTxn(txn, realm.ID())
+		if err == sql.ErrNoRows {
+			return insertRealmTxn(txn, time.Now(), realm)
+		} else if err != nil {
+			return err
+		} else {
+			return updateRealmTxn(txn, time.Now(), realm)
+		}
+	})
+	return
+}
+
 func runTransaction(db *sql.DB, fn func(txn *sql.Tx) error) (err error) {
 	txn, err := db.Begin()
 	if err != nil {

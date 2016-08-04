@@ -88,3 +88,27 @@ func RegisterAuthModule(am AuthModule) {
 func GetAuthModule(authType string) AuthModule {
 	return authModulesByType[authType]
 }
+
+// AuthRealm represents a place where a user can authenticate themselves.
+// This may static (like github.com) or a specific domain (like matrix.org/jira)
+type AuthRealm interface {
+	ID() string
+	Type() string
+}
+
+var realmsByType = map[string]func(string) AuthRealm{}
+
+// RegisterAuthRealm registers a factory for creating AuthRealm instances.
+func RegisterAuthRealm(factory func(string) AuthRealm) {
+	realmsByType[factory("").Type()] = factory
+}
+
+// CreateAuthRealm creates an AuthRealm of the given type and realm ID.
+// Returns nil if the realm couldn't be created.
+func CreateAuthRealm(realmID, realmType string) AuthRealm {
+	f := realmsByType[realmType]
+	if f == nil {
+		return nil
+	}
+	return f(realmID)
+}
