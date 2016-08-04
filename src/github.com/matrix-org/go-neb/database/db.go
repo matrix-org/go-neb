@@ -186,7 +186,7 @@ func (d *ServiceDB) StoreAuthRealm(realm types.AuthRealm) (old types.AuthRealm, 
 	return
 }
 
-// StoreAuthSession stores the given AuthSession, clobbering based on the tupe of
+// StoreAuthSession stores the given AuthSession, clobbering based on the tuple of
 // user ID and realm ID. This function updates the time added/updated values.
 // The previous session, if any, is returned.
 func (d *ServiceDB) StoreAuthSession(session types.AuthSession) (old types.AuthSession, err error) {
