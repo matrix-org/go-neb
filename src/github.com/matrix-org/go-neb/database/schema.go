@@ -43,6 +43,15 @@ CREATE TABLE IF NOT EXISTS auth_realms (
 	time_updated_ms BIGINT NOT NULL,
 	UNIQUE(realm_id)
 );
+
+CREATE TABLE IF NOT EXISTS auth_sessions (
+	realm_id TEXT NOT NULL,
+	user_id TEXT NOT NULL,
+	session_json TEXT NOT NULL,
+	time_added_ms BIGINT NOT NULL,
+	time_updated_ms BIGINT NOT NULL,
+	UNIQUE(realm_id, user_id)
+);
 `
 
 const selectServiceUserIDsSQL = `
@@ -265,6 +274,71 @@ func updateRealmTxn(txn *sql.Tx, now time.Time, realm types.AuthRealm) error {
 	_, err = txn.Exec(
 		updateRealmSQL, realm.Type(), realmJSON, t,
 		realm.ID(),
+	)
+	return err
+}
+
+const insertAuthSessionSQL = `
+INSERT INTO auth_sessions(
+	realm_id, user_id, session_json, time_added_ms, time_updated_ms
+) VALUES ($1, $2, $3, $4, $5)
+`
+
+func insertAuthSessionTxn(txn *sql.Tx, now time.Time, session types.AuthSession) error {
+	sessionJSON, err := json.Marshal(session)
+	if err != nil {
+		return err
+	}
+	t := now.UnixNano() / 1000000
+	_, err = txn.Exec(
+		insertAuthSessionSQL,
+		session.RealmID(), session.UserID(), sessionJSON, t, t,
+	)
+	return err
+}
+
+const selectAuthSessionSQL = `
+SELECT realm_type, realm_json, session_json FROM auth_sessions
+	JOIN auth_realms ON auth_sessions.realm_id = auth_realms.realm_id
+	WHERE auth_sessions.realm_id = $1 AND auth_sessions.user_id = $2
+`
+
+func selectAuthSessionTxn(txn *sql.Tx, realmID, userID string) (types.AuthSession, error) {
+	var realmType string
+	var realmJSON []byte
+	var sessionJSON []byte
+	row := txn.QueryRow(selectAuthSessionSQL, realmID, userID)
+	if err := row.Scan(&realmType, &realmJSON, &sessionJSON); err != nil {
+		return nil, err
+	}
+	realm := types.CreateAuthRealm(realmID, realmType)
+	if realm == nil {
+		return nil, fmt.Errorf("Cannot create realm of type %s", realmType)
+	}
+	if err := json.Unmarshal(realmJSON, realm); err != nil {
+		return nil, err
+	}
+	session := realm.AuthSession(userID, json.RawMessage(sessionJSON))
+	if session == nil {
+		return nil, fmt.Errorf("Cannot create session for given realm")
+	}
+	return session, nil
+}
+
+const updateAuthSessionSQL = `
+UPDATE auth_sessions SET session_json=$1, time_updated_ms=$2
+	WHERE realm_id=$3 AND user_id=$4
+`
+
+func updateAuthSessionTxn(txn *sql.Tx, now time.Time, session types.AuthSession) error {
+	sessionJSON, err := json.Marshal(session)
+	if err != nil {
+		return err
+	}
+	t := now.UnixNano() / 1000000
+	_, err = txn.Exec(
+		updateAuthSessionSQL, sessionJSON, t,
+		session.RealmID(), session.UserID(),
 	)
 	return err
 }

@@ -186,6 +186,33 @@ func (d *ServiceDB) StoreAuthRealm(realm types.AuthRealm) (old types.AuthRealm, 
 	return
 }
 
+// StoreAuthSession stores the given AuthSession, clobbering based on the tuple of
+// user ID and realm ID. This function updates the time added/updated values.
+// The previous session, if any, is returned.
+func (d *ServiceDB) StoreAuthSession(session types.AuthSession) (old types.AuthSession, err error) {
+	err = runTransaction(d.db, func(txn *sql.Tx) error {
+		old, err = selectAuthSessionTxn(txn, session.RealmID(), session.UserID())
+		if err == sql.ErrNoRows {
+			return insertAuthSessionTxn(txn, time.Now(), session)
+		} else if err != nil {
+			return err
+		} else {
+			return updateAuthSessionTxn(txn, time.Now(), session)
+		}
+	})
+	return
+}
+
+// LoadAuthSession loads an AuthSession from the database.
+// Returns sql.ErrNoRows if the session isn't in the database.
+func (d *ServiceDB) LoadAuthSession(realmID, userID string) (session types.AuthSession, err error) {
+	err = runTransaction(d.db, func(txn *sql.Tx) error {
+		session, err = selectAuthSessionTxn(txn, realmID, userID)
+		return err
+	})
+	return
+}
+
 func runTransaction(db *sql.DB, fn func(txn *sql.Tx) error) (err error) {
 	txn, err := db.Begin()
 	if err != nil {
