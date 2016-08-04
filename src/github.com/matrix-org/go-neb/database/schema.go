@@ -298,21 +298,25 @@ func insertAuthSessionTxn(txn *sql.Tx, now time.Time, session types.AuthSession)
 }
 
 const selectAuthSessionSQL = `
-SELECT realm_type, session_json FROM auth_sessions
+SELECT realm_type, realm_json, session_json FROM auth_sessions
 	JOIN auth_realms ON auth_sessions.realm_id = auth_realms.realm_id
 	WHERE auth_sessions.realm_id = $1 AND auth_sessions.user_id = $2
 `
 
 func selectAuthSessionTxn(txn *sql.Tx, realmID, userID string) (types.AuthSession, error) {
 	var realmType string
+	var realmJSON []byte
 	var sessionJSON []byte
 	row := txn.QueryRow(selectAuthSessionSQL, realmID, userID)
-	if err := row.Scan(&realmType, &sessionJSON); err != nil {
+	if err := row.Scan(&realmType, &realmJSON, &sessionJSON); err != nil {
 		return nil, err
 	}
 	realm := types.CreateAuthRealm(realmID, realmType)
 	if realm == nil {
 		return nil, fmt.Errorf("Cannot create realm of type %s", realmType)
+	}
+	if err := json.Unmarshal(realmJSON, realm); err != nil {
+		return nil, err
 	}
 	session := realm.AuthSession(userID, json.RawMessage(sessionJSON))
 	if session == nil {
