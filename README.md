@@ -46,7 +46,7 @@ user. Services are configured using an HTTP API and the config is stored in the
 database. Services use one of the matrix users configured on go-neb to receive
 matrix messages. Each service is configured to listen for messages in a set
 of rooms. Go-neb will automatically join the service to its rooms when it is
-configured. To start a service:
+configured. To start an echo service:
 
     curl -X POST localhost:4050/admin/configureService --data-binary '{
         "Type": "echo",
@@ -73,9 +73,62 @@ check that the server is still running.
 
     {}
 
+## Starting a Github Service
+
+### Register a Github realm
+
+```
+curl -X POST localhost:4050/admin/configureAuthRealm --data-binary '{
+    "ID": "mygithubrealm",
+    "Type": "github",
+    "Config": {
+        "ClientSecret": "YOUR_CLIENT_SECRET",
+        "ClientID": "YOUR_CLIENT_ID",
+        "RedirectBaseURI": "https://public.path.to.neb"
+    }
+}'
+```
+Returns:
+```
+{
+  "ID":"mygithubrealm",
+  "Type":"github",
+  "OldConfig":null,
+  "NewConfig":{
+    "ClientSecret":"YOUR_CLIENT_SECRET",
+    "ClientID":"YOUR_CLIENT_ID",
+    "RedirectBaseURI":"https://public.path.to.neb"
+  }
+}
+```
+
+### Make a request for Github Auth
+
+```
+curl -X POST localhost:4050/admin/requestAuthSession --data-binary '{
+    "RealmID": "mygithubrealm",
+    "UserID": "@your_user_id:localhost",
+    "Config": {
+    }
+}'
+```
+Returns:
+```
+{
+  "URL":"https://github.com/login/oauth/authorize?client_id=$ID\u0026client_secret=$SECRET\u0026redirect_uri=$REDIRECT_BASE_URI%2Frealms%2Fredirects%2Fmygithubrealm\u0026state=$RANDOM_STRING"
+}
+```
+Follow this link and grant access for NEB to act on your behalf.
+
+### Create a github bot
+
+TODO
+
 # Developing on go-neb.
 
-There's a bunch more tools this project uses when developing in order to do things like linting. Some of them are bundled with go (fmt and vet) but some are not. You should install the ones which are not:
+There's a bunch more tools this project uses when developing in order to do
+things like linting. Some of them are bundled with go (fmt and vet) but some
+are not. You should install the ones which are not:
 
 ```bash
 go get github.com/golang/lint/golint
