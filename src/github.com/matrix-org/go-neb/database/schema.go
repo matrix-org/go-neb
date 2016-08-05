@@ -45,14 +45,14 @@ CREATE TABLE IF NOT EXISTS auth_realms (
 );
 
 CREATE TABLE IF NOT EXISTS auth_sessions (
-	id TEXT NOT NULL,
+	session_id TEXT NOT NULL,
 	realm_id TEXT NOT NULL,
 	user_id TEXT NOT NULL,
 	session_json TEXT NOT NULL,
 	time_added_ms BIGINT NOT NULL,
 	time_updated_ms BIGINT NOT NULL,
 	UNIQUE(realm_id, user_id),
-	UNIQUE(realm_id, id)
+	UNIQUE(realm_id, session_id)
 );
 `
 
@@ -282,7 +282,7 @@ func updateRealmTxn(txn *sql.Tx, now time.Time, realm types.AuthRealm) error {
 
 const insertAuthSessionSQL = `
 INSERT INTO auth_sessions(
-	id, realm_id, user_id, session_json, time_added_ms, time_updated_ms
+	session_id, realm_id, user_id, session_json, time_added_ms, time_updated_ms
 ) VALUES ($1, $2, $3, $4, $5, $6)
 `
 
@@ -300,7 +300,7 @@ func insertAuthSessionTxn(txn *sql.Tx, now time.Time, session types.AuthSession)
 }
 
 const selectAuthSessionByUserSQL = `
-SELECT id, realm_type, realm_json, session_json FROM auth_sessions
+SELECT session_id, realm_type, realm_json, session_json FROM auth_sessions
 	JOIN auth_realms ON auth_sessions.realm_id = auth_realms.realm_id
 	WHERE auth_sessions.realm_id = $1 AND auth_sessions.user_id = $2
 `
@@ -334,7 +334,7 @@ func selectAuthSessionByUserTxn(txn *sql.Tx, realmID, userID string) (types.Auth
 const selectAuthSessionByIDSQL = `
 SELECT user_id, realm_type, realm_json, session_json FROM auth_sessions
 	JOIN auth_realms ON auth_sessions.realm_id = auth_realms.realm_id
-	WHERE auth_sessions.realm_id = $1 AND auth_sessions.id = $2
+	WHERE auth_sessions.realm_id = $1 AND auth_sessions.session_id = $2
 `
 
 func selectAuthSessionByIDTxn(txn *sql.Tx, realmID, id string) (types.AuthSession, error) {
@@ -364,7 +364,7 @@ func selectAuthSessionByIDTxn(txn *sql.Tx, realmID, id string) (types.AuthSessio
 }
 
 const updateAuthSessionSQL = `
-UPDATE auth_sessions SET id=$1, session_json=$2, time_updated_ms=$3
+UPDATE auth_sessions SET session_id=$1, session_json=$2, time_updated_ms=$3
 	WHERE realm_id=$4 AND user_id=$5
 `
 
