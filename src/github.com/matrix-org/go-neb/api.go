@@ -51,6 +51,23 @@ func (h *requestAuthSessionHandler) OnIncomingRequest(req *http.Request) (interf
 	return response, nil
 }
 
+type realmRedirectHandler struct {
+	db *database.ServiceDB
+}
+
+func (rh *realmRedirectHandler) handle(w http.ResponseWriter, req *http.Request) {
+	segments := strings.Split(req.URL.Path, "/")
+	// last path segment is the realm ID which we will pass the incoming request to
+	realmID := segments[len(segments)-1]
+	realm, err := rh.db.LoadAuthRealm(realmID)
+	if err != nil {
+		log.WithError(err).WithField("realm_id", realmID).Print("Failed to load realm")
+		w.WriteHeader(404)
+		return
+	}
+	realm.OnReceiveRedirect(w, req)
+}
+
 type configureAuthRealmHandler struct {
 	db *database.ServiceDB
 }

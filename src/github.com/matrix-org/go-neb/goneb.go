@@ -37,6 +37,8 @@ func main() {
 	http.Handle("/admin/requestAuthSession", server.MakeJSONAPI(&requestAuthSessionHandler{db: db}))
 	wh := &webhookHandler{db: db, clients: clients}
 	http.HandleFunc("/services/hooks/", wh.handle)
+	rh := &realmRedirectHandler{db: db}
+	http.HandleFunc("/realms/redirects/", rh.handle)
 
 	http.ListenAndServe(bindAddress, nil)
 }

@@ -59,7 +59,8 @@ func CreateService(serviceID, serviceType string) Service {
 type AuthRealm interface {
 	ID() string
 	Type() string
-	AuthSession(userID, realmID string) AuthSession
+	OnReceiveRedirect(w http.ResponseWriter, req *http.Request)
+	AuthSession(id, userID, realmID string) AuthSession
 	RequestAuthSession(userID string, config json.RawMessage) interface{}
 }
 
@@ -83,6 +84,7 @@ func CreateAuthRealm(realmID, realmType string) AuthRealm {
 // AuthSession represents a single authentication session between a user and
 // an auth realm.
 type AuthSession interface {
+	ID() string
 	UserID() string
 	RealmID() string
 }
