@@ -218,9 +218,10 @@ func (d *ServiceDB) StoreAuthSession(session types.AuthSession) (old types.AuthS
 	return
 }
 
-// LoadAuthSession loads an AuthSession from the database.
+// LoadAuthSessionForUser loads an AuthSession from the database based on the given
+// realm and user ID.
 // Returns sql.ErrNoRows if the session isn't in the database.
-func (d *ServiceDB) LoadAuthSession(realmID, userID string) (session types.AuthSession, err error) {
+func (d *ServiceDB) LoadAuthSessionForUser(realmID, userID string) (session types.AuthSession, err error) {
 	err = runTransaction(d.db, func(txn *sql.Tx) error {
 		session, err = selectAuthSessionTxn(txn, realmID, userID)
 		return err

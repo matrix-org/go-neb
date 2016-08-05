@@ -71,6 +71,17 @@ func (r *githubRealm) RequestAuthSession(userID string, req json.RawMessage) int
 }
 
 func (r *githubRealm) OnReceiveRedirect(w http.ResponseWriter, req *http.Request) {
+	code := req.URL.Query().Get("code")
+	state := req.URL.Query().Get("state")
+	log.WithFields(log.Fields{
+		"code":  code,
+		"state": state,
+	}).Print("GithubRealm: OnReceiveRedirect")
+	if code == "" || state == "" {
+		w.WriteHeader(400)
+		w.Write([]byte("code and state are required"))
+		return
+	}
 }
 
 func (r *githubRealm) AuthSession(userID, realmID string) types.AuthSession {
