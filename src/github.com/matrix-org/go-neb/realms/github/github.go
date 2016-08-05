@@ -96,7 +96,11 @@ func (r *githubRealm) OnReceiveRedirect(w http.ResponseWriter, req *http.Request
 		failWith(logger, w, 400, "Provided ?state= param is not recognised.", err)
 		return
 	}
-	ghSession := session.(*githubSession)
+	ghSession, ok := session.(*githubSession)
+	if !ok {
+		failWith(logger, w, 500, "Unexpected session found.", nil)
+		return
+	}
 	logger.WithField("user_id", ghSession.UserID()).Print("Mapped redirect to user")
 
 	// exchange code for access_token
