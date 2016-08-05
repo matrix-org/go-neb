@@ -206,7 +206,7 @@ func (d *ServiceDB) StoreAuthRealm(realm types.AuthRealm) (old types.AuthRealm, 
 // The previous session, if any, is returned.
 func (d *ServiceDB) StoreAuthSession(session types.AuthSession) (old types.AuthSession, err error) {
 	err = runTransaction(d.db, func(txn *sql.Tx) error {
-		old, err = selectAuthSessionTxn(txn, session.RealmID(), session.UserID())
+		old, err = selectAuthSessionByUserTxn(txn, session.RealmID(), session.UserID())
 		if err == sql.ErrNoRows {
 			return insertAuthSessionTxn(txn, time.Now(), session)
 		} else if err != nil {
@@ -218,12 +218,23 @@ func (d *ServiceDB) StoreAuthSession(session types.AuthSession) (old types.AuthS
 	return
 }
 
-// LoadAuthSessionForUser loads an AuthSession from the database based on the given
+// LoadAuthSessionByUser loads an AuthSession from the database based on the given
 // realm and user ID.
 // Returns sql.ErrNoRows if the session isn't in the database.
-func (d *ServiceDB) LoadAuthSessionForUser(realmID, userID string) (session types.AuthSession, err error) {
+func (d *ServiceDB) LoadAuthSessionByUser(realmID, userID string) (session types.AuthSession, err error) {
 	err = runTransaction(d.db, func(txn *sql.Tx) error {
-		session, err = selectAuthSessionTxn(txn, realmID, userID)
+		session, err = selectAuthSessionByUserTxn(txn, realmID, userID)
+		return err
+	})
+	return
+}
+
+// LoadAuthSessionByID loads an AuthSession from the database based on the given
+// realm and session ID.
+// Returns sql.ErrNoRows if the session isn't in the database.
+func (d *ServiceDB) LoadAuthSessionByID(realmID, sessionID string) (session types.AuthSession, err error) {
+	err = runTransaction(d.db, func(txn *sql.Tx) error {
+		session, err = selectAuthSessionByIDTxn(txn, realmID, sessionID)
 		return err
 	})
 	return

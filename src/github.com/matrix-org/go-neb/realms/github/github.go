@@ -20,6 +20,7 @@ type githubRealm struct {
 
 type githubSession struct {
 	State   string
+	id      string
 	userID  string
 	realmID string
 }
@@ -30,6 +31,10 @@ func (s *githubSession) UserID() string {
 
 func (s *githubSession) RealmID() string {
 	return s.realmID
+}
+
+func (s *githubSession) ID() string {
+	return s.id
 }
 
 func (r *githubRealm) ID() string {
@@ -55,7 +60,7 @@ func (r *githubRealm) RequestAuthSession(userID string, req json.RawMessage) int
 	q.Set("redirect_uri", r.RedirectBaseURI+"/realms/redirects/"+r.ID())
 	u.RawQuery = q.Encode()
 	session := &githubSession{
-		State:   state,
+		id:      state, // key off the state for redirects
 		userID:  userID,
 		realmID: r.ID(),
 	}
@@ -73,19 +78,29 @@ func (r *githubRealm) RequestAuthSession(userID string, req json.RawMessage) int
 func (r *githubRealm) OnReceiveRedirect(w http.ResponseWriter, req *http.Request) {
 	code := req.URL.Query().Get("code")
 	state := req.URL.Query().Get("state")
-	log.WithFields(log.Fields{
-		"code":  code,
+	logger := log.WithFields(log.Fields{
 		"state": state,
-	}).Print("GithubRealm: OnReceiveRedirect")
+	})
+	logger.WithField("code", code).Print("GithubRealm: OnReceiveRedirect")
 	if code == "" || state == "" {
 		w.WriteHeader(400)
 		w.Write([]byte("code and state are required"))
 		return
 	}
+	// load the session (we keyed off the state param)
+	session, err := database.GetServiceDB().LoadAuthSessionByID(r.ID(), state)
+	if err != nil {
+		logger.WithError(err).Print("Failed to load session")
+		w.WriteHeader(400)
+		w.Write([]byte("Provided ?state= param is not recognised.")) // most likely cause
+		return
+	}
+	logger.WithField("user_id", session.UserID()).Print("Mapped redirect to user")
 }
 
-func (r *githubRealm) AuthSession(userID, realmID string) types.AuthSession {
+func (r *githubRealm) AuthSession(id, userID, realmID string) types.AuthSession {
 	return &githubSession{
+		id:      id,
 		userID:  userID,
 		realmID: realmID,
 	}

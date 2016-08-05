@@ -45,12 +45,14 @@ CREATE TABLE IF NOT EXISTS auth_realms (
 );
 
 CREATE TABLE IF NOT EXISTS auth_sessions (
+	id TEXT NOT NULL,
 	realm_id TEXT NOT NULL,
 	user_id TEXT NOT NULL,
 	session_json TEXT NOT NULL,
 	time_added_ms BIGINT NOT NULL,
 	time_updated_ms BIGINT NOT NULL,
-	UNIQUE(realm_id, user_id)
+	UNIQUE(realm_id, user_id),
+	UNIQUE(realm_id, id)
 );
 `
 
@@ -280,8 +282,8 @@ func updateRealmTxn(txn *sql.Tx, now time.Time, realm types.AuthRealm) error {
 
 const insertAuthSessionSQL = `
 INSERT INTO auth_sessions(
-	realm_id, user_id, session_json, time_added_ms, time_updated_ms
-) VALUES ($1, $2, $3, $4, $5)
+	id, realm_id, user_id, session_json, time_added_ms, time_updated_ms
+) VALUES ($1, $2, $3, $4, $5, $6)
 `
 
 func insertAuthSessionTxn(txn *sql.Tx, now time.Time, session types.AuthSession) error {
@@ -292,23 +294,24 @@ func insertAuthSessionTxn(txn *sql.Tx, now time.Time, session types.AuthSession)
 	t := now.UnixNano() / 1000000
 	_, err = txn.Exec(
 		insertAuthSessionSQL,
-		session.RealmID(), session.UserID(), sessionJSON, t, t,
+		session.ID(), session.RealmID(), session.UserID(), sessionJSON, t, t,
 	)
 	return err
 }
 
-const selectAuthSessionSQL = `
-SELECT realm_type, realm_json, session_json FROM auth_sessions
+const selectAuthSessionByUserSQL = `
+SELECT id, realm_type, realm_json, session_json FROM auth_sessions
 	JOIN auth_realms ON auth_sessions.realm_id = auth_realms.realm_id
 	WHERE auth_sessions.realm_id = $1 AND auth_sessions.user_id = $2
 `
 
-func selectAuthSessionTxn(txn *sql.Tx, realmID, userID string) (types.AuthSession, error) {
+func selectAuthSessionByUserTxn(txn *sql.Tx, realmID, userID string) (types.AuthSession, error) {
+	var id string
 	var realmType string
 	var realmJSON []byte
 	var sessionJSON []byte
-	row := txn.QueryRow(selectAuthSessionSQL, realmID, userID)
-	if err := row.Scan(&realmType, &realmJSON, &sessionJSON); err != nil {
+	row := txn.QueryRow(selectAuthSessionByUserSQL, realmID, userID)
+	if err := row.Scan(&id, &realmType, &realmJSON, &sessionJSON); err != nil {
 		return nil, err
 	}
 	realm := types.CreateAuthRealm(realmID, realmType)
@@ -318,7 +321,39 @@ func selectAuthSessionTxn(txn *sql.Tx, realmID, userID string) (types.AuthSessio
 	if err := json.Unmarshal(realmJSON, realm); err != nil {
 		return nil, err
 	}
-	session := realm.AuthSession(userID, realmID)
+	session := realm.AuthSession(id, userID, realmID)
+	if session == nil {
+		return nil, fmt.Errorf("Cannot create session for given realm")
+	}
+	if err := json.Unmarshal(sessionJSON, session); err != nil {
+		return nil, err
+	}
+	return session, nil
+}
+
+const selectAuthSessionByIDSQL = `
+SELECT user_id, realm_type, realm_json, session_json FROM auth_sessions
+	JOIN auth_realms ON auth_sessions.realm_id = auth_realms.realm_id
+	WHERE auth_sessions.realm_id = $1 AND auth_sessions.id = $2
+`
+
+func selectAuthSessionByIDTxn(txn *sql.Tx, realmID, id string) (types.AuthSession, error) {
+	var userID string
+	var realmType string
+	var realmJSON []byte
+	var sessionJSON []byte
+	row := txn.QueryRow(selectAuthSessionByIDSQL, realmID, id)
+	if err := row.Scan(&userID, &realmType, &realmJSON, &sessionJSON); err != nil {
+		return nil, err
+	}
+	realm := types.CreateAuthRealm(realmID, realmType)
+	if realm == nil {
+		return nil, fmt.Errorf("Cannot create realm of type %s", realmType)
+	}
+	if err := json.Unmarshal(realmJSON, realm); err != nil {
+		return nil, err
+	}
+	session := realm.AuthSession(id, userID, realmID)
 	if session == nil {
 		return nil, fmt.Errorf("Cannot create session for given realm")
 	}
@@ -329,8 +364,8 @@ func selectAuthSessionTxn(txn *sql.Tx, realmID, userID string) (types.AuthSessio
 }
 
 const updateAuthSessionSQL = `
-UPDATE auth_sessions SET session_json=$1, time_updated_ms=$2
-	WHERE realm_id=$3 AND user_id=$4
+UPDATE auth_sessions SET id=$1, session_json=$2, time_updated_ms=$3
+	WHERE realm_id=$4 AND user_id=$5
 `
 
 func updateAuthSessionTxn(txn *sql.Tx, now time.Time, session types.AuthSession) error {
@@ -340,7 +375,7 @@ func updateAuthSessionTxn(txn *sql.Tx, now time.Time, session types.AuthSession)
 	}
 	t := now.UnixNano() / 1000000
 	_, err = txn.Exec(
-		updateAuthSessionSQL, sessionJSON, t,
+		updateAuthSessionSQL, session.ID(), sessionJSON, t,
 		session.RealmID(), session.UserID(),
 	)
 	return err
