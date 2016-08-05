@@ -4,8 +4,10 @@ import (
 	"fmt"
 	log "github.com/Sirupsen/logrus"
 	"github.com/google/go-github/github"
+	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/plugin"
+	"github.com/matrix-org/go-neb/realms/github"
 	"github.com/matrix-org/go-neb/services/github/webhook"
 	"github.com/matrix-org/go-neb/types"
 	"golang.org/x/oauth2"
@@ -23,6 +25,7 @@ type githubService struct {
 	id           string
 	BotUserID    string
 	GithubUserID string
+	RealmID      string
 	WebhookRooms map[string][]string // room_id => ["push","issue","pull_request"]
 }
 
@@ -42,7 +45,7 @@ func (s *githubService) Plugin(roomID string) plugin.Plugin {
 			plugin.Command{
 				Path: []string{"github", "create"},
 				Command: func(roomID, userID string, args []string) (interface{}, error) {
-					cli := githubClientFor(userID, false)
+					cli := s.githubClientFor(userID, false)
 					if cli == nil {
 						// TODO: send starter link
 						return &matrix.TextMessage{"m.notice",
@@ -56,7 +59,7 @@ func (s *githubService) Plugin(roomID string) plugin.Plugin {
 			plugin.Expansion{
 				Regexp: ownerRepoIssueRegex,
 				Expand: func(roomID, userID, matchingText string) interface{} {
-					cli := githubClientFor(userID, true)
+					cli := s.githubClientFor(userID, true)
 					owner, repo, num, err := ownerRepoNumberFromText(matchingText)
 					if err != nil {
 						log.WithError(err).WithField("text", matchingText).Print(
@@ -115,18 +118,58 @@ func (s *githubService) OnReceiveWebhook(w http.ResponseWriter, req *http.Reques
 	w.WriteHeader(200)
 }
 func (s *githubService) Register() error {
+	if s.RealmID == "" || s.BotUserID == "" {
+		return fmt.Errorf("RealmID and BotUserID are required")
+	}
+	// check realm exists
+	realm, err := database.GetServiceDB().LoadAuthRealm(s.RealmID)
+	if err != nil {
+		return err
+	}
+	// make sure the realm is of the type we expect
+	if realm.Type() != "github" {
+		return fmt.Errorf("Realm is of type '%s', not 'github'", realm.Type())
+	}
 	return nil
 }
 
-func githubClientFor(userID string, allowUnauth bool) *github.Client {
-	var cli *github.Client
-
-	// TODO get the token for this user
-
-	if cli == nil && allowUnauth {
-		return githubClient("")
+func (s *githubService) githubClientFor(userID string, allowUnauth bool) *github.Client {
+	token, err := getTokenForUser(s.RealmID, userID)
+	if err != nil {
+		log.WithFields(log.Fields{
+			log.ErrorKey: err,
+			"user_id":    userID,
+			"realm_id":   s.RealmID,
+		}).Print("Failed to get token for user")
 	}
-	return cli
+	if token != "" {
+		return githubClient(token)
+	} else if allowUnauth {
+		return githubClient("")
+	} else {
+		return nil
+	}
+}
+
+func getTokenForUser(realmID, userID string) (string, error) {
+	realm, err := database.GetServiceDB().LoadAuthRealm(realmID)
+	if err != nil {
+		return "", err
+	}
+	if realm.Type() != "github" {
+		return "", fmt.Errorf("Bad realm type: %s", realm.Type())
+	}
+
+	// pull out the token (TODO: should the service know how the realm stores this?)
+	session, err := database.GetServiceDB().LoadAuthSessionByUser(realm.ID(), userID)
+	if err != nil {
+		return "", err
+	}
+	ghSession, ok := session.(*realms.GithubSession)
+	if !ok {
+		return "", fmt.Errorf("Session is not a github session: %s", session.ID())
+	}
+	return ghSession.AccessToken, nil
 }
 
 // githubClient returns a github Client which can perform Github API operations.

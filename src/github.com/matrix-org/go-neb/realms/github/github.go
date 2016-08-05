@@ -19,23 +19,29 @@ type githubRealm struct {
 	RedirectBaseURI string
 }
 
-type githubSession struct {
+// GithubSession represents an authenticated github session
+type GithubSession struct {
+	// AccessToken is the github access token for the user
 	AccessToken string
-	Scopes      string
-	id          string
-	userID      string
-	realmID     string
+	// Scopes are the set of *ALLOWED* scopes (which may not be the same as the requested scopes)
+	Scopes  string
+	id      string
+	userID  string
+	realmID string
 }
 
-func (s *githubSession) UserID() string {
+// UserID returns the user_id who authorised with Github
+func (s *GithubSession) UserID() string {
 	return s.userID
 }
 
-func (s *githubSession) RealmID() string {
+// RealmID returns the realm ID of the realm which performed the authentication
+func (s *GithubSession) RealmID() string {
 	return s.realmID
 }
 
-func (s *githubSession) ID() string {
+// ID returns the session ID
+func (s *GithubSession) ID() string {
 	return s.id
 }
 
@@ -61,7 +67,7 @@ func (r *githubRealm) RequestAuthSession(userID string, req json.RawMessage) int
 	// TODO: Path is from goneb.go - we should probably factor it out.
 	q.Set("redirect_uri", r.RedirectBaseURI+"/realms/redirects/"+r.ID())
 	u.RawQuery = q.Encode()
-	session := &githubSession{
+	session := &GithubSession{
 		id:      state, // key off the state for redirects
 		userID:  userID,
 		realmID: r.ID(),
@@ -96,7 +102,7 @@ func (r *githubRealm) OnReceiveRedirect(w http.ResponseWriter, req *http.Request
 		failWith(logger, w, 400, "Provided ?state= param is not recognised.", err)
 		return
 	}
-	ghSession, ok := session.(*githubSession)
+	ghSession, ok := session.(*GithubSession)
 	if !ok {
 		failWith(logger, w, 500, "Unexpected session found.", nil)
 		return
@@ -136,7 +142,7 @@ func (r *githubRealm) OnReceiveRedirect(w http.ResponseWriter, req *http.Request
 }
 
 func (r *githubRealm) AuthSession(id, userID, realmID string) types.AuthSession {
-	return &githubSession{
+	return &GithubSession{
 		id:      id,
 		userID:  userID,
 		realmID: realmID,

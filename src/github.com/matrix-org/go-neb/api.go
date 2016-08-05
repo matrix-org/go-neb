@@ -200,7 +200,7 @@ func (s *configureServiceHandler) OnIncomingRequest(req *http.Request) (interfac
 
 	err := service.Register()
 	if err != nil {
-		return nil, &errors.HTTPError{err, "Failed to register service", 500}
+		return nil, &errors.HTTPError{err, "Failed to register service: " + err.Error(), 500}
 	}
 
 	client, err := s.clients.Client(service.ServiceUserID())
