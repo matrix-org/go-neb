@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"regexp"
 	"strconv"
+	"strings"
 )
 
 // Matches alphanumeric then a /, then more alphanumeric then a #, then a number.
@@ -19,29 +20,43 @@ import (
 var ownerRepoIssueRegex = regexp.MustCompile("([A-z0-9-_]+)/([A-z0-9-_]+)#([0-9]+)")
 
 type githubService struct {
-	id     string
-	UserID string
-	Rooms  map[string][]string // room_id => ["push","issue","pull_request"]
+	id           string
+	BotUserID    string
+	GithubUserID string
+	WebhookRooms map[string][]string // room_id => ["push","issue","pull_request"]
 }
 
-func (s *githubService) ServiceUserID() string { return s.UserID }
+func (s *githubService) ServiceUserID() string { return s.BotUserID }
 func (s *githubService) ServiceID() string     { return s.id }
 func (s *githubService) ServiceType() string   { return "github" }
 func (s *githubService) RoomIDs() []string {
 	var keys []string
-	for k := range s.Rooms {
+	for k := range s.WebhookRooms {
 		keys = append(keys, k)
 	}
 	return keys
 }
 func (s *githubService) Plugin(roomID string) plugin.Plugin {
 	return plugin.Plugin{
-		Commands: []plugin.Command{},
+		Commands: []plugin.Command{
+			plugin.Command{
+				Path: []string{"github", "create"},
+				Command: func(roomID, userID string, args []string) (interface{}, error) {
+					cli := githubClientFor(userID, false)
+					if cli == nil {
+						// TODO: send starter link
+						return &matrix.TextMessage{"m.notice",
+							userID + " : You have not linked your Github account."}, nil
+					}
+					return &matrix.TextMessage{"m.notice", strings.Join(args, " ")}, nil
+				},
+			},
+		},
 		Expansions: []plugin.Expansion{
 			plugin.Expansion{
 				Regexp: ownerRepoIssueRegex,
-				Expand: func(roomID, matchingText string) interface{} {
-					cli := githubClient("")
+				Expand: func(roomID, userID, matchingText string) interface{} {
+					cli := githubClientFor(userID, true)
 					owner, repo, num, err := ownerRepoNumberFromText(matchingText)
 					if err != nil {
 						log.WithError(err).WithField("text", matchingText).Print(
@@ -75,7 +90,7 @@ func (s *githubService) OnReceiveWebhook(w http.ResponseWriter, req *http.Reques
 		return
 	}
 
-	for roomID, notif := range s.Rooms {
+	for roomID, notif := range s.WebhookRooms {
 		notifyRoom := false
 		for _, notifyType := range notif {
 			if evType == notifyType {
@@ -98,6 +113,20 @@ func (s *githubService) OnReceiveWebhook(w http.ResponseWriter, req *http.Reques
 		}
 	}
 	w.WriteHeader(200)
+}
+func (s *githubService) Register() error {
+	return nil
+}
+
+func githubClientFor(userID string, allowUnauth bool) *github.Client {
+	var cli *github.Client
+
+	// TODO get the token for this user
+
+	if cli == nil && allowUnauth {
+		return githubClient("")
+	}
+	return cli
 }
 
 // githubClient returns a github Client which can perform Github API operations.

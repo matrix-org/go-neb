@@ -198,6 +198,11 @@ func (s *configureServiceHandler) OnIncomingRequest(req *http.Request) (interfac
 		return nil, &errors.HTTPError{err, "Error parsing config JSON", 400}
 	}
 
+	err := service.Register()
+	if err != nil {
+		return nil, &errors.HTTPError{err, "Failed to register service", 500}
+	}
+
 	client, err := s.clients.Client(service.ServiceUserID())
 	if err != nil {
 		return nil, &errors.HTTPError{err, "Unknown matrix client", 400}
