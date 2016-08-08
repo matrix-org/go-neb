@@ -36,6 +36,7 @@ type Service interface {
 	Plugin(roomID string) plugin.Plugin
 	OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client)
 	Register() error
+	PostRegister(oldService Service)
 }
 
 var servicesByType = map[string]func(string) Service{}
