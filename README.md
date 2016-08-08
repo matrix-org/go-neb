@@ -122,7 +122,29 @@ Follow this link and grant access for NEB to act on your behalf.
 
 ### Create a github bot
 
-TODO
+```
+curl -X POST localhost:4050/admin/configureService --data-binary '{
+    "Type": "github",
+    "Id": "mygithubserviceid",
+    "Config": {
+    	"RealmID": "mygithubrealm",
+        "BotUserID": "@goneb:localhost",
+        "ClientUserID": "@example:localhost",
+        "WebhookBaseURI": "https://public.path.to.neb",
+        "Rooms": {
+        	"!EmwxeXCVubhskuWvaw:localhost": {
+        		"Repos": {
+        			"owner/repo": {
+        				"Events": ["push","issues"]
+        			}
+        		}
+        	}
+        }
+    }
+}'
+```
+
+This request will make `BotUserID` join the `Rooms` specified and create webhooks for the `owner/repo` projects given.
 
 # Developing on go-neb.
 
