@@ -51,7 +51,44 @@ func (s *githubService) Plugin(roomID string) plugin.Plugin {
 						return &matrix.TextMessage{"m.notice",
 							userID + " : You have not linked your Github account."}, nil
 					}
-					return &matrix.TextMessage{"m.notice", strings.Join(args, " ")}, nil
+
+					if len(args) < 2 {
+						return &matrix.TextMessage{"m.notice",
+							`Usage: !github create owner/repo "issue title" "description"`}, nil
+					}
+
+					var (
+						ownerRepo string
+						title     *string
+						desc      *string
+					)
+					ownerRepo = args[0]
+					o := strings.Split(ownerRepo, "/")
+					if len(o) != 2 {
+						return &matrix.TextMessage{"m.notice",
+							`Usage: !github create owner/repo "issue title" "description"`}, nil
+					}
+
+					if len(args) == 2 {
+						title = &args[1]
+					} else if len(args) == 3 {
+						title = &args[1]
+						desc = &args[2]
+					} else { // > 3 args is probably a title without quote marks
+						joinedTitle := strings.Join(args[1:], " ")
+						title = &joinedTitle
+					}
+
+					issue, res, err := cli.Issues.Create(o[0], o[1], &github.IssueRequest{
+						Title: title,
+						Body:  desc,
+					})
+					if err != nil {
+						log.WithField("err", err).Print("Failed to create issue")
+						return nil, fmt.Errorf("Failed to create issue. HTTP %d", res.StatusCode)
+					}
+
+					return matrix.TextMessage{"m.notice", fmt.Sprintf("Created issue: %s", *issue.HTMLURL)}, nil
 				},
 			},
 		},
