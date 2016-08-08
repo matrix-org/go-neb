@@ -54,6 +54,9 @@ func OnReceiveRequest(r *http.Request, secretToken string) (string, *github.Repo
 	}).Print("Received Github event")
 
 	if eventType == "ping" {
+		// Github will send a "ping" event when the webhook is first created. We need
+		// to return a 200 in order for the webhook to be marked as "up" (this doesn't
+		// affect delivery, just the tick/cross status flag).
 		return "", nil, nil, &errors.HTTPError{nil, "pong", 200}
 	}
 
