@@ -31,7 +31,7 @@ type Command struct {
 // the appropriate RFC.
 type Expansion struct {
 	Regexp *regexp.Regexp
-	Expand func(roomID, matchingText string) interface{}
+	Expand func(roomID, userID, matchingText string) interface{}
 }
 
 // matches if the arguments start with the path of the command.
@@ -95,7 +95,7 @@ func runExpansionsForPlugin(plugin Plugin, event *matrix.Event, body string) []i
 				continue
 			}
 			matches[matchingText] = true
-			if response := expansion.Expand(event.RoomID, matchingText); response != nil {
+			if response := expansion.Expand(event.RoomID, event.Sender, matchingText); response != nil {
 				responses = append(responses, response)
 			}
 		}

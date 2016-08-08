@@ -18,6 +18,7 @@ func (e *echoService) ServiceUserID() string { return e.UserID }
 func (e *echoService) ServiceID() string     { return e.id }
 func (e *echoService) ServiceType() string   { return "echo" }
 func (e *echoService) RoomIDs() []string     { return e.Rooms }
+func (e *echoService) Register() error       { return nil }
 func (e *echoService) Plugin(roomID string) plugin.Plugin {
 	return plugin.Plugin{
 		Commands: []plugin.Command{

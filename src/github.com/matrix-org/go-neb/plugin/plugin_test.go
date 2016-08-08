@@ -26,21 +26,21 @@ func makeTestEvent(msgtype, body string) *matrix.Event {
 
 type testResponse struct {
 	RoomID    string
-	Sender    string
 	Arguments []string
 }
 
 func makeTestResponse(roomID, sender string, arguments []string) interface{} {
-	return testResponse{roomID, sender, arguments}
+	return testResponse{roomID, arguments}
 }
 
 type testExpansion struct {
 	RoomID       string
+	UserID       string
 	MatchingText string
 }
 
-func makeTestExpansion(roomID, matchingText string) interface{} {
-	return testExpansion{roomID, matchingText}
+func makeTestExpansion(roomID, userID, matchingText string) interface{} {
+	return testExpansion{roomID, userID, matchingText}
 }
 
 func makeTestPlugin(paths [][]string, regexps []*regexp.Regexp) Plugin {
@@ -74,7 +74,7 @@ func TestRunCommands(t *testing.T) {
 		"arg1", "arg 2", "arg 3",
 	})}
 	if !reflect.DeepEqual(got, want) {
-		t.Errorf("runCommands(%q, %q) == %q, want %q", plugins, event, got, want)
+		t.Errorf("runCommands(\nplugins=%+v\nevent=%+v\n)\n%+v\nwanted: %+v", plugins, event, got, want)
 	}
 }
 
@@ -89,7 +89,7 @@ func TestRunCommandsBestMatch(t *testing.T) {
 		"arg1",
 	})}
 	if !reflect.DeepEqual(got, want) {
-		t.Errorf("runCommands(%q, %q) == %q, want %q", plugins, event, got, want)
+		t.Errorf("runCommands(\nplugins=%+v\nevent=%+v\n)\n%+v\nwanted: %+v", plugins, event, got, want)
 	}
 }
 
@@ -105,7 +105,7 @@ func TestRunCommandsMultiplePlugins(t *testing.T) {
 		makeTestResponse(myRoomID, mySender, []string{"first", "arg1"}),
 	}
 	if !reflect.DeepEqual(got, want) {
-		t.Errorf("runCommands(%q, %q) == %q, want %q", plugins, event, got, want)
+		t.Errorf("runCommands(\nplugins=%+v\nevent=%+v\n)\n%+v\nwanted: %+v", plugins, event, got, want)
 	}
 }
 
@@ -119,7 +119,7 @@ func TestRunCommandsInvalidShell(t *testing.T) {
 		makeTestResponse(myRoomID, mySender, []string{"'mismatched", `quotes"`}),
 	}
 	if !reflect.DeepEqual(got, want) {
-		t.Errorf("runCommands(%q, %q) == %q, want %q", plugins, event, got, want)
+		t.Errorf("runCommands(\nplugins=%+v\nevent=%+v\n)\n%+v\nwanted: %+v", plugins, event, got, want)
 	}
 }
 
@@ -133,12 +133,12 @@ func TestExpansion(t *testing.T) {
 	event := makeTestEvent("m.text", "test banana for scale")
 	got := runCommands(plugins, event)
 	want := []interface{}{
-		makeTestExpansion(myRoomID, "anana"),
-		makeTestExpansion(myRoomID, "ale"),
-		makeTestExpansion(myRoomID, "ban"),
+		makeTestExpansion(myRoomID, mySender, "anana"),
+		makeTestExpansion(myRoomID, mySender, "ale"),
+		makeTestExpansion(myRoomID, mySender, "ban"),
 	}
 	if !reflect.DeepEqual(got, want) {
-		t.Errorf("runCommands(%q, %q) == %q, want %q", plugins, event, got, want)
+		t.Errorf("runCommands(\nplugins=%+v\nevent=%+v\n)\n%+v\nwanted: %+v", plugins, event, got, want)
 	}
 }
 
@@ -151,9 +151,9 @@ func TestExpansionDuplicateMatches(t *testing.T) {
 	event := makeTestEvent("m.text", "badger badger badger")
 	got := runCommands(plugins, event)
 	want := []interface{}{
-		makeTestExpansion(myRoomID, "badger"),
+		makeTestExpansion(myRoomID, mySender, "badger"),
 	}
 	if !reflect.DeepEqual(got, want) {
-		t.Errorf("runCommands(%q, %q) == %q, want %q", plugins, event, got, want)
+		t.Errorf("runCommands(\nplugins=%+v\nevent=%+v\n)\n%+v\nwanted: %+v", plugins, event, got, want)
 	}
 }
