@@ -26,7 +26,11 @@ type githubService struct {
 	BotUserID    string
 	GithubUserID string
 	RealmID      string
-	WebhookRooms map[string][]string // room_id => ["push","issue","pull_request"]
+	Rooms        map[string]struct { // room_id => {}
+		OwnerRepo map[string]struct { // owner/repo => { events: ["push","issue","pull_request"] }
+			Events []string
+		}
+	}
 }
 
 func (s *githubService) ServiceUserID() string { return s.BotUserID }
@@ -34,7 +38,7 @@ func (s *githubService) ServiceID() string     { return s.id }
 func (s *githubService) ServiceType() string   { return "github" }
 func (s *githubService) RoomIDs() []string {
 	var keys []string
-	for k := range s.WebhookRooms {
+	for k := range s.Rooms {
 		keys = append(keys, k)
 	}
 	return keys
@@ -130,25 +134,31 @@ func (s *githubService) OnReceiveWebhook(w http.ResponseWriter, req *http.Reques
 		return
 	}
 
-	for roomID, notif := range s.WebhookRooms {
-		notifyRoom := false
-		for _, notifyType := range notif {
-			if evType == notifyType {
-				notifyRoom = true
-				break
+	for roomID, roomConfig := range s.Rooms {
+		for ownerRepo, repoConfig := range roomConfig.OwnerRepo {
+			if *repo.FullName != ownerRepo {
+				continue
 			}
-		}
-		if notifyRoom {
-			log.WithFields(log.Fields{
-				"type":    evType,
-				"msg":     msg,
-				"repo":    repo,
-				"room_id": roomID,
-			}).Print("Sending notification to room")
-			_, e := cli.SendMessageEvent(roomID, "m.room.message", msg)
-			if e != nil {
-				log.WithError(e).WithField("room_id", roomID).Print(
-					"Failed to send notification to room.")
+
+			notifyRoom := false
+			for _, notifyType := range repoConfig.Events {
+				if evType == notifyType {
+					notifyRoom = true
+					break
+				}
+			}
+			if notifyRoom {
+				log.WithFields(log.Fields{
+					"type":    evType,
+					"msg":     msg,
+					"repo":    repo,
+					"room_id": roomID,
+				}).Print("Sending notification to room")
+				_, e := cli.SendMessageEvent(roomID, "m.room.message", msg)
+				if e != nil {
+					log.WithError(e).WithField("room_id", roomID).Print(
+						"Failed to send notification to room.")
+				}
 			}
 		}
 	}
@@ -167,6 +177,7 @@ func (s *githubService) Register() error {
 	if realm.Type() != "github" {
 		return fmt.Errorf("Realm is of type '%s', not 'github'", realm.Type())
 	}
+
 	return nil
 }
 
