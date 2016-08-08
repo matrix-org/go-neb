@@ -201,6 +201,12 @@ func (s *githubService) PostRegister(oldService types.Service) {
 		return
 	}
 
+	// TODO: We should be adding webhooks in Register() then removing old hooks in PostRegister()
+	//
+	// By doing both operations in PostRegister(), if some of the requests fail we can end up in
+	// an inconsistent state. It is a lot simpler and easy to reason about this way though, so
+	// for now it will do.
+
 	// remove any existing webhooks this service created on the user's behalf
 	modifyWebhooks(old, cli, true)
 
