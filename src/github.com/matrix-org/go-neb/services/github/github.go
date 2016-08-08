@@ -22,12 +22,14 @@ import (
 var ownerRepoIssueRegex = regexp.MustCompile("([A-z0-9-_]+)/([A-z0-9-_]+)#([0-9]+)")
 
 type githubService struct {
-	id           string
-	BotUserID    string
-	GithubUserID string
-	RealmID      string
-	Rooms        map[string]struct { // room_id => {}
-		OwnerRepo map[string]struct { // owner/repo => { events: ["push","issue","pull_request"] }
+	id             string
+	BotUserID      string
+	ClientUserID   string
+	RealmID        string
+	SecretToken    string
+	WebhookBaseURI string
+	Rooms          map[string]struct { // room_id => {}
+		Repos map[string]struct { // owner/repo => { events: ["push","issue","pull_request"] }
 			Events []string
 		}
 	}
@@ -128,15 +130,15 @@ func (s *githubService) Plugin(roomID string) plugin.Plugin {
 	}
 }
 func (s *githubService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client) {
-	evType, repo, msg, err := webhook.OnReceiveRequest(req, "")
+	evType, repo, msg, err := webhook.OnReceiveRequest(req, s.SecretToken)
 	if err != nil {
 		w.WriteHeader(err.Code)
 		return
 	}
 
 	for roomID, roomConfig := range s.Rooms {
-		for ownerRepo, repoConfig := range roomConfig.OwnerRepo {
-			if *repo.FullName != ownerRepo {
+		for ownerRepo, repoConfig := range roomConfig.Repos {
+			if !strings.EqualFold(*repo.FullName, ownerRepo) {
 				continue
 			}
 
@@ -165,8 +167,8 @@ func (s *githubService) OnReceiveWebhook(w http.ResponseWriter, req *http.Reques
 	w.WriteHeader(200)
 }
 func (s *githubService) Register() error {
-	if s.RealmID == "" || s.BotUserID == "" {
-		return fmt.Errorf("RealmID and BotUserID are required")
+	if s.RealmID == "" || s.ClientUserID == "" || s.BotUserID == "" {
+		return fmt.Errorf("RealmID, BotUserID and ClientUserID are required")
 	}
 	// check realm exists
 	realm, err := database.GetServiceDB().LoadAuthRealm(s.RealmID)
@@ -178,7 +180,88 @@ func (s *githubService) Register() error {
 		return fmt.Errorf("Realm is of type '%s', not 'github'", realm.Type())
 	}
 
+	// In order to register the GH service, you must have authed with GH.
+	cli := s.githubClientFor(s.ClientUserID, false)
+	if cli == nil {
+		return fmt.Errorf("User %s does not have a Github auth session.", s.ClientUserID)
+	}
+
 	return nil
+}
+
+func (s *githubService) PostRegister(oldService types.Service) {
+	cli := s.githubClientFor(s.ClientUserID, false)
+	if cli == nil {
+		log.Errorf("PostRegister: %s does not have a github session", s.ClientUserID)
+		return
+	}
+	old, ok := oldService.(*githubService)
+	if !ok {
+		log.Error("PostRegister: Provided old service is not of type GithubService")
+		return
+	}
+
+	// remove any existing webhooks this service created on the user's behalf
+	modifyWebhooks(old, cli, true)
+
+	// make new webhooks according to service config
+	modifyWebhooks(s, cli, false)
+}
+
+func modifyWebhooks(s *githubService, cli *github.Client, removeHooks bool) {
+	// TODO: This makes assumptions about how Go-NEB maps services to webhook endpoints.
+	//       We should factor this out to a function called GetWebhookEndpoint(Service) or something.
+	trailingSlash := ""
+	if !strings.HasSuffix(s.WebhookBaseURI, "/") {
+		trailingSlash = "/"
+	}
+	webhookEndpointURL := s.WebhookBaseURI + trailingSlash + "services/hooks/" + s.id
+
+	ownerRepoSet := make(map[string]bool)
+	for _, roomCfg := range s.Rooms {
+		for ownerRepo := range roomCfg.Repos {
+			// sanity check that it looks like 'owner/repo' as we'll split on / later
+			if strings.Count(ownerRepo, "/") != 1 {
+				log.WithField("owner_repo", ownerRepo).Print("Bad owner/repo value.")
+				continue
+			}
+			ownerRepoSet[ownerRepo] = true
+		}
+	}
+
+	for ownerRepo := range ownerRepoSet {
+		o := strings.Split(ownerRepo, "/")
+		owner := o[0]
+		repo := o[1]
+		logger := log.WithFields(log.Fields{
+			"owner": owner,
+			"repo":  repo,
+		})
+		if removeHooks {
+			removeHook(logger, cli, owner, repo, webhookEndpointURL)
+
+		} else {
+			// make a hook for all GH events since we'll filter it when we receive webhook requests
+			name := "web" // https://developer.github.com/v3/repos/hooks/#create-a-hook
+			cfg := map[string]interface{}{
+				"content_type": "json",
+				"url":          webhookEndpointURL,
+			}
+			if s.SecretToken != "" {
+				cfg["secret"] = s.SecretToken
+			}
+			events := []string{"push", "pull_request", "issues", "issue_comment", "pull_request_review_comment"}
+			_, _, err := cli.Repositories.CreateHook(owner, repo, &github.Hook{
+				Name:   &name,
+				Config: cfg,
+				Events: events,
+			})
+			if err != nil {
+				logger.WithError(err).Print("Failed to create webhook")
+				// continue as others may succeed
+			}
+		}
+	}
 }
 
 func (s *githubService) githubClientFor(userID string, allowUnauth bool) *github.Client {
@@ -217,6 +300,9 @@ func getTokenForUser(realmID, userID string) (string, error) {
 	if !ok {
 		return "", fmt.Errorf("Session is not a github session: %s", session.ID())
 	}
+	if ghSession.AccessToken == "" {
+		return "", fmt.Errorf("Github auth session for %s has not been completed.", userID)
+	}
 	return ghSession.AccessToken, nil
 }
 
@@ -247,6 +333,41 @@ func ownerRepoNumberFromText(ownerRepoNumberText string) (string, string, int, e
 		return "", "", 0, err
 	}
 	return groups[1], groups[2], num, nil
+}
+
+func removeHook(logger *log.Entry, cli *github.Client, owner, repo, webhookEndpointURL string) {
+	// Get a list of webhooks for this owner/repo and find the one which has the
+	// same endpoint URL which is what github uses to determine equivalence.
+	hooks, _, err := cli.Repositories.ListHooks(owner, repo, nil)
+	if err != nil {
+		logger.WithError(err).Print("Failed to list hooks")
+		return
+	}
+	var hook *github.Hook
+	for _, h := range hooks {
+		if h.Config["url"] == nil {
+			logger.Print("Ignoring nil config.url")
+			continue
+		}
+		hookURL, ok := h.Config["url"].(string)
+		if !ok {
+			logger.Print("Ignoring non-string config.url")
+			continue
+		}
+		if hookURL == webhookEndpointURL {
+			hook = h
+			break
+		}
+	}
+	if hook == nil {
+		return // couldn't find it
+	}
+
+	_, err = cli.Repositories.DeleteHook(owner, repo, *hook.ID)
+	if err != nil {
+		logger.WithError(err).Print("Failed to delete hook")
+		// continue as others may succeed
+	}
 }
 
 func init() {

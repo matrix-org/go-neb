@@ -53,6 +53,10 @@ func OnReceiveRequest(r *http.Request, secretToken string) (string, *github.Repo
 		"signature":  signatureSHA1,
 	}).Print("Received Github event")
 
+	if eventType == "ping" {
+		return "", nil, nil, &errors.HTTPError{nil, "pong", 200}
+	}
+
 	htmlStr, repo, err := parseGithubEvent(eventType, content)
 	if err != nil {
 		log.WithError(err).Print("Failed to parse github event")
