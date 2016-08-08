@@ -239,7 +239,6 @@ func modifyWebhooks(s *githubService, cli *github.Client, removeHooks bool) {
 		})
 		if removeHooks {
 			removeHook(logger, cli, owner, repo, webhookEndpointURL)
-
 		} else {
 			// make a hook for all GH events since we'll filter it when we receive webhook requests
 			name := "web" // https://developer.github.com/v3/repos/hooks/#create-a-hook
@@ -366,7 +365,6 @@ func removeHook(logger *log.Entry, cli *github.Client, owner, repo, webhookEndpo
 	_, err = cli.Repositories.DeleteHook(owner, repo, *hook.ID)
 	if err != nil {
 		logger.WithError(err).Print("Failed to delete hook")
-		// continue as others may succeed
 	}
 }
 
