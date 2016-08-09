@@ -13,9 +13,12 @@ import (
 
 type jiraRealm struct {
 	id             string
+	privateKey     *rsa.PrivateKey
+	JIRAEndpoint   string
 	ConsumerName   string
 	ConsumerKey    string
 	ConsumerSecret string
+	PublicKeyPEM   string // clobbered based on PrivateKeyPEM
 	PrivateKeyPEM  string
 }
 
@@ -31,27 +34,19 @@ func (r *jiraRealm) Register() error {
 	if r.ConsumerName == "" || r.ConsumerKey == "" || r.ConsumerSecret == "" || r.PrivateKeyPEM == "" {
 		return errors.New("ConsumerName, ConsumerKey, ConsumerSecret, PrivateKeyPEM must be specified.")
 	}
+	log.Print("Registering..")
 	// Make sure the private key PEM is actually a private key.
-	_, err := loadPrivateKey(r.PrivateKeyPEM)
+	err := r.parsePrivateKey()
 	if err != nil {
 		return err
 	}
+
+	// TODO: Check to see if JIRA endpoint is valid and known
+
 	return nil
 }
 
 func (r *jiraRealm) RequestAuthSession(userID string, req json.RawMessage) interface{} {
-	reqAuth := struct {
-		JIRAURL string
-	}{}
-	if err := json.Unmarshal(req, reqAuth); err != nil {
-		log.WithError(err).Print("Error parsing request JSON")
-		return nil
-	}
-	if reqAuth.JIRAURL == "" {
-		log.Print("Missing JIRAURL")
-		return nil
-	}
-	// TODO: Check to see if JIRA endpoint is valid and known
 	return nil
 }
 
@@ -60,6 +55,20 @@ func (r *jiraRealm) OnReceiveRedirect(w http.ResponseWriter, req *http.Request) 
 }
 
 func (r *jiraRealm) AuthSession(id, userID, realmID string) types.AuthSession {
+	return nil
+}
+
+func (r *jiraRealm) parsePrivateKey() error {
+	pk, err := loadPrivateKey(r.PrivateKeyPEM)
+	if err != nil {
+		return err
+	}
+	pub, err := publicKeyAsPEM(pk)
+	if err != nil {
+		return err
+	}
+	r.PublicKeyPEM = pub
+	r.privateKey = pk
 	return nil
 }
 
@@ -78,6 +87,20 @@ func loadPrivateKey(privKeyPEM string) (*rsa.PrivateKey, error) {
 		return nil, err
 	}
 	return priv, nil
+}
+
+func publicKeyAsPEM(pkey *rsa.PrivateKey) (string, error) {
+	// https://github.com/golang-samples/cipher/blob/master/crypto/rsa_keypair.go
+	der, err := x509.MarshalPKIXPublicKey(&pkey.PublicKey)
+	if err != nil {
+		return "", err
+	}
+	block := pem.Block{
+		Type:    "PUBLIC KEY",
+		Headers: nil,
+		Bytes:   der,
+	}
+	return string(pem.EncodeToMemory(&block)), nil
 }
 
 func init() {
