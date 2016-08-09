@@ -130,7 +130,6 @@ curl -X POST localhost:4050/admin/configureService --data-binary '{
     	"RealmID": "mygithubrealm",
         "BotUserID": "@goneb:localhost",
         "ClientUserID": "@example:localhost",
-        "WebhookBaseURI": "https://public.path.to.neb",
         "Rooms": {
         	"!EmwxeXCVubhskuWvaw:localhost": {
         		"Repos": {

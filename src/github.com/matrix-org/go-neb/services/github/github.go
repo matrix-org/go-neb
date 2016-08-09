@@ -22,13 +22,13 @@ import (
 var ownerRepoIssueRegex = regexp.MustCompile("([A-z0-9-_]+)/([A-z0-9-_]+)#([0-9]+)")
 
 type githubService struct {
-	id             string
-	BotUserID      string
-	ClientUserID   string
-	RealmID        string
-	SecretToken    string
-	WebhookBaseURI string
-	Rooms          map[string]struct { // room_id => {}
+	id                 string
+	webhookEndpointURL string
+	BotUserID          string
+	ClientUserID       string
+	RealmID            string
+	SecretToken        string
+	Rooms              map[string]struct { // room_id => {}
 		Repos map[string]struct { // owner/repo => { events: ["push","issue","pull_request"] }
 			Events []string
 		}
@@ -183,7 +183,8 @@ func (s *githubService) Register() error {
 	// In order to register the GH service, you must have authed with GH.
 	cli := s.githubClientFor(s.ClientUserID, false)
 	if cli == nil {
-		return fmt.Errorf("User %s does not have a Github auth session.", s.ClientUserID)
+		return fmt.Errorf(
+			"User %s does not have a Github auth session with realm %s.", s.ClientUserID, realm.ID())
 	}
 
 	return nil
@@ -215,14 +216,6 @@ func (s *githubService) PostRegister(oldService types.Service) {
 }
 
 func modifyWebhooks(s *githubService, cli *github.Client, removeHooks bool) {
-	// TODO: This makes assumptions about how Go-NEB maps services to webhook endpoints.
-	//       We should factor this out to a function called GetWebhookEndpoint(Service) or something.
-	trailingSlash := ""
-	if !strings.HasSuffix(s.WebhookBaseURI, "/") {
-		trailingSlash = "/"
-	}
-	webhookEndpointURL := s.WebhookBaseURI + trailingSlash + "services/hooks/" + s.id
-
 	ownerRepoSet := make(map[string]bool)
 	for _, roomCfg := range s.Rooms {
 		for ownerRepo := range roomCfg.Repos {
@@ -244,13 +237,13 @@ func modifyWebhooks(s *githubService, cli *github.Client, removeHooks bool) {
 			"repo":  repo,
 		})
 		if removeHooks {
-			removeHook(logger, cli, owner, repo, webhookEndpointURL)
+			removeHook(logger, cli, owner, repo, s.webhookEndpointURL)
 		} else {
 			// make a hook for all GH events since we'll filter it when we receive webhook requests
 			name := "web" // https://developer.github.com/v3/repos/hooks/#create-a-hook
 			cfg := map[string]interface{}{
 				"content_type": "json",
-				"url":          webhookEndpointURL,
+				"url":          s.webhookEndpointURL,
 			}
 			if s.SecretToken != "" {
 				cfg["secret"] = s.SecretToken
@@ -375,7 +368,10 @@ func removeHook(logger *log.Entry, cli *github.Client, owner, repo, webhookEndpo
 }
 
 func init() {
-	types.RegisterService(func(serviceID string) types.Service {
-		return &githubService{id: serviceID}
+	types.RegisterService(func(serviceID, webhookEndpointURL string) types.Service {
+		return &githubService{
+			id:                 serviceID,
+			webhookEndpointURL: webhookEndpointURL,
+		}
 	})
 }
