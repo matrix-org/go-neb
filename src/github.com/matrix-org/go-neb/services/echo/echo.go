@@ -37,7 +37,7 @@ func (e *echoService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request,
 }
 
 func init() {
-	types.RegisterService(func(serviceID string) types.Service {
+	types.RegisterService(func(serviceID, webhookEndpointURL string) types.Service {
 		return &echoService{id: serviceID}
 	})
 }

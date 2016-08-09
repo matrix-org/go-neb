@@ -8,6 +8,7 @@ import (
 	"github.com/matrix-org/go-neb/server"
 	_ "github.com/matrix-org/go-neb/services/echo"
 	_ "github.com/matrix-org/go-neb/services/github"
+	"github.com/matrix-org/go-neb/types"
 	_ "github.com/mattn/go-sqlite3"
 	"net/http"
 	_ "net/http/pprof"
@@ -18,6 +19,12 @@ func main() {
 	bindAddress := os.Getenv("BIND_ADDRESS")
 	databaseType := os.Getenv("DATABASE_TYPE")
 	databaseURL := os.Getenv("DATABASE_URL")
+	baseURL := os.Getenv("BASE_URL")
+
+	err := types.BaseURL(baseURL)
+	if err != nil {
+		log.Panic(err)
+	}
 
 	db, err := database.Open(databaseType, databaseURL)
 	if err != nil {

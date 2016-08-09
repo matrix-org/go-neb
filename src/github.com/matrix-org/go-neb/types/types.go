@@ -7,6 +7,7 @@ import (
 	"github.com/matrix-org/go-neb/plugin"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
 // A ClientConfig is the configuration for a matrix client for a bot to use.
@@ -39,11 +40,29 @@ type Service interface {
 	PostRegister(oldService Service)
 }
 
-var servicesByType = map[string]func(string) Service{}
+var baseURL = ""
+
+// BaseURL sets the base URL of NEB to the url given. This URL must be accessible from the
+// public internet.
+func BaseURL(u string) error {
+	if u == "" {
+		return errors.New("BASE_URL not found")
+	}
+	if !strings.HasPrefix(u, "http://") && !strings.HasPrefix(u, "https://") {
+		return errors.New("BASE_URL must start with http[s]://")
+	}
+	if !strings.HasSuffix(u, "/") {
+		u = u + "/"
+	}
+	baseURL = u
+	return nil
+}
+
+var servicesByType = map[string]func(string, string) Service{}
 
 // RegisterService registers a factory for creating Service instances.
-func RegisterService(factory func(string) Service) {
-	servicesByType[factory("").ServiceType()] = factory
+func RegisterService(factory func(string, string) Service) {
+	servicesByType[factory("", "").ServiceType()] = factory
 }
 
 // CreateService creates a Service of the given type and serviceID.
@@ -53,7 +72,8 @@ func CreateService(serviceID, serviceType string) Service {
 	if f == nil {
 		return nil
 	}
-	return f(serviceID)
+	webhookEndpointURL := baseURL + "services/hooks/" + serviceID
+	return f(serviceID, webhookEndpointURL)
 }
 
 // AuthRealm represents a place where a user can authenticate themselves.
