@@ -19,7 +19,7 @@ gb build github.com/matrix-org/go-neb
 Go-neb uses environment variables to configure its database and bind address.
 To run go-neb:
 
-    BIND_ADDRESS=:4050 DATABASE_TYPE=sqlite3 DATABASE_URL=go-neb.db bin/go-neb
+    BIND_ADDRESS=:4050 DATABASE_TYPE=sqlite3 DATABASE_URL=go-neb.db BASE_URL=https://public.facing.endpoint bin/go-neb
 
 
 Go-neb needs to connect as a matrix user to receive messages. Go-neb can listen
