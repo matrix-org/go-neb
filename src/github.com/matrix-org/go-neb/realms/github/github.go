@@ -53,6 +53,10 @@ func (r *githubRealm) Type() string {
 	return "github"
 }
 
+func (r *githubRealm) Register() error {
+	return nil
+}
+
 func (r *githubRealm) RequestAuthSession(userID string, req json.RawMessage) interface{} {
 	state, err := randomString(10)
 	if err != nil {
