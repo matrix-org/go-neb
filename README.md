@@ -178,7 +178,7 @@ Returns:
 {
     "ID": "jirarealm",
     "Type": "jira",
-    "OldConfig": nil,
+    "OldConfig": null,
     "NewConfig": {
         "JIRAEndpoint": "https://matrix.org/jira/",
         "Server": "Matrix.org",
