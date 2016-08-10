@@ -192,9 +192,9 @@ Returns:
 }
 ```
 
-The `PublicKeyPEM` must be manually inserted into the "Application Links" section under
-JIRA Admin Settings by a JIRA admin on the target JIRA installation. Once that is complete,
-users can OAuth on the target JIRA installation.
+The `ConsumerKey`, `ConsumerSecret`, `ConsumerName` and `PublicKeyPEM` must be manually inserted
+into the "Application Links" section under JIRA Admin Settings by a JIRA admin on the target
+JIRA installation. Once that is complete, users can OAuth on the target JIRA installation.
 
 
 ### Make a request for JIRA Auth
