@@ -14,6 +14,31 @@
 			"branch": "master"
 		},
 		{
+			"importpath": "github.com/cenkalti/backoff",
+			"repository": "https://github.com/cenkalti/backoff",
+			"revision": "cdf48bbc1eb78d1349cbda326a4a037f7ba565c6",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/dghubble/go-twitter/twitter",
+			"repository": "https://github.com/dghubble/go-twitter",
+			"revision": "02eb4f9667b1fe4df2265e12d4366506aab0a78f",
+			"branch": "master",
+			"path": "/twitter"
+		},
+		{
+			"importpath": "github.com/dghubble/oauth1",
+			"repository": "https://github.com/dghubble/oauth1",
+			"revision": "b61f9f49ca0b822c9c681186ce83bed924c98e56",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/dghubble/sling",
+			"repository": "https://github.com/dghubble/sling",
+			"revision": "9da07f0db0226d82803fc7374dba08506d29da00",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/google/go-github/github",
 			"repository": "https://github.com/google/go-github",
 			"revision": "b5e5babef39c18002f177a134fc49dc5013374ba",
