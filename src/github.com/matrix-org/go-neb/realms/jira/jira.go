@@ -73,8 +73,7 @@ func (r *jiraRealm) Register() error {
 		return errors.New("JIRAEndpoint must be specified")
 	}
 
-	err := r.ensureInited()
-	if err != nil {
+	if err := r.ensureInited(); err != nil {
 		return err
 	}
 
@@ -99,9 +98,8 @@ func (r *jiraRealm) Register() error {
 }
 
 func (r *jiraRealm) RequestAuthSession(userID string, req json.RawMessage) interface{} {
-	err := r.ensureInited()
 	logger := log.WithField("jira_url", r.JIRAEndpoint)
-	if err != nil {
+	if err := r.ensureInited(); err != nil {
 		logger.WithError(err).Print("Failed to init realm")
 		return nil
 	}
@@ -135,9 +133,8 @@ func (r *jiraRealm) RequestAuthSession(userID string, req json.RawMessage) inter
 }
 
 func (r *jiraRealm) OnReceiveRedirect(w http.ResponseWriter, req *http.Request) {
-	err := r.ensureInited()
 	logger := log.WithField("jira_url", r.JIRAEndpoint)
-	if err != nil {
+	if err := r.ensureInited(); err != nil {
 		failWith(logger, w, 500, "Failed to initialise realm", err)
 		return
 	}
@@ -216,8 +213,7 @@ func (r *jiraRealm) jiraClient(jiraBaseURL, userID string, allowUnauth bool) (*j
 }
 
 func (r *jiraRealm) ensureInited() error {
-	err := r.parsePrivateKey()
-	if err != nil {
+	if err := r.parsePrivateKey(); err != nil {
 		log.WithError(err).Print("Failed to parse private key")
 		return err
 	}
@@ -308,8 +304,7 @@ type jiraServiceInfo struct {
 func jiraServerInfo(cli *jira.Client) (*jiraServiceInfo, error) {
 	var jsi jiraServiceInfo
 	req, _ := cli.NewRequest("GET", "rest/api/2/serverInfo", nil)
-	_, err := cli.Do(req, &jsi)
-	if err != nil {
+	if _, err := cli.Do(req, &jsi); err != nil {
 		return nil, err
 	}
 	return &jsi, nil
