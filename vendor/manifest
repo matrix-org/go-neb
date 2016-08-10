@@ -8,6 +8,12 @@
 			"branch": "master"
 		},
 		{
+			"importpath": "github.com/andygrunwald/go-jira",
+			"repository": "https://github.com/andygrunwald/go-jira",
+			"revision": "ae45380959ecd26b9c0adcae4c194b7e2253e214",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/google/go-github/github",
 			"repository": "https://github.com/google/go-github",
 			"revision": "b5e5babef39c18002f177a134fc49dc5013374ba",
