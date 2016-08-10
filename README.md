@@ -199,7 +199,22 @@ JIRA installation. Once that is complete, users can OAuth on the target JIRA ins
 
 ### Make a request for JIRA Auth
 
-TODO
+```
+curl -X POST localhost:4050/admin/requestAuthSession --data-binary '{
+    "RealmID": "jirarealm",
+    "UserID": "@your_user_id:localhost",
+    "Config": {
+    }
+}'
+```
+Returns:
+```json
+{
+    "URL":"https://jira.somewhere.com/plugins/servlet/oauth/authorize?oauth_token=7yeuierbgweguiegrTbOT"
+}
+```
+
+Follow this link and grant access for NEB to act on your behalf.
 
 ### Create a JIRA bot
 

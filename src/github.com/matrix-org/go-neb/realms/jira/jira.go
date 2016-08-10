@@ -9,6 +9,7 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/andygrunwald/go-jira"
 	"github.com/dghubble/oauth1"
+	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/realms/jira/urls"
 	"github.com/matrix-org/go-neb/types"
 	"golang.org/x/net/context"
@@ -26,6 +27,25 @@ type jiraRealm struct {
 	ConsumerSecret string
 	PublicKeyPEM   string // clobbered based on PrivateKeyPEM
 	PrivateKeyPEM  string
+}
+
+type JIRASession struct {
+	id      string // request token
+	userID  string
+	realmID string
+	Secret  string // request secret
+}
+
+func (s *JIRASession) UserID() string {
+	return s.userID
+}
+
+func (s *JIRASession) RealmID() string {
+	return s.realmID
+}
+
+func (s *JIRASession) ID() string {
+	return s.id
 }
 
 func (r *jiraRealm) ID() string {
@@ -78,7 +98,45 @@ func (r *jiraRealm) Register() error {
 }
 
 func (r *jiraRealm) RequestAuthSession(userID string, req json.RawMessage) interface{} {
-	return nil
+	logger := log.WithField("jira_url", r.JIRAEndpoint)
+	// Parse the private key as we may not have called Register()
+	err := r.parsePrivateKey()
+	if err != nil {
+		logger.WithError(err).Print("Failed to parse private key")
+		return nil
+	}
+	ju, err := urls.ParseJIRAURL(r.JIRAEndpoint)
+	if err != nil {
+		log.WithError(err).Print("Failed to parse JIRA endpoint")
+		return nil
+	}
+	authConfig := r.oauth1Config(ju)
+	reqToken, reqSec, err := authConfig.RequestToken()
+	if err != nil {
+		logger.WithError(err).Print("Failed to request auth token")
+		return nil
+	}
+	logger.WithField("req_token", reqToken).Print("Received request token")
+	authURL, err := authConfig.AuthorizationURL(reqToken)
+	if err != nil {
+		logger.WithError(err).Print("Failed to create authorization URL")
+		return nil
+	}
+
+	_, err = database.GetServiceDB().StoreAuthSession(&JIRASession{
+		id:      reqToken,
+		userID:  userID,
+		realmID: r.id,
+		Secret:  reqSec,
+	})
+	if err != nil {
+		log.WithError(err).Print("Failed to store new auth session")
+		return nil
+	}
+
+	return &struct {
+		URL string
+	}{authURL.String()}
 }
 
 func (r *jiraRealm) OnReceiveRedirect(w http.ResponseWriter, req *http.Request) {
@@ -99,24 +157,7 @@ func (r *jiraRealm) jiraClient(u urls.JIRAURL, userID string, allowUnauth bool) 
 		// make an authenticated client
 		var cli *jira.Client
 
-		auth := &oauth1.Config{
-			ConsumerKey:    r.ConsumerKey,
-			ConsumerSecret: r.ConsumerSecret,
-			CallbackURL:    u.Base + "realms/redirect/" + r.id,
-			// TODO: In JIRA Cloud, the Authorization URL is only the Instance BASE_URL:
-			//    https://BASE_URL.atlassian.net.
-			// It also does not require the + "/plugins/servlet/oauth/authorize"
-			// We should probably check the provided JIRA base URL to see if it is a cloud one
-			// then adjust accordingly.
-			Endpoint: oauth1.Endpoint{
-				RequestTokenURL: u.Base + "plugins/servlet/oauth/request-token",
-				AuthorizeURL:    u.Base + "plugins/servlet/oauth/authorize",
-				AccessTokenURL:  u.Base + "plugins/servlet/oauth/access-token",
-			},
-			Signer: &oauth1.RSASigner{
-				PrivateKey: r.privateKey,
-			},
-		}
+		auth := r.oauth1Config(u)
 
 		httpClient := auth.Client(context.TODO(), oauth1.NewToken("access_tokenTODO", "access_secretTODO"))
 		cli, err := jira.NewClient(httpClient, u.Base)
@@ -142,6 +183,28 @@ func (r *jiraRealm) parsePrivateKey() error {
 	r.PublicKeyPEM = pub
 	r.privateKey = pk
 	return nil
+}
+
+func (r *jiraRealm) oauth1Config(u urls.JIRAURL) *oauth1.Config {
+	return &oauth1.Config{
+		ConsumerKey:    r.ConsumerKey,
+		ConsumerSecret: r.ConsumerSecret,
+		// TODO: path from goneb.go - we should factor it out like we did with Services
+		CallbackURL: u.Base + "realms/redirect/" + r.id,
+		// TODO: In JIRA Cloud, the Authorization URL is only the Instance BASE_URL:
+		//    https://BASE_URL.atlassian.net.
+		// It also does not require the + "/plugins/servlet/oauth/authorize"
+		// We should probably check the provided JIRA base URL to see if it is a cloud one
+		// then adjust accordingly.
+		Endpoint: oauth1.Endpoint{
+			RequestTokenURL: u.Base + "plugins/servlet/oauth/request-token",
+			AuthorizeURL:    u.Base + "plugins/servlet/oauth/authorize",
+			AccessTokenURL:  u.Base + "plugins/servlet/oauth/access-token",
+		},
+		Signer: &oauth1.RSASigner{
+			PrivateKey: r.privateKey,
+		},
+	}
 }
 
 func loadPrivateKey(privKeyPEM string) (*rsa.PrivateKey, error) {
