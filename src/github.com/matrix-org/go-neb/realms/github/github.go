@@ -13,10 +13,10 @@ import (
 )
 
 type githubRealm struct {
-	id              string
-	ClientSecret    string
-	ClientID        string
-	RedirectBaseURI string
+	id           string
+	redirectURL  string
+	ClientSecret string
+	ClientID     string
 }
 
 // GithubSession represents an authenticated github session
@@ -68,8 +68,7 @@ func (r *githubRealm) RequestAuthSession(userID string, req json.RawMessage) int
 	q.Set("client_id", r.ClientID)
 	q.Set("client_secret", r.ClientSecret)
 	q.Set("state", state)
-	// TODO: Path is from goneb.go - we should probably factor it out.
-	q.Set("redirect_uri", r.RedirectBaseURI+"/realms/redirects/"+r.ID())
+	q.Set("redirect_uri", r.redirectURL)
 	u.RawQuery = q.Encode()
 	session := &GithubSession{
 		id:      state, // key off the state for redirects
@@ -171,7 +170,7 @@ func randomString(length int) (string, error) {
 }
 
 func init() {
-	types.RegisterAuthRealm(func(realmID string) types.AuthRealm {
-		return &githubRealm{id: realmID}
+	types.RegisterAuthRealm(func(realmID, redirectURL string) types.AuthRealm {
+		return &githubRealm{id: realmID, redirectURL: redirectURL}
 	})
 }

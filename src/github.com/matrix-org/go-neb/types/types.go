@@ -87,11 +87,11 @@ type AuthRealm interface {
 	RequestAuthSession(userID string, config json.RawMessage) interface{}
 }
 
-var realmsByType = map[string]func(string) AuthRealm{}
+var realmsByType = map[string]func(string, string) AuthRealm{}
 
 // RegisterAuthRealm registers a factory for creating AuthRealm instances.
-func RegisterAuthRealm(factory func(string) AuthRealm) {
-	realmsByType[factory("").Type()] = factory
+func RegisterAuthRealm(factory func(string, string) AuthRealm) {
+	realmsByType[factory("", "").Type()] = factory
 }
 
 // CreateAuthRealm creates an AuthRealm of the given type and realm ID.
@@ -101,7 +101,8 @@ func CreateAuthRealm(realmID, realmType string) AuthRealm {
 	if f == nil {
 		return nil
 	}
-	return f(realmID)
+	redirectURL := baseURL + "realms/redirects/" + realmID
+	return f(realmID, redirectURL)
 }
 
 // AuthSession represents a single authentication session between a user and

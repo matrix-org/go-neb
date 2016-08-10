@@ -33,6 +33,10 @@ func (h *requestAuthSessionHandler) OnIncomingRequest(req *http.Request) (interf
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
 		return nil, &errors.HTTPError{err, "Error parsing request JSON", 400}
 	}
+	log.WithFields(log.Fields{
+		"realm_id": body.RealmID,
+		"user_id":  body.UserID,
+	}).Print("Incoming auth session request")
 
 	if body.UserID == "" || body.RealmID == "" || body.Config == nil {
 		return nil, &errors.HTTPError{nil, `Must supply a "UserID", a "RealmID" and a "Config"`, 400}
@@ -65,6 +69,9 @@ func (rh *realmRedirectHandler) handle(w http.ResponseWriter, req *http.Request)
 		w.WriteHeader(404)
 		return
 	}
+	log.WithFields(log.Fields{
+		"realm_id": realmID,
+	}).Print("Incoming realm redirect request")
 	realm.OnReceiveRedirect(w, req)
 }
 
