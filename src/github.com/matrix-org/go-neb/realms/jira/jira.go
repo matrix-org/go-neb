@@ -19,6 +19,8 @@ type jiraRealm struct {
 	id             string
 	privateKey     *rsa.PrivateKey
 	JIRAEndpoint   string
+	Server         string // clobbered based on /serverInfo request
+	Version        string // clobbered based on /serverInfo request
 	ConsumerName   string
 	ConsumerKey    string
 	ConsumerSecret string
@@ -69,6 +71,8 @@ func (r *jiraRealm) Register() error {
 		"title":    info.ServerTitle,
 		"version":  info.Version,
 	}).Print("Found JIRA endpoint")
+	r.Server = info.ServerTitle
+	r.Version = info.Version
 
 	return nil
 }

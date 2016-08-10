@@ -1,9 +1,9 @@
 // Package urls handles converting between various JIRA URL representations in a consistent way. There exists three main
-// types of JIRA URL which Scalar cares about:
+// types of JIRA URL which Go-NEB cares about:
 //    - URL Keys => matrix.org/jira
 //    - Base URLs => https://matrix.org/jira/
 //    - REST URLs => https://matrix.org/jira/rest/api/2/issue/12680
-// When making outbound requests to JIRA, Scalar needs to use the Base URL representation. Likewise, when Scalar
+// When making outbound requests to JIRA, Go-NEB needs to use the Base URL representation. Likewise, when Go-NEB
 // sends Matrix messages with JIRA URLs in them, the Base URL needs to be used to form the URL. The URL Key is
 // used to determine equivalence of various JIRA installations and is mainly required when searching the database.
 // The REST URLs are present on incoming webhook events and are the only way to map the event to a JIRA installation.
