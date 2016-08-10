@@ -79,9 +79,6 @@ func loadPrivateKey(privKeyPEM string) (*rsa.PrivateKey, error) {
 		return nil, errors.New("No PEM formatted block found")
 	}
 
-	// TODO: Handle passwords on private keys.
-	// decBytes, err = x509.DecryptPEMBlock(block, []byte{}) // no pass
-
 	priv, err := x509.ParsePKCS1PrivateKey(block.Bytes)
 	if err != nil {
 		return nil, err
