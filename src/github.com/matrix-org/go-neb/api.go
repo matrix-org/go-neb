@@ -98,6 +98,10 @@ func (h *configureAuthRealmHandler) OnIncomingRequest(req *http.Request) (interf
 		return nil, &errors.HTTPError{err, "Error parsing config JSON", 400}
 	}
 
+	if err := realm.Register(); err != nil {
+		return nil, &errors.HTTPError{err, "Error registering auth realm", 400}
+	}
+
 	oldRealm, err := h.db.StoreAuthRealm(realm)
 	if err != nil {
 		return nil, &errors.HTTPError{err, "Error storing realm", 500}
