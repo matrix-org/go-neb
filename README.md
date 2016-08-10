@@ -145,6 +145,45 @@ curl -X POST localhost:4050/admin/configureService --data-binary '{
 
 This request will make `BotUserID` join the `Rooms` specified and create webhooks for the `owner/repo` projects given.
 
+
+## Starting a JIRA Service
+
+### Register a JIRA realm
+
+Generate an RSA private key: (JIRA does not support key sizes >2048 bits)
+
+```bash
+openssl genrsa -out privkey.pem 2048
+```
+
+
+
+```
+curl -X POST localhost:4050/admin/configureAuthRealm --data-binary '{
+    "ID": "jirarealm",
+    "Type": "jira",
+    "Config": {
+        "ConsumerName": "goneb",
+        "ConsumerKey": "goneb",
+        "ConsumerSecret": "random_long_string",
+        "PrivateKeyPEM": "-----BEGIN RSA PRIVATE KEY-----\r\nMIIEowIBAAKCAQEA39UhbOvQHEkBP9fGnhU+eSObTWBDGWygVYzbcONOlqEOTJUN\r\n8gmnellWqJO45S4jB1vLLnuXiHqEWnmaShIvbUem3QnDDqghu0gfqXHMlQr5R8ZP\r\norTt1F2idWy1wk5rVXeLKSG7uriYhDVOVS69WuefoW5v55b5YZV283v2jROjxHuj\r\ngAsJA7k6tvpYiSXApUl6YHmECfBoiwG9bwItkHwhZ\/fG9i4H8\/aOyr3WlaWbVeKX\r\n+m38lmYZvzQFRAk5ab1vzCGz4cyc\r\nTk2qmZpcjHRd1ijcOkgC23KF8lHWF5Zx0tySR+DWL1JeGm8NJxKMRJZuE8MIkJYF\r\nryE7kjspNItk6npkA3\/A4PWwElhddI4JpiuK+29mMNipRcYYy9e0vH\/igejv7ayd\r\nPLCRMQKBgBDSNWlZT0nNd2DXVqTW9p+MG72VKhDgmEwFB1acOw0lpu1XE8R1wmwG\r\nZRl\/xzri3LOW2Gpc77xu6fs3NIkzQw3v1ifYhX3OrVsCIRBbDjPQI3yYjkhGx24s\r\nVhhZ5S\/TkGk3Kw59bDC6KGqAuQAwX9req2l1NiuNaPU9rE7tf6Bk\r\n-----END RSA PRIVATE KEY-----"
+    }
+}'
+```
+
+Returns:
+
+
+
+### Make a request for JIRA Auth
+
+TODO
+
+### Create a JIRA bot
+
+TODO
+
+
 # Developing on go-neb.
 
 There's a bunch more tools this project uses when developing in order to do

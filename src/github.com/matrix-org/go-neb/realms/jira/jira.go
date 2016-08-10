@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"encoding/pem"
 	"errors"
-	log "github.com/Sirupsen/logrus"
+	"github.com/matrix-org/go-neb/realms/jira/urls"
 	"github.com/matrix-org/go-neb/types"
 	"net/http"
 )
@@ -34,14 +34,27 @@ func (r *jiraRealm) Register() error {
 	if r.ConsumerName == "" || r.ConsumerKey == "" || r.ConsumerSecret == "" || r.PrivateKeyPEM == "" {
 		return errors.New("ConsumerName, ConsumerKey, ConsumerSecret, PrivateKeyPEM must be specified.")
 	}
-	log.Print("Registering..")
+	if r.JIRAEndpoint == "" {
+		return errors.New("JIRAEndpoint must be specified")
+	}
+
 	// Make sure the private key PEM is actually a private key.
 	err := r.parsePrivateKey()
 	if err != nil {
 		return err
 	}
 
-	// TODO: Check to see if JIRA endpoint is valid and known
+	// Parse the messy input URL into a canonicalised form.
+	ju, err := urls.ParseJIRAURL(r.JIRAEndpoint)
+	if err != nil {
+		return err
+	}
+
+	// Check to see if JIRA endpoint is valid by pinging an endpoint
+	err = jiraClient(ju, "")
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -98,6 +111,10 @@ func publicKeyAsPEM(pkey *rsa.PrivateKey) (string, error) {
 		Bytes:   der,
 	}
 	return string(pem.EncodeToMemory(&block)), nil
+}
+
+func jiraClient(u urls.JIRAURL, userID string) error {
+	return nil
 }
 
 func init() {
