@@ -263,7 +263,7 @@ func selectRealmTxn(txn *sql.Tx, realmID string) (types.AuthRealm, error) {
 }
 
 const selectRealmsByTypeSQL = `
-SELECT realm_id, realm_json FROM auth_realms WHERE realm_type = $1
+SELECT realm_id, realm_json FROM auth_realms WHERE realm_type = $1 ORDER BY realm_id
 `
 
 func selectRealmsByTypeTxn(txn *sql.Tx, realmType string) (realms []types.AuthRealm, err error) {

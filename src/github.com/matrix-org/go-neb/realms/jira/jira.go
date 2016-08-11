@@ -262,8 +262,7 @@ func (r *JIRARealm) JIRAClient(userID string, allowUnauth bool) (*jira.Client, e
 	if jsession.AccessSecret == "" || jsession.AccessToken == "" {
 		if allowUnauth {
 			// make an unauthenticated client
-			cli, err = jira.NewClient(nil, r.JIRAEndpoint)
-			return cli, err
+			return jira.NewClient(nil, r.JIRAEndpoint)
 		}
 		return nil, errors.New("No authenticated session found for " + userID)
 	}

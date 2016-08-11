@@ -81,9 +81,17 @@ func (s *jiraService) Plugin(roomID string) plugin.Plugin {
 						},
 					}
 					cli, err := r.JIRAClient(userID, false)
+					if err != nil {
+						return nil, err
+					}
 					i, res, err := cli.Issue.Create(&iss)
 					if err != nil {
-						log.WithError(err).Print("Failed to create issue")
+						log.WithFields(log.Fields{
+							log.ErrorKey: err,
+							"user_id":    userID,
+							"project":    pkey,
+							"realm_id":   r.ID(),
+						}).Print("Failed to create issue")
 						return nil, errors.New("Failed to create issue")
 					}
 					if res.StatusCode < 200 || res.StatusCode >= 300 {
@@ -123,34 +131,39 @@ func (s *jiraService) projectToRealm(userID, pkey string) (*realms.JIRARealm, er
 	}
 	// typecast and move ones which the user has authed with to the front of the queue
 	var queue []*realms.JIRARealm
+	var unauthRealms []*realms.JIRARealm
 	for _, r := range knownRealms {
 		jrealm, ok := r.(*realms.JIRARealm)
 		if !ok {
 			logger.WithField("realm_id", r.ID()).Print(
-				"Failed to type-cast 'jira' type realm into JIRARealm")
+				"Failed to type-cast 'jira' type realm into JIRARealm",
+			)
 			continue
 		}
 
 		_, err := database.GetServiceDB().LoadAuthSessionByUser(r.ID(), userID)
 		if err != nil {
 			if err == sql.ErrNoRows {
-				// not authed with this JIRA realm; add to back of queue.
-				queue = append(queue, jrealm)
+				unauthRealms = append(unauthRealms, jrealm)
 			} else {
 				logger.WithError(err).WithField("realm_id", r.ID()).Print(
-					"Failed to load auth sessions for user")
+					"Failed to load auth sessions for user",
+				)
 			}
 			continue // this may not have been the match anyway so don't give up!
 		}
-		// authed with this JIRA realm; add to front of queue
-		queue = append([]*realms.JIRARealm{jrealm}, queue...)
+		queue = append(queue, jrealm)
 	}
+
+	// push unauthed realms to the back
+	queue = append(queue, unauthRealms...)
 
 	for _, jr := range queue {
 		exists, err := jr.ProjectKeyExists(userID, pkey)
 		if err != nil {
 			logger.WithError(err).WithField("realm_id", jr.ID()).Print(
-				"Failed to check if project key exists on this realm.")
+				"Failed to check if project key exists on this realm.",
+			)
 			continue // may not have been found anyway so keep searching!
 		}
 		if exists {

@@ -185,6 +185,7 @@ func (d *ServiceDB) LoadAuthRealm(realmID string) (realm types.AuthRealm, err er
 }
 
 // LoadAuthRealmsByType loads all auth realms with the given type from the database.
+// The realms are ordered based on their realm ID.
 // Returns an empty list if there are no realms with that type.
 func (d *ServiceDB) LoadAuthRealmsByType(realmType string) (realms []types.AuthRealm, err error) {
 	err = runTransaction(d.db, func(txn *sql.Tx) error {
