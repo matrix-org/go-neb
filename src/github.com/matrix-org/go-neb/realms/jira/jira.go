@@ -3,9 +3,11 @@ package realms
 import (
 	"crypto/rsa"
 	"crypto/x509"
+	"database/sql"
 	"encoding/json"
 	"encoding/pem"
 	"errors"
+	"fmt"
 	log "github.com/Sirupsen/logrus"
 	"github.com/andygrunwald/go-jira"
 	"github.com/dghubble/oauth1"
@@ -14,9 +16,11 @@ import (
 	"github.com/matrix-org/go-neb/types"
 	"golang.org/x/net/context"
 	"net/http"
+	"strings"
 )
 
-type jiraRealm struct {
+// JIRARealm is an AuthRealm which can process JIRA installations
+type JIRARealm struct {
 	id             string
 	redirectURL    string
 	privateKey     *rsa.PrivateKey
@@ -57,15 +61,18 @@ func (s *JIRASession) ID() string {
 	return s.id
 }
 
-func (r *jiraRealm) ID() string {
+// ID returns the ID of this JIRA realm.
+func (r *JIRARealm) ID() string {
 	return r.id
 }
 
-func (r *jiraRealm) Type() string {
+// Type returns the type of realm this is.
+func (r *JIRARealm) Type() string {
 	return "jira"
 }
 
-func (r *jiraRealm) Register() error {
+// Register is called when this realm is being created from an external entity
+func (r *JIRARealm) Register() error {
 	if r.ConsumerName == "" || r.ConsumerKey == "" || r.ConsumerSecret == "" || r.PrivateKeyPEM == "" {
 		return errors.New("ConsumerName, ConsumerKey, ConsumerSecret, PrivateKeyPEM must be specified.")
 	}
@@ -78,7 +85,7 @@ func (r *jiraRealm) Register() error {
 	}
 
 	// Check to see if JIRA endpoint is valid by pinging an endpoint
-	cli, err := r.jiraClient(r.JIRAEndpoint, "", true)
+	cli, err := r.JIRAClient("", true)
 	if err != nil {
 		return err
 	}
@@ -97,7 +104,8 @@ func (r *jiraRealm) Register() error {
 	return nil
 }
 
-func (r *jiraRealm) RequestAuthSession(userID string, req json.RawMessage) interface{} {
+// RequestAuthSession is called by a user wishing to auth with this JIRA realm
+func (r *JIRARealm) RequestAuthSession(userID string, req json.RawMessage) interface{} {
 	logger := log.WithField("jira_url", r.JIRAEndpoint)
 	if err := r.ensureInited(); err != nil {
 		logger.WithError(err).Print("Failed to init realm")
@@ -132,7 +140,8 @@ func (r *jiraRealm) RequestAuthSession(userID string, req json.RawMessage) inter
 	}{authURL.String()}
 }
 
-func (r *jiraRealm) OnReceiveRedirect(w http.ResponseWriter, req *http.Request) {
+// OnReceiveRedirect is called when JIRA installations redirect back to NEB
+func (r *JIRARealm) OnReceiveRedirect(w http.ResponseWriter, req *http.Request) {
 	logger := log.WithField("jira_url", r.JIRAEndpoint)
 	if err := r.ensureInited(); err != nil {
 		failWith(logger, w, 500, "Failed to initialise realm", err)
@@ -180,7 +189,8 @@ func (r *jiraRealm) OnReceiveRedirect(w http.ResponseWriter, req *http.Request) 
 	w.Write([]byte("OK!"))
 }
 
-func (r *jiraRealm) AuthSession(id, userID, realmID string) types.AuthSession {
+// AuthSession returns a JIRASession with the given parameters
+func (r *JIRARealm) AuthSession(id, userID, realmID string) types.AuthSession {
 	return &JIRASession{
 		id:      id,
 		userID:  userID,
@@ -188,31 +198,87 @@ func (r *jiraRealm) AuthSession(id, userID, realmID string) types.AuthSession {
 	}
 }
 
-// jiraClient returns an authenticated jira.Client for the given userID. Returns an unauthenticated
-// client if allowUnauth is true and no authenticated session is found, else returns an error.
-func (r *jiraRealm) jiraClient(jiraBaseURL, userID string, allowUnauth bool) (*jira.Client, error) {
-	// TODO: Check if user has an auth session. Requires access token+secret
-	hasAuthSession := false
-
-	if hasAuthSession {
-		// make an authenticated client
-		var cli *jira.Client
-
-		auth := r.oauth1Config(jiraBaseURL)
-
-		httpClient := auth.Client(context.TODO(), oauth1.NewToken("access_tokenTODO", "access_secretTODO"))
-		cli, err := jira.NewClient(httpClient, jiraBaseURL)
-		return cli, err
-	} else if allowUnauth {
-		// make an unauthenticated client
-		cli, err := jira.NewClient(nil, jiraBaseURL)
-		return cli, err
-	} else {
-		return nil, errors.New("No authenticated session found for " + userID)
+// ProjectKeyExists returns true if the given project key exists on this JIRA realm.
+// An authenticated client for userID will be used if one exists, else an
+// unauthenticated client will be used, which may not be able to see the complete list
+// of projects.
+func (r *JIRARealm) ProjectKeyExists(userID, projectKey string) (bool, error) {
+	if err := r.ensureInited(); err != nil {
+		return false, err
 	}
+	cli, err := r.JIRAClient(userID, true)
+	if err != nil {
+		return false, err
+	}
+	var projects []jira.Project
+	req, err := cli.NewRequest("GET", "rest/api/2/project", nil)
+	if err != nil {
+		return false, err
+	}
+	res, err := cli.Do(req, &projects)
+	if err != nil {
+		return false, err
+	}
+	if res == nil {
+		return false, errors.New("No response returned")
+	}
+	if res.StatusCode < 200 || res.StatusCode >= 300 {
+		return false, fmt.Errorf("%srest/api/2/project returned code %d",
+			r.JIRAEndpoint, res.StatusCode)
+	}
+
+	for _, p := range projects {
+		if strings.EqualFold(p.Key, projectKey) {
+			return true, nil
+		}
+	}
+	return false, nil
 }
 
-func (r *jiraRealm) ensureInited() error {
+// JIRAClient returns an authenticated jira.Client for the given userID. Returns an unauthenticated
+// client if allowUnauth is true and no authenticated session is found, else returns an error.
+func (r *JIRARealm) JIRAClient(userID string, allowUnauth bool) (*jira.Client, error) {
+	var cli *jira.Client
+	// Check if user has an auth session.
+	session, err := database.GetServiceDB().LoadAuthSessionByUser(r.id, userID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			if allowUnauth {
+				// make an unauthenticated client
+				cli, err = jira.NewClient(nil, r.JIRAEndpoint)
+				return cli, err
+			}
+			return nil, errors.New("No authenticated session found for " + userID)
+		}
+		// some other error
+		return nil, err
+	}
+
+	jsession, ok := session.(*JIRASession)
+	if !ok {
+		return nil, errors.New("Failed to cast user session to a JIRASession")
+	}
+	// Make sure they finished the auth process
+	if jsession.AccessSecret == "" || jsession.AccessToken == "" {
+		if allowUnauth {
+			// make an unauthenticated client
+			cli, err = jira.NewClient(nil, r.JIRAEndpoint)
+			return cli, err
+		}
+		return nil, errors.New("No authenticated session found for " + userID)
+	}
+
+	// make an authenticated client
+	auth := r.oauth1Config(r.JIRAEndpoint)
+	httpClient := auth.Client(
+		context.TODO(),
+		oauth1.NewToken(jsession.AccessToken, jsession.AccessSecret),
+	)
+	cli, err = jira.NewClient(httpClient, r.JIRAEndpoint)
+	return cli, err
+}
+
+func (r *JIRARealm) ensureInited() error {
 	if err := r.parsePrivateKey(); err != nil {
 		log.WithError(err).Print("Failed to parse private key")
 		return err
@@ -227,7 +293,7 @@ func (r *jiraRealm) ensureInited() error {
 	return nil
 }
 
-func (r *jiraRealm) parsePrivateKey() error {
+func (r *JIRARealm) parsePrivateKey() error {
 	if r.privateKey != nil {
 		return nil
 	}
@@ -244,7 +310,7 @@ func (r *jiraRealm) parsePrivateKey() error {
 	return nil
 }
 
-func (r *jiraRealm) oauth1Config(jiraBaseURL string) *oauth1.Config {
+func (r *JIRARealm) oauth1Config(jiraBaseURL string) *oauth1.Config {
 	return &oauth1.Config{
 		ConsumerKey:    r.ConsumerKey,
 		ConsumerSecret: r.ConsumerSecret,
@@ -319,6 +385,6 @@ func failWith(logger *log.Entry, w http.ResponseWriter, code int, msg string, er
 
 func init() {
 	types.RegisterAuthRealm(func(realmID, redirectURL string) types.AuthRealm {
-		return &jiraRealm{id: realmID, redirectURL: redirectURL}
+		return &JIRARealm{id: realmID, redirectURL: redirectURL}
 	})
 }

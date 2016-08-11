@@ -66,6 +66,11 @@ func runCommandForPlugin(plugin Plugin, event *matrix.Event, arguments []string)
 	}
 
 	cmdArgs := arguments[len(bestMatch.Path):]
+	log.WithFields(log.Fields{
+		"room_id": event.RoomID,
+		"user_id": event.Sender,
+		"command": bestMatch.Path,
+	}).Info("Executing command")
 	content, err := bestMatch.Command(event.RoomID, event.Sender, cmdArgs)
 	if err != nil {
 		if content != nil {

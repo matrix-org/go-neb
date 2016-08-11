@@ -262,6 +262,35 @@ func selectRealmTxn(txn *sql.Tx, realmID string) (types.AuthRealm, error) {
 	return realm, nil
 }
 
+const selectRealmsByTypeSQL = `
+SELECT realm_id, realm_json FROM auth_realms WHERE realm_type = $1
+`
+
+func selectRealmsByTypeTxn(txn *sql.Tx, realmType string) (realms []types.AuthRealm, err error) {
+	rows, err := txn.Query(selectRealmsByTypeSQL, realmType)
+	if err != nil {
+		return
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var realmID string
+		var realmJSON []byte
+		if err = rows.Scan(&realmID, &realmJSON); err != nil {
+			return
+		}
+		realm := types.CreateAuthRealm(realmID, realmType)
+		if realm == nil {
+			err = fmt.Errorf("Cannot create realm %s of type %s", realmID, realmType)
+			return
+		}
+		if err = json.Unmarshal(realmJSON, realm); err != nil {
+			return
+		}
+		realms = append(realms, realm)
+	}
+	return
+}
+
 const updateRealmSQL = `
 UPDATE auth_realms SET realm_type=$1, realm_json=$2, time_updated_ms=$3
 	WHERE realm_id=$4
