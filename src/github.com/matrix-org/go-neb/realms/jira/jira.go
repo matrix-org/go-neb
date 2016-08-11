@@ -238,15 +238,13 @@ func (r *JIRARealm) ProjectKeyExists(userID, projectKey string) (bool, error) {
 // JIRAClient returns an authenticated jira.Client for the given userID. Returns an unauthenticated
 // client if allowUnauth is true and no authenticated session is found, else returns an error.
 func (r *JIRARealm) JIRAClient(userID string, allowUnauth bool) (*jira.Client, error) {
-	var cli *jira.Client
 	// Check if user has an auth session.
 	session, err := database.GetServiceDB().LoadAuthSessionByUser(r.id, userID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			if allowUnauth {
 				// make an unauthenticated client
-				cli, err = jira.NewClient(nil, r.JIRAEndpoint)
-				return cli, err
+				return jira.NewClient(nil, r.JIRAEndpoint)
 			}
 			return nil, errors.New("No authenticated session found for " + userID)
 		}
@@ -273,8 +271,7 @@ func (r *JIRARealm) JIRAClient(userID string, allowUnauth bool) (*jira.Client, e
 		context.TODO(),
 		oauth1.NewToken(jsession.AccessToken, jsession.AccessSecret),
 	)
-	cli, err = jira.NewClient(httpClient, r.JIRAEndpoint)
-	return cli, err
+	return jira.NewClient(httpClient, r.JIRAEndpoint)
 }
 
 func (r *JIRARealm) ensureInited() error {
