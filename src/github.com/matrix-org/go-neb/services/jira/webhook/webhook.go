@@ -22,6 +22,7 @@ type jiraWebhook struct {
 	Enabled bool `json:"enabled"`
 }
 
+// Event represents an incoming JIRA webhook event
 type Event struct {
 	WebhookEvent string     `json:"webhookEvent"`
 	Timestamp    int64      `json:"timestamp"`
