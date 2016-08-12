@@ -4,6 +4,7 @@ import (
 	"fmt"
 	log "github.com/Sirupsen/logrus"
 	"github.com/andygrunwald/go-jira"
+	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/errors"
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/realms/jira"
@@ -72,8 +73,11 @@ func RegisterHook(jrealm *realms.JIRARealm, projects []string, userID, webhookEn
 		// All projects that wish to be tracked are public, but the user cannot create
 		// webhooks. The only way this will work is if we already have a webhook for this
 		// JIRA endpoint.
-		// TODO: Check for an existing webhook for this realm (flag on realm?)
-		return fmt.Errorf("Not supported yet")
+		if !jrealm.HasWebhook {
+			logger.Print("No webhook exists for this realm.")
+			return fmt.Errorf("Not authorised to create webhook: not an admin.")
+		}
+		return nil
 	}
 
 	// The user is probably an admin (can query webhooks endpoint)
@@ -115,7 +119,11 @@ func createWebhook(jrealm *realms.JIRARealm, webhookEndpointURL, userID string) 
 		"realm_id":    jrealm.ID(),
 		"jira_url":    jrealm.JIRAEndpoint,
 	}).Print("Created webhook")
-	return nil
+
+	// mark this on the realm and persist it.
+	jrealm.HasWebhook = true
+	_, err = database.GetServiceDB().StoreAuthRealm(jrealm)
+	return err
 }
 
 func getWebhook(cli *jira.Client, webhookEndpointURL string) (*jiraWebhook, *errors.HTTPError) {

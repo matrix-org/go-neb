@@ -32,6 +32,7 @@ type JIRARealm struct {
 	ConsumerSecret string
 	PublicKeyPEM   string // clobbered based on PrivateKeyPEM
 	PrivateKeyPEM  string
+	HasWebhook     bool // clobbered based on NEB
 }
 
 // JIRASession represents a single authentication session between a user and a JIRA endpoint.
@@ -95,6 +96,7 @@ func (r *JIRARealm) Register() error {
 	if r.JIRAEndpoint == "" {
 		return errors.New("JIRAEndpoint must be specified")
 	}
+	r.HasWebhook = false // never let the user set this; only NEB can.
 
 	// Check to see if JIRA endpoint is valid by pinging an endpoint
 	cli, err := r.JIRAClient("", true)
