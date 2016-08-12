@@ -10,6 +10,7 @@ import (
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/plugin"
 	"github.com/matrix-org/go-neb/realms/jira"
+	"github.com/matrix-org/go-neb/services/jira/webhook"
 	"github.com/matrix-org/go-neb/types"
 	"html"
 	"net/http"
@@ -22,14 +23,16 @@ var issueKeyRegex = regexp.MustCompile("([A-z]+)-([0-9]+)")
 var projectKeyRegex = regexp.MustCompile("^[A-z]+$")
 
 type jiraService struct {
-	id           string
-	BotUserID    string
-	ClientUserID string
-	Rooms        map[string]struct { // room_id => {}
-		RealmID  string              // Determines the JIRA endpoint
-		Projects map[string]struct { // SYN => {}
-			Expand bool
-			Track  bool
+	id                 string
+	webhookEndpointURL string
+	BotUserID          string
+	ClientUserID       string
+	Rooms              map[string]struct { // room_id => {}
+		Realms map[string]struct { // realm_id => {}  Determines the JIRA endpoint
+			Projects map[string]struct { // SYN => {}
+				Expand bool
+				Track  bool
+			}
 		}
 	}
 }
@@ -44,8 +47,29 @@ func (s *jiraService) RoomIDs() []string {
 	}
 	return keys
 }
-func (s *jiraService) Register() error                { return nil }
-func (s *jiraService) PostRegister(old types.Service) {}
+func (s *jiraService) Register() error {
+	// We only ever make 1 JIRA webhook which listens for all projects and then filter
+	// on receive. So we simply need to know if we need to make a webhook or not. We
+	// need to do this for each unique realm.
+	for realmID, pkeys := range projectsAndRealmsToTrack(s) {
+		realm, err := database.GetServiceDB().LoadAuthRealm(realmID)
+		if err != nil {
+			return err
+		}
+		jrealm, ok := realm.(*realms.JIRARealm)
+		if !ok {
+			return errors.New("Realm ID doesn't map to a JIRA realm")
+		}
+
+		if err = webhook.RegisterHook(jrealm, pkeys, s.ClientUserID, s.webhookEndpointURL); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+func (s *jiraService) PostRegister(old types.Service) {
+	// TODO: We don't remove old JIRA webhooks for now. Let the admin sort it out.
+}
 
 func (s *jiraService) cmdJiraCreate(roomID, userID string, args []string) (interface{}, error) {
 	// E.g jira create PROJ "Issue title" "Issue desc"
@@ -125,21 +149,23 @@ func (s *jiraService) expandIssue(roomID, userID, issueKey string) interface{} {
 	}
 
 	projectKey := groups[1]
-	if !s.Rooms[roomID].Projects[projectKey].Expand {
+
+	realmID := s.realmIDForProject(roomID, projectKey)
+	if realmID == "" {
 		return nil
 	}
 
-	r, err := database.GetServiceDB().LoadAuthRealm(s.Rooms[roomID].RealmID)
+	r, err := database.GetServiceDB().LoadAuthRealm(realmID)
 	if err != nil {
 		logger.WithFields(log.Fields{
-			"realm_id":   s.Rooms[roomID].RealmID,
+			"realm_id":   realmID,
 			log.ErrorKey: err,
 		}).Print("Failed to load realm")
 		return nil
 	}
 	jrealm, ok := r.(*realms.JIRARealm)
 	if !ok {
-		logger.WithField("realm_id", s.Rooms[roomID].RealmID).Print(
+		logger.WithField("realm_id", realmID).Print(
 			"Realm cannot be typecast to JIRARealm",
 		)
 	}
@@ -194,8 +220,21 @@ func (s *jiraService) Plugin(roomID string) plugin.Plugin {
 		},
 	}
 }
+
 func (s *jiraService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client) {
-	w.WriteHeader(200) // Do nothing
+	webhook.OnReceiveRequest(w, req, cli)
+}
+
+func (s *jiraService) realmIDForProject(roomID, projectKey string) string {
+	// TODO: Multiple realms with the same pkey will be randomly chosen.
+	for r, realmConfig := range s.Rooms[roomID].Realms {
+		for pkey, projectConfig := range realmConfig.Projects {
+			if pkey == projectKey && projectConfig.Expand {
+				return r
+			}
+		}
+	}
+	return ""
 }
 
 func (s *jiraService) projectToRealm(userID, pkey string) (*realms.JIRARealm, error) {
@@ -261,6 +300,23 @@ func (s *jiraService) projectToRealm(userID, pkey string) (*realms.JIRARealm, er
 	return nil, nil
 }
 
+// Returns realm_id => [PROJ, ECT, KEYS]
+func projectsAndRealmsToTrack(s *jiraService) map[string][]string {
+	ridsToProjects := make(map[string][]string)
+	for _, roomConfig := range s.Rooms {
+		for realmID, realmConfig := range roomConfig.Realms {
+			for projectKey, projectConfig := range realmConfig.Projects {
+				if projectConfig.Track {
+					ridsToProjects[realmID] = append(
+						ridsToProjects[realmID], projectKey,
+					)
+				}
+			}
+		}
+	}
+	return ridsToProjects
+}
+
 func htmlSummaryForIssue(issue *jira.Issue) string {
 	// form a summary of the issue being affected e.g:
 	//   "Flibble Wibble [P1, In Progress]"
@@ -281,6 +337,6 @@ func htmlSummaryForIssue(issue *jira.Issue) string {
 
 func init() {
 	types.RegisterService(func(serviceID, webhookEndpointURL string) types.Service {
-		return &jiraService{id: serviceID}
+		return &jiraService{id: serviceID, webhookEndpointURL: webhookEndpointURL}
 	})
 }
