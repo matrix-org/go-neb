@@ -71,6 +71,22 @@ func (r *JIRARealm) Type() string {
 	return "jira"
 }
 
+// Init initialises the private key for this JIRA realm.
+func (r *JIRARealm) Init() error {
+	if err := r.parsePrivateKey(); err != nil {
+		log.WithError(err).Print("Failed to parse private key")
+		return err
+	}
+	// Parse the messy input URL into a canonicalised form.
+	ju, err := urls.ParseJIRAURL(r.JIRAEndpoint)
+	if err != nil {
+		log.WithError(err).Print("Failed to parse JIRA endpoint")
+		return err
+	}
+	r.JIRAEndpoint = ju.Base
+	return nil
+}
+
 // Register is called when this realm is being created from an external entity
 func (r *JIRARealm) Register() error {
 	if r.ConsumerName == "" || r.ConsumerKey == "" || r.ConsumerSecret == "" || r.PrivateKeyPEM == "" {
@@ -78,10 +94,6 @@ func (r *JIRARealm) Register() error {
 	}
 	if r.JIRAEndpoint == "" {
 		return errors.New("JIRAEndpoint must be specified")
-	}
-
-	if err := r.ensureInited(); err != nil {
-		return err
 	}
 
 	// Check to see if JIRA endpoint is valid by pinging an endpoint
@@ -107,10 +119,6 @@ func (r *JIRARealm) Register() error {
 // RequestAuthSession is called by a user wishing to auth with this JIRA realm
 func (r *JIRARealm) RequestAuthSession(userID string, req json.RawMessage) interface{} {
 	logger := log.WithField("jira_url", r.JIRAEndpoint)
-	if err := r.ensureInited(); err != nil {
-		logger.WithError(err).Print("Failed to init realm")
-		return nil
-	}
 	authConfig := r.oauth1Config(r.JIRAEndpoint)
 	reqToken, reqSec, err := authConfig.RequestToken()
 	if err != nil {
@@ -143,10 +151,6 @@ func (r *JIRARealm) RequestAuthSession(userID string, req json.RawMessage) inter
 // OnReceiveRedirect is called when JIRA installations redirect back to NEB
 func (r *JIRARealm) OnReceiveRedirect(w http.ResponseWriter, req *http.Request) {
 	logger := log.WithField("jira_url", r.JIRAEndpoint)
-	if err := r.ensureInited(); err != nil {
-		failWith(logger, w, 500, "Failed to initialise realm", err)
-		return
-	}
 
 	requestToken, verifier, err := oauth1.ParseAuthorizationCallback(req)
 	if err != nil {
@@ -203,9 +207,6 @@ func (r *JIRARealm) AuthSession(id, userID, realmID string) types.AuthSession {
 // unauthenticated client will be used, which may not be able to see the complete list
 // of projects.
 func (r *JIRARealm) ProjectKeyExists(userID, projectKey string) (bool, error) {
-	if err := r.ensureInited(); err != nil {
-		return false, err
-	}
 	cli, err := r.JIRAClient(userID, true)
 	if err != nil {
 		return false, err
@@ -271,21 +272,6 @@ func (r *JIRARealm) JIRAClient(userID string, allowUnauth bool) (*jira.Client, e
 		oauth1.NewToken(jsession.AccessToken, jsession.AccessSecret),
 	)
 	return jira.NewClient(httpClient, r.JIRAEndpoint)
-}
-
-func (r *JIRARealm) ensureInited() error {
-	if err := r.parsePrivateKey(); err != nil {
-		log.WithError(err).Print("Failed to parse private key")
-		return err
-	}
-	// Parse the messy input URL into a canonicalised form.
-	ju, err := urls.ParseJIRAURL(r.JIRAEndpoint)
-	if err != nil {
-		log.WithError(err).Print("Failed to parse JIRA endpoint")
-		return err
-	}
-	r.JIRAEndpoint = ju.Base
-	return nil
 }
 
 func (r *JIRARealm) parsePrivateKey() error {
