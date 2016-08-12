@@ -266,13 +266,17 @@ func htmlSummaryForIssue(issue *jira.Issue) string {
 	//   "Flibble Wibble [P1, In Progress]"
 	status := html.EscapeString(issue.Fields.Status.Name)
 	if issue.Fields.Resolution != nil {
-		status = fmt.Sprintf("%s (%s)",
-			status, html.EscapeString(issue.Fields.Resolution.Name))
+		status = fmt.Sprintf(
+			"%s (%s)",
+			status, html.EscapeString(issue.Fields.Resolution.Name),
+		)
 	}
-	return fmt.Sprintf("%s [%s, %s]",
+	return fmt.Sprintf(
+		"%s [%s, %s]",
 		html.EscapeString(issue.Fields.Summary),
 		html.EscapeString(issue.Fields.Priority.Name),
-		status)
+		status,
+	)
 }
 
 func init() {

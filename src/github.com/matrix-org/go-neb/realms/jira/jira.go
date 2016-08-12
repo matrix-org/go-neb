@@ -224,8 +224,10 @@ func (r *JIRARealm) ProjectKeyExists(userID, projectKey string) (bool, error) {
 		return false, errors.New("No response returned")
 	}
 	if res.StatusCode < 200 || res.StatusCode >= 300 {
-		return false, fmt.Errorf("%srest/api/2/project returned code %d",
-			r.JIRAEndpoint, res.StatusCode)
+		return false, fmt.Errorf(
+			"%srest/api/2/project returned code %d",
+			r.JIRAEndpoint, res.StatusCode,
+		)
 	}
 
 	for _, p := range projects {
