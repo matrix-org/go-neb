@@ -239,7 +239,7 @@ func (s *jiraService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request,
 	// work out the HTML to send
 	htmlText := htmlForEvent(event, jurl.Base)
 	if htmlText == "" {
-		log.Print("Unable to process event")
+		log.WithField("project", eventProjectKey).Print("Unable to process event for project")
 		w.WriteHeader(200)
 		return
 	}
@@ -263,6 +263,7 @@ func (s *jiraService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request,
 			}
 		}
 	}
+	w.WriteHeader(200)
 }
 
 func (s *jiraService) realmIDForProject(roomID, projectKey string) string {
