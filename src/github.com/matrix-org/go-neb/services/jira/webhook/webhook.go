@@ -1,14 +1,15 @@
 package webhook
 
 import (
+	"encoding/json"
 	"fmt"
 	log "github.com/Sirupsen/logrus"
 	"github.com/andygrunwald/go-jira"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/errors"
-	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/realms/jira"
 	"net/http"
+	"strings"
 )
 
 type jiraWebhook struct {
@@ -19,6 +20,13 @@ type jiraWebhook struct {
 	Exclude bool     `json:"excludeIssueDetails"`
 	// These fields are populated on GET
 	Enabled bool `json:"enabled"`
+}
+
+type Event struct {
+	WebhookEvent string     `json:"webhookEvent"`
+	Timestamp    int64      `json:"timestamp"`
+	User         jira.User  `json:"user"`
+	Issue        jira.Issue `json:"issue"`
 }
 
 // RegisterHook checks to see if this user is allowed to track the given projects and then tracks them.
@@ -89,9 +97,23 @@ func RegisterHook(jrealm *realms.JIRARealm, projects []string, userID, webhookEn
 	return createWebhook(jrealm, webhookEndpointURL, userID)
 }
 
-// OnReceiveRequest is called when JIRA hits NEB with an update
-func OnReceiveRequest(w http.ResponseWriter, req *http.Request, cli *matrix.Client) {
-	w.WriteHeader(200) // Do nothing
+// OnReceiveRequest is called when JIRA hits NEB with an update.
+// Returns the project key and webhook event, or an error.
+func OnReceiveRequest(req *http.Request) (string, *Event, *errors.HTTPError) {
+	// extract the JIRA webhook event JSON
+	defer req.Body.Close()
+	var whe Event
+	err := json.NewDecoder(req.Body).Decode(&whe)
+	if err != nil {
+		return "", nil, &errors.HTTPError{err, "Failed to parse request JSON", 400}
+	}
+
+	if err != nil {
+		return "", nil, &errors.HTTPError{err, "Failed to parse JIRA URL", 400}
+	}
+	projKey := strings.Split(whe.Issue.Key, "-")[0]
+	projKey = strings.ToUpper(projKey)
+	return projKey, &whe, nil
 }
 
 func createWebhook(jrealm *realms.JIRARealm, webhookEndpointURL, userID string) error {

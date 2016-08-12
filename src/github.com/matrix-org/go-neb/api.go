@@ -140,6 +140,9 @@ func (wh *webhookHandler) handle(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(500)
 		return
 	}
+	log.WithFields(log.Fields{
+		"service_id": service.ServiceID(),
+	}).Print("Incoming webhook")
 	service.OnReceiveWebhook(w, req, cli)
 }
 
