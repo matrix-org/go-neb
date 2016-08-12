@@ -150,20 +150,7 @@ func (s *jiraService) expandIssue(roomID, userID, issueKey string) interface{} {
 
 	projectKey := groups[1]
 
-	// find which realm this project belongs to.
-	// TODO: Multiple realms with the same pkey will be randomly chosen.
-	realmID := ""
-	for r, realmConfig := range s.Rooms[roomID].Realms {
-		for pkey, projectConfig := range realmConfig.Projects {
-			if pkey == projectKey && projectConfig.Expand {
-				realmID = r
-				break
-			}
-		}
-		if realmID != "" {
-			break
-		}
-	}
+	realmID := s.realmIDForProject(roomID, projectKey)
 	if realmID == "" {
 		return nil
 	}
@@ -236,6 +223,18 @@ func (s *jiraService) Plugin(roomID string) plugin.Plugin {
 
 func (s *jiraService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client) {
 	webhook.OnReceiveRequest(w, req, cli)
+}
+
+func (s *jiraService) realmIDForProject(roomID, projectKey string) string {
+	// TODO: Multiple realms with the same pkey will be randomly chosen.
+	for r, realmConfig := range s.Rooms[roomID].Realms {
+		for pkey, projectConfig := range realmConfig.Projects {
+			if pkey == projectKey && projectConfig.Expand {
+				return r
+			}
+		}
+	}
+	return ""
 }
 
 func (s *jiraService) projectToRealm(userID, pkey string) (*realms.JIRARealm, error) {
