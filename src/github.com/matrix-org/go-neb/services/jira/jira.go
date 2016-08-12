@@ -11,6 +11,7 @@ import (
 	"github.com/matrix-org/go-neb/plugin"
 	"github.com/matrix-org/go-neb/realms/jira"
 	"github.com/matrix-org/go-neb/types"
+	"html"
 	"net/http"
 	"regexp"
 	"strings"
@@ -21,87 +22,173 @@ var issueKeyRegex = regexp.MustCompile("([A-z]+)-([0-9]+)")
 var projectKeyRegex = regexp.MustCompile("^[A-z]+$")
 
 type jiraService struct {
-	id     string
-	UserID string
-	Rooms  []string
+	id           string
+	BotUserID    string
+	ClientUserID string
+	Rooms        map[string]struct { // room_id => {}
+		RealmID  string              // Determines the JIRA endpoint
+		Projects map[string]struct { // SYN => {}
+			Expand bool
+			Track  bool
+		}
+	}
 }
 
-func (s *jiraService) ServiceUserID() string          { return s.UserID }
-func (s *jiraService) ServiceID() string              { return s.id }
-func (s *jiraService) ServiceType() string            { return "jira" }
-func (s *jiraService) RoomIDs() []string              { return s.Rooms }
+func (s *jiraService) ServiceUserID() string { return s.BotUserID }
+func (s *jiraService) ServiceID() string     { return s.id }
+func (s *jiraService) ServiceType() string   { return "jira" }
+func (s *jiraService) RoomIDs() []string {
+	var keys []string
+	for k := range s.Rooms {
+		keys = append(keys, k)
+	}
+	return keys
+}
 func (s *jiraService) Register() error                { return nil }
 func (s *jiraService) PostRegister(old types.Service) {}
+
+func (s *jiraService) cmdJiraCreate(roomID, userID string, args []string) (interface{}, error) {
+	// E.g jira create PROJ "Issue title" "Issue desc"
+	if len(args) <= 1 {
+		return nil, errors.New("Missing project key (e.g 'ABC') and/or title")
+	}
+
+	if !projectKeyRegex.MatchString(args[0]) {
+		return nil, errors.New("Project key must only contain A-Z.")
+	}
+
+	pkey := strings.ToUpper(args[0]) // REST API complains if they are not ALL CAPS
+
+	title := args[1]
+	desc := ""
+	if len(args) == 3 {
+		desc = args[2]
+	} else if len(args) > 3 { // > 3 args is probably a title without quote marks
+		joinedTitle := strings.Join(args[1:], " ")
+		title = joinedTitle
+	}
+
+	r, err := s.projectToRealm(userID, pkey)
+	if err != nil {
+		log.WithError(err).Print("Failed to map project key to realm")
+		return nil, errors.New("Failed to map project key to a JIRA endpoint.")
+	}
+	if r == nil {
+		return nil, errors.New("No known project exists with that project key.")
+	}
+
+	iss := jira.Issue{
+		Fields: &jira.IssueFields{
+			Summary:     title,
+			Description: desc,
+			Project: jira.Project{
+				Key: pkey,
+			},
+			// FIXME: This may vary depending on the JIRA install!
+			Type: jira.IssueType{
+				Name: "Bug",
+			},
+		},
+	}
+	cli, err := r.JIRAClient(userID, false)
+	if err != nil {
+		return nil, err
+	}
+	i, res, err := cli.Issue.Create(&iss)
+	if err != nil {
+		log.WithFields(log.Fields{
+			log.ErrorKey: err,
+			"user_id":    userID,
+			"project":    pkey,
+			"realm_id":   r.ID(),
+		}).Print("Failed to create issue")
+		return nil, errors.New("Failed to create issue")
+	}
+	if res.StatusCode < 200 || res.StatusCode >= 300 {
+		return nil, fmt.Errorf("Failed to create issue: JIRA returned %d", res.StatusCode)
+	}
+
+	return &matrix.TextMessage{
+		"m.notice",
+		fmt.Sprintf("Created issue: %sbrowse/%s", r.JIRAEndpoint, i.Key),
+	}, nil
+}
+
+func (s *jiraService) expandIssue(roomID, userID, issueKey string) interface{} {
+	issueKey = strings.ToUpper(issueKey)
+	logger := log.WithField("issue_key", issueKey)
+	// [ISSU-123, ISSU, 123]
+	groups := issueKeyRegex.FindStringSubmatch(issueKey)
+	if len(groups) != 3 {
+		logger.Print("Failed to find issue key")
+		return nil
+	}
+
+	projectKey := groups[1]
+	if !s.Rooms[roomID].Projects[projectKey].Expand {
+		return nil
+	}
+
+	r, err := database.GetServiceDB().LoadAuthRealm(s.Rooms[roomID].RealmID)
+	if err != nil {
+		logger.WithFields(log.Fields{
+			"realm_id":   s.Rooms[roomID].RealmID,
+			log.ErrorKey: err,
+		}).Print("Failed to load realm")
+		return nil
+	}
+	jrealm, ok := r.(*realms.JIRARealm)
+	if !ok {
+		logger.WithField("realm_id", s.Rooms[roomID].RealmID).Print(
+			"Realm cannot be typecast to JIRARealm",
+		)
+	}
+	logger.WithFields(log.Fields{
+		"room_id": roomID,
+		"user_id": s.ClientUserID,
+	}).Print("Expanding issue")
+
+	// Use the person who *provisioned* the service to check for project keys
+	// rather than the person who mentioned the issue key, as it is unlikely
+	// some random who mentioned the issue will have the intended auth.
+	cli, err := jrealm.JIRAClient(s.ClientUserID, false)
+	if err != nil {
+		logger.WithFields(log.Fields{
+			log.ErrorKey: err,
+			"user_id":    s.ClientUserID,
+		}).Print("Failed to retrieve client")
+		return nil
+	}
+
+	issue, _, err := cli.Issue.Get(issueKey)
+	if err != nil {
+		logger.WithError(err).Print("Failed to GET issue")
+		return err
+	}
+	return matrix.GetHTMLMessage(
+		"m.notice",
+		fmt.Sprintf(
+			"%sbrowse/%s : %s",
+			jrealm.JIRAEndpoint, issueKey, htmlSummaryForIssue(issue),
+		),
+	)
+}
+
 func (s *jiraService) Plugin(roomID string) plugin.Plugin {
 	return plugin.Plugin{
 		Commands: []plugin.Command{
 			plugin.Command{
 				Path: []string{"jira", "create"},
 				Command: func(roomID, userID string, args []string) (interface{}, error) {
-					// E.g jira create PROJ "Issue title" "Issue desc"
-					if len(args) <= 1 {
-						return nil, errors.New("Missing project key (e.g 'ABC') and/or title")
-					}
-
-					if !projectKeyRegex.MatchString(args[0]) {
-						return nil, errors.New("Project key must only contain A-Z.")
-					}
-
-					pkey := strings.ToUpper(args[0]) // REST API complains if they are not ALL CAPS
-
-					title := args[1]
-					desc := ""
-					if len(args) == 3 {
-						desc = args[2]
-					} else if len(args) > 3 { // > 3 args is probably a title without quote marks
-						joinedTitle := strings.Join(args[1:], " ")
-						title = joinedTitle
-					}
-
-					r, err := s.projectToRealm(userID, pkey)
-					if err != nil {
-						log.WithError(err).Print("Failed to map project key to realm")
-						return nil, errors.New("Failed to map project key to a JIRA endpoint.")
-					}
-					if r == nil {
-						return nil, errors.New("No known project exists with that project key.")
-					}
-
-					iss := jira.Issue{
-						Fields: &jira.IssueFields{
-							Summary:     title,
-							Description: desc,
-							Project: jira.Project{
-								Key: pkey,
-							},
-							// FIXME: This may vary depending on the JIRA install!
-							Type: jira.IssueType{
-								Name: "Bug",
-							},
-						},
-					}
-					cli, err := r.JIRAClient(userID, false)
-					if err != nil {
-						return nil, err
-					}
-					i, res, err := cli.Issue.Create(&iss)
-					if err != nil {
-						log.WithFields(log.Fields{
-							log.ErrorKey: err,
-							"user_id":    userID,
-							"project":    pkey,
-							"realm_id":   r.ID(),
-						}).Print("Failed to create issue")
-						return nil, errors.New("Failed to create issue")
-					}
-					if res.StatusCode < 200 || res.StatusCode >= 300 {
-						return nil, fmt.Errorf("Failed to create issue: JIRA returned %d", res.StatusCode)
-					}
-
-					return &matrix.TextMessage{
-						"m.notice",
-						fmt.Sprintf("Created issue: %s", i.Key),
-					}, nil
+					return s.cmdJiraCreate(roomID, userID, args)
+				},
+			},
+		},
+		Expansions: []plugin.Expansion{
+			plugin.Expansion{
+				Regexp: issueKeyRegex,
+				Expand: func(roomID, userID, issueKey string) interface{} {
+					return s.expandIssue(roomID, userID, issueKey)
 				},
 			},
 		},
@@ -172,6 +259,24 @@ func (s *jiraService) projectToRealm(userID, pkey string) (*realms.JIRARealm, er
 		}
 	}
 	return nil, nil
+}
+
+func htmlSummaryForIssue(issue *jira.Issue) string {
+	// form a summary of the issue being affected e.g:
+	//   "Flibble Wibble [P1, In Progress]"
+	status := html.EscapeString(issue.Fields.Status.Name)
+	if issue.Fields.Resolution != nil {
+		status = fmt.Sprintf(
+			"%s (%s)",
+			status, html.EscapeString(issue.Fields.Resolution.Name),
+		)
+	}
+	return fmt.Sprintf(
+		"%s [%s, %s]",
+		html.EscapeString(issue.Fields.Summary),
+		html.EscapeString(issue.Fields.Priority.Name),
+		status,
+	)
 }
 
 func init() {
