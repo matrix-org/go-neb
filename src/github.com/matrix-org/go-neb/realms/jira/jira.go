@@ -264,7 +264,6 @@ func (r *JIRARealm) JIRAClient(userID string, allowUnauth bool) (*jira.Client, e
 		}
 		return nil, errors.New("No authenticated session found for " + userID)
 	}
-
 	// make an authenticated client
 	auth := r.oauth1Config(r.JIRAEndpoint)
 	httpClient := auth.Client(

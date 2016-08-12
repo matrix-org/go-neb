@@ -202,7 +202,7 @@ JIRA installation. Once that is complete, users can OAuth on the target JIRA ins
 ```
 curl -X POST localhost:4050/admin/requestAuthSession --data-binary '{
     "RealmID": "jirarealm",
-    "UserID": "@your_user_id:localhost",
+    "UserID": "@example:localhost",
     "Config": {
     }
 }'
@@ -218,7 +218,27 @@ Follow this link and grant access for NEB to act on your behalf.
 
 ### Create a JIRA bot
 
-TODO
+```
+curl -X POST localhost:4050/admin/configureService --data-binary '{
+    "Type": "jira",
+    "Id": "jid",
+    "Config": {
+        "BotUserID": "@goneb:localhost",
+        "ClientUserID": "@example:localhost",
+        "Rooms": {
+            "!EmwxeXCVubhskuWvaw:localhost": {
+                "RealmID": "jirarealm",
+                "Projects": {
+                    "BOTS": {
+                        "Expand": true,
+                        "Track": true
+                    }
+                }
+            }
+        }
+    }
+}'
+```
 
 
 # Developing on go-neb.

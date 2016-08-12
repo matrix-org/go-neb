@@ -129,21 +129,29 @@ func (s *jiraService) expandIssue(roomID, userID, issueKey string) interface{} {
 		return nil
 	}
 
+	r, err := database.GetServiceDB().LoadAuthRealm(s.Rooms[roomID].RealmID)
+	if err != nil {
+		logger.WithFields(log.Fields{
+			"realm_id":   s.Rooms[roomID].RealmID,
+			log.ErrorKey: err,
+		}).Print("Failed to load realm")
+		return nil
+	}
+	jrealm, ok := r.(*realms.JIRARealm)
+	if !ok {
+		logger.WithField("realm_id", s.Rooms[roomID].RealmID).Print(
+			"Realm cannot be typecast to JIRARealm",
+		)
+	}
+	logger.WithFields(log.Fields{
+		"room_id": roomID,
+		"user_id": s.ClientUserID,
+	}).Print("Expanding issue")
+
 	// Use the person who *provisioned* the service to check for project keys
 	// rather than the person who mentioned the issue key, as it is unlikely
 	// some random who mentioned the issue will have the intended auth.
-	r, err := s.projectToRealm(s.ClientUserID, projectKey)
-	if err != nil {
-		logger.WithError(err).Print("Failed to map project key to realm")
-		return nil
-	}
-	if r == nil {
-		logger.Print("No known project exists with that project key.")
-		return nil
-	}
-
-	logger.WithField("room_id", roomID).Print("Expanding issue")
-	cli, err := r.JIRAClient(s.ClientUserID, false)
+	cli, err := jrealm.JIRAClient(s.ClientUserID, false)
 	if err != nil {
 		logger.WithFields(log.Fields{
 			log.ErrorKey: err,
@@ -161,7 +169,7 @@ func (s *jiraService) expandIssue(roomID, userID, issueKey string) interface{} {
 		"m.notice",
 		fmt.Sprintf(
 			"%sbrowse/%s : %s",
-			r.JIRAEndpoint, issueKey, htmlSummaryForIssue(issue),
+			jrealm.JIRAEndpoint, issueKey, htmlSummaryForIssue(issue),
 		),
 	)
 }
