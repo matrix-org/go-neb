@@ -85,6 +85,7 @@ func CreateService(serviceID, serviceType string, serviceJSON []byte) (Service, 
 type AuthRealm interface {
 	ID() string
 	Type() string
+	Init() error
 	Register() error
 	OnReceiveRedirect(w http.ResponseWriter, req *http.Request)
 	AuthSession(id, userID, realmID string) AuthSession
@@ -108,6 +109,9 @@ func CreateAuthRealm(realmID, realmType string, realmJSON []byte) (AuthRealm, er
 	redirectURL := baseURL + "realms/redirects/" + realmID
 	r := f(realmID, redirectURL)
 	if err := json.Unmarshal(realmJSON, r); err != nil {
+		return nil, err
+	}
+	if err := r.Init(); err != nil {
 		return nil, err
 	}
 	return r, nil

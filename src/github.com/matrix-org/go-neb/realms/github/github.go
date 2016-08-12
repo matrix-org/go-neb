@@ -53,6 +53,10 @@ func (r *githubRealm) Type() string {
 	return "github"
 }
 
+func (r *githubRealm) Init() error {
+	return nil
+}
+
 func (r *githubRealm) Register() error {
 	return nil
 }
