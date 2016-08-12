@@ -10,6 +10,7 @@ import (
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/plugin"
 	"github.com/matrix-org/go-neb/realms/jira"
+	"github.com/matrix-org/go-neb/realms/jira/urls"
 	"github.com/matrix-org/go-neb/services/jira/webhook"
 	"github.com/matrix-org/go-neb/types"
 	"html"
@@ -222,7 +223,47 @@ func (s *jiraService) Plugin(roomID string) plugin.Plugin {
 }
 
 func (s *jiraService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client) {
-	webhook.OnReceiveRequest(w, req, cli)
+	eventProjectKey, event, httpErr := webhook.OnReceiveRequest(req)
+	if httpErr != nil {
+		log.WithError(httpErr).Print("Failed to handle JIRA webhook")
+		w.WriteHeader(500)
+		return
+	}
+	// grab base jira url
+	jurl, err := urls.ParseJIRAURL(event.Issue.Self)
+	if err != nil {
+		log.WithError(err).Print("Failed to parse base JIRA URL")
+		w.WriteHeader(500)
+		return
+	}
+	// work out the HTML to send
+	htmlText := htmlForEvent(event, jurl.Base)
+	if htmlText == "" {
+		log.WithField("project", eventProjectKey).Print("Unable to process event for project")
+		w.WriteHeader(200)
+		return
+	}
+	// send message into each configured room
+	for roomID, roomConfig := range s.Rooms {
+		for _, realmConfig := range roomConfig.Realms {
+			for pkey, projectConfig := range realmConfig.Projects {
+				if pkey != eventProjectKey || !projectConfig.Track {
+					continue
+				}
+				_, msgErr := cli.SendMessageEvent(
+					roomID, "m.room.message", matrix.GetHTMLMessage("m.notice", htmlText),
+				)
+				if msgErr != nil {
+					log.WithFields(log.Fields{
+						log.ErrorKey: msgErr,
+						"project":    pkey,
+						"room_id":    roomID,
+					}).Print("Failed to send notice into room")
+				}
+			}
+		}
+	}
+	w.WriteHeader(200)
 }
 
 func (s *jiraService) realmIDForProject(roomID, projectKey string) string {
@@ -332,6 +373,31 @@ func htmlSummaryForIssue(issue *jira.Issue) string {
 		html.EscapeString(issue.Fields.Summary),
 		html.EscapeString(issue.Fields.Priority.Name),
 		status,
+	)
+}
+
+// htmlForEvent formats a webhook event as HTML. Returns an empty string if there is nothing to send/cannot
+// be parsed.
+func htmlForEvent(whe *webhook.Event, jiraBaseURL string) string {
+	action := ""
+	if whe.WebhookEvent == "jira:issue_updated" {
+		action = "updated"
+	} else if whe.WebhookEvent == "jira:issue_deleted" {
+		action = "deleted"
+	} else if whe.WebhookEvent == "jira:issue_created" {
+		action = "created"
+	} else {
+		return ""
+	}
+
+	summaryHTML := htmlSummaryForIssue(&whe.Issue)
+
+	return fmt.Sprintf("%s %s <b>%s</b> - %s %s",
+		html.EscapeString(whe.User.Name),
+		html.EscapeString(action),
+		html.EscapeString(whe.Issue.Key),
+		summaryHTML,
+		html.EscapeString(jiraBaseURL+"browse/"+whe.Issue.Key),
 	)
 }
 
