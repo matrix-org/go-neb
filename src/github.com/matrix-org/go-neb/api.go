@@ -196,16 +196,12 @@ func (s *configureServiceHandler) OnIncomingRequest(req *http.Request) (interfac
 		return nil, &errors.HTTPError{nil, `Must supply a "ID", a "Type" and a "Config"`, 400}
 	}
 
-	service := types.CreateService(body.ID, body.Type)
-	if service == nil {
-		return nil, &errors.HTTPError{nil, "Unknown service type", 400}
-	}
-
-	if err := json.Unmarshal(body.Config, service); err != nil {
+	service, err := types.CreateService(body.ID, body.Type, body.Config)
+	if err != nil {
 		return nil, &errors.HTTPError{err, "Error parsing config JSON", 400}
 	}
 
-	err := service.Register()
+	err = service.Register()
 	if err != nil {
 		return nil, &errors.HTTPError{err, "Failed to register service: " + err.Error(), 500}
 	}

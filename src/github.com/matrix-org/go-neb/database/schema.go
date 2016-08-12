@@ -135,14 +135,7 @@ func selectServiceTxn(txn *sql.Tx, serviceID string) (types.Service, error) {
 	if err := row.Scan(&serviceType, &serviceJSON); err != nil {
 		return nil, err
 	}
-	service := types.CreateService(serviceID, serviceType)
-	if service == nil {
-		return nil, fmt.Errorf("Cannot create services of type %s", serviceType)
-	}
-	if err := json.Unmarshal(serviceJSON, service); err != nil {
-		return nil, err
-	}
-	return service, nil
+	return types.CreateService(serviceID, serviceType, serviceJSON)
 }
 
 const updateServiceSQL = `

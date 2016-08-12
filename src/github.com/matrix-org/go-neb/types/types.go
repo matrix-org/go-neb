@@ -66,14 +66,18 @@ func RegisterService(factory func(string, string) Service) {
 }
 
 // CreateService creates a Service of the given type and serviceID.
-// Returns nil if the Service couldn't be created.
-func CreateService(serviceID, serviceType string) Service {
+// Returns an error if the Service couldn't be created.
+func CreateService(serviceID, serviceType string, serviceJSON []byte) (Service, error) {
 	f := servicesByType[serviceType]
 	if f == nil {
-		return nil
+		return nil, errors.New("Unknown service type: " + serviceType)
 	}
 	webhookEndpointURL := baseURL + "services/hooks/" + serviceID
-	return f(serviceID, webhookEndpointURL)
+	service := f(serviceID, webhookEndpointURL)
+	if err := json.Unmarshal(serviceJSON, service); err != nil {
+		return nil, err
+	}
+	return service, nil
 }
 
 // AuthRealm represents a place where a user can authenticate themselves.
