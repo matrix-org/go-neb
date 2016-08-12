@@ -96,16 +96,12 @@ func (h *configureAuthRealmHandler) OnIncomingRequest(req *http.Request) (interf
 		return nil, &errors.HTTPError{nil, `Must supply a "ID", a "Type" and a "Config"`, 400}
 	}
 
-	realm := types.CreateAuthRealm(body.ID, body.Type)
-	if realm == nil {
-		return nil, &errors.HTTPError{nil, "Unknown realm type", 400}
-	}
-
-	if err := json.Unmarshal(body.Config, realm); err != nil {
+	realm, err := types.CreateAuthRealm(body.ID, body.Type, body.Config)
+	if err != nil {
 		return nil, &errors.HTTPError{err, "Error parsing config JSON", 400}
 	}
 
-	if err := realm.Register(); err != nil {
+	if err = realm.Register(); err != nil {
 		return nil, &errors.HTTPError{err, "Error registering auth realm", 400}
 	}
 

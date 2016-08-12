@@ -252,14 +252,7 @@ func selectRealmTxn(txn *sql.Tx, realmID string) (types.AuthRealm, error) {
 	if err := row.Scan(&realmType, &realmJSON); err != nil {
 		return nil, err
 	}
-	realm := types.CreateAuthRealm(realmID, realmType)
-	if realm == nil {
-		return nil, fmt.Errorf("Cannot create realm of type %s", realmType)
-	}
-	if err := json.Unmarshal(realmJSON, realm); err != nil {
-		return nil, err
-	}
-	return realm, nil
+	return types.CreateAuthRealm(realmID, realmType, realmJSON)
 }
 
 const selectRealmsByTypeSQL = `
@@ -273,17 +266,14 @@ func selectRealmsByTypeTxn(txn *sql.Tx, realmType string) (realms []types.AuthRe
 	}
 	defer rows.Close()
 	for rows.Next() {
+		var realm types.AuthRealm
 		var realmID string
 		var realmJSON []byte
 		if err = rows.Scan(&realmID, &realmJSON); err != nil {
 			return
 		}
-		realm := types.CreateAuthRealm(realmID, realmType)
-		if realm == nil {
-			err = fmt.Errorf("Cannot create realm %s of type %s", realmID, realmType)
-			return
-		}
-		if err = json.Unmarshal(realmJSON, realm); err != nil {
+		realm, err = types.CreateAuthRealm(realmID, realmType, realmJSON)
+		if err != nil {
 			return
 		}
 		realms = append(realms, realm)
@@ -343,11 +333,8 @@ func selectAuthSessionByUserTxn(txn *sql.Tx, realmID, userID string) (types.Auth
 	if err := row.Scan(&id, &realmType, &realmJSON, &sessionJSON); err != nil {
 		return nil, err
 	}
-	realm := types.CreateAuthRealm(realmID, realmType)
-	if realm == nil {
-		return nil, fmt.Errorf("Cannot create realm of type %s", realmType)
-	}
-	if err := json.Unmarshal(realmJSON, realm); err != nil {
+	realm, err := types.CreateAuthRealm(realmID, realmType, realmJSON)
+	if err != nil {
 		return nil, err
 	}
 	session := realm.AuthSession(id, userID, realmID)
@@ -375,11 +362,8 @@ func selectAuthSessionByIDTxn(txn *sql.Tx, realmID, id string) (types.AuthSessio
 	if err := row.Scan(&userID, &realmType, &realmJSON, &sessionJSON); err != nil {
 		return nil, err
 	}
-	realm := types.CreateAuthRealm(realmID, realmType)
-	if realm == nil {
-		return nil, fmt.Errorf("Cannot create realm of type %s", realmType)
-	}
-	if err := json.Unmarshal(realmJSON, realm); err != nil {
+	realm, err := types.CreateAuthRealm(realmID, realmType, realmJSON)
+	if err != nil {
 		return nil, err
 	}
 	session := realm.AuthSession(id, userID, realmID)

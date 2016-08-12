@@ -95,14 +95,18 @@ func RegisterAuthRealm(factory func(string, string) AuthRealm) {
 }
 
 // CreateAuthRealm creates an AuthRealm of the given type and realm ID.
-// Returns nil if the realm couldn't be created.
-func CreateAuthRealm(realmID, realmType string) AuthRealm {
+// Returns an error if the realm couldn't be created or the JSON cannot be unmarshalled.
+func CreateAuthRealm(realmID, realmType string, realmJSON []byte) (AuthRealm, error) {
 	f := realmsByType[realmType]
 	if f == nil {
-		return nil
+		return nil, errors.New("Unknown realm type: " + realmType)
 	}
 	redirectURL := baseURL + "realms/redirects/" + realmID
-	return f(realmID, redirectURL)
+	r := f(realmID, redirectURL)
+	if err := json.Unmarshal(realmJSON, r); err != nil {
+		return nil, err
+	}
+	return r, nil
 }
 
 // AuthSession represents a single authentication session between a user and
