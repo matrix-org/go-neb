@@ -295,6 +295,6 @@ func (h *getSessionHandler) OnIncomingRequest(req *http.Request) (interface{}, *
 	return &struct {
 		ID            string
 		Authenticated bool
-		Session       interface{}
+		Info          interface{}
 	}{session.ID(), session.Authenticated(), session.Info()}, nil
 }
