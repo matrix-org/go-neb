@@ -86,6 +86,37 @@ check that the server is still running.
     curl -X GET localhost:4050/test
 
     {}
+    
+## Architecture
+
+```
+
+   HOMESERVER
+       |
++=============================================================+
+|      |                 Go-NEB                               |
+| +---------+                                                 |
+| | Clients |                                                 |
+| +---------+                                                 |
+|      |                                                      |
+| +---------+       +------------+      +--------------+      |
+| | Service |-------| Auth Realm |------| Auth Session |-+    |
+| +---------+       +------------+      +--------------+ |    |
+|     ^                   ^              +---------------+    |
+|     |                   |                                   |
++=============================================================+
+      |                   |                   
+    WEBHOOK            REDIRECT
+    REQUEST            REQUEST
+    
+    
+Clients      = A thing which can talk to homeservers and listen for events.
+Service      = An individual bot, configured by a user.
+Auth Realm   = A place where a user can authenticate with.
+Auth Session = An individual authentication session
+
+
+```
 
 Some `AuthRealms` support "Starter Links". These are HTTP URLs which knowledgeable clients should use to *start* the auth process. They are commonly returned as metadata to `!commands`.
 These links require the client to prove that they own a given user ID by appending a token
