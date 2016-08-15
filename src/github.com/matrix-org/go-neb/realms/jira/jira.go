@@ -33,6 +33,7 @@ type JIRARealm struct {
 	PublicKeyPEM   string // clobbered based on PrivateKeyPEM
 	PrivateKeyPEM  string
 	HasWebhook     bool // clobbered based on NEB
+	StarterLink    string
 }
 
 // JIRASession represents a single authentication session between a user and a JIRA endpoint.
@@ -256,9 +257,7 @@ func (r *JIRARealm) JIRAClient(userID string, allowUnauth bool) (*jira.Client, e
 				// make an unauthenticated client
 				return jira.NewClient(nil, r.JIRAEndpoint)
 			}
-			return nil, errors.New("No authenticated session found for " + userID)
 		}
-		// some other error
 		return nil, err
 	}
 
