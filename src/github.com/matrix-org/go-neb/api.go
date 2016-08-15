@@ -235,7 +235,7 @@ type getServiceHandler struct {
 }
 
 func (h *getServiceHandler) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError) {
-	if req.Method != "GET" {
+	if req.Method != "POST" {
 		return nil, &errors.HTTPError{nil, "Unsupported Method", 405}
 	}
 	var body struct {
