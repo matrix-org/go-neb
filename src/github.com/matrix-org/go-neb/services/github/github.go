@@ -28,6 +28,7 @@ type githubService struct {
 	ClientUserID       string
 	RealmID            string
 	SecretToken        string
+	StarterLink        string
 	Rooms              map[string]struct { // room_id => {}
 		Repos map[string]struct { // owner/repo => { events: ["push","issue","pull_request"] }
 			Events []string
@@ -49,9 +50,10 @@ func (s *githubService) RoomIDs() []string {
 func (s *githubService) cmdGithubCreate(roomID, userID string, args []string) (interface{}, error) {
 	cli := s.githubClientFor(userID, false)
 	if cli == nil {
-		// TODO: send starter link
-		return &matrix.TextMessage{"m.notice",
-			userID + " : You have not linked your Github account."}, nil
+		return matrix.StarterLinkMessage{
+			Body: "You need to OAuth with Github before you can create issues.",
+			Link: s.StarterLink,
+		}, nil
 	}
 
 	if len(args) < 2 {
