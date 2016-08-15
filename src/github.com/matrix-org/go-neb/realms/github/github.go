@@ -5,7 +5,9 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	log "github.com/Sirupsen/logrus"
+	"github.com/google/go-github/github"
 	"github.com/matrix-org/go-neb/database"
+	"github.com/matrix-org/go-neb/services/github/client"
 	"github.com/matrix-org/go-neb/types"
 	"io/ioutil"
 	"net/http"
@@ -35,6 +37,33 @@ type GithubSession struct {
 // Authenticated returns true if the user has completed the auth process
 func (s *GithubSession) Authenticated() bool {
 	return s.AccessToken != ""
+}
+
+// Info returns a list of possible repositories that this session can integrate with.
+func (s *GithubSession) Info() interface{} {
+	logger := log.WithFields(log.Fields{
+		"user_id":  s.userID,
+		"realm_id": s.realmID,
+	})
+	cli := client.New(s.AccessToken)
+	// query for a list of possible projects
+	rs, _, err := cli.Repositories.List("", &github.RepositoryListOptions{
+		Type: "all",
+	})
+	if err != nil {
+		logger.WithError(err).Print("Failed to query github projects on github.com")
+		return nil
+	}
+
+	var repos []client.TrimmedRepository
+
+	for _, r := range rs {
+		repos = append(repos, client.TrimRepository(r))
+	}
+
+	return struct {
+		Repos []client.TrimmedRepository
+	}{repos}
 }
 
 // UserID returns the user_id who authorised with Github
