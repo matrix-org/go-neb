@@ -12,6 +12,7 @@ import (
 	"net/url"
 )
 
+// GithubRealm can handle OAuth processes with github.com
 type GithubRealm struct {
 	id           string
 	redirectURL  string
@@ -46,22 +47,27 @@ func (s *GithubSession) ID() string {
 	return s.id
 }
 
+// ID returns the realm ID
 func (r *GithubRealm) ID() string {
 	return r.id
 }
 
+// Type is github
 func (r *GithubRealm) Type() string {
 	return "github"
 }
 
+// Init does nothing.
 func (r *GithubRealm) Init() error {
 	return nil
 }
 
+// Register does nothing.
 func (r *GithubRealm) Register() error {
 	return nil
 }
 
+// RequestAuthSession generates an OAuth2 URL for this user to auth with github via.
 func (r *GithubRealm) RequestAuthSession(userID string, req json.RawMessage) interface{} {
 	state, err := randomString(10)
 	if err != nil {
@@ -91,6 +97,7 @@ func (r *GithubRealm) RequestAuthSession(userID string, req json.RawMessage) int
 	}{u.String()}
 }
 
+// OnReceiveRedirect processes OAuth redirect requests from Github
 func (r *GithubRealm) OnReceiveRedirect(w http.ResponseWriter, req *http.Request) {
 	// parse out params from the request
 	code := req.URL.Query().Get("code")
@@ -149,6 +156,7 @@ func (r *GithubRealm) OnReceiveRedirect(w http.ResponseWriter, req *http.Request
 	w.Write([]byte("OK!"))
 }
 
+// AuthSession returns a GithubSession for this user
 func (r *GithubRealm) AuthSession(id, userID, realmID string) types.AuthSession {
 	return &GithubSession{
 		id:      id,
