@@ -118,8 +118,7 @@ Returns:
   "NewConfig":{
     "ClientSecret":"YOUR_CLIENT_SECRET",
     "ClientID":"YOUR_CLIENT_ID",
-    "StarterLink": "https://example.com/requestGithubOAuthToken",
-    "RedirectBaseURI":"https://public.path.to.neb"
+    "StarterLink": "https://example.com/requestGithubOAuthToken"
   }
 }
 ```
