@@ -123,4 +123,5 @@ type AuthSession interface {
 	ID() string
 	UserID() string
 	RealmID() string
+	Authenticated() bool
 }

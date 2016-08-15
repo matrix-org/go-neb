@@ -30,6 +30,11 @@ type GithubSession struct {
 	realmID string
 }
 
+// Authenticated returns true if the user has completed the auth process
+func (s *GithubSession) Authenticated() bool {
+	return s.AccessToken != ""
+}
+
 // UserID returns the user_id who authorised with Github
 func (s *GithubSession) UserID() string {
 	return s.userID

@@ -46,6 +46,11 @@ type JIRASession struct {
 	AccessSecret  string
 }
 
+// Authenticated returns true if the user has completed the auth process
+func (s *JIRASession) Authenticated() bool {
+	return s.AccessToken != "" && s.AccessSecret != ""
+}
+
 // UserID returns the ID of the user performing the authentication.
 func (s *JIRASession) UserID() string {
 	return s.userID

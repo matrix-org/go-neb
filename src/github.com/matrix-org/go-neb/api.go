@@ -263,3 +263,38 @@ func (h *getServiceHandler) OnIncomingRequest(req *http.Request) (interface{}, *
 		Config types.Service
 	}{srv.ServiceID(), srv.ServiceType(), srv}, nil
 }
+
+type getSessionHandler struct {
+	db *database.ServiceDB
+}
+
+func (h *getSessionHandler) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError) {
+	if req.Method != "GET" {
+		return nil, &errors.HTTPError{nil, "Unsupported Method", 405}
+	}
+	var body struct {
+		RealmID string
+		UserID  string
+	}
+	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
+		return nil, &errors.HTTPError{err, "Error parsing request JSON", 400}
+	}
+
+	if body.RealmID == "" || body.UserID == "" {
+		return nil, &errors.HTTPError{nil, `Must supply a "RealmID" and "UserID"`, 400}
+	}
+
+	session, err := h.db.LoadAuthSessionByUser(body.RealmID, body.UserID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, &errors.HTTPError{err, `Session not found`, 404}
+		}
+		return nil, &errors.HTTPError{err, `Failed to load session`, 500}
+	}
+
+	return &struct {
+		ID            string
+		Authenticated bool
+		Session       types.AuthSession
+	}{session.ID(), session.Authenticated(), session}, nil
+}
