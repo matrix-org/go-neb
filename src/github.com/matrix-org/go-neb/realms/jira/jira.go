@@ -33,6 +33,7 @@ type JIRARealm struct {
 	PublicKeyPEM   string // clobbered based on PrivateKeyPEM
 	PrivateKeyPEM  string
 	HasWebhook     bool // clobbered based on NEB
+	StarterLink    string
 }
 
 // JIRASession represents a single authentication session between a user and a JIRA endpoint.

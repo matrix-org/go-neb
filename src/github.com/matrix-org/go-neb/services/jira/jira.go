@@ -118,8 +118,13 @@ func (s *jiraService) cmdJiraCreate(roomID, userID string, args []string) (inter
 	cli, err := r.JIRAClient(userID, false)
 	if err != nil {
 		if err == sql.ErrNoRows { // no client found
-			return &matrix.TextMessage{"m.notice",
-				userID + " : You have not linked your JIRA account."}, nil
+			return matrix.StarterLinkMessage{
+				Body: fmt.Sprintf(
+					"You need to OAuth with JIRA on %s before you can create issues.",
+					r.JIRAEndpoint,
+				),
+				Link: r.StarterLink,
+			}, nil
 		}
 		return nil, err
 	}
