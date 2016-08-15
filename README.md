@@ -65,6 +65,20 @@ configured. To start an echo service:
             "Rooms": ["!QkdpvTwGlrptdeViJx:localhost:8448"]
         }
     }
+    
+To retrieve an existing Service:
+
+    curl -X POST localhost:4050/admin/getService --data-binary '{
+        "Id": "myserviceid"
+    }'
+    {
+        "Type": "echo",
+        "Id": "myserviceid",
+        "Config": {
+            "UserID": "@goneb:localhost:8448",
+            "Rooms": ["!QkdpvTwGlrptdeViJx:localhost:8448"]
+        }
+    }
 
 Go-neb has a heartbeat listener that returns 200 OK so that load balancers can
 check that the server is still running.
@@ -245,11 +259,14 @@ curl -X POST localhost:4050/admin/configureService --data-binary '{
         "ClientUserID": "@example:localhost",
         "Rooms": {
             "!EmwxeXCVubhskuWvaw:localhost": {
-                "RealmID": "jirarealm",
-                "Projects": {
-                    "BOTS": {
-                        "Expand": true,
-                        "Track": true
+                "Realms": {
+                    "jira_realm_id": {
+                        "Projects": {
+                            "BOTS": {
+                                "Expand": true,
+                                "Track": true
+                            }
+                        }
                     }
                 }
             }
