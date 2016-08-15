@@ -40,6 +40,7 @@ func main() {
 	}
 
 	http.Handle("/test", server.MakeJSONAPI(&heartbeatHandler{}))
+	http.Handle("/admin/getService", server.MakeJSONAPI(&getServiceHandler{db: db}))
 	http.Handle("/admin/configureClient", server.MakeJSONAPI(&configureClientHandler{db: db, clients: clients}))
 	http.Handle("/admin/configureService", server.MakeJSONAPI(&configureServiceHandler{db: db, clients: clients}))
 	http.Handle("/admin/configureAuthRealm", server.MakeJSONAPI(&configureAuthRealmHandler{db: db}))

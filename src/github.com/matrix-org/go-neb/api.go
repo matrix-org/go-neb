@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"encoding/json"
 	log "github.com/Sirupsen/logrus"
 	"github.com/matrix-org/go-neb/clients"
@@ -227,4 +228,38 @@ func (s *configureServiceHandler) OnIncomingRequest(req *http.Request) (interfac
 		OldConfig types.Service
 		NewConfig types.Service
 	}{body.ID, body.Type, oldService, service}, nil
+}
+
+type getServiceHandler struct {
+	db *database.ServiceDB
+}
+
+func (h *getServiceHandler) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError) {
+	if req.Method != "POST" {
+		return nil, &errors.HTTPError{nil, "Unsupported Method", 405}
+	}
+	var body struct {
+		ID string
+	}
+	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
+		return nil, &errors.HTTPError{err, "Error parsing request JSON", 400}
+	}
+
+	if body.ID == "" {
+		return nil, &errors.HTTPError{nil, `Must supply a "ID"`, 400}
+	}
+
+	srv, err := h.db.LoadService(body.ID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, &errors.HTTPError{err, `Service not found`, 404}
+		}
+		return nil, &errors.HTTPError{err, `Failed to load service`, 500}
+	}
+
+	return &struct {
+		ID     string
+		Type   string
+		Config types.Service
+	}{srv.ServiceID(), srv.ServiceType(), srv}, nil
 }
