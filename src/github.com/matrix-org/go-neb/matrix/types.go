@@ -1,6 +1,7 @@
 package matrix
 
 import (
+	"encoding/json"
 	"html"
 	"regexp"
 )
@@ -113,4 +114,30 @@ func GetHTMLMessage(msgtype, htmlText string) HTMLMessage {
 		Format:        "org.matrix.custom.html",
 		FormattedBody: htmlText,
 	}
+}
+
+// StarterLinkMessage represents a message with a starter_link custom data.
+type StarterLinkMessage struct {
+	Body string
+	Link string
+}
+
+// MarshalJSON converts this message into actual event content JSON.
+func (m StarterLinkMessage) MarshalJSON() ([]byte, error) {
+	var data map[string]string
+
+	if m.Link != "" {
+		data = map[string]string{
+			"org.matrix.neb.starter_link": m.Link,
+		}
+	}
+
+	msg := struct {
+		MsgType string            `json:"msgtype"`
+		Body    string            `json:"body"`
+		Data    map[string]string `json:"data,omitempty"`
+	}{
+		"m.notice", m.Body, data,
+	}
+	return json.Marshal(msg)
 }
