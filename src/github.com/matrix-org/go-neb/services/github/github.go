@@ -8,9 +8,9 @@ import (
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/plugin"
 	"github.com/matrix-org/go-neb/realms/github"
+	"github.com/matrix-org/go-neb/services/github/client"
 	"github.com/matrix-org/go-neb/services/github/webhook"
 	"github.com/matrix-org/go-neb/types"
-	"golang.org/x/oauth2"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -290,9 +290,9 @@ func (s *githubService) githubClientFor(userID string, allowUnauth bool) *github
 		}).Print("Failed to get token for user")
 	}
 	if token != "" {
-		return githubClient(token)
+		return client.New(token)
 	} else if allowUnauth {
-		return githubClient("")
+		return client.New("")
 	} else {
 		return nil
 	}
@@ -320,20 +320,6 @@ func getTokenForUser(realmID, userID string) (string, error) {
 		return "", fmt.Errorf("Github auth session for %s has not been completed.", userID)
 	}
 	return ghSession.AccessToken, nil
-}
-
-// githubClient returns a github Client which can perform Github API operations.
-// If `token` is empty, a non-authenticated client will be created. This should be
-// used sparingly where possible as you only get 60 requests/hour like that (IP locked).
-func githubClient(token string) *github.Client {
-	var tokenSource oauth2.TokenSource
-	if token != "" {
-		tokenSource = oauth2.StaticTokenSource(
-			&oauth2.Token{AccessToken: token},
-		)
-	}
-	httpCli := oauth2.NewClient(oauth2.NoContext, tokenSource)
-	return github.NewClient(httpCli)
 }
 
 // ownerRepoNumberFromText parses a GH issue string that looks like 'owner/repo#11'

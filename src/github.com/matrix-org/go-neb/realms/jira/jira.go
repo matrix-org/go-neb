@@ -52,6 +52,11 @@ func (s *JIRASession) Authenticated() bool {
 	return s.AccessToken != "" && s.AccessSecret != ""
 }
 
+// Info returns nothing
+func (s *JIRASession) Info() interface{} {
+	return nil
+}
+
 // UserID returns the ID of the user performing the authentication.
 func (s *JIRASession) UserID() string {
 	return s.userID
