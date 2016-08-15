@@ -73,9 +73,16 @@ check that the server is still running.
 
     {}
 
+Some `AuthRealms` support "Starter Links". These are HTTP URLs which knowledgeable clients should use to *start* the auth process. They are commonly returned as metadata to `!commands`.
+These links require the client to prove that they own a given user ID by appending a token
+to the Starter Link. This token will be used to verify the client's identity by making an
+Open ID request to the user's Homeserver via federation.
+
 ## Starting a Github Service
 
 ### Register a Github realm
+
+This API allows for an optional `StarterLink` value.
 
 ```
 curl -X POST localhost:4050/admin/configureAuthRealm --data-binary '{
@@ -84,6 +91,7 @@ curl -X POST localhost:4050/admin/configureAuthRealm --data-binary '{
     "Config": {
         "ClientSecret": "YOUR_CLIENT_SECRET",
         "ClientID": "YOUR_CLIENT_ID",
+        "StarterLink": "https://example.com/requestGithubOAuthToken",
         "RedirectBaseURI": "https://public.path.to.neb"
     }
 }'
@@ -97,6 +105,7 @@ Returns:
   "NewConfig":{
     "ClientSecret":"YOUR_CLIENT_SECRET",
     "ClientID":"YOUR_CLIENT_ID",
+    "StarterLink": "https://example.com/requestGithubOAuthToken",
     "RedirectBaseURI":"https://public.path.to.neb"
   }
 }
@@ -157,7 +166,7 @@ openssl genrsa -out privkey.pem 2048
 cat privkey.pem
 ```
 
-Create the realm:
+This API allows for an optional `StarterLink` value. Create the realm:
 
 ```
 curl -X POST localhost:4050/admin/configureAuthRealm --data-binary '{
@@ -165,6 +174,7 @@ curl -X POST localhost:4050/admin/configureAuthRealm --data-binary '{
     "Type": "jira",
     "Config": {
         "JIRAEndpoint": "matrix.org/jira/",
+        "StarterLink": "https://example.com/requestJIRAOAuthToken",
         "ConsumerName": "goneb",
         "ConsumerKey": "goneb",
         "ConsumerSecret": "random_long_string",
@@ -174,15 +184,16 @@ curl -X POST localhost:4050/admin/configureAuthRealm --data-binary '{
 ```
 
 Returns:
-```json
+```yaml
 {
     "ID": "jirarealm",
     "Type": "jira",
     "OldConfig": null,
     "NewConfig": {
-        "JIRAEndpoint": "https://matrix.org/jira/",
-        "Server": "Matrix.org",
-        "Version": "6.3.5a",
+        "JIRAEndpoint": "https://matrix.org/jira/", // canonicalised form
+        "StarterLink": "https://example.com/requestJIRAOAuthToken",
+        "Server": "Matrix.org",  // informational; inserted by NEB
+        "Version": "6.3.5a",     // informational; inserted by NEB
         "ConsumerName": "goneb",
         "ConsumerKey": "goneb",
         "ConsumerSecret": "random_long_string",
