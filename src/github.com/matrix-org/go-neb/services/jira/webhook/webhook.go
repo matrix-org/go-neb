@@ -119,6 +119,9 @@ func OnReceiveRequest(req *http.Request) (string, *Event, *errors.HTTPError) {
 
 func createWebhook(jrealm *realms.JIRARealm, webhookEndpointURL, userID string) error {
 	cli, err := jrealm.JIRAClient(userID, false)
+	if err != nil {
+		return err
+	}
 
 	req, err := cli.NewRequest("POST", "rest/webhooks/1.0/webhook", jiraWebhook{
 		Name:    "Go-NEB",

@@ -117,6 +117,10 @@ func (s *jiraService) cmdJiraCreate(roomID, userID string, args []string) (inter
 	}
 	cli, err := r.JIRAClient(userID, false)
 	if err != nil {
+		if err == sql.ErrNoRows { // no client found
+			return &matrix.TextMessage{"m.notice",
+				userID + " : You have not linked your JIRA account."}, nil
+		}
 		return nil, err
 	}
 	i, res, err := cli.Issue.Create(&iss)
@@ -286,7 +290,6 @@ func (s *jiraService) projectToRealm(userID, pkey string) (*realms.JIRARealm, er
 	//  - If there is a matching project with that key, return that realm.
 	// We search installations which the user has already OAuthed with first as most likely
 	// the project key will be on a JIRA they have access to.
-	// TODO: Return whether they have authed or not so they know if they need to make a starter link
 	logger := log.WithFields(log.Fields{
 		"user_id": userID,
 		"project": pkey,
