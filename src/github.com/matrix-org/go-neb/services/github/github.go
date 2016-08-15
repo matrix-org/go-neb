@@ -28,7 +28,6 @@ type githubService struct {
 	ClientUserID       string
 	RealmID            string
 	SecretToken        string
-	StarterLink        string
 	Rooms              map[string]struct { // room_id => {}
 		Repos map[string]struct { // owner/repo => { events: ["push","issue","pull_request"] }
 			Events []string
@@ -50,9 +49,17 @@ func (s *githubService) RoomIDs() []string {
 func (s *githubService) cmdGithubCreate(roomID, userID string, args []string) (interface{}, error) {
 	cli := s.githubClientFor(userID, false)
 	if cli == nil {
+		r, err := database.GetServiceDB().LoadAuthRealm(s.RealmID)
+		if err != nil {
+			return nil, err
+		}
+		ghRealm, ok := r.(*realms.GithubRealm)
+		if !ok {
+			return nil, fmt.Errorf("Failed to cast realm %s into a GithubRealm", s.RealmID)
+		}
 		return matrix.StarterLinkMessage{
 			Body: "You need to OAuth with Github before you can create issues.",
-			Link: s.StarterLink,
+			Link: ghRealm.StarterLink,
 		}, nil
 	}
 
