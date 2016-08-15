@@ -183,17 +183,24 @@ curl -X POST localhost:4050/admin/configureAuthRealm --data-binary '{
 }'
 ```
 
+The following keys will be modified/added:
+ - `JIRAEndpoint` in canonicalised form.
+ - `Server` and `Version` keys which are purely informational for the caller.
+ - `PublicKeyPEM` which the caller needs a human to insert into the JIRA Application Links web form.
+
+
 Returns:
-```yaml
+
+```json
 {
     "ID": "jirarealm",
     "Type": "jira",
     "OldConfig": null,
     "NewConfig": {
-        "JIRAEndpoint": "https://matrix.org/jira/", // canonicalised form
+        "JIRAEndpoint": "https://matrix.org/jira/",
         "StarterLink": "https://example.com/requestJIRAOAuthToken",
-        "Server": "Matrix.org",  // informational; inserted by NEB
-        "Version": "6.3.5a",     // informational; inserted by NEB
+        "Server": "Matrix.org",
+        "Version": "6.3.5a",
         "ConsumerName": "goneb",
         "ConsumerKey": "goneb",
         "ConsumerSecret": "random_long_string",
