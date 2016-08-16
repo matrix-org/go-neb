@@ -34,13 +34,13 @@ func makeTestResponse(roomID, sender string, arguments []string) interface{} {
 }
 
 type testExpansion struct {
-	RoomID       string
-	UserID       string
-	MatchingText string
+	RoomID         string
+	UserID         string
+	MatchingGroups []string
 }
 
-func makeTestExpansion(roomID, userID, matchingText string) interface{} {
-	return testExpansion{roomID, userID, matchingText}
+func makeTestExpansion(roomID, userID string, matchingGroups []string) interface{} {
+	return testExpansion{roomID, userID, matchingGroups}
 }
 
 func makeTestPlugin(paths [][]string, regexps []*regexp.Regexp) Plugin {
@@ -133,9 +133,9 @@ func TestExpansion(t *testing.T) {
 	event := makeTestEvent("m.text", "test banana for scale")
 	got := runCommands(plugins, event)
 	want := []interface{}{
-		makeTestExpansion(myRoomID, mySender, "anana"),
-		makeTestExpansion(myRoomID, mySender, "ale"),
-		makeTestExpansion(myRoomID, mySender, "ban"),
+		makeTestExpansion(myRoomID, mySender, []string{"anana"}),
+		makeTestExpansion(myRoomID, mySender, []string{"ale"}),
+		makeTestExpansion(myRoomID, mySender, []string{"ban"}),
 	}
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("runCommands(\nplugins=%+v\nevent=%+v\n)\n%+v\nwanted: %+v", plugins, event, got, want)
@@ -151,7 +151,7 @@ func TestExpansionDuplicateMatches(t *testing.T) {
 	event := makeTestEvent("m.text", "badger badger badger")
 	got := runCommands(plugins, event)
 	want := []interface{}{
-		makeTestExpansion(myRoomID, mySender, "badger"),
+		makeTestExpansion(myRoomID, mySender, []string{"badger"}),
 	}
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("runCommands(\nplugins=%+v\nevent=%+v\n)\n%+v\nwanted: %+v", plugins, event, got, want)

@@ -148,17 +148,15 @@ func (s *jiraService) cmdJiraCreate(roomID, userID string, args []string) (inter
 	}, nil
 }
 
-func (s *jiraService) expandIssue(roomID, userID, issueKey string) interface{} {
-	issueKey = strings.ToUpper(issueKey)
-	logger := log.WithField("issue_key", issueKey)
-	// [ISSU-123, ISSU, 123]
-	groups := issueKeyRegex.FindStringSubmatch(issueKey)
-	if len(groups) != 3 {
-		logger.Print("Failed to find issue key")
+func (s *jiraService) expandIssue(roomID, userID string, issueKeyGroups []string) interface{} {
+	// issueKeyGroups => ["SYN-123", "SYN", "123"]
+	if len(issueKeyGroups) != 3 {
+		log.WithField("groups", issueKeyGroups).Error("Bad number of groups")
 		return nil
 	}
-
-	projectKey := groups[1]
+	issueKey := strings.ToUpper(issueKeyGroups[0])
+	logger := log.WithField("issue_key", issueKey)
+	projectKey := strings.ToUpper(issueKeyGroups[1])
 
 	realmID := s.realmIDForProject(roomID, projectKey)
 	if realmID == "" {
@@ -223,8 +221,8 @@ func (s *jiraService) Plugin(roomID string) plugin.Plugin {
 		Expansions: []plugin.Expansion{
 			plugin.Expansion{
 				Regexp: issueKeyRegex,
-				Expand: func(roomID, userID, issueKey string) interface{} {
-					return s.expandIssue(roomID, userID, issueKey)
+				Expand: func(roomID, userID string, issueKeyGroups []string) interface{} {
+					return s.expandIssue(roomID, userID, issueKeyGroups)
 				},
 			},
 		},

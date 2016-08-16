@@ -102,14 +102,21 @@ func (s *githubService) cmdGithubCreate(roomID, userID string, args []string) (i
 	return matrix.TextMessage{"m.notice", fmt.Sprintf("Created issue: %s", *issue.HTMLURL)}, nil
 }
 
-func (s *githubService) expandIssue(roomID, userID, matchingText string) interface{} {
-	cli := s.githubClientFor(userID, true)
-	owner, repo, num, err := ownerRepoNumberFromText(matchingText)
-	if err != nil {
-		log.WithError(err).WithField("text", matchingText).Print(
-			"Failed to extract owner,repo,number from matched string")
+func (s *githubService) expandIssue(roomID, userID string, matchingGroups []string) interface{} {
+	// matchingGroups => ["foo/bar#11", "foo", "bar", "11"]
+	if len(matchingGroups) != 4 {
+		log.WithField("groups", matchingGroups).Print("Unexpected number of groups")
 		return nil
 	}
+	num, err := strconv.Atoi(matchingGroups[3])
+	if err != nil {
+		log.WithField("issue_number", matchingGroups[3]).Print("Bad issue number")
+		return nil
+	}
+	owner := matchingGroups[1]
+	repo := matchingGroups[2]
+
+	cli := s.githubClientFor(userID, true)
 
 	i, _, err := cli.Issues.Get(owner, repo, num)
 	if err != nil {
@@ -140,8 +147,8 @@ func (s *githubService) Plugin(roomID string) plugin.Plugin {
 		Expansions: []plugin.Expansion{
 			plugin.Expansion{
 				Regexp: ownerRepoIssueRegex,
-				Expand: func(roomID, userID, matchingText string) interface{} {
-					return s.expandIssue(roomID, userID, matchingText)
+				Expand: func(roomID, userID string, matchingGroups []string) interface{} {
+					return s.expandIssue(roomID, userID, matchingGroups)
 				},
 			},
 		},
@@ -320,21 +327,6 @@ func getTokenForUser(realmID, userID string) (string, error) {
 		return "", fmt.Errorf("Github auth session for %s has not been completed.", userID)
 	}
 	return ghSession.AccessToken, nil
-}
-
-// ownerRepoNumberFromText parses a GH issue string that looks like 'owner/repo#11'
-// into its constituient parts. Returns: owner, repo, issue#.
-func ownerRepoNumberFromText(ownerRepoNumberText string) (string, string, int, error) {
-	// [full_string, owner, repo, issue_number]
-	groups := ownerRepoIssueRegex.FindStringSubmatch(ownerRepoNumberText)
-	if len(groups) != 4 {
-		return "", "", 0, fmt.Errorf("No match found for '%s'", ownerRepoNumberText)
-	}
-	num, err := strconv.Atoi(groups[3])
-	if err != nil {
-		return "", "", 0, err
-	}
-	return groups[1], groups[2], num, nil
 }
 
 func removeHook(logger *log.Entry, cli *github.Client, owner, repo, webhookEndpointURL string) {
