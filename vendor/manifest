@@ -53,6 +53,12 @@
 			"path": "/query"
 		},
 		{
+			"importpath": "github.com/matrix-org/dugong",
+			"repository": "https://github.com/matrix-org/dugong",
+			"revision": "6b893e5ef2dd0ddcbfdf00aafe0278237456512b",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/mattn/go-shellwords",
 			"repository": "https://github.com/mattn/go-shellwords",
 			"revision": "525bedee691b5a8df547cb5cf9f86b7fb1883e24",
