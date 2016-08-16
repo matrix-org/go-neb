@@ -2,6 +2,7 @@ package main
 
 import (
 	log "github.com/Sirupsen/logrus"
+	"github.com/matrix-org/dugong"
 	"github.com/matrix-org/go-neb/clients"
 	"github.com/matrix-org/go-neb/database"
 	_ "github.com/matrix-org/go-neb/realms/github"
@@ -15,6 +16,7 @@ import (
 	"net/http"
 	_ "net/http/pprof"
 	"os"
+	"path/filepath"
 )
 
 func main() {
@@ -22,6 +24,20 @@ func main() {
 	databaseType := os.Getenv("DATABASE_TYPE")
 	databaseURL := os.Getenv("DATABASE_URL")
 	baseURL := os.Getenv("BASE_URL")
+	logDir := os.Getenv("LOG_DIR")
+
+	if logDir != "" {
+		log.AddHook(dugong.NewFSHook(
+			filepath.Join(logDir, "info.log"),
+			filepath.Join(logDir, "warn.log"),
+			filepath.Join(logDir, "error.log"),
+		))
+	}
+
+	log.Infof(
+		"Go-NEB (BIND_ADDRESS=%s DATABASE_TYPE=%s DATABASE_URL=%s BASE_URL=%s LOG_DIR=%s)",
+		bindAddress, databaseType, databaseURL, baseURL, logDir,
+	)
 
 	err := types.BaseURL(baseURL)
 	if err != nil {
