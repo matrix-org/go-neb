@@ -25,6 +25,8 @@ type GithubRealm struct {
 
 // GithubSession represents an authenticated github session
 type GithubSession struct {
+	// The client-supplied URL to redirect them to after the auth process is complete.
+	ClientsRedirectURL string
 	// AccessToken is the github access token for the user
 	AccessToken string
 	// Scopes are the set of *ALLOWED* scopes (which may not be the same as the requested scopes)
@@ -108,6 +110,7 @@ func (r *GithubRealm) RequestAuthSession(userID string, req json.RawMessage) int
 		log.WithError(err).Print("Failed to generate state param")
 		return nil
 	}
+
 	u, _ := url.Parse("https://github.com/login/oauth/authorize")
 	q := u.Query()
 	q.Set("client_id", r.ClientID)
@@ -120,6 +123,17 @@ func (r *GithubRealm) RequestAuthSession(userID string, req json.RawMessage) int
 		userID:  userID,
 		realmID: r.ID(),
 	}
+
+	// check if they supplied a redirect URL
+	var reqBody struct {
+		RedirectURL string
+	}
+	if err = json.Unmarshal(req, &reqBody); err != nil {
+		log.WithError(err).Print("Failed to decode request body")
+		return nil
+	}
+	session.ClientsRedirectURL = reqBody.RedirectURL
+
 	_, err = database.GetServiceDB().StoreAuthSession(session)
 	if err != nil {
 		log.WithError(err).Print("Failed to store new auth session")
@@ -186,8 +200,15 @@ func (r *GithubRealm) OnReceiveRedirect(w http.ResponseWriter, req *http.Request
 		failWith(logger, w, 500, "Failed to persist session", err)
 		return
 	}
-	w.WriteHeader(200)
-	w.Write([]byte("OK!"))
+	if ghSession.ClientsRedirectURL != "" {
+		w.WriteHeader(302)
+		w.Header().Set("Location", ghSession.ClientsRedirectURL)
+		// technically don't need a body but *shrug*
+		w.Write([]byte(ghSession.ClientsRedirectURL))
+	} else {
+		w.WriteHeader(200)
+		w.Write([]byte("You have successfully linked your Github account to " + ghSession.UserID()))
+	}
 }
 
 // AuthSession returns a GithubSession for this user
