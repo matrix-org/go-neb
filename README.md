@@ -161,6 +161,7 @@ curl -X POST localhost:4050/admin/requestAuthSession --data-binary '{
     "RealmID": "mygithubrealm",
     "UserID": "@your_user_id:localhost",
     "Config": {
+        "RedirectURL": "https://optional-url.com/to/redirect/to/after/auth"
     }
 }'
 ```
