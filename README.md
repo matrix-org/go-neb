@@ -266,6 +266,7 @@ curl -X POST localhost:4050/admin/requestAuthSession --data-binary '{
     "RealmID": "jirarealm",
     "UserID": "@example:localhost",
     "Config": {
+        "RedirectURL": "https://optional-url.com/to/redirect/to/after/auth"
     }
 }'
 ```

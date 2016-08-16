@@ -39,12 +39,13 @@ type JIRARealm struct {
 // JIRASession represents a single authentication session between a user and a JIRA endpoint.
 // The endpoint is dictated by the realm ID.
 type JIRASession struct {
-	id            string // request token
-	userID        string
-	realmID       string
-	RequestSecret string
-	AccessToken   string
-	AccessSecret  string
+	id                 string // request token
+	userID             string
+	realmID            string
+	RequestSecret      string
+	AccessToken        string
+	AccessSecret       string
+	ClientsRedirectURL string // where to redirect the client to after auth
 }
 
 // Authenticated returns true if the user has completed the auth process
@@ -132,6 +133,16 @@ func (r *JIRARealm) Register() error {
 // RequestAuthSession is called by a user wishing to auth with this JIRA realm
 func (r *JIRARealm) RequestAuthSession(userID string, req json.RawMessage) interface{} {
 	logger := log.WithField("jira_url", r.JIRAEndpoint)
+
+	// check if they supplied a redirect URL
+	var reqBody struct {
+		RedirectURL string
+	}
+	if err := json.Unmarshal(req, &reqBody); err != nil {
+		log.WithError(err).Print("Failed to decode request body")
+		return nil
+	}
+
 	authConfig := r.oauth1Config(r.JIRAEndpoint)
 	reqToken, reqSec, err := authConfig.RequestToken()
 	if err != nil {
@@ -146,10 +157,11 @@ func (r *JIRARealm) RequestAuthSession(userID string, req json.RawMessage) inter
 	}
 
 	_, err = database.GetServiceDB().StoreAuthSession(&JIRASession{
-		id:            reqToken,
-		userID:        userID,
-		realmID:       r.id,
-		RequestSecret: reqSec,
+		id:                 reqToken,
+		userID:             userID,
+		realmID:            r.id,
+		RequestSecret:      reqSec,
+		ClientsRedirectURL: reqBody.RedirectURL,
 	})
 	if err != nil {
 		log.WithError(err).Print("Failed to store new auth session")
@@ -202,8 +214,19 @@ func (r *JIRARealm) OnReceiveRedirect(w http.ResponseWriter, req *http.Request) 
 		failWith(logger, w, 500, "Failed to persist JIRA session", err)
 		return
 	}
-	w.WriteHeader(200)
-	w.Write([]byte("OK!"))
+	if jiraSession.ClientsRedirectURL != "" {
+		w.WriteHeader(302)
+		w.Header().Set("Location", jiraSession.ClientsRedirectURL)
+		// technically don't need a body but *shrug*
+		w.Write([]byte(jiraSession.ClientsRedirectURL))
+	} else {
+		w.WriteHeader(200)
+		w.Write([]byte(
+			fmt.Sprintf("You have successfully linked your JIRA account on %s to %s",
+				r.JIRAEndpoint, jiraSession.UserID(),
+			),
+		))
+	}
 }
 
 // AuthSession returns a JIRASession with the given parameters
