@@ -1,6 +1,7 @@
 package types
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"github.com/matrix-org/go-neb/matrix"
@@ -72,7 +73,9 @@ func CreateService(serviceID, serviceType string, serviceJSON []byte) (Service, 
 	if f == nil {
 		return nil, errors.New("Unknown service type: " + serviceType)
 	}
-	webhookEndpointURL := baseURL + "services/hooks/" + serviceID
+
+	base64ServiceID := base64.StdEncoding.EncodeToString([]byte(serviceID))
+	webhookEndpointURL := baseURL + "services/hooks/" + base64ServiceID
 	service := f(serviceID, webhookEndpointURL)
 	if err := json.Unmarshal(serviceJSON, service); err != nil {
 		return nil, err

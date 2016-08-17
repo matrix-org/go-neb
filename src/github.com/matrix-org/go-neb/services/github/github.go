@@ -221,20 +221,22 @@ func (s *githubService) PostRegister(oldService types.Service) {
 		log.Errorf("PostRegister: %s does not have a github session", s.ClientUserID)
 		return
 	}
-	old, ok := oldService.(*githubService)
-	if !ok {
-		log.Error("PostRegister: Provided old service is not of type GithubService")
-		return
+	if oldService != nil {
+		old, ok := oldService.(*githubService)
+		if !ok {
+			log.Error("PostRegister: Provided old service is not of type GithubService")
+			return
+		}
+
+		// TODO: We should be adding webhooks in Register() then removing old hooks in PostRegister()
+		//
+		// By doing both operations in PostRegister(), if some of the requests fail we can end up in
+		// an inconsistent state. It is a lot simpler and easy to reason about this way though, so
+		// for now it will do.
+
+		// remove any existing webhooks this service created on the user's behalf
+		modifyWebhooks(old, cli, true)
 	}
-
-	// TODO: We should be adding webhooks in Register() then removing old hooks in PostRegister()
-	//
-	// By doing both operations in PostRegister(), if some of the requests fail we can end up in
-	// an inconsistent state. It is a lot simpler and easy to reason about this way though, so
-	// for now it will do.
-
-	// remove any existing webhooks this service created on the user's behalf
-	modifyWebhooks(old, cli, true)
 
 	// make new webhooks according to service config
 	modifyWebhooks(s, cli, false)

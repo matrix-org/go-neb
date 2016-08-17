@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"encoding/base64"
 	"encoding/json"
 	log "github.com/Sirupsen/logrus"
 	"github.com/matrix-org/go-neb/clients"
@@ -126,8 +127,19 @@ type webhookHandler struct {
 
 func (wh *webhookHandler) handle(w http.ResponseWriter, req *http.Request) {
 	segments := strings.Split(req.URL.Path, "/")
-	// last path segment is the service ID which we will pass the incoming request to
-	srvID := segments[len(segments)-1]
+	// last path segment is the service ID which we will pass the incoming request to,
+	// but we've base64d it.
+	base64srvID := segments[len(segments)-1]
+	bytesSrvID, err := base64.StdEncoding.DecodeString(base64srvID)
+	srvID := string(bytesSrvID)
+	if err != nil {
+		log.WithError(err).WithField("base64_service_id", base64srvID).Print(
+			"Not a b64 encoded string",
+		)
+		w.WriteHeader(400)
+		return
+	}
+
 	service, err := wh.db.LoadService(srvID)
 	if err != nil {
 		log.WithError(err).WithField("service_id", srvID).Print("Failed to load service")
