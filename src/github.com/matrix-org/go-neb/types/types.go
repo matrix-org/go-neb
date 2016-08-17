@@ -1,6 +1,7 @@
 package types
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"github.com/matrix-org/go-neb/matrix"
@@ -72,7 +73,9 @@ func CreateService(serviceID, serviceType string, serviceJSON []byte) (Service, 
 	if f == nil {
 		return nil, errors.New("Unknown service type: " + serviceType)
 	}
-	webhookEndpointURL := baseURL + "services/hooks/" + serviceID
+
+	base64ServiceID := base64.RawURLEncoding.EncodeToString([]byte(serviceID))
+	webhookEndpointURL := baseURL + "services/hooks/" + base64ServiceID
 	service := f(serviceID, webhookEndpointURL)
 	if err := json.Unmarshal(serviceJSON, service); err != nil {
 		return nil, err
@@ -106,7 +109,8 @@ func CreateAuthRealm(realmID, realmType string, realmJSON []byte) (AuthRealm, er
 	if f == nil {
 		return nil, errors.New("Unknown realm type: " + realmType)
 	}
-	redirectURL := baseURL + "realms/redirects/" + realmID
+	base64RealmID := base64.RawURLEncoding.EncodeToString([]byte(realmID))
+	redirectURL := baseURL + "realms/redirects/" + base64RealmID
 	r := f(realmID, redirectURL)
 	if err := json.Unmarshal(realmJSON, r); err != nil {
 		return nil, err
