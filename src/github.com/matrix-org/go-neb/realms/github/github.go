@@ -48,20 +48,33 @@ func (s *GithubSession) Info() interface{} {
 		"realm_id": s.realmID,
 	})
 	cli := client.New(s.AccessToken)
-	// query for a list of possible projects
-	rs, _, err := cli.Repositories.List("", &github.RepositoryListOptions{
-		Type: "all",
-	})
-	if err != nil {
-		logger.WithError(err).Print("Failed to query github projects on github.com")
-		return nil
-	}
-
 	var repos []client.TrimmedRepository
 
-	for _, r := range rs {
-		repos = append(repos, client.TrimRepository(r))
+	opts := &github.RepositoryListOptions{
+		Type: "all",
+		ListOptions: github.ListOptions{
+			PerPage: 100,
+		},
 	}
+	for {
+		// query for a list of possible projects
+		rs, resp, err := cli.Repositories.List("", opts)
+		if err != nil {
+			logger.WithError(err).Print("Failed to query github projects on github.com")
+			return nil
+		}
+
+		for _, r := range rs {
+			repos = append(repos, client.TrimRepository(r))
+		}
+
+		if resp.NextPage == 0 {
+			break
+		}
+		opts.ListOptions.Page = resp.NextPage
+		logger.Print("GithubSession.Info() Next => ", resp.NextPage)
+	}
+	logger.Print("GithubSession.Info() Returning ", len(repos), " repos")
 
 	return struct {
 		Repos []client.TrimmedRepository
