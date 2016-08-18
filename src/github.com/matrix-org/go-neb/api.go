@@ -136,7 +136,7 @@ type webhookHandler struct {
 }
 
 func (wh *webhookHandler) handle(w http.ResponseWriter, req *http.Request) {
-	log.WithField("path", req.URL.RawPath).Print("Incoming webhook request")
+	log.WithField("path", req.URL.Path).Print("Incoming webhook request")
 	segments := strings.Split(req.URL.Path, "/")
 	// last path segment is the service ID which we will pass the incoming request to,
 	// but we've base64d it.

@@ -213,6 +213,8 @@ func (s *githubService) Register() error {
 			"User %s does not have a Github auth session with realm %s.", s.ClientUserID, realm.ID())
 	}
 
+	log.Infof("%+v", s)
+
 	return nil
 }
 
