@@ -292,6 +292,8 @@ func modifyWebhooks(s *githubService, cli *github.Client, removeHooks bool) {
 			if err != nil {
 				logger.WithError(err).Print("Failed to create webhook")
 				// continue as others may succeed
+			} else {
+				logger.WithField("endpoint", s.webhookEndpointURL).Print("Created hook with endpoint")
 			}
 		}
 	}
@@ -396,6 +398,7 @@ func removeHook(logger *log.Entry, cli *github.Client, owner, repo, webhookEndpo
 		}
 	}
 	if hook == nil {
+		logger.WithField("endpoint", webhookEndpointURL).Print("Failed to find hook with endpoint")
 		return // couldn't find it
 	}
 
@@ -403,6 +406,7 @@ func removeHook(logger *log.Entry, cli *github.Client, owner, repo, webhookEndpo
 	if err != nil {
 		logger.WithError(err).Print("Failed to delete hook")
 	}
+	logger.WithField("endpoint", webhookEndpointURL).Print("Deleted hook")
 }
 
 func init() {
