@@ -301,12 +301,12 @@ func sameRepos(a *githubService, b *githubService) bool {
 	getRepos := func(s *githubService) []string {
 		r := make(map[string]bool)
 		for _, roomConfig := range s.Rooms {
-			for ownerRepo, _ := range roomConfig.Repos {
+			for ownerRepo := range roomConfig.Repos {
 				r[ownerRepo] = true
 			}
 		}
 		var rs []string
-		for k, _ := range r {
+		for k := range r {
 			rs = append(rs, k)
 		}
 		return rs
@@ -320,7 +320,7 @@ func sameRepos(a *githubService, b *githubService) bool {
 
 	sort.Strings(aRepos)
 	sort.Strings(bRepos)
-	for i := 0; i < len(aRepos); i += 1 {
+	for i := 0; i < len(aRepos); i++ {
 		if aRepos[i] != bRepos[i] {
 			return false
 		}
