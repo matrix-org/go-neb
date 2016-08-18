@@ -172,6 +172,11 @@ func (r *GithubRealm) OnReceiveRedirect(w http.ResponseWriter, req *http.Request
 	}
 	logger.WithField("user_id", ghSession.UserID()).Print("Mapped redirect to user")
 
+	if ghSession.AccessToken != "" && ghSession.Scopes != "" {
+		failWith(logger, w, 400, "You have already authenticated with Github", nil)
+		return
+	}
+
 	// exchange code for access_token
 	res, err := http.PostForm("https://github.com/login/oauth/access_token",
 		url.Values{"client_id": {r.ClientID}, "client_secret": {r.ClientSecret}, "code": {code}})
