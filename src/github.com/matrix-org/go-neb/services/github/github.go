@@ -371,6 +371,7 @@ func getTokenForUser(realmID, userID string) (string, error) {
 }
 
 func removeHook(logger *log.Entry, cli *github.Client, owner, repo, webhookEndpointURL string) {
+	logger.WithField("endpoint", webhookEndpointURL).Print("Removing hook with endpoint")
 	// Get a list of webhooks for this owner/repo and find the one which has the
 	// same endpoint URL which is what github uses to determine equivalence.
 	hooks, _, err := cli.Repositories.ListHooks(owner, repo, nil)
