@@ -147,6 +147,10 @@ func (r *GithubRealm) RequestAuthSession(userID string, req json.RawMessage) int
 		return nil
 	}
 	session.ClientsRedirectURL = reqBody.RedirectURL
+	log.WithFields(log.Fields{
+		"clients_redirect_url": session.ClientsRedirectURL,
+		"redirect_url":         u.String(),
+	}).Print("RequestAuthSession: Performing redirect")
 
 	_, err = database.GetServiceDB().StoreAuthSession(session)
 	if err != nil {
