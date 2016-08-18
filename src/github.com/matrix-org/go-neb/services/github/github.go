@@ -13,6 +13,7 @@ import (
 	"github.com/matrix-org/go-neb/types"
 	"net/http"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -221,10 +222,17 @@ func (s *githubService) PostRegister(oldService types.Service) {
 		log.Errorf("PostRegister: %s does not have a github session", s.ClientUserID)
 		return
 	}
+
 	if oldService != nil {
 		old, ok := oldService.(*githubService)
 		if !ok {
 			log.Error("PostRegister: Provided old service is not of type GithubService")
+			return
+		}
+
+		// Don't spam github webhook requests if we can help it.
+		if sameRepos(s, old) {
+			log.Print("PostRegister: old and new services have the same repo set. Nooping.")
 			return
 		}
 
@@ -287,6 +295,37 @@ func modifyWebhooks(s *githubService, cli *github.Client, removeHooks bool) {
 			}
 		}
 	}
+}
+
+func sameRepos(a *githubService, b *githubService) bool {
+	getRepos := func(s *githubService) []string {
+		r := make(map[string]bool)
+		for _, roomConfig := range s.Rooms {
+			for ownerRepo, _ := range roomConfig.Repos {
+				r[ownerRepo] = true
+			}
+		}
+		var rs []string
+		for k, _ := range r {
+			rs = append(rs, k)
+		}
+		return rs
+	}
+	aRepos := getRepos(a)
+	bRepos := getRepos(b)
+
+	if len(aRepos) != len(bRepos) {
+		return false
+	}
+
+	sort.Strings(aRepos)
+	sort.Strings(bRepos)
+	for i := 0; i < len(aRepos); i += 1 {
+		if aRepos[i] != bRepos[i] {
+			return false
+		}
+	}
+	return true
 }
 
 func (s *githubService) githubClientFor(userID string, allowUnauth bool) *github.Client {
