@@ -117,6 +117,7 @@ func (r *GithubRealm) RequestAuthSession(userID string, req json.RawMessage) int
 	q.Set("client_secret", r.ClientSecret)
 	q.Set("state", state)
 	q.Set("redirect_uri", r.redirectURL)
+	q.Set("scope", "admin:repo_hook,admin:org_hook,repo")
 	u.RawQuery = q.Encode()
 	session := &GithubSession{
 		id:      state, // key off the state for redirects
