@@ -43,6 +43,7 @@ func (c *Clients) Update(config types.ClientConfig) (types.ClientConfig, error) 
 	return old.config, err
 }
 
+// Start listening on client /sync streams
 func (c *Clients) Start() error {
 	configs, err := c.db.LoadMatrixClientConfigs()
 	if err != nil {
@@ -153,6 +154,33 @@ func (c *Clients) newClient(config types.ClientConfig) (*matrix.Client, error) {
 		}
 		plugin.OnMessage(plugins, client, event)
 	})
+
+	if config.AutoJoinRooms {
+		client.Worker.OnEventType("m.room.member", func(event *matrix.Event) {
+			if event.StateKey != config.UserID {
+				return // not our member event
+			}
+			m := event.Content["membership"]
+			membership, ok := m.(string)
+			if !ok {
+				return
+			}
+			if membership == "invite" {
+				logger := log.WithFields(log.Fields{
+					"room_id":         event.RoomID,
+					"service_user_id": config.UserID,
+					"inviter":         event.Sender,
+				})
+				logger.Print("Accepting invite from user")
+
+				if _, err := client.JoinRoom(event.RoomID, ""); err != nil {
+					logger.WithError(err).Print("Failed to join room")
+				} else {
+					logger.Print("Joined room")
+				}
+			}
+		})
+	}
 
 	go client.Sync()
 
