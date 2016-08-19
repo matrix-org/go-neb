@@ -224,6 +224,7 @@ func (s *githubService) PostRegister(oldService types.Service) {
 	// PostRegister handles creating/destroying webhooks, which is only valid if this service
 	// is configured on behalf of a client.
 	if s.ClientUserID == "" {
+		// TODO: We should log an error here if the service has any webhook config in Rooms
 		return
 	}
 
