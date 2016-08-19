@@ -29,6 +29,8 @@ type githubService struct {
 	ClientUserID       string
 	RealmID            string
 	SecretToken        string
+	HandleCommands     bool
+	HandleExpansions   bool
 	Rooms              map[string]struct { // room_id => {}
 		Repos map[string]struct { // owner/repo => { events: ["push","issue","pull_request"] }
 			Events []string
@@ -48,6 +50,9 @@ func (s *githubService) RoomIDs() []string {
 }
 
 func (s *githubService) cmdGithubCreate(roomID, userID string, args []string) (interface{}, error) {
+	if !s.HandleCommands {
+		return nil, nil
+	}
 	cli := s.githubClientFor(userID, false)
 	if cli == nil {
 		r, err := database.GetServiceDB().LoadAuthRealm(s.RealmID)
@@ -104,6 +109,9 @@ func (s *githubService) cmdGithubCreate(roomID, userID string, args []string) (i
 }
 
 func (s *githubService) expandIssue(roomID, userID string, matchingGroups []string) interface{} {
+	if !s.HandleExpansions {
+		return nil
+	}
 	// matchingGroups => ["foo/bar#11", "foo", "bar", "11"]
 	if len(matchingGroups) != 4 {
 		log.WithField("groups", matchingGroups).Print("Unexpected number of groups")
