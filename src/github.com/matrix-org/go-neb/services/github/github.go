@@ -26,7 +26,7 @@ type githubService struct {
 	id                 string
 	serviceUserID      string
 	webhookEndpointURL string
-	ClientUserID       string
+	ClientUserID       string // optional; required for webhooks
 	RealmID            string
 	SecretToken        string
 	HandleCommands     bool
@@ -193,8 +193,8 @@ func (s *githubService) OnReceiveWebhook(w http.ResponseWriter, req *http.Reques
 	w.WriteHeader(200)
 }
 func (s *githubService) Register() error {
-	if s.RealmID == "" || s.ClientUserID == "" {
-		return fmt.Errorf("RealmID and ClientUserID are required")
+	if s.RealmID == "" {
+		return fmt.Errorf("RealmID is required")
 	}
 	// check realm exists
 	realm, err := database.GetServiceDB().LoadAuthRealm(s.RealmID)
@@ -206,11 +206,13 @@ func (s *githubService) Register() error {
 		return fmt.Errorf("Realm is of type '%s', not 'github'", realm.Type())
 	}
 
-	// In order to register the GH service, you must have authed with GH.
-	cli := s.githubClientFor(s.ClientUserID, false)
-	if cli == nil {
-		return fmt.Errorf(
-			"User %s does not have a Github auth session with realm %s.", s.ClientUserID, realm.ID())
+	if s.ClientUserID != "" {
+		// In order to register the GH service as a client, you must have authed with GH.
+		cli := s.githubClientFor(s.ClientUserID, false)
+		if cli == nil {
+			return fmt.Errorf(
+				"User %s does not have a Github auth session with realm %s.", s.ClientUserID, realm.ID())
+		}
 	}
 
 	log.Infof("%+v", s)
@@ -219,6 +221,17 @@ func (s *githubService) Register() error {
 }
 
 func (s *githubService) PostRegister(oldService types.Service) {
+	// PostRegister handles creating/destroying webhooks, which is only valid if this service
+	// is configured on behalf of a client.
+	if s.ClientUserID == "" {
+		if len(s.Rooms) != 0 {
+			log.WithFields(log.Fields{
+				"Rooms": s.Rooms,
+			}).Error("Empty ClientUserID but a webhook config was supplied.")
+		}
+		return
+	}
+
 	cli := s.githubClientFor(s.ClientUserID, false)
 	if cli == nil {
 		log.Errorf("PostRegister: %s does not have a github session", s.ClientUserID)
