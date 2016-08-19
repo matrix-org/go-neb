@@ -59,6 +59,15 @@ func (d *ServiceDB) StoreMatrixClientConfig(config types.ClientConfig) (oldConfi
 	return
 }
 
+// LoadMatrixClientConfigs loads all Matrix client configs from the database.
+func (d *ServiceDB) LoadMatrixClientConfigs() (configs []types.ClientConfig, err error) {
+	err = runTransaction(d.db, func(txn *sql.Tx) error {
+		configs, err = selectMatrixClientConfigsTxn(txn)
+		return err
+	})
+	return
+}
+
 // LoadMatrixClientConfig loads a Matrix client config from the database.
 // Returns sql.ErrNoRows if the client isn't in the database.
 func (d *ServiceDB) LoadMatrixClientConfig(userID string) (config types.ClientConfig, err error) {

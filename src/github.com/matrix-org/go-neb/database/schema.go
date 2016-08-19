@@ -64,6 +64,30 @@ func selectMatrixClientConfigTxn(txn *sql.Tx, userID string) (config types.Clien
 	return
 }
 
+const selectMatrixClientConfigsSQL = `
+SELECT client_json FROM matrix_clients
+`
+
+func selectMatrixClientConfigsTxn(txn *sql.Tx) (configs []types.ClientConfig, err error) {
+	rows, err := txn.Query(selectMatrixClientConfigsSQL)
+	if err != nil {
+		return
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var config types.ClientConfig
+		var configJSON []byte
+		if err = rows.Scan(&configJSON); err != nil {
+			return
+		}
+		if err = json.Unmarshal(configJSON, &config); err != nil {
+			return
+		}
+		configs = append(configs, config)
+	}
+	return
+}
+
 const insertMatrixClientConfigSQL = `
 INSERT INTO matrix_clients(
 	user_id, client_json, next_batch, time_added_ms, time_updated_ms

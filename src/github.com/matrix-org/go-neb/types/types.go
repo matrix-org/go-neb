@@ -16,6 +16,8 @@ type ClientConfig struct {
 	UserID        string // The matrix UserId to connect with.
 	HomeserverURL string // A URL with the host and port of the matrix server. E.g. https://matrix.org:8448
 	AccessToken   string // The matrix access token to authenticate the requests with.
+	Sync          bool   // True to start a sync stream for this user
+	AutoJoinRooms bool   // True to automatically join all rooms for this user
 }
 
 // Check that the client has the correct fields.
