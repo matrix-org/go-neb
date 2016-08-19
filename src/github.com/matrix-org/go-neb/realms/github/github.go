@@ -230,8 +230,8 @@ func (r *GithubRealm) OnReceiveRedirect(w http.ResponseWriter, req *http.Request
 
 func (r *GithubRealm) redirectOr(w http.ResponseWriter, code int, msg string, logger *log.Entry, ghSession *GithubSession) {
 	if ghSession.ClientsRedirectURL != "" {
-		w.WriteHeader(302)
 		w.Header().Set("Location", ghSession.ClientsRedirectURL)
+		w.WriteHeader(302)
 		// technically don't need a body but *shrug*
 		w.Write([]byte(ghSession.ClientsRedirectURL))
 	} else {
