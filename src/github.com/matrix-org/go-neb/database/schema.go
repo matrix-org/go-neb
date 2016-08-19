@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS services (
 	time_updated_ms BIGINT NOT NULL,
 	UNIQUE(service_id)
 );
+CREATE UNIQUE INDEX IF NOT EXISTS service_id_and_user_idx ON services(service_user_id, service_id);
 
 CREATE TABLE IF NOT EXISTS matrix_clients (
 	user_id TEXT NOT NULL,
