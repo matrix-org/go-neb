@@ -43,6 +43,21 @@ func (c *Clients) Update(config types.ClientConfig) (types.ClientConfig, error) 
 	return old.config, err
 }
 
+func (c *Clients) Start() error {
+	configs, err := c.db.LoadMatrixClientConfigs()
+	if err != nil {
+		return err
+	}
+	for _, cfg := range configs {
+		if cfg.Sync {
+			if _, err := c.Client(cfg.UserID); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
 type clientEntry struct {
 	config types.ClientConfig
 	client *matrix.Client
