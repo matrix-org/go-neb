@@ -34,7 +34,6 @@ type Service interface {
 	ServiceUserID() string
 	ServiceID() string
 	ServiceType() string
-	RoomIDs() []string
 	Plugin(roomID string) plugin.Plugin
 	OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client)
 	Register() error
@@ -59,16 +58,16 @@ func BaseURL(u string) error {
 	return nil
 }
 
-var servicesByType = map[string]func(string, string) Service{}
+var servicesByType = map[string]func(string, string, string) Service{}
 
 // RegisterService registers a factory for creating Service instances.
-func RegisterService(factory func(string, string) Service) {
-	servicesByType[factory("", "").ServiceType()] = factory
+func RegisterService(factory func(string, string, string) Service) {
+	servicesByType[factory("", "", "").ServiceType()] = factory
 }
 
 // CreateService creates a Service of the given type and serviceID.
 // Returns an error if the Service couldn't be created.
-func CreateService(serviceID, serviceType string, serviceJSON []byte) (Service, error) {
+func CreateService(serviceID, serviceType, serviceUserID string, serviceJSON []byte) (Service, error) {
 	f := servicesByType[serviceType]
 	if f == nil {
 		return nil, errors.New("Unknown service type: " + serviceType)
@@ -76,7 +75,7 @@ func CreateService(serviceID, serviceType string, serviceJSON []byte) (Service, 
 
 	base64ServiceID := base64.RawURLEncoding.EncodeToString([]byte(serviceID))
 	webhookEndpointURL := baseURL + "services/hooks/" + base64ServiceID
-	service := f(serviceID, webhookEndpointURL)
+	service := f(serviceID, serviceUserID, webhookEndpointURL)
 	if err := json.Unmarshal(serviceJSON, service); err != nil {
 		return nil, err
 	}

@@ -24,11 +24,13 @@ var ownerRepoIssueRegex = regexp.MustCompile("([A-z0-9-_]+)/([A-z0-9-_]+)#([0-9]
 
 type githubService struct {
 	id                 string
+	serviceUserID      string
 	webhookEndpointURL string
-	BotUserID          string
 	ClientUserID       string
 	RealmID            string
 	SecretToken        string
+	HandleCommands     bool
+	HandleExpansions   bool
 	Rooms              map[string]struct { // room_id => {}
 		Repos map[string]struct { // owner/repo => { events: ["push","issue","pull_request"] }
 			Events []string
@@ -36,18 +38,13 @@ type githubService struct {
 	}
 }
 
-func (s *githubService) ServiceUserID() string { return s.BotUserID }
+func (s *githubService) ServiceUserID() string { return s.serviceUserID }
 func (s *githubService) ServiceID() string     { return s.id }
 func (s *githubService) ServiceType() string   { return "github" }
-func (s *githubService) RoomIDs() []string {
-	var keys []string
-	for k := range s.Rooms {
-		keys = append(keys, k)
-	}
-	return keys
-}
-
 func (s *githubService) cmdGithubCreate(roomID, userID string, args []string) (interface{}, error) {
+	if !s.HandleCommands {
+		return nil, nil
+	}
 	cli := s.githubClientFor(userID, false)
 	if cli == nil {
 		r, err := database.GetServiceDB().LoadAuthRealm(s.RealmID)
@@ -104,6 +101,9 @@ func (s *githubService) cmdGithubCreate(roomID, userID string, args []string) (i
 }
 
 func (s *githubService) expandIssue(roomID, userID string, matchingGroups []string) interface{} {
+	if !s.HandleExpansions {
+		return nil
+	}
 	// matchingGroups => ["foo/bar#11", "foo", "bar", "11"]
 	if len(matchingGroups) != 4 {
 		log.WithField("groups", matchingGroups).Print("Unexpected number of groups")
@@ -193,8 +193,8 @@ func (s *githubService) OnReceiveWebhook(w http.ResponseWriter, req *http.Reques
 	w.WriteHeader(200)
 }
 func (s *githubService) Register() error {
-	if s.RealmID == "" || s.ClientUserID == "" || s.BotUserID == "" {
-		return fmt.Errorf("RealmID, BotUserID and ClientUserID are required")
+	if s.RealmID == "" || s.ClientUserID == "" {
+		return fmt.Errorf("RealmID and ClientUserID are required")
 	}
 	// check realm exists
 	realm, err := database.GetServiceDB().LoadAuthRealm(s.RealmID)
@@ -412,9 +412,10 @@ func removeHook(logger *log.Entry, cli *github.Client, owner, repo, webhookEndpo
 }
 
 func init() {
-	types.RegisterService(func(serviceID, webhookEndpointURL string) types.Service {
+	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
 		return &githubService{
 			id:                 serviceID,
+			serviceUserID:      serviceUserID,
 			webhookEndpointURL: webhookEndpointURL,
 		}
 	})

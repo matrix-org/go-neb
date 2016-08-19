@@ -9,15 +9,13 @@ import (
 )
 
 type echoService struct {
-	id     string
-	UserID string
-	Rooms  []string
+	id            string
+	serviceUserID string
 }
 
-func (e *echoService) ServiceUserID() string          { return e.UserID }
+func (e *echoService) ServiceUserID() string          { return e.serviceUserID }
 func (e *echoService) ServiceID() string              { return e.id }
 func (e *echoService) ServiceType() string            { return "echo" }
-func (e *echoService) RoomIDs() []string              { return e.Rooms }
 func (e *echoService) Register() error                { return nil }
 func (e *echoService) PostRegister(old types.Service) {}
 func (e *echoService) Plugin(roomID string) plugin.Plugin {
@@ -37,7 +35,7 @@ func (e *echoService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request,
 }
 
 func init() {
-	types.RegisterService(func(serviceID, webhookEndpointURL string) types.Service {
-		return &echoService{id: serviceID}
+	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
+		return &echoService{id: serviceID, serviceUserID: serviceUserID}
 	})
 }
