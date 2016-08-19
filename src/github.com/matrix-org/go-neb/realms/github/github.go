@@ -191,7 +191,7 @@ func (r *GithubRealm) OnReceiveRedirect(w http.ResponseWriter, req *http.Request
 	logger.WithField("user_id", ghSession.UserID()).Print("Mapped redirect to user")
 
 	if ghSession.AccessToken != "" && ghSession.Scopes != "" {
-		failWith(logger, w, 400, "You have already authenticated with Github", nil)
+		r.redirectOr(w, 400, "You have already authenticated with Github", logger, ghSession)
 		return
 	}
 
@@ -223,14 +223,19 @@ func (r *GithubRealm) OnReceiveRedirect(w http.ResponseWriter, req *http.Request
 		failWith(logger, w, 500, "Failed to persist session", err)
 		return
 	}
+	r.redirectOr(
+		w, 200, "You have successfully linked your Github account to "+ghSession.UserID(), logger, ghSession,
+	)
+}
+
+func (r *GithubRealm) redirectOr(w http.ResponseWriter, code int, msg string, logger *log.Entry, ghSession *GithubSession) {
 	if ghSession.ClientsRedirectURL != "" {
 		w.WriteHeader(302)
 		w.Header().Set("Location", ghSession.ClientsRedirectURL)
 		// technically don't need a body but *shrug*
 		w.Write([]byte(ghSession.ClientsRedirectURL))
 	} else {
-		w.WriteHeader(200)
-		w.Write([]byte("You have successfully linked your Github account to " + ghSession.UserID()))
+		failWith(logger, w, code, msg, nil)
 	}
 }
 
