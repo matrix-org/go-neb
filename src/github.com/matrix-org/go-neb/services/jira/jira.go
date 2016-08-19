@@ -25,8 +25,8 @@ var projectKeyRegex = regexp.MustCompile("^[A-z]+$")
 
 type jiraService struct {
 	id                 string
+	serviceUserID      string
 	webhookEndpointURL string
-	BotUserID          string
 	ClientUserID       string
 	Rooms              map[string]struct { // room_id => {}
 		Realms map[string]struct { // realm_id => {}  Determines the JIRA endpoint
@@ -38,16 +38,9 @@ type jiraService struct {
 	}
 }
 
-func (s *jiraService) ServiceUserID() string { return s.BotUserID }
+func (s *jiraService) ServiceUserID() string { return s.serviceUserID }
 func (s *jiraService) ServiceID() string     { return s.id }
 func (s *jiraService) ServiceType() string   { return "jira" }
-func (s *jiraService) RoomIDs() []string {
-	var keys []string
-	for k := range s.Rooms {
-		keys = append(keys, k)
-	}
-	return keys
-}
 func (s *jiraService) Register() error {
 	// We only ever make 1 JIRA webhook which listens for all projects and then filter
 	// on receive. So we simply need to know if we need to make a webhook or not. We
@@ -408,7 +401,11 @@ func htmlForEvent(whe *webhook.Event, jiraBaseURL string) string {
 }
 
 func init() {
-	types.RegisterService(func(serviceID, webhookEndpointURL string) types.Service {
-		return &jiraService{id: serviceID, webhookEndpointURL: webhookEndpointURL}
+	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
+		return &jiraService{
+			id:                 serviceID,
+			serviceUserID:      serviceUserID,
+			webhookEndpointURL: webhookEndpointURL,
+		}
 	})
 }

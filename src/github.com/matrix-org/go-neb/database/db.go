@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/types"
-	"sort"
 	"time"
 )
 
@@ -60,16 +59,6 @@ func (d *ServiceDB) StoreMatrixClientConfig(config types.ClientConfig) (oldConfi
 	return
 }
 
-// LoadServiceUserIds loads the user ids used by the bots in the database and
-// the rooms those bots should be joined to.
-func (d *ServiceDB) LoadServiceUserIds() (userIDsToRooms map[string][]string, err error) {
-	err = runTransaction(d.db, func(txn *sql.Tx) error {
-		userIDsToRooms, err = selectServiceUserIDsTxn(txn)
-		return err
-	})
-	return
-}
-
 // LoadMatrixClientConfig loads a Matrix client config from the database.
 // Returns sql.ErrNoRows if the client isn't in the database.
 func (d *ServiceDB) LoadMatrixClientConfig(userID string) (config types.ClientConfig, err error) {
@@ -90,20 +79,13 @@ func (d *ServiceDB) LoadService(serviceID string) (service types.Service, err er
 	return
 }
 
-// LoadServicesInRoom loads all the bot services configured for a room.
-// Returns the empty list if there aren't any services configured.
-func (d *ServiceDB) LoadServicesInRoom(serviceUserID, roomID string) (services []types.Service, err error) {
+// LoadServicesForUser loads all the bot services configured for a given user.
+// Returns an empty list if there aren't any services configured.
+func (d *ServiceDB) LoadServicesForUser(serviceUserID string) (services []types.Service, err error) {
 	err = runTransaction(d.db, func(txn *sql.Tx) error {
-		serviceIDs, err := selectRoomServicesTxn(txn, serviceUserID, roomID)
+		services, err = selectServicesForUserTxn(txn, serviceUserID)
 		if err != nil {
 			return err
-		}
-		for _, serviceID := range serviceIDs {
-			service, err := selectServiceTxn(txn, serviceID)
-			if err != nil {
-				return err
-			}
-			services = append(services, service)
 		}
 		return nil
 	})
@@ -116,60 +98,13 @@ func (d *ServiceDB) LoadServicesInRoom(serviceUserID, roomID string) (services [
 func (d *ServiceDB) StoreService(service types.Service, client *matrix.Client) (oldService types.Service, err error) {
 	err = runTransaction(d.db, func(txn *sql.Tx) error {
 		oldService, err = selectServiceTxn(txn, service.ServiceID())
-		if err != nil && err != sql.ErrNoRows {
+		if err == sql.ErrNoRows {
+			return insertServiceTxn(txn, time.Now(), service)
+		} else if err != nil {
 			return err
-		}
-		now := time.Now()
-
-		var newRoomIDs []string
-		var oldRoomIDs []string
-
-		if oldService == nil {
-			if err := insertServiceTxn(txn, now, service); err != nil {
-				return err
-			}
-			newRoomIDs = service.RoomIDs()
 		} else {
-			if err := updateServiceTxn(txn, now, service); err != nil {
-				return err
-			}
-			if service.ServiceUserID() == oldService.ServiceUserID() {
-				oldRoomIDs, newRoomIDs = difference(
-					oldService.RoomIDs(), service.RoomIDs(),
-				)
-			} else {
-				oldRoomIDs = oldService.RoomIDs()
-				newRoomIDs = service.RoomIDs()
-			}
+			return updateServiceTxn(txn, time.Now(), service)
 		}
-
-		for _, roomID := range oldRoomIDs {
-			if err := deleteRoomServiceTxn(
-				txn, oldService.ServiceUserID(), roomID, service.ServiceID(),
-			); err != nil {
-				return err
-			}
-			// TODO: Leave the old rooms.
-		}
-
-		for _, roomID := range newRoomIDs {
-			if err := insertRoomServiceTxn(
-				txn, now, service.ServiceUserID(), roomID, service.ServiceID(),
-			); err != nil {
-				return err
-			}
-
-			// TODO: Making HTTP requests inside the database transaction is unfortunate.
-			// But it is the easiest way of making sure that the changes we
-			// made to the database get rolled back if the requests fail.
-			if _, err := client.JoinRoom(roomID, ""); err != nil {
-				// TODO: What happens to the rooms that we successfully joined?
-				// Should we leave them now?
-				return err
-			}
-		}
-
-		return nil
 	})
 	return
 }
@@ -268,34 +203,4 @@ func runTransaction(db *sql.DB, fn func(txn *sql.Tx) error) (err error) {
 	}()
 	err = fn(txn)
 	return
-}
-
-// difference returns the elements that are only in the first list and
-// the elements that are only in the second. As a side-effect this sorts
-// the input lists in-place.
-func difference(a, b []string) (onlyA, onlyB []string) {
-	sort.Strings(a)
-	sort.Strings(b)
-	for {
-		if len(b) == 0 {
-			onlyA = append(onlyA, a...)
-			return
-		}
-		if len(a) == 0 {
-			onlyB = append(onlyB, b...)
-			return
-		}
-		xA := a[0]
-		xB := b[0]
-		if xA < xB {
-			onlyA = append(onlyA, xA)
-			a = a[1:]
-		} else if xA > xB {
-			onlyB = append(onlyB, xB)
-			b = b[1:]
-		} else {
-			a = a[1:]
-			b = b[1:]
-		}
-	}
 }

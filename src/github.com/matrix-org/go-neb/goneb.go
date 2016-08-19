@@ -51,9 +51,6 @@ func main() {
 	database.SetServiceDB(db)
 
 	clients := clients.New(db)
-	if err := clients.Start(); err != nil {
-		log.Panic(err)
-	}
 
 	http.Handle("/test", server.MakeJSONAPI(&heartbeatHandler{}))
 	http.Handle("/admin/getService", server.MakeJSONAPI(&getServiceHandler{db: db}))

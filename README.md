@@ -51,19 +51,16 @@ configured. To start an echo service:
     curl -X POST localhost:4050/admin/configureService --data-binary '{
         "Type": "echo",
         "Id": "myserviceid",
+        "UserID": "@goneb:localhost:8448",
         "Config": {
-            "UserID": "@goneb:localhost:8448",
-            "Rooms": ["!QkdpvTwGlrptdeViJx:localhost:8448"]
         }
     }'
     {
         "Type": "echo",
         "Id": "myserviceid",
+        "UserID": "@goneb:localhost:8448",
         "OldConfig": {},
-        "NewConfig": {
-            "UserID": "@goneb:localhost:8448",
-            "Rooms": ["!QkdpvTwGlrptdeViJx:localhost:8448"]
-        }
+        "NewConfig": {}
     }
     
 To retrieve an existing Service:
@@ -74,10 +71,8 @@ To retrieve an existing Service:
     {
         "Type": "echo",
         "Id": "myserviceid",
-        "Config": {
-            "UserID": "@goneb:localhost:8448",
-            "Rooms": ["!QkdpvTwGlrptdeViJx:localhost:8448"]
-        }
+        "UserID": "@goneb:localhost:8448",
+        "Config": {}
     }
 
 Go-neb has a heartbeat listener that returns 200 OK so that load balancers can
@@ -179,10 +174,12 @@ Follow this link and grant access for NEB to act on your behalf.
 curl -X POST localhost:4050/admin/configureService --data-binary '{
     "Type": "github",
     "Id": "mygithubserviceid",
+    "UserID": "@goneb:localhost",
     "Config": {
     	"RealmID": "mygithubrealm",
-        "BotUserID": "@goneb:localhost",
         "ClientUserID": "@example:localhost",
+        "HandleCommands": true,
+        "HandleExpansions": true,
         "Rooms": {
         	"!EmwxeXCVubhskuWvaw:localhost": {
         		"Repos": {
@@ -285,8 +282,8 @@ Follow this link and grant access for NEB to act on your behalf.
 curl -X POST localhost:4050/admin/configureService --data-binary '{
     "Type": "jira",
     "Id": "jid",
+    "UserID": "@goneb:localhost",
     "Config": {
-        "BotUserID": "@goneb:localhost",
         "ClientUserID": "@example:localhost",
         "Rooms": {
             "!EmwxeXCVubhskuWvaw:localhost": {

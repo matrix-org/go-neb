@@ -214,17 +214,20 @@ func (s *configureServiceHandler) OnIncomingRequest(req *http.Request) (interfac
 	var body struct {
 		ID     string
 		Type   string
+		UserID string
 		Config json.RawMessage
 	}
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
 		return nil, &errors.HTTPError{err, "Error parsing request JSON", 400}
 	}
 
-	if body.ID == "" || body.Type == "" || body.Config == nil {
-		return nil, &errors.HTTPError{nil, `Must supply a "ID", a "Type" and a "Config"`, 400}
+	if body.ID == "" || body.Type == "" || body.UserID == "" || body.Config == nil {
+		return nil, &errors.HTTPError{
+			nil, `Must supply an "ID", a "Type", a "UserID" and a "Config"`, 400,
+		}
 	}
 
-	service, err := types.CreateService(body.ID, body.Type, body.Config)
+	service, err := types.CreateService(body.ID, body.Type, body.UserID, body.Config)
 	if err != nil {
 		return nil, &errors.HTTPError{err, "Error parsing config JSON", 400}
 	}

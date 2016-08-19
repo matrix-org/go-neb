@@ -43,31 +43,6 @@ func (c *Clients) Update(config types.ClientConfig) (types.ClientConfig, error) 
 	return old.config, err
 }
 
-// Start the clients in the database and join them to the rooms.
-func (c *Clients) Start() error {
-	userIDsToRooms, err := c.db.LoadServiceUserIds()
-	if err != nil {
-		return err
-	}
-	for userID, roomIDs := range userIDsToRooms {
-		client, err := c.Client(userID)
-		if err != nil {
-			log.WithFields(log.Fields{
-				log.ErrorKey:      err,
-				"service_user_id": userID,
-			}).Warn("Error loading matrix client")
-			return err
-		}
-		for _, roomID := range roomIDs {
-			_, err := client.JoinRoom(roomID, "")
-			if err != nil {
-				return err
-			}
-		}
-	}
-	return nil
-}
-
 type clientEntry struct {
 	config types.ClientConfig
 	client *matrix.Client
@@ -138,7 +113,6 @@ func (c *Clients) updateClientInDB(newConfig types.ClientConfig) (new clientEntr
 }
 
 func (c *Clients) newClient(config types.ClientConfig) (*matrix.Client, error) {
-
 	homeserverURL, err := url.Parse(config.HomeserverURL)
 	if err != nil {
 		return nil, err
@@ -150,7 +124,7 @@ func (c *Clients) newClient(config types.ClientConfig) (*matrix.Client, error) {
 	// a request against the server.
 
 	client.Worker.OnEventType("m.room.message", func(event *matrix.Event) {
-		services, err := c.db.LoadServicesInRoom(client.UserID, event.RoomID)
+		services, err := c.db.LoadServicesForUser(client.UserID)
 		if err != nil {
 			log.WithFields(log.Fields{
 				log.ErrorKey:      err,

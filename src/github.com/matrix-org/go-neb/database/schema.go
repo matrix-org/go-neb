@@ -12,18 +12,11 @@ const schemaSQL = `
 CREATE TABLE IF NOT EXISTS services (
 	service_id TEXT NOT NULL,
 	service_type TEXT NOT NULL,
+	service_user_id TEXT NOT NULL,
 	service_json TEXT NOT NULL,
 	time_added_ms BIGINT NOT NULL,
 	time_updated_ms BIGINT NOT NULL,
 	UNIQUE(service_id)
-);
-
-CREATE TABLE IF NOT EXISTS rooms_to_services (
-	service_user_id TEXT NOT NULL,
-	room_id TEXT NOT NULL,
-	service_id TEXT NOT NULL,
-	time_added_ms BIGINT NOT NULL,
-	UNIQUE(service_user_id, room_id, service_id)
 );
 
 CREATE TABLE IF NOT EXISTS matrix_clients (
@@ -55,28 +48,6 @@ CREATE TABLE IF NOT EXISTS auth_sessions (
 	UNIQUE(realm_id, session_id)
 );
 `
-
-const selectServiceUserIDsSQL = `
-SELECT service_user_id, room_id FROM rooms_to_services
-	GROUP BY service_user_id, room_id
-`
-
-// selectServiceUserIDsTxn returns a map from userIDs to lists of roomIDs.
-func selectServiceUserIDsTxn(txn *sql.Tx) (map[string][]string, error) {
-	rows, err := txn.Query(selectServiceUserIDsSQL)
-	if err != nil {
-		return nil, err
-	}
-	result := make(map[string][]string)
-	for rows.Next() {
-		var uID, rID string
-		if err = rows.Scan(&uID, &rID); err != nil {
-			return nil, err
-		}
-		result[uID] = append(result[uID], rID)
-	}
-	return result, nil
-}
 
 const selectMatrixClientConfigSQL = `
 SELECT client_json FROM matrix_clients WHERE user_id = $1
@@ -124,23 +95,24 @@ func updateMatrixClientConfigTxn(txn *sql.Tx, now time.Time, config types.Client
 }
 
 const selectServiceSQL = `
-SELECT service_type, service_json FROM services
+SELECT service_type, service_user_id, service_json FROM services
 	WHERE service_id = $1
 `
 
 func selectServiceTxn(txn *sql.Tx, serviceID string) (types.Service, error) {
 	var serviceType string
+	var serviceUserID string
 	var serviceJSON []byte
 	row := txn.QueryRow(selectServiceSQL, serviceID)
-	if err := row.Scan(&serviceType, &serviceJSON); err != nil {
+	if err := row.Scan(&serviceType, &serviceUserID, &serviceJSON); err != nil {
 		return nil, err
 	}
-	return types.CreateService(serviceID, serviceType, serviceJSON)
+	return types.CreateService(serviceID, serviceType, serviceUserID, serviceJSON)
 }
 
 const updateServiceSQL = `
-UPDATE services SET service_type=$1, service_json=$2, time_updated_ms=$3
-	WHERE service_id=$4
+UPDATE services SET service_type=$1, service_user_id=$2, service_json=$3, time_updated_ms=$4
+	WHERE service_id=$5
 `
 
 func updateServiceTxn(txn *sql.Tx, now time.Time, service types.Service) error {
@@ -150,7 +122,7 @@ func updateServiceTxn(txn *sql.Tx, now time.Time, service types.Service) error {
 	}
 	t := now.UnixNano() / 1000000
 	_, err = txn.Exec(
-		updateServiceSQL, service.ServiceType(), serviceJSON, t,
+		updateServiceSQL, service.ServiceType(), service.ServiceUserID(), serviceJSON, t,
 		service.ServiceID(),
 	)
 	return err
@@ -158,8 +130,8 @@ func updateServiceTxn(txn *sql.Tx, now time.Time, service types.Service) error {
 
 const insertServiceSQL = `
 INSERT INTO services(
-	service_id, service_type, service_json, time_added_ms, time_updated_ms
-) VALUES ($1, $2, $3, $4, $5)
+	service_id, service_type, service_user_id, service_json, time_added_ms, time_updated_ms
+) VALUES ($1, $2, $3, $4, $5, $6)
 `
 
 func insertServiceTxn(txn *sql.Tx, now time.Time, service types.Service) error {
@@ -170,47 +142,34 @@ func insertServiceTxn(txn *sql.Tx, now time.Time, service types.Service) error {
 	t := now.UnixNano() / 1000000
 	_, err = txn.Exec(
 		insertServiceSQL,
-		service.ServiceID(), service.ServiceType(), serviceJSON, t, t,
+		service.ServiceID(), service.ServiceType(), service.ServiceUserID(), serviceJSON, t, t,
 	)
 	return err
 }
 
-const insertRoomServiceSQL = `
-INSERT INTO rooms_to_services(service_user_id, room_id, service_id, time_added_ms)
-	VALUES ($1, $2, $3, $4)
+const selectServicesForUserSQL = `
+SELECT service_id, service_type, service_json FROM services WHERE service_user_id=$1 ORDER BY service_id
 `
 
-func insertRoomServiceTxn(txn *sql.Tx, now time.Time, serviceUserID, roomID, serviceID string) error {
-	t := now.UnixNano() / 1000000
-	_, err := txn.Exec(insertRoomServiceSQL, serviceUserID, roomID, serviceID, t)
-	return err
-}
-
-const deleteRoomServiceSQL = `
-DELETE FROM rooms_to_services WHERE service_user_id=$1 AND room_id = $2 AND service_id=$3
-`
-
-func deleteRoomServiceTxn(txn *sql.Tx, serviceUserID, roomID, serviceID string) error {
-	_, err := txn.Exec(deleteRoomServiceSQL, serviceUserID, roomID, serviceID)
-	return err
-}
-
-const selectRoomServicesSQL = `
-SELECT service_id FROM rooms_to_services WHERE service_user_id=$1 AND room_id=$2
-`
-
-func selectRoomServicesTxn(txn *sql.Tx, serviceUserID, roomID string) (serviceIDs []string, err error) {
-	rows, err := txn.Query(selectRoomServicesSQL, serviceUserID, roomID)
+func selectServicesForUserTxn(txn *sql.Tx, userID string) (srvs []types.Service, err error) {
+	rows, err := txn.Query(selectServicesForUserSQL, userID)
 	if err != nil {
 		return
 	}
 	defer rows.Close()
 	for rows.Next() {
+		var s types.Service
 		var serviceID string
-		if err = rows.Scan(&serviceID); err != nil {
+		var serviceType string
+		var serviceJSON []byte
+		if err = rows.Scan(&serviceID, &serviceType, &serviceJSON); err != nil {
 			return
 		}
-		serviceIDs = append(serviceIDs, serviceID)
+		s, err = types.CreateService(serviceID, serviceType, userID, serviceJSON)
+		if err != nil {
+			return
+		}
+		srvs = append(srvs, s)
 	}
 	return
 }
