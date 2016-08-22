@@ -162,13 +162,18 @@ func (s *githubService) OnReceiveWebhook(w http.ResponseWriter, req *http.Reques
 		w.WriteHeader(err.Code)
 		return
 	}
+	logger := log.WithFields(log.Fields{
+		"event": evType,
+		"repo":  *repo.FullName,
+	})
+	repoExistsInConfig := false
 
 	for roomID, roomConfig := range s.Rooms {
 		for ownerRepo, repoConfig := range roomConfig.Repos {
 			if !strings.EqualFold(*repo.FullName, ownerRepo) {
 				continue
 			}
-
+			repoExistsInConfig = true // even if we don't notify for it.
 			notifyRoom := false
 			for _, notifyType := range repoConfig.Events {
 				if evType == notifyType {
@@ -177,20 +182,32 @@ func (s *githubService) OnReceiveWebhook(w http.ResponseWriter, req *http.Reques
 				}
 			}
 			if notifyRoom {
-				log.WithFields(log.Fields{
-					"type":    evType,
+				logger.WithFields(log.Fields{
 					"msg":     msg,
-					"repo":    repo,
 					"room_id": roomID,
 				}).Print("Sending notification to room")
-				_, e := cli.SendMessageEvent(roomID, "m.room.message", msg)
-				if e != nil {
-					log.WithError(e).WithField("room_id", roomID).Print(
+				if _, e := cli.SendMessageEvent(roomID, "m.room.message", msg); e != nil {
+					logger.WithError(e).WithField("room_id", roomID).Print(
 						"Failed to send notification to room.")
 				}
 			}
 		}
 	}
+
+	if !repoExistsInConfig {
+		segs := strings.Split(*repo.FullName, "/")
+		if len(segs) != 2 {
+			logger.Error("Received event with malformed owner/repo.")
+			w.WriteHeader(400)
+			return
+		}
+		if err := s.deleteHook(segs[0], segs[1]); err != nil {
+			logger.WithError(err).Print("Failed to delete webhook")
+		} else {
+			logger.Info("Deleted webhook")
+		}
+	}
+
 	w.WriteHeader(200)
 }
 
@@ -325,6 +342,49 @@ func (s *githubService) createHook(cli *github.Client, ownerRepo string) error {
 	return err
 }
 
+func (s *githubService) deleteHook(owner, repo string) error {
+	logger := log.WithFields(log.Fields{
+		"endpoint": s.webhookEndpointURL,
+		"repo":     owner + "/" + repo,
+	})
+	logger.Info("Removing hook")
+
+	cli := s.githubClientFor(s.ClientUserID, false)
+	if cli == nil {
+		logger.WithField("user_id", s.ClientUserID).Print("Cannot delete webhook: no authenticated client exists for user ID.")
+		return fmt.Errorf("no authenticated client exists for user ID")
+	}
+
+	// Get a list of webhooks for this owner/repo and find the one which has the
+	// same endpoint URL which is what github uses to determine equivalence.
+	hooks, _, err := cli.Repositories.ListHooks(owner, repo, nil)
+	if err != nil {
+		return err
+	}
+	var hook *github.Hook
+	for _, h := range hooks {
+		if h.Config["url"] == nil {
+			logger.Print("Ignoring nil config.url")
+			continue
+		}
+		hookURL, ok := h.Config["url"].(string)
+		if !ok {
+			logger.Print("Ignoring non-string config.url")
+			continue
+		}
+		if hookURL == s.webhookEndpointURL {
+			hook = h
+			break
+		}
+	}
+	if hook == nil {
+		return fmt.Errorf("Failed to find hook with endpoint: %s", s.webhookEndpointURL)
+	}
+
+	_, err = cli.Repositories.DeleteHook(owner, repo, *hook.ID)
+	return err
+}
+
 func sameRepos(a *githubService, b *githubService) bool {
 	getRepos := func(s *githubService) []string {
 		r := make(map[string]bool)
@@ -396,43 +456,6 @@ func getTokenForUser(realmID, userID string) (string, error) {
 		return "", fmt.Errorf("Github auth session for %s has not been completed.", userID)
 	}
 	return ghSession.AccessToken, nil
-}
-
-func removeHook(logger *log.Entry, cli *github.Client, owner, repo, webhookEndpointURL string) {
-	logger.WithField("endpoint", webhookEndpointURL).Print("Removing hook with endpoint")
-	// Get a list of webhooks for this owner/repo and find the one which has the
-	// same endpoint URL which is what github uses to determine equivalence.
-	hooks, _, err := cli.Repositories.ListHooks(owner, repo, nil)
-	if err != nil {
-		logger.WithError(err).Print("Failed to list hooks")
-		return
-	}
-	var hook *github.Hook
-	for _, h := range hooks {
-		if h.Config["url"] == nil {
-			logger.Print("Ignoring nil config.url")
-			continue
-		}
-		hookURL, ok := h.Config["url"].(string)
-		if !ok {
-			logger.Print("Ignoring non-string config.url")
-			continue
-		}
-		if hookURL == webhookEndpointURL {
-			hook = h
-			break
-		}
-	}
-	if hook == nil {
-		logger.WithField("endpoint", webhookEndpointURL).Print("Failed to find hook with endpoint")
-		return // couldn't find it
-	}
-
-	_, err = cli.Repositories.DeleteHook(owner, repo, *hook.ID)
-	if err != nil {
-		logger.WithError(err).Print("Failed to delete hook")
-	}
-	logger.WithField("endpoint", webhookEndpointURL).Print("Deleted hook")
 }
 
 func init() {
