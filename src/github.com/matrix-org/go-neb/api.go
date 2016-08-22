@@ -222,6 +222,9 @@ func (s *configureServiceHandler) getMutexForServiceID(serviceID string) *sync.M
 	defer s.mapMutex.Unlock()
 	m := s.mutexByServiceID[serviceID]
 	if m == nil {
+		// XXX TODO: There's a memory leak here. The amount of mutexes created is unbounded, as there will be 1 per service which are never deleted.
+		// A better solution would be to have a striped hash map with a bounded pool of mutexes. We can't live with a single global mutex because the Register()
+		// function this is protecting does many many HTTP requests which can take a long time on bad networks and will head of line block other services.
 		m = &sync.Mutex{}
 		s.mutexByServiceID[serviceID] = m
 	}
