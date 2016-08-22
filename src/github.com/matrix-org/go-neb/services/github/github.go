@@ -192,6 +192,17 @@ func (s *githubService) OnReceiveWebhook(w http.ResponseWriter, req *http.Reques
 	}
 	w.WriteHeader(200)
 }
+
+// Register will create webhooks for the repos specified in Rooms
+//
+// The hooks made are a delta between the old service and the current configuration. If all webhooks are made,
+// Register() succeeds. If any webhook fails to be created, Register() fails. A delta is used to allow clients to incrementally
+// build up the service config without recreating the hooks every time a change is made.
+//
+// Hooks are deleted when this service receives a webhook event from Github for a repo which has no user configurations.
+//
+// Hooks can get out of sync if a user manually deletes a hook in the Github UI. In this case, toggling the repo configuration will
+// force NEB to recreate the hook.
 func (s *githubService) Register() error {
 	if s.RealmID == "" {
 		return fmt.Errorf("RealmID is required")
@@ -213,6 +224,10 @@ func (s *githubService) Register() error {
 			return fmt.Errorf(
 				"User %s does not have a Github auth session with realm %s.", s.ClientUserID, realm.ID())
 		}
+		// Make sure they have specified some webhooks (it makes no sense otherwise)
+
+		// Work out
+
 	}
 
 	log.Infof("%+v", s)
