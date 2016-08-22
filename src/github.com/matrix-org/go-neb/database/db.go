@@ -2,7 +2,6 @@ package database
 
 import (
 	"database/sql"
-	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/types"
 	"time"
 )
@@ -104,7 +103,7 @@ func (d *ServiceDB) LoadServicesForUser(serviceUserID string) (services []types.
 // StoreService stores a service into the database either by inserting a new
 // service or updating an existing service. Returns the old service if there
 // was one.
-func (d *ServiceDB) StoreService(service types.Service, client *matrix.Client) (oldService types.Service, err error) {
+func (d *ServiceDB) StoreService(service types.Service) (oldService types.Service, err error) {
 	err = runTransaction(d.db, func(txn *sql.Tx) error {
 		oldService, err = selectServiceTxn(txn, service.ServiceID())
 		if err == sql.ErrNoRows {

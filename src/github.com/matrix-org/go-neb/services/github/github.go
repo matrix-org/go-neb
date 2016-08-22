@@ -221,7 +221,7 @@ func (s *githubService) OnReceiveWebhook(w http.ResponseWriter, req *http.Reques
 //
 // Hooks can get out of sync if a user manually deletes a hook in the Github UI. In this case, toggling the repo configuration will
 // force NEB to recreate the hook.
-func (s *githubService) Register(oldService types.Service) error {
+func (s *githubService) Register(oldService types.Service, client *matrix.Client) error {
 	if s.RealmID == "" {
 		return fmt.Errorf("RealmID is required")
 	}
@@ -250,15 +250,17 @@ func (s *githubService) Register(oldService types.Service) error {
 
 		// Fetch the old service list and work out the difference between the two.
 		var oldRepos []string
-		old, ok := oldService.(*githubService)
-		if !ok {
-			log.WithFields(log.Fields{
-				"service_id":   oldService.ServiceID(),
-				"service_type": oldService.ServiceType(),
-			}).Print("Cannot case old github service to GithubService")
-			// non-fatal though, we'll just make the hooks
-		} else {
-			oldRepos = old.repoList()
+		if oldService != nil {
+			old, ok := oldService.(*githubService)
+			if !ok {
+				log.WithFields(log.Fields{
+					"service_id":   oldService.ServiceID(),
+					"service_type": oldService.ServiceType(),
+				}).Print("Cannot cast old github service to GithubService")
+				// non-fatal though, we'll just make the hooks
+			} else {
+				oldRepos = old.repoList()
+			}
 		}
 
 		// Add the repos in the new service but not the old service
@@ -272,10 +274,24 @@ func (s *githubService) Register(oldService types.Service) error {
 			}
 			logger.Info("Created webhook")
 		}
+
+		if err := s.joinWebhookRooms(client); err != nil {
+			return err
+		}
 	}
 
 	log.Infof("%+v", s)
 
+	return nil
+}
+
+func (s *githubService) joinWebhookRooms(client *matrix.Client) error {
+	for roomID := range s.Rooms {
+		if _, err := client.JoinRoom(roomID, ""); err != nil {
+			// TODO: Leave the rooms we successfully joined?
+			return err
+		}
+	}
 	return nil
 }
 
