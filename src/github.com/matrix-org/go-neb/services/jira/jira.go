@@ -41,7 +41,7 @@ type jiraService struct {
 func (s *jiraService) ServiceUserID() string { return s.serviceUserID }
 func (s *jiraService) ServiceID() string     { return s.id }
 func (s *jiraService) ServiceType() string   { return "jira" }
-func (s *jiraService) Register() error {
+func (s *jiraService) Register(oldService types.Service) error {
 	// We only ever make 1 JIRA webhook which listens for all projects and then filter
 	// on receive. So we simply need to know if we need to make a webhook or not. We
 	// need to do this for each unique realm.
@@ -60,9 +60,6 @@ func (s *jiraService) Register() error {
 		}
 	}
 	return nil
-}
-func (s *jiraService) PostRegister(old types.Service) {
-	// TODO: We don't remove old JIRA webhooks for now. Let the admin sort it out.
 }
 
 func (s *jiraService) cmdJiraCreate(roomID, userID string, args []string) (interface{}, error) {

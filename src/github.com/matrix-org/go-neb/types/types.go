@@ -38,8 +38,7 @@ type Service interface {
 	ServiceType() string
 	Plugin(roomID string) plugin.Plugin
 	OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client)
-	Register() error
-	PostRegister(oldService Service)
+	Register(oldService Service) error
 }
 
 var baseURL = ""

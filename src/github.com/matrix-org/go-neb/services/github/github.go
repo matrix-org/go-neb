@@ -11,6 +11,7 @@ import (
 	"github.com/matrix-org/go-neb/services/github/client"
 	"github.com/matrix-org/go-neb/services/github/webhook"
 	"github.com/matrix-org/go-neb/types"
+	"github.com/matrix-org/go-neb/util"
 	"net/http"
 	"regexp"
 	"sort"
@@ -203,7 +204,7 @@ func (s *githubService) OnReceiveWebhook(w http.ResponseWriter, req *http.Reques
 //
 // Hooks can get out of sync if a user manually deletes a hook in the Github UI. In this case, toggling the repo configuration will
 // force NEB to recreate the hook.
-func (s *githubService) Register() error {
+func (s *githubService) Register(oldService types.Service) error {
 	if s.RealmID == "" {
 		return fmt.Errorf("RealmID is required")
 	}
@@ -225,9 +226,35 @@ func (s *githubService) Register() error {
 				"User %s does not have a Github auth session with realm %s.", s.ClientUserID, realm.ID())
 		}
 		// Make sure they have specified some webhooks (it makes no sense otherwise)
+		reposForWebhooks := s.repoList()
+		if len(reposForWebhooks) == 0 {
+			return fmt.Errorf("No repos for webhooks specified")
+		}
 
-		// Work out
+		// Fetch the old service list and work out the difference between the two.
+		var oldRepos []string
+		old, ok := oldService.(*githubService)
+		if !ok {
+			log.WithFields(log.Fields{
+				"service_id":   oldService.ServiceID(),
+				"service_type": oldService.ServiceType(),
+			}).Print("Cannot case old github service to GithubService")
+			// non-fatal though, we'll just make the hooks
+		} else {
+			oldRepos = old.repoList()
+		}
 
+		// Add the repos in the new service but not the old service
+		newRepos, _ := util.Difference(reposForWebhooks, oldRepos)
+		for _, r := range newRepos {
+			logger := log.WithField("repo", r)
+			err := s.createHook(cli, r)
+			if err != nil {
+				logger.WithError(err).Error("Failed to create webhook")
+				return err
+			}
+			logger.Info("Created webhook")
+		}
 	}
 
 	log.Infof("%+v", s)
@@ -235,98 +262,52 @@ func (s *githubService) Register() error {
 	return nil
 }
 
-func (s *githubService) PostRegister(oldService types.Service) {
-	// PostRegister handles creating/destroying webhooks, which is only valid if this service
-	// is configured on behalf of a client.
-	if s.ClientUserID == "" {
-		if len(s.Rooms) != 0 {
-			log.WithFields(log.Fields{
-				"Rooms": s.Rooms,
-			}).Error("Empty ClientUserID but a webhook config was supplied.")
-		}
-		return
+func (s *githubService) repoList() []string {
+	var repos []string
+	if s.Rooms == nil {
+		return repos
 	}
-
-	cli := s.githubClientFor(s.ClientUserID, false)
-	if cli == nil {
-		log.Errorf("PostRegister: %s does not have a github session", s.ClientUserID)
-		return
-	}
-
-	if oldService != nil {
-		old, ok := oldService.(*githubService)
-		if !ok {
-			log.Error("PostRegister: Provided old service is not of type GithubService")
-			return
-		}
-
-		// Don't spam github webhook requests if we can help it.
-		if sameRepos(s, old) {
-			log.Print("PostRegister: old and new services have the same repo set. Nooping.")
-			return
-		}
-
-		// TODO: We should be adding webhooks in Register() then removing old hooks in PostRegister()
-		//
-		// By doing both operations in PostRegister(), if some of the requests fail we can end up in
-		// an inconsistent state. It is a lot simpler and easy to reason about this way though, so
-		// for now it will do.
-
-		// remove any existing webhooks this service created on the user's behalf
-		modifyWebhooks(old, cli, true)
-	}
-
-	// make new webhooks according to service config
-	modifyWebhooks(s, cli, false)
-}
-
-func modifyWebhooks(s *githubService, cli *github.Client, removeHooks bool) {
-	ownerRepoSet := make(map[string]bool)
-	for _, roomCfg := range s.Rooms {
-		for ownerRepo := range roomCfg.Repos {
-			// sanity check that it looks like 'owner/repo' as we'll split on / later
+	for _, roomConfig := range s.Rooms {
+		for ownerRepo := range roomConfig.Repos {
 			if strings.Count(ownerRepo, "/") != 1 {
-				log.WithField("owner_repo", ownerRepo).Print("Bad owner/repo value.")
+				log.WithField("repo", ownerRepo).Error("Bad owner/repo key in config")
 				continue
 			}
-			ownerRepoSet[ownerRepo] = true
+			exists := false
+			for _, r := range repos {
+				if r == ownerRepo {
+					exists = true
+					break
+				}
+			}
+			if !exists {
+				repos = append(repos, ownerRepo)
+			}
 		}
 	}
+	return repos
+}
 
-	for ownerRepo := range ownerRepoSet {
-		o := strings.Split(ownerRepo, "/")
-		owner := o[0]
-		repo := o[1]
-		logger := log.WithFields(log.Fields{
-			"owner": owner,
-			"repo":  repo,
-		})
-		if removeHooks {
-			removeHook(logger, cli, owner, repo, s.webhookEndpointURL)
-		} else {
-			// make a hook for all GH events since we'll filter it when we receive webhook requests
-			name := "web" // https://developer.github.com/v3/repos/hooks/#create-a-hook
-			cfg := map[string]interface{}{
-				"content_type": "json",
-				"url":          s.webhookEndpointURL,
-			}
-			if s.SecretToken != "" {
-				cfg["secret"] = s.SecretToken
-			}
-			events := []string{"push", "pull_request", "issues", "issue_comment", "pull_request_review_comment"}
-			_, _, err := cli.Repositories.CreateHook(owner, repo, &github.Hook{
-				Name:   &name,
-				Config: cfg,
-				Events: events,
-			})
-			if err != nil {
-				logger.WithError(err).Print("Failed to create webhook")
-				// continue as others may succeed
-			} else {
-				logger.WithField("endpoint", s.webhookEndpointURL).Print("Created hook with endpoint")
-			}
-		}
+func (s *githubService) createHook(cli *github.Client, ownerRepo string) error {
+	o := strings.Split(ownerRepo, "/")
+	owner := o[0]
+	repo := o[1]
+	// make a hook for all GH events since we'll filter it when we receive webhook requests
+	name := "web" // https://developer.github.com/v3/repos/hooks/#create-a-hook
+	cfg := map[string]interface{}{
+		"content_type": "json",
+		"url":          s.webhookEndpointURL,
 	}
+	if s.SecretToken != "" {
+		cfg["secret"] = s.SecretToken
+	}
+	events := []string{"push", "pull_request", "issues", "issue_comment", "pull_request_review_comment"}
+	_, _, err := cli.Repositories.CreateHook(owner, repo, &github.Hook{
+		Name:   &name,
+		Config: cfg,
+		Events: events,
+	})
+	return err
 }
 
 func sameRepos(a *githubService, b *githubService) bool {
