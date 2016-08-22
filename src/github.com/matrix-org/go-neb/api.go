@@ -11,6 +11,7 @@ import (
 	"github.com/matrix-org/go-neb/types"
 	"net/http"
 	"strings"
+	"sync"
 )
 
 type heartbeatHandler struct{}
@@ -202,8 +203,29 @@ func (s *configureClientHandler) OnIncomingRequest(req *http.Request) (interface
 }
 
 type configureServiceHandler struct {
-	db      *database.ServiceDB
-	clients *clients.Clients
+	db               *database.ServiceDB
+	clients          *clients.Clients
+	mapMutex         sync.Mutex
+	mutexByServiceID map[string]*sync.Mutex
+}
+
+func newConfigureServiceHandler(db *database.ServiceDB, clients *clients.Clients) *configureServiceHandler {
+	return &configureServiceHandler{
+		db:               db,
+		clients:          clients,
+		mutexByServiceID: make(map[string]*sync.Mutex),
+	}
+}
+
+func (s *configureServiceHandler) getMutexForServiceID(serviceID string) *sync.Mutex {
+	s.mapMutex.Lock()
+	defer s.mapMutex.Unlock()
+	m := s.mutexByServiceID[serviceID]
+	if m == nil {
+		m = &sync.Mutex{}
+		s.mutexByServiceID[serviceID] = m
+	}
+	return m
 }
 
 func (s *configureServiceHandler) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError) {
@@ -216,7 +238,10 @@ func (s *configureServiceHandler) OnIncomingRequest(req *http.Request) (interfac
 		return nil, httpErr
 	}
 
-	// TODO mutex lock keyed off service ID
+	// Have mutexes around each service to queue up multiple requests for the same service ID
+	mut := s.getMutexForServiceID(service.ServiceID())
+	mut.Lock()
+	defer mut.Unlock()
 
 	old, err := s.db.LoadService(service.ServiceID())
 	if err != nil && err != sql.ErrNoRows {
@@ -236,8 +261,6 @@ func (s *configureServiceHandler) OnIncomingRequest(req *http.Request) (interfac
 	if err != nil {
 		return nil, &errors.HTTPError{err, "Error storing service", 500}
 	}
-
-	// TODO mutex unlock keyed off service ID
 
 	return &struct {
 		ID        string
