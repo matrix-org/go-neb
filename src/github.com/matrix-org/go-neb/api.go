@@ -211,6 +211,43 @@ func (s *configureServiceHandler) OnIncomingRequest(req *http.Request) (interfac
 		return nil, &errors.HTTPError{nil, "Unsupported Method", 405}
 	}
 
+	service, httpErr := s.createService(req)
+	if httpErr != nil {
+		return nil, httpErr
+	}
+
+	// TODO mutex lock keyed off service ID
+
+	old, err := s.db.LoadService(service.ServiceID())
+	if err != nil && err != sql.ErrNoRows {
+		return nil, &errors.HTTPError{err, "Error loading old service", 500}
+	}
+
+	if err = service.Register(old); err != nil {
+		return nil, &errors.HTTPError{err, "Failed to register service: " + err.Error(), 500}
+	}
+
+	client, err := s.clients.Client(service.ServiceUserID())
+	if err != nil {
+		return nil, &errors.HTTPError{err, "Unknown matrix client", 400}
+	}
+
+	oldService, err := s.db.StoreService(service, client)
+	if err != nil {
+		return nil, &errors.HTTPError{err, "Error storing service", 500}
+	}
+
+	// TODO mutex unlock keyed off service ID
+
+	return &struct {
+		ID        string
+		Type      string
+		OldConfig types.Service
+		NewConfig types.Service
+	}{service.ServiceID(), service.ServiceType(), oldService, service}, nil
+}
+
+func (s *configureServiceHandler) createService(req *http.Request) (types.Service, *errors.HTTPError) {
 	var body struct {
 		ID     string
 		Type   string
@@ -231,30 +268,7 @@ func (s *configureServiceHandler) OnIncomingRequest(req *http.Request) (interfac
 	if err != nil {
 		return nil, &errors.HTTPError{err, "Error parsing config JSON", 400}
 	}
-
-	err = service.Register()
-	if err != nil {
-		return nil, &errors.HTTPError{err, "Failed to register service: " + err.Error(), 500}
-	}
-
-	client, err := s.clients.Client(service.ServiceUserID())
-	if err != nil {
-		return nil, &errors.HTTPError{err, "Unknown matrix client", 400}
-	}
-
-	oldService, err := s.db.StoreService(service, client)
-	if err != nil {
-		return nil, &errors.HTTPError{err, "Error storing service", 500}
-	}
-
-	service.PostRegister(oldService)
-
-	return &struct {
-		ID        string
-		Type      string
-		OldConfig types.Service
-		NewConfig types.Service
-	}{body.ID, body.Type, oldService, service}, nil
+	return service, nil
 }
 
 type getServiceHandler struct {
