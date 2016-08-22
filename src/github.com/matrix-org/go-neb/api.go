@@ -248,16 +248,16 @@ func (s *configureServiceHandler) OnIncomingRequest(req *http.Request) (interfac
 		return nil, &errors.HTTPError{err, "Error loading old service", 500}
 	}
 
-	if err = service.Register(old); err != nil {
-		return nil, &errors.HTTPError{err, "Failed to register service: " + err.Error(), 500}
-	}
-
 	client, err := s.clients.Client(service.ServiceUserID())
 	if err != nil {
 		return nil, &errors.HTTPError{err, "Unknown matrix client", 400}
 	}
 
-	oldService, err := s.db.StoreService(service, client)
+	if err = service.Register(old, client); err != nil {
+		return nil, &errors.HTTPError{err, "Failed to register service: " + err.Error(), 500}
+	}
+
+	oldService, err := s.db.StoreService(service)
 	if err != nil {
 		return nil, &errors.HTTPError{err, "Error storing service", 500}
 	}
