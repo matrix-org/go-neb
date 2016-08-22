@@ -302,11 +302,26 @@ func (s *githubService) createHook(cli *github.Client, ownerRepo string) error {
 		cfg["secret"] = s.SecretToken
 	}
 	events := []string{"push", "pull_request", "issues", "issue_comment", "pull_request_review_comment"}
-	_, _, err := cli.Repositories.CreateHook(owner, repo, &github.Hook{
+	_, res, err := cli.Repositories.CreateHook(owner, repo, &github.Hook{
 		Name:   &name,
 		Config: cfg,
 		Events: events,
 	})
+
+	if res.StatusCode == 422 {
+		errResponse, ok := err.(*github.ErrorResponse)
+		if !ok {
+			return err
+		}
+		for _, ghErr := range errResponse.Errors {
+			if strings.Contains(ghErr.Message, "already exists") {
+				log.WithField("repo", ownerRepo).Print("422 : Hook already exists")
+				return nil
+			}
+		}
+		return err
+	}
+
 	return err
 }
 
