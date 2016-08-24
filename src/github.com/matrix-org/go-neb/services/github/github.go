@@ -112,24 +112,15 @@ func (s *githubService) cmdGithubCreate(roomID, userID string, args []string) (i
 	return matrix.TextMessage{"m.notice", fmt.Sprintf("Created issue: %s", *issue.HTMLURL)}, nil
 }
 
-func (s *githubService) expandIssue(roomID, userID string, matchingGroups []string) interface{} {
-	// matchingGroups => ["foo/bar#11", "foo/bar", "foo", "bar", "11"]
-	num, err := strconv.Atoi(matchingGroups[4])
-	if err != nil {
-		log.WithField("issue_number", matchingGroups[4]).Print("Bad issue number")
-		return nil
-	}
-	owner := matchingGroups[2]
-	repo := matchingGroups[3]
-
+func (s *githubService) expandIssue(roomID, userID, owner, repo string, issueNum int) interface{} {
 	cli := s.githubClientFor(userID, true)
 
-	i, _, err := cli.Issues.Get(owner, repo, num)
+	i, _, err := cli.Issues.Get(owner, repo, issueNum)
 	if err != nil {
 		log.WithError(err).WithFields(log.Fields{
 			"owner":  owner,
 			"repo":   repo,
-			"number": num,
+			"number": issueNum,
 		}).Print("Failed to fetch issue")
 		return nil
 	}
@@ -166,7 +157,6 @@ func (s *githubService) Plugin(roomID string) plugin.Plugin {
 						)
 						return nil
 					}
-					log.Print(matchingGroups)
 					if matchingGroups[1] == "" && matchingGroups[2] == "" && matchingGroups[3] == "" {
 						// issue only match, this only works if there is a default repo
 						defaultRepo := s.defaultRepo(roomID)
@@ -190,7 +180,12 @@ func (s *githubService) Plugin(roomID string) plugin.Plugin {
 							matchingGroups[4],
 						}
 					}
-					return s.expandIssue(roomID, userID, matchingGroups)
+					num, err := strconv.Atoi(matchingGroups[4])
+					if err != nil {
+						log.WithField("issue_number", matchingGroups[4]).Print("Bad issue number")
+						return nil
+					}
+					return s.expandIssue(roomID, userID, matchingGroups[2], matchingGroups[3], num)
 				},
 			},
 		},
