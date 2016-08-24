@@ -194,6 +194,33 @@ func (d *ServiceDB) LoadAuthSessionByID(realmID, sessionID string) (session type
 	return
 }
 
+// LoadBotOptions loads bot options from the database.
+// Returns sql.ErrNoRows if the bot options isn't in the database.
+func (d *ServiceDB) LoadBotOptions(userID, roomID string) (opts types.BotOptions, err error) {
+	err = runTransaction(d.db, func(txn *sql.Tx) error {
+		opts, err = selectBotOptionsTxn(txn, userID, roomID)
+		return err
+	})
+	return
+}
+
+// StoreBotOptions stores a BotOptions into the database either by inserting a new
+// bot options or updating an existing bot options. Returns the old bot options if there
+// was one.
+func (d *ServiceDB) StoreBotOptions(opts types.BotOptions) (oldOpts types.BotOptions, err error) {
+	err = runTransaction(d.db, func(txn *sql.Tx) error {
+		oldOpts, err = selectBotOptionsTxn(txn, opts.UserID, opts.RoomID)
+		if err == sql.ErrNoRows {
+			return insertBotOptionsTxn(txn, time.Now(), opts)
+		} else if err != nil {
+			return err
+		} else {
+			return updateBotOptionsTxn(txn, time.Now(), opts)
+		}
+	})
+	return
+}
+
 func runTransaction(db *sql.DB, fn func(txn *sql.Tx) error) (err error) {
 	txn, err := db.Begin()
 	if err != nil {

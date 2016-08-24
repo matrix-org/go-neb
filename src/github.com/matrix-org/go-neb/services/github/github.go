@@ -1,6 +1,7 @@
 package services
 
 import (
+	"database/sql"
 	"fmt"
 	log "github.com/Sirupsen/logrus"
 	"github.com/google/go-github/github"
@@ -22,6 +23,7 @@ import (
 // Matches alphanumeric then a /, then more alphanumeric then a #, then a number.
 // E.g. owner/repo#11 (issue/PR numbers) - Captured groups for owner/repo/number
 var ownerRepoIssueRegex = regexp.MustCompile("([A-z0-9-_]+)/([A-z0-9-_]+)#([0-9]+)")
+var issueRegex = regexp.MustCompile("#([0-9]+)")
 
 type githubService struct {
 	id                 string
@@ -62,9 +64,19 @@ func (s *githubService) cmdGithubCreate(roomID, userID string, args []string) (i
 		}, nil
 	}
 
-	if len(args) < 2 {
-		return &matrix.TextMessage{"m.notice",
-			`Usage: !github create owner/repo "issue title" "description"`}, nil
+	// We expect the args to look like:
+	// [ "owner/repo", "title text", "desc text" ]
+	// They can omit the owner/repo if there is a default one set.
+
+	if len(args) < 2 || strings.Count(args[0], "/") != 1 {
+		// look for a default repo
+		defaultRepo := s.defaultRepo(roomID)
+		if defaultRepo == "" {
+			return &matrix.TextMessage{"m.notice",
+				`Usage: !github create owner/repo "issue title" "description"`}, nil
+		}
+		// insert the default as the first arg to reuse the same code path
+		args = append([]string{defaultRepo}, args...)
 	}
 
 	var (
@@ -102,9 +114,6 @@ func (s *githubService) cmdGithubCreate(roomID, userID string, args []string) (i
 }
 
 func (s *githubService) expandIssue(roomID, userID string, matchingGroups []string) interface{} {
-	if !s.HandleExpansions {
-		return nil
-	}
 	// matchingGroups => ["foo/bar#11", "foo", "bar", "11"]
 	if len(matchingGroups) != 4 {
 		log.WithField("groups", matchingGroups).Print("Unexpected number of groups")
@@ -150,7 +159,42 @@ func (s *githubService) Plugin(roomID string) plugin.Plugin {
 			plugin.Expansion{
 				Regexp: ownerRepoIssueRegex,
 				Expand: func(roomID, userID string, matchingGroups []string) interface{} {
+					if !s.HandleExpansions {
+						return nil
+					}
 					return s.expandIssue(roomID, userID, matchingGroups)
+				},
+			},
+			plugin.Expansion{
+				Regexp: issueRegex,
+				Expand: func(roomID, userID string, matchingGroups []string) interface{} {
+					if !s.HandleExpansions {
+						return nil
+					}
+
+					// This expansion only works if there is a default repo. If there is a default,
+					// convert the matchingGroups of [ "#11", "11" ] into:
+					//   ["foo/bar#11", "foo", "bar", "11"]
+					// and then use the same code path as the longer form.
+					defaultRepo := s.defaultRepo(roomID)
+					if defaultRepo == "" {
+						return nil
+					}
+					segs := strings.Split(defaultRepo, "/")
+					if len(segs) != 2 {
+						log.WithFields(log.Fields{
+							"room_id":      roomID,
+							"default_repo": defaultRepo,
+						}).Error("Default repo is malformed")
+						return nil
+					}
+					// convert ["#11", "11"] into ["foo/bar#11", "foo", "bar", "11"]
+					return s.expandIssue(roomID, userID, []string{
+						defaultRepo + matchingGroups[0],
+						segs[0],
+						segs[1],
+						matchingGroups[1],
+					})
 				},
 			},
 		},
@@ -283,6 +327,36 @@ func (s *githubService) Register(oldService types.Service, client *matrix.Client
 	log.Infof("%+v", s)
 
 	return nil
+}
+
+// defaultRepo returns the default repo for the given room, or an empty string.
+func (s *githubService) defaultRepo(roomID string) string {
+	logger := log.WithFields(log.Fields{
+		"room_id":     roomID,
+		"bot_user_id": s.serviceUserID,
+	})
+	opts, err := database.GetServiceDB().LoadBotOptions(s.serviceUserID, roomID)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			logger.WithError(err).Error("Failed to load bot options")
+		}
+		return ""
+	}
+	// Expect opts to look like:
+	// { github: { default_repo: $OWNER_REPO } }
+	ghOpts, ok := opts.Options["github"].(map[string]interface{})
+	if !ok {
+		logger.WithField("options", opts.Options).Error("Failed to cast bot options as github options")
+		return ""
+	}
+	defaultRepo, ok := ghOpts["default_repo"].(string)
+	if !ok {
+		logger.WithField("default_repo", ghOpts["default_repo"]).Error(
+			"Failed to cast default repo as a string",
+		)
+		return ""
+	}
+	return defaultRepo
 }
 
 func (s *githubService) joinWebhookRooms(client *matrix.Client) error {

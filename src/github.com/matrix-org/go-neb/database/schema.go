@@ -48,6 +48,16 @@ CREATE TABLE IF NOT EXISTS auth_sessions (
 	UNIQUE(realm_id, user_id),
 	UNIQUE(realm_id, session_id)
 );
+
+CREATE TABLE IF NOT EXISTS bot_options (
+	user_id TEXT NOT NULL,
+	room_id TEXT NOT NULL,
+	set_by_user_id TEXT NOT NULL,
+	bot_options_json TEXT NOT NULL,
+	time_added_ms BIGINT NOT NULL,
+	time_updated_ms BIGINT NOT NULL,
+	UNIQUE(user_id, room_id)
+);
 `
 
 const selectMatrixClientConfigSQL = `
@@ -368,5 +378,50 @@ func updateAuthSessionTxn(txn *sql.Tx, now time.Time, session types.AuthSession)
 		updateAuthSessionSQL, session.ID(), sessionJSON, t,
 		session.RealmID(), session.UserID(),
 	)
+	return err
+}
+
+const selectBotOptionsSQL = `
+SELECT bot_options_json, set_by_user_id FROM bot_options WHERE user_id = $1 AND room_id = $2
+`
+
+func selectBotOptionsTxn(txn *sql.Tx, userID, roomID string) (opts types.BotOptions, err error) {
+	var optionsJSON []byte
+	err = txn.QueryRow(selectBotOptionsSQL, userID, roomID).Scan(&optionsJSON, &opts.SetByUserID)
+	if err != nil {
+		return
+	}
+	err = json.Unmarshal(optionsJSON, &opts.Options)
+	return
+}
+
+const insertBotOptionsSQL = `
+INSERT INTO bot_options(
+	user_id, room_id, bot_options_json, set_by_user_id, time_added_ms, time_updated_ms
+) VALUES ($1, $2, $3, $4, $5, $6)
+`
+
+func insertBotOptionsTxn(txn *sql.Tx, now time.Time, opts types.BotOptions) error {
+	t := now.UnixNano() / 1000000
+	optsJSON, err := json.Marshal(&opts.Options)
+	if err != nil {
+		return err
+	}
+	_, err = txn.Exec(insertBotOptionsSQL, opts.UserID, opts.RoomID, optsJSON, opts.SetByUserID, t, t)
+	return err
+}
+
+const updateBotOptionsSQL = `
+UPDATE bot_options SET bot_options_json = $1, set_by_user_id = $2, time_updated_ms = $3
+	WHERE user_id = $4 AND room_id = $5
+`
+
+func updateBotOptionsTxn(txn *sql.Tx, now time.Time, opts types.BotOptions) error {
+	t := now.UnixNano() / 1000000
+	optsJSON, err := json.Marshal(&opts.Options)
+	if err != nil {
+		return err
+	}
+	_, err = txn.Exec(updateBotOptionsSQL, optsJSON, opts.SetByUserID, t, opts.UserID, opts.RoomID)
 	return err
 }
