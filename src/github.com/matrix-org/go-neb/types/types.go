@@ -31,6 +31,14 @@ func (c *ClientConfig) Check() error {
 	return nil
 }
 
+// BotOptions for a given bot user in a given room
+type BotOptions struct {
+	RoomID      string
+	UserID      string
+	SetByUserID string
+	Options     map[string]interface{}
+}
+
 // A Service is the configuration for a bot service.
 type Service interface {
 	ServiceUserID() string

@@ -7,6 +7,7 @@ import (
 	"github.com/matrix-org/go-neb/plugin"
 	"github.com/matrix-org/go-neb/types"
 	"net/url"
+	"strings"
 	"sync"
 )
 
@@ -153,6 +154,30 @@ func (c *Clients) newClient(config types.ClientConfig) (*matrix.Client, error) {
 			plugins = append(plugins, service.Plugin(event.RoomID))
 		}
 		plugin.OnMessage(plugins, client, event)
+	})
+
+	client.Worker.OnEventType("m.room.bot.options", func(event *matrix.Event) {
+		// see if these options are for us. The state key is the user ID with a leading _
+		// to get around restrictions in the HS about having user IDs as state keys.
+		targetUserID := strings.TrimPrefix(event.StateKey, "_")
+		if targetUserID != client.UserID {
+			return
+		}
+		// these options fully clobber what was there previously.
+		opts := types.BotOptions{
+			UserID:      client.UserID,
+			RoomID:      event.RoomID,
+			SetByUserID: event.Sender,
+			Options:     event.Content,
+		}
+		if _, err := c.db.StoreBotOptions(opts); err != nil {
+			log.WithFields(log.Fields{
+				log.ErrorKey:     err,
+				"room_id":        event.RoomID,
+				"bot_user_id":    client.UserID,
+				"set_by_user_id": event.Sender,
+			}).Error("Failed to persist bot options")
+		}
 	})
 
 	if config.AutoJoinRooms {
