@@ -287,7 +287,7 @@ func (s *githubService) Register(oldService types.Service, client *matrix.Client
 
 func (s *githubService) joinWebhookRooms(client *matrix.Client) error {
 	for roomID := range s.Rooms {
-		if _, err := client.JoinRoom(roomID, ""); err != nil {
+		if _, err := client.JoinRoom(roomID, "", ""); err != nil {
 			// TODO: Leave the rooms we successfully joined?
 			return err
 		}

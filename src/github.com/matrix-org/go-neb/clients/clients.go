@@ -173,7 +173,7 @@ func (c *Clients) newClient(config types.ClientConfig) (*matrix.Client, error) {
 				})
 				logger.Print("Accepting invite from user")
 
-				if _, err := client.JoinRoom(event.RoomID, ""); err != nil {
+				if _, err := client.JoinRoom(event.RoomID, "", event.Sender); err != nil {
 					logger.WithError(err).Print("Failed to join room")
 				} else {
 					logger.Print("Joined room")

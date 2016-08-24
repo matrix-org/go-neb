@@ -65,8 +65,10 @@ func (cli *Client) buildURLWithQuery(urlPath []string, urlQuery map[string]strin
 	return u.String()
 }
 
-// JoinRoom joins the client to a room ID or alias. Returns a room ID.
-func (cli *Client) JoinRoom(roomIDorAlias, serverName string) (string, error) {
+// JoinRoom joins the client to a room ID or alias. If serverName is specified, this will be added as a query param
+// to instruct the homeserver to join via that server. If invitingUserID is specified, the inviting user ID will be
+// inserted into the content of the join request. Returns a room ID.
+func (cli *Client) JoinRoom(roomIDorAlias, serverName, invitingUserID string) (string, error) {
 	var urlPath string
 	if serverName != "" {
 		urlPath = cli.buildURLWithQuery([]string{"join", roomIDorAlias}, map[string]string{
@@ -76,7 +78,12 @@ func (cli *Client) JoinRoom(roomIDorAlias, serverName string) (string, error) {
 		urlPath = cli.buildURL("join", roomIDorAlias)
 	}
 
-	resBytes, err := cli.sendJSON("POST", urlPath, `{}`)
+	content := struct {
+		Inviter string `json:"inviter,omitempty"`
+	}{}
+	content.Inviter = invitingUserID
+
+	resBytes, err := cli.sendJSON("POST", urlPath, content)
 	if err != nil {
 		return "", err
 	}
