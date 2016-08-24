@@ -22,8 +22,7 @@ import (
 
 // Matches alphanumeric then a /, then more alphanumeric then a #, then a number.
 // E.g. owner/repo#11 (issue/PR numbers) - Captured groups for owner/repo/number
-var ownerRepoIssueRegex = regexp.MustCompile("([A-z0-9-_]+)/([A-z0-9-_]+)#([0-9]+)")
-var issueRegex = regexp.MustCompile("#([0-9]+)")
+var ownerRepoIssueRegex = regexp.MustCompile(`(([A-z0-9-_]+)/([A-z0-9-_]+))?#([0-9]+)`)
 
 type githubService struct {
 	id                 string
@@ -114,18 +113,14 @@ func (s *githubService) cmdGithubCreate(roomID, userID string, args []string) (i
 }
 
 func (s *githubService) expandIssue(roomID, userID string, matchingGroups []string) interface{} {
-	// matchingGroups => ["foo/bar#11", "foo", "bar", "11"]
-	if len(matchingGroups) != 4 {
-		log.WithField("groups", matchingGroups).Print("Unexpected number of groups")
-		return nil
-	}
-	num, err := strconv.Atoi(matchingGroups[3])
+	// matchingGroups => ["foo/bar#11", "foo/bar", "foo", "bar", "11"]
+	num, err := strconv.Atoi(matchingGroups[4])
 	if err != nil {
-		log.WithField("issue_number", matchingGroups[3]).Print("Bad issue number")
+		log.WithField("issue_number", matchingGroups[4]).Print("Bad issue number")
 		return nil
 	}
-	owner := matchingGroups[1]
-	repo := matchingGroups[2]
+	owner := matchingGroups[2]
+	repo := matchingGroups[3]
 
 	cli := s.githubClientFor(userID, true)
 
@@ -162,39 +157,40 @@ func (s *githubService) Plugin(roomID string) plugin.Plugin {
 					if !s.HandleExpansions {
 						return nil
 					}
+					// There's an optional group in the regex so matchingGroups can look like:
+					// [foo/bar#55 foo/bar foo bar 55]
+					// [#55                        55]
+					if len(matchingGroups) != 5 {
+						log.WithField("groups", matchingGroups).WithField("len", len(matchingGroups)).Print(
+							"Unexpected number of groups",
+						)
+						return nil
+					}
+					log.Print(matchingGroups)
+					if matchingGroups[1] == "" && matchingGroups[2] == "" && matchingGroups[3] == "" {
+						// issue only match, this only works if there is a default repo
+						defaultRepo := s.defaultRepo(roomID)
+						if defaultRepo == "" {
+							return nil
+						}
+						segs := strings.Split(defaultRepo, "/")
+						if len(segs) != 2 {
+							log.WithFields(log.Fields{
+								"room_id":      roomID,
+								"default_repo": defaultRepo,
+							}).Error("Default repo is malformed")
+							return nil
+						}
+						// Fill in the missing fields in matching groups and fall through into ["foo/bar#11", "foo", "bar", "11"]
+						matchingGroups = []string{
+							defaultRepo + matchingGroups[0],
+							defaultRepo,
+							segs[0],
+							segs[1],
+							matchingGroups[4],
+						}
+					}
 					return s.expandIssue(roomID, userID, matchingGroups)
-				},
-			},
-			plugin.Expansion{
-				Regexp: issueRegex,
-				Expand: func(roomID, userID string, matchingGroups []string) interface{} {
-					if !s.HandleExpansions {
-						return nil
-					}
-
-					// This expansion only works if there is a default repo. If there is a default,
-					// convert the matchingGroups of [ "#11", "11" ] into:
-					//   ["foo/bar#11", "foo", "bar", "11"]
-					// and then use the same code path as the longer form.
-					defaultRepo := s.defaultRepo(roomID)
-					if defaultRepo == "" {
-						return nil
-					}
-					segs := strings.Split(defaultRepo, "/")
-					if len(segs) != 2 {
-						log.WithFields(log.Fields{
-							"room_id":      roomID,
-							"default_repo": defaultRepo,
-						}).Error("Default repo is malformed")
-						return nil
-					}
-					// convert ["#11", "11"] into ["foo/bar#11", "foo", "bar", "11"]
-					return s.expandIssue(roomID, userID, []string{
-						defaultRepo + matchingGroups[0],
-						segs[0],
-						segs[1],
-						matchingGroups[1],
-					})
 				},
 			},
 		},
