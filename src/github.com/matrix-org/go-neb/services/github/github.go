@@ -131,7 +131,7 @@ func (s *githubService) expandIssue(roomID, userID, owner, repo string, issueNum
 	}
 }
 
-func (s *githubService) Plugin(roomID string) plugin.Plugin {
+func (s *githubService) Plugin(cli *matrix.Client, roomID string) plugin.Plugin {
 	return plugin.Plugin{
 		Commands: []plugin.Command{
 			plugin.Command{

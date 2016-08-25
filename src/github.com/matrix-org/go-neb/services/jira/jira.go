@@ -198,7 +198,7 @@ func (s *jiraService) expandIssue(roomID, userID string, issueKeyGroups []string
 	)
 }
 
-func (s *jiraService) Plugin(roomID string) plugin.Plugin {
+func (s *jiraService) Plugin(cli *matrix.Client, roomID string) plugin.Plugin {
 	return plugin.Plugin{
 		Commands: []plugin.Command{
 			plugin.Command{

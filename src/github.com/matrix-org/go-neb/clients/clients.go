@@ -151,7 +151,7 @@ func (c *Clients) newClient(config types.ClientConfig) (*matrix.Client, error) {
 		}
 		var plugins []plugin.Plugin
 		for _, service := range services {
-			plugins = append(plugins, service.Plugin(event.RoomID))
+			plugins = append(plugins, service.Plugin(client, event.RoomID))
 		}
 		plugin.OnMessage(plugins, client, event)
 	})

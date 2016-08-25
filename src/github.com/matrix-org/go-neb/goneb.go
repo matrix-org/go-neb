@@ -9,6 +9,7 @@ import (
 	_ "github.com/matrix-org/go-neb/realms/jira"
 	"github.com/matrix-org/go-neb/server"
 	_ "github.com/matrix-org/go-neb/services/echo"
+	_ "github.com/matrix-org/go-neb/services/giphy"
 	_ "github.com/matrix-org/go-neb/services/github"
 	_ "github.com/matrix-org/go-neb/services/jira"
 	"github.com/matrix-org/go-neb/types"

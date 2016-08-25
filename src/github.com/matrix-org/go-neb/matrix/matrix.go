@@ -14,8 +14,10 @@ package matrix
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	log "github.com/Sirupsen/logrus"
 	"github.com/matrix-org/go-neb/errors"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -44,9 +46,17 @@ type Client struct {
 }
 
 func (cli *Client) buildURL(urlPath ...string) string {
+	ps := []string{cli.Prefix}
+	for _, p := range urlPath {
+		ps = append(ps, p)
+	}
+	return cli.buildBaseURL(ps...)
+}
+
+func (cli *Client) buildBaseURL(urlPath ...string) string {
 	// copy the URL. Purposefully ignore error as the input is from a valid URL already
 	hsURL, _ := url.Parse(cli.HomeserverURL.String())
-	parts := []string{hsURL.Path, cli.Prefix}
+	parts := []string{hsURL.Path}
 	parts = append(parts, urlPath...)
 	hsURL.Path = path.Join(parts...)
 	query := hsURL.Query()
@@ -114,6 +124,49 @@ func (cli *Client) SendMessageEvent(roomID string, eventType string, contentJSON
 func (cli *Client) SendText(roomID, text string) (string, error) {
 	return cli.SendMessageEvent(roomID, "m.room.message",
 		TextMessage{"m.text", text})
+}
+
+// UploadLink uploads an HTTP URL and then returns an MXC URI.
+func (cli *Client) UploadLink(link string) (string, error) {
+	res, err := http.Get(link)
+	if res != nil {
+		defer res.Body.Close()
+	}
+	if err != nil {
+		return "", err
+	}
+	return cli.UploadToContentRepo(res.Body, res.Header.Get("Content-Type"), res.ContentLength)
+}
+
+// UploadToContentRepo uploads the given bytes to the content repository and returns an MXC URI.
+func (cli *Client) UploadToContentRepo(content io.Reader, contentType string, contentLength int64) (string, error) {
+	req, err := http.NewRequest("POST", cli.buildBaseURL("_matrix/media/r0/upload"), content)
+	if err != nil {
+		return "", err
+	}
+	req.Header.Set("Content-Type", contentType)
+	req.ContentLength = contentLength
+	log.WithFields(log.Fields{
+		"content_type":   contentType,
+		"content_length": contentLength,
+	}).Print("Uploading to content repo")
+	res, err := cli.httpClient.Do(req)
+	if res != nil {
+		defer res.Body.Close()
+	}
+	if err != nil {
+		return "", err
+	}
+	if res.StatusCode != 200 {
+		return "", fmt.Errorf("Upload request returned HTTP %d", res.StatusCode)
+	}
+	m := struct {
+		ContentURI string `json:"content_uri"`
+	}{}
+	if err := json.NewDecoder(res.Body).Decode(&m); err != nil {
+		return "", err
+	}
+	return m.ContentURI, nil
 }
 
 // Sync starts syncing with the provided Homeserver. This function will be invoked continually.
