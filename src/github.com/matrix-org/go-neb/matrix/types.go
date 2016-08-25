@@ -95,6 +95,7 @@ type TextMessage struct {
 	Body    string `json:"body"`
 }
 
+// ImageInfo contains info about an image
 type ImageInfo struct {
 	Height   uint   `json:"h"`
 	Width    uint   `json:"w"`
