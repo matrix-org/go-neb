@@ -135,24 +135,21 @@ func (cli *Client) UploadLink(link string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	log.Print("GOT GIF BODY ", link)
-	return cli.UploadToContentRepo(res.Body, res.Header.Get("Content-Type"), res.Header.Get("Content-Length"))
+	return cli.UploadToContentRepo(res.Body, res.Header.Get("Content-Type"), res.ContentLength)
 }
 
 // UploadToContentRepo uploads the given bytes to the content repository and returns an MXC URI.
-func (cli *Client) UploadToContentRepo(content io.Reader, contentType, contentLength string) (string, error) {
+func (cli *Client) UploadToContentRepo(content io.Reader, contentType string, contentLength int64) (string, error) {
 	req, err := http.NewRequest("POST", cli.buildBaseURL("_matrix/media/r0/upload"), content)
 	if err != nil {
 		return "", err
 	}
 	req.Header.Set("Content-Type", contentType)
-	cl, err := strconv.Atoi(contentLength)
-	if err != nil {
-		return "", err
-	}
-	req.ContentLength = int64(cl)
-	log.Print("Doing upload request to ", req.URL)
-	log.Print("Type=", contentType, "Length=", contentLength)
+	req.ContentLength = contentLength
+	log.WithFields(log.Fields{
+		"content_type":   contentType,
+		"content_length": contentLength,
+	}).Print("Uploading to content repo")
 	res, err := cli.httpClient.Do(req)
 	if res != nil {
 		defer res.Body.Close()

@@ -62,12 +62,10 @@ func (s *giphyService) cmdGiphy(client *matrix.Client, roomID, userID string, ar
 	if err != nil {
 		return nil, err
 	}
-	log.Print("GOT ", gifResult)
 	mxc, err := client.UploadLink(gifResult.Images.Original.URL)
 	if err != nil {
 		return nil, err
 	}
-	log.Print("GOT MXC ", mxc)
 
 	return matrix.ImageMessage{
 		MsgType: "m.image",
@@ -84,6 +82,7 @@ func (s *giphyService) cmdGiphy(client *matrix.Client, roomID, userID string, ar
 
 // searchGiphy returns info about a gif
 func (s *giphyService) searchGiphy(query string) (*result, error) {
+	log.Info("Searching giphy for ", query)
 	u, err := url.Parse("http://api.giphy.com/v1/gifs/search")
 	if err != nil {
 		return nil, err
