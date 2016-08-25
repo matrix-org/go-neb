@@ -95,6 +95,21 @@ type TextMessage struct {
 	Body    string `json:"body"`
 }
 
+type ImageInfo struct {
+	Height   uint   `json:"h"`
+	Width    uint   `json:"w"`
+	Mimetype string `json:"mimetype"`
+	Size     uint   `json:"size"`
+}
+
+// ImageMessage is an m.image event
+type ImageMessage struct {
+	MsgType string    `json:"msgtype"`
+	Body    string    `json:"body"`
+	URL     string    `json:"url"`
+	Info    ImageInfo `json:"info"`
+}
+
 // An HTMLMessage is the contents of a Matrix HTML formated message event.
 type HTMLMessage struct {
 	Body          string `json:"body"`

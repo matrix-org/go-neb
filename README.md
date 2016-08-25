@@ -303,6 +303,21 @@ curl -X POST localhost:4050/admin/configureService --data-binary '{
 }'
 ```
 
+## Starting a Giphy Service
+
+### Create a Giphy bot
+
+```
+curl -X POST localhost:4050/admin/configureService --data-binary '{
+    "Type": "giphy",
+    "Id": "giphyid",
+    "UserID": "@goneb:localhost",
+    "Config": {
+        "APIKey": "YOUR_API_KEY"
+    }
+}'
+```
+
 
 # Developing on go-neb.
 

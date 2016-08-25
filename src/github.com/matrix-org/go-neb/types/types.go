@@ -44,7 +44,7 @@ type Service interface {
 	ServiceUserID() string
 	ServiceID() string
 	ServiceType() string
-	Plugin(roomID string) plugin.Plugin
+	Plugin(cli *matrix.Client, roomID string) plugin.Plugin
 	OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client)
 	Register(oldService Service, client *matrix.Client) error
 }
