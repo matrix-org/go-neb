@@ -240,6 +240,11 @@ func (s *configureServiceHandler) OnIncomingRequest(req *http.Request) (interfac
 	if httpErr != nil {
 		return nil, httpErr
 	}
+	log.WithFields(log.Fields{
+		"service_id":      service.ServiceID(),
+		"service_type":    service.ServiceType(),
+		"service_user_id": service.ServiceUserID(),
+	}).Print("Incoming configure service request")
 
 	// Have mutexes around each service to queue up multiple requests for the same service ID
 	mut := s.getMutexForServiceID(service.ServiceID())
