@@ -105,14 +105,9 @@ func (s *githubWebhookService) Register(oldService types.Service, client *matrix
 	if s.RealmID == "" || s.ClientUserID == "" {
 		return fmt.Errorf("RealmID and ClientUserID is required")
 	}
-	// check realm exists
-	realm, err := database.GetServiceDB().LoadAuthRealm(s.RealmID)
+	realm, err := s.loadRealm()
 	if err != nil {
 		return err
-	}
-	// make sure the realm is of the type we expect
-	if realm.Type() != "github" {
-		return fmt.Errorf("Realm is of type '%s', not 'github'", realm.Type())
 	}
 
 	// In order to register the GH service as a client, you must have authed with GH.
@@ -121,13 +116,8 @@ func (s *githubWebhookService) Register(oldService types.Service, client *matrix
 		return fmt.Errorf(
 			"User %s does not have a Github auth session with realm %s.", s.ClientUserID, realm.ID())
 	}
-	// Make sure they have specified some webhooks (it makes no sense otherwise)
-	reposForWebhooks := s.repoList()
-	if len(reposForWebhooks) == 0 {
-		return fmt.Errorf("No repos for webhooks specified")
-	}
 
-	// Fetch the old service list and work out the difference between the two.
+	// Fetch the old service list and work out the difference between the two services.
 	var oldRepos []string
 	if oldService != nil {
 		old, ok := oldService.(*githubWebhookService)
@@ -142,8 +132,16 @@ func (s *githubWebhookService) Register(oldService types.Service, client *matrix
 		}
 	}
 
-	// Add the repos in the new service but not the old service
-	newRepos, _ := util.Difference(reposForWebhooks, oldRepos)
+	reposForWebhooks := s.repoList()
+
+	// Add hooks for the newly added repos but don't remove hooks for the removed repos: we'll clean those out later
+	newRepos, removedRepos := util.Difference(reposForWebhooks, oldRepos)
+	if len(reposForWebhooks) == 0 && len(removedRepos) == 0 {
+		// The user didn't specify any webhooks. This may be a bug or it may be
+		// a conscious decision to remove all webhooks for this service. Figure out
+		// which it is by checking if we'd be removing any webhooks.
+		return fmt.Errorf("No webhooks specified.")
+	}
 	for _, r := range newRepos {
 		logger := log.WithField("repo", r)
 		err := s.createHook(cli, r)
@@ -163,6 +161,39 @@ func (s *githubWebhookService) Register(oldService types.Service, client *matrix
 	return nil
 }
 
+func (s *githubWebhookService) PostRegister(oldService types.Service) {
+	// Clean up removed repositories from the old service by working out the delta between
+	// the old and new hooks.
+
+	// Fetch the old service list
+	var oldRepos []string
+	if oldService != nil {
+		old, ok := oldService.(*githubWebhookService)
+		if !ok {
+			log.WithFields(log.Fields{
+				"service_id":   oldService.ServiceID(),
+				"service_type": oldService.ServiceType(),
+			}).Print("Cannot cast old github service to GithubWebhookService")
+			return
+		}
+		oldRepos = old.repoList()
+	}
+
+	newRepos := s.repoList()
+
+	// Register() handled adding the new repos, we just want to clean up after ourselves
+	_, removedRepos := util.Difference(newRepos, oldRepos)
+	for _, r := range removedRepos {
+		segs := strings.Split(r, "/")
+		if err := s.deleteHook(segs[0], segs[1]); err != nil {
+			log.WithFields(log.Fields{
+				log.ErrorKey: err,
+				"repo":       r,
+			}).Error("Failed to remove webhook")
+		}
+	}
+}
+
 func (s *githubWebhookService) joinWebhookRooms(client *matrix.Client) error {
 	for roomID := range s.Rooms {
 		if _, err := client.JoinRoom(roomID, "", ""); err != nil {
@@ -173,6 +204,7 @@ func (s *githubWebhookService) joinWebhookRooms(client *matrix.Client) error {
 	return nil
 }
 
+// Returns a list of "owner/repos"
 func (s *githubWebhookService) repoList() []string {
 	var repos []string
 	if s.Rooms == nil {
@@ -326,6 +358,22 @@ func (s *githubWebhookService) githubClientFor(userID string, allowUnauth bool) 
 	} else {
 		return nil
 	}
+}
+
+func (s *githubWebhookService) loadRealm() (types.AuthRealm, error) {
+	if s.RealmID == "" {
+		return nil, fmt.Errorf("Missing RealmID")
+	}
+	// check realm exists
+	realm, err := database.GetServiceDB().LoadAuthRealm(s.RealmID)
+	if err != nil {
+		return nil, err
+	}
+	// make sure the realm is of the type we expect
+	if realm.Type() != "github" {
+		return nil, fmt.Errorf("Realm is of type '%s', not 'github'", realm.Type())
+	}
+	return realm, nil
 }
 
 func init() {

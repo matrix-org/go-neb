@@ -47,7 +47,16 @@ type Service interface {
 	ServiceType() string
 	Plugin(cli *matrix.Client, roomID string) plugin.Plugin
 	OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client)
+	// A lifecycle function which is invoked when the service is being registered. The old service, if one exists, is provided,
+	// along with a Client instance for ServiceUserID(). If this function returns an error, the service will not be registered
+	// or persisted to the database, and the user's request will fail. This can be useful if you depend on external factors
+	// such as registering webhooks.
 	Register(oldService Service, client *matrix.Client) error
+	// A lifecycle function which is invoked after the service has been successfully registered and persisted to the database.
+	// This function is invoked within the critical section for configuring services, guaranteeing that there will not be
+	// concurrent modifications to this service whilst this function executes. This lifecycle hook should be used to clean
+	// up resources which are no longer needed (e.g. removing old webhooks).
+	PostRegister(oldService Service)
 }
 
 var baseURL = ""
