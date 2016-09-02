@@ -204,6 +204,8 @@ func (s *githubService) Register(oldService types.Service, client *matrix.Client
 	return nil
 }
 
+func (s *githubService) PostRegister(oldService types.Service) {}
+
 // defaultRepo returns the default repo for the given room, or an empty string.
 func (s *githubService) defaultRepo(roomID string) string {
 	logger := log.WithFields(log.Fields{

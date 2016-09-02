@@ -270,6 +270,8 @@ func (s *configureServiceHandler) OnIncomingRequest(req *http.Request) (interfac
 		return nil, &errors.HTTPError{err, "Error storing service", 500}
 	}
 
+	service.PostRegister(old)
+
 	return &struct {
 		ID        string
 		Type      string
