@@ -359,11 +359,13 @@ func (h *getSessionHandler) OnIncomingRequest(req *http.Request) (interface{}, *
 	}
 
 	session, err := h.db.LoadAuthSessionByUser(body.RealmID, body.UserID)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil, &errors.HTTPError{err, `Session not found`, 404}
-		}
+	if err != nil && err != sql.ErrNoRows {
 		return nil, &errors.HTTPError{err, `Failed to load session`, 500}
+	}
+	if err == sql.ErrNoRows {
+		return &struct {
+			Authenticated bool
+		}{false}, nil
 	}
 
 	return &struct {
