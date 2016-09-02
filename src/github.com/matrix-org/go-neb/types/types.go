@@ -18,6 +18,7 @@ type ClientConfig struct {
 	AccessToken   string // The matrix access token to authenticate the requests with.
 	Sync          bool   // True to start a sync stream for this user
 	AutoJoinRooms bool   // True to automatically join all rooms for this user
+	DisplayName   string // The display name to set for the matrix client
 }
 
 // Check that the client has the correct fields.
