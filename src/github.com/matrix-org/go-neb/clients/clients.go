@@ -115,6 +115,18 @@ func (c *Clients) updateClientInDB(newConfig types.ClientConfig) (new clientEntr
 		return
 	}
 
+	// set the new display name if they differ
+	if old.config.DisplayName != new.config.DisplayName {
+		if err := new.client.SetDisplayName(new.config.DisplayName); err != nil {
+			// whine about it but don't stop: this isn't fatal.
+			log.WithFields(log.Fields{
+				log.ErrorKey:  err,
+				"displayname": new.config.DisplayName,
+				"user_id":     new.config.UserID,
+			}).Error("Failed to set display name")
+		}
+	}
+
 	if old.config, err = c.db.StoreMatrixClientConfig(new.config); err != nil {
 		new.client.StopSync()
 		return

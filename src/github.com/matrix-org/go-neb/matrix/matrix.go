@@ -104,6 +104,16 @@ func (cli *Client) JoinRoom(roomIDorAlias, serverName, invitingUserID string) (s
 	return joinRoomResponse.RoomID, nil
 }
 
+// SetDisplayName sets the user's profile display name
+func (cli *Client) SetDisplayName(displayName string) error {
+	urlPath := cli.buildURL("profile", cli.UserID, "displayname")
+	s := struct {
+		DisplayName string `json:"displayname"`
+	}{displayName}
+	_, err := cli.sendJSON("PUT", urlPath, &s)
+	return err
+}
+
 // SendMessageEvent sends a message event into a room, returning the event_id on success.
 // contentJSON should be a pointer to something that can be encoded as JSON using json.Marshal.
 func (cli *Client) SendMessageEvent(roomID string, eventType string, contentJSON interface{}) (string, error) {
@@ -282,11 +292,13 @@ func (cli *Client) sendJSON(method string, httpURL string, contentJSON interface
 	})
 	logger.Print("Sending JSON request")
 	res, err := cli.httpClient.Do(req)
+	if res != nil {
+		defer res.Body.Close()
+	}
 	if err != nil {
 		logger.WithError(err).Warn("Failed to send JSON request")
 		return nil, err
 	}
-	defer res.Body.Close()
 	contents, err := ioutil.ReadAll(res.Body)
 	if res.StatusCode >= 300 {
 		logger.WithFields(log.Fields{
