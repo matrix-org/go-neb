@@ -37,10 +37,11 @@ func WithCORSOptions(handler http.HandlerFunc) http.HandlerFunc {
 // MakeJSONAPI creates an HTTP handler which always responds to incoming requests with JSON responses.
 func MakeJSONAPI(handler JSONRequestHandler) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		log.WithFields(log.Fields{
+		logger := log.WithFields(log.Fields{
 			"method": req.Method,
 			"url":    req.URL,
-		}).Print("Received request")
+		})
+		logger.Print(">>> Incoming request")
 		res, httpErr := handler.OnIncomingRequest(req)
 
 		// Set common headers returned regardless of the outcome of the request
@@ -62,6 +63,7 @@ func MakeJSONAPI(handler JSONRequestHandler) http.HandlerFunc {
 				jsonErrorResponse(w, req, &errors.HTTPError{nil, "Failed to serialise response as JSON", 500})
 				return
 			}
+			logger.Print("<<< Returning response ", string(r))
 			resBytes = r
 		}
 		w.Write(resBytes)
