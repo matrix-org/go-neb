@@ -219,7 +219,9 @@ func (c *Clients) newClient(config types.ClientConfig) (*matrix.Client, error) {
 		})
 	}
 
-	go client.Sync()
+	if config.Sync {
+		go client.Sync()
+	}
 
 	return client, nil
 }
