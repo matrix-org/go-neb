@@ -189,7 +189,7 @@ func (s *githubWebhookService) PostRegister(oldService types.Service) {
 			log.WithFields(log.Fields{
 				log.ErrorKey: err,
 				"repo":       r,
-			}).Error("Failed to remove webhook")
+			}).Warn("Failed to remove webhook")
 		}
 	}
 }
