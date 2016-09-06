@@ -47,17 +47,17 @@ func (s noopNextBatchStore) Load(userID string) string     { return "" }
 
 // Client represents a Matrix client.
 type Client struct {
-	HomeserverURL *url.URL
-	Prefix        string
-	UserID        string
-	AccessToken   string
-	Rooms         map[string]*Room
-	Worker        *Worker
-	syncingMutex  sync.Mutex
-	syncingID     uint32 // Identifies the current Sync. Only one Sync can be active at any given time.
-	httpClient    *http.Client
-	filterID      string
-	NextBatch     NextBatchStorer
+	HomeserverURL   *url.URL
+	Prefix          string
+	UserID          string
+	AccessToken     string
+	Rooms           map[string]*Room
+	Worker          *Worker
+	syncingMutex    sync.Mutex
+	syncingID       uint32 // Identifies the current Sync. Only one Sync can be active at any given time.
+	httpClient      *http.Client
+	filterID        string
+	NextBatchStorer NextBatchStorer
 }
 
 func (cli *Client) buildURL(urlPath ...string) string {
@@ -214,7 +214,7 @@ func (cli *Client) Sync() {
 	}
 	cli.filterID = filterID
 	logger.WithField("filter", filterID).Print("Got filter ID")
-	nextToken := cli.NextBatch.Load(cli.UserID)
+	nextToken := cli.NextBatchStorer.Load(cli.UserID)
 
 	logger.WithField("next_batch", nextToken).Print("Starting sync")
 
@@ -261,7 +261,7 @@ func (cli *Client) Sync() {
 		// Save the token now *before* passing it through to the worker. This means it's possible
 		// to not process some events, but it means that we won't get constantly stuck processing
 		// a malformed/buggy event which keeps making us panic.
-		cli.NextBatch.Save(cli.UserID, nextToken)
+		cli.NextBatchStorer.Save(cli.UserID, nextToken)
 
 		if !isFirstSync {
 			channel <- syncResponse
@@ -390,7 +390,10 @@ func NewClient(homeserverURL *url.URL, accessToken string, userID string) *Clien
 		Prefix:        "/_matrix/client/r0",
 	}
 	cli.Worker = newWorker(&cli)
-	cli.NextBatch = noopNextBatchStore{}
+	// By default, use a no-op next_batch storer which will never save tokens and always
+	// "load" the empty string as a token. The client will work with this storer: it just won't
+	// remember the token across restarts. In practice, a database backend should be used.
+	cli.NextBatchStorer = noopNextBatchStore{}
 	cli.Rooms = make(map[string]*Room)
 	cli.httpClient = &http.Client{}
 

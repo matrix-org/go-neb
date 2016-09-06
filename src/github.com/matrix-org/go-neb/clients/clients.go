@@ -238,7 +238,7 @@ func (c *Clients) newClient(config types.ClientConfig) (*matrix.Client, error) {
 	}
 
 	client := matrix.NewClient(homeserverURL, config.AccessToken, config.UserID)
-	client.NextBatch = nextBatchStore{c.db}
+	client.NextBatchStorer = nextBatchStore{c.db}
 
 	// TODO: Check that the access token is valid for the userID by peforming
 	// a request against the server.
