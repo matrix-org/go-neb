@@ -31,19 +31,33 @@ var (
 	filterJSON = json.RawMessage(`{"room":{"timeline":{"limit":50}}}`)
 )
 
+// NextBatchStorer controls loading/saving of next_batch tokens for users
+type NextBatchStorer interface {
+	// Save a next_batch token for a given user. Best effort.
+	Save(userID, nextBatch string)
+	// Load a next_batch token for a given user. Return an empty string if no token exists.
+	Load(userID string) string
+}
+
+// noopNextBatchStore does not load or save next_batch tokens.
+type noopNextBatchStore struct{}
+
+func (s noopNextBatchStore) Save(userID, nextBatch string) {}
+func (s noopNextBatchStore) Load(userID string) string     { return "" }
+
 // Client represents a Matrix client.
 type Client struct {
-	HomeserverURL  *url.URL
-	Prefix         string
-	UserID         string
-	AccessToken    string
-	Rooms          map[string]*Room
-	Worker         *Worker
-	syncingMutex   sync.Mutex
-	syncingID      uint32 // Identifies the current Sync. Only one Sync can be active at any given time.
-	httpClient     *http.Client
-	filterID       string
-	nextBatchSaver func(string)
+	HomeserverURL *url.URL
+	Prefix        string
+	UserID        string
+	AccessToken   string
+	Rooms         map[string]*Room
+	Worker        *Worker
+	syncingMutex  sync.Mutex
+	syncingID     uint32 // Identifies the current Sync. Only one Sync can be active at any given time.
+	httpClient    *http.Client
+	filterID      string
+	NextBatch     NextBatchStorer
 }
 
 func (cli *Client) buildURL(urlPath ...string) string {
@@ -200,9 +214,9 @@ func (cli *Client) Sync() {
 	}
 	cli.filterID = filterID
 	logger.WithField("filter", filterID).Print("Got filter ID")
-	nextToken := ""
+	nextToken := cli.NextBatch.Load(cli.UserID)
 
-	logger.Print("Starting sync")
+	logger.WithField("next_batch", nextToken).Print("Starting sync")
 
 	channel := make(chan syncHTTPResponse, 5)
 
@@ -249,19 +263,12 @@ func (cli *Client) Sync() {
 		// Save the token now *before* passing it through to the worker. This means it's possible
 		// to not process some events, but it means that we won't get constantly stuck processing
 		// a malformed/buggy event which keeps making us panic.
-		if cli.nextBatchSaver != nil {
-			cli.nextBatchSaver(nextToken)
-		}
+		cli.NextBatch.Save(cli.UserID, nextToken)
 
 		if !isFirstSync {
 			channel <- syncResponse
 		}
 	}
-}
-
-// OnSaveNextBatch is a function which can save the next_batch token passed to it
-func (cli *Client) OnSaveNextBatch(fn func(string)) {
-	cli.nextBatchSaver = fn
 }
 
 func (cli *Client) incrementSyncingID() uint32 {
@@ -385,6 +392,7 @@ func NewClient(homeserverURL *url.URL, accessToken string, userID string) *Clien
 		Prefix:        "/_matrix/client/r0",
 	}
 	cli.Worker = newWorker(&cli)
+	cli.NextBatch = noopNextBatchStore{}
 	cli.Rooms = make(map[string]*Room)
 	cli.httpClient = &http.Client{}
 

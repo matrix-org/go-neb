@@ -11,6 +11,31 @@ import (
 	"sync"
 )
 
+type nextBatchStore struct {
+	db *database.ServiceDB
+}
+
+func (s nextBatchStore) Save(userID, nextBatch string) {
+	if err := s.db.UpdateNextBatch(userID, nextBatch); err != nil {
+		log.WithFields(log.Fields{
+			log.ErrorKey: err,
+			"user_id":    userID,
+			"next_batch": nextBatch,
+		}).Error("Failed to persist next_batch token")
+	}
+}
+func (s nextBatchStore) Load(userID string) string {
+	token, err := s.db.LoadNextBatch(userID)
+	if err != nil {
+		log.WithFields(log.Fields{
+			log.ErrorKey: err,
+			"user_id":    userID,
+		}).Error("Failed to load next_batch token")
+		return ""
+	}
+	return token
+}
+
 // A Clients is a collection of clients used for bot services.
 type Clients struct {
 	db       *database.ServiceDB
@@ -213,15 +238,7 @@ func (c *Clients) newClient(config types.ClientConfig) (*matrix.Client, error) {
 	}
 
 	client := matrix.NewClient(homeserverURL, config.AccessToken, config.UserID)
-
-	client.OnSaveNextBatch(func(nextBatch string) {
-		if err := c.db.UpdateNextBatch(client.UserID, nextBatch); err != nil {
-			log.WithFields(log.Fields{
-				log.ErrorKey: err,
-				"next_batch": nextBatch,
-			}).Error("Failed to persist next_batch token")
-		}
-	})
+	client.NextBatch = nextBatchStore{c.db}
 
 	// TODO: Check that the access token is valid for the userID by peforming
 	// a request against the server.
