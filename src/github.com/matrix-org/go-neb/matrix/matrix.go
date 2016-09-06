@@ -206,7 +206,7 @@ func (cli *Client) Sync() {
 		"user_id": cli.UserID,
 	})
 
-	// TODO: Store the filter ID and sync token in the database
+	// TODO: Store the filter ID in the database
 	filterID, err := cli.createFilter()
 	if err != nil {
 		logger.WithError(err).Fatal("Failed to create filter")
@@ -247,8 +247,6 @@ func (cli *Client) Sync() {
 		//  Check that the syncing state hasn't changed
 		// Either because we've stopped syncing or another sync has been started.
 		// We discard the response from our sync.
-		// TODO: Store the next_batch token so that the next sync can resume
-		// from where this sync left off.
 		if cli.getSyncingID() != syncingID {
 			logger.Print("Stopping sync")
 			return
