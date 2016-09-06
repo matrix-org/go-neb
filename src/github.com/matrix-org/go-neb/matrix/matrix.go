@@ -28,21 +28,36 @@ import (
 )
 
 var (
-	filterJSON = json.RawMessage(`{"room":{"timeline":{"limit":0}}}`)
+	filterJSON = json.RawMessage(`{"room":{"timeline":{"limit":50}}}`)
 )
+
+// NextBatchStorer controls loading/saving of next_batch tokens for users
+type NextBatchStorer interface {
+	// Save a next_batch token for a given user. Best effort.
+	Save(userID, nextBatch string)
+	// Load a next_batch token for a given user. Return an empty string if no token exists.
+	Load(userID string) string
+}
+
+// noopNextBatchStore does not load or save next_batch tokens.
+type noopNextBatchStore struct{}
+
+func (s noopNextBatchStore) Save(userID, nextBatch string) {}
+func (s noopNextBatchStore) Load(userID string) string     { return "" }
 
 // Client represents a Matrix client.
 type Client struct {
-	HomeserverURL *url.URL
-	Prefix        string
-	UserID        string
-	AccessToken   string
-	Rooms         map[string]*Room
-	Worker        *Worker
-	syncingMutex  sync.Mutex
-	syncingID     uint32 // Identifies the current Sync. Only one Sync can be active at any given time.
-	httpClient    *http.Client
-	filterID      string
+	HomeserverURL   *url.URL
+	Prefix          string
+	UserID          string
+	AccessToken     string
+	Rooms           map[string]*Room
+	Worker          *Worker
+	syncingMutex    sync.Mutex
+	syncingID       uint32 // Identifies the current Sync. Only one Sync can be active at any given time.
+	httpClient      *http.Client
+	filterID        string
+	NextBatchStorer NextBatchStorer
 }
 
 func (cli *Client) buildURL(urlPath ...string) string {
@@ -191,7 +206,7 @@ func (cli *Client) Sync() {
 		"user_id": cli.UserID,
 	})
 
-	// TODO: Store the filter ID and sync token in the database
+	// TODO: Store the filter ID in the database
 	filterID, err := cli.createFilter()
 	if err != nil {
 		logger.WithError(err).Fatal("Failed to create filter")
@@ -199,9 +214,9 @@ func (cli *Client) Sync() {
 	}
 	cli.filterID = filterID
 	logger.WithField("filter", filterID).Print("Got filter ID")
-	nextToken := ""
+	nextToken := cli.NextBatchStorer.Load(cli.UserID)
 
-	logger.Print("Starting sync")
+	logger.WithField("next_batch", nextToken).Print("Starting sync")
 
 	channel := make(chan syncHTTPResponse, 5)
 
@@ -232,17 +247,25 @@ func (cli *Client) Sync() {
 		//  Check that the syncing state hasn't changed
 		// Either because we've stopped syncing or another sync has been started.
 		// We discard the response from our sync.
-		// TODO: Store the next_batch token so that the next sync can resume
-		// from where this sync left off.
 		if cli.getSyncingID() != syncingID {
 			logger.Print("Stopping sync")
 			return
 		}
 
+		isFirstSync := nextToken == ""
+
 		// Update client state
 		nextToken = syncResponse.NextBatch
 		logger.WithField("next_batch", nextToken).Print("Received sync response")
-		channel <- syncResponse
+
+		// Save the token now *before* passing it through to the worker. This means it's possible
+		// to not process some events, but it means that we won't get constantly stuck processing
+		// a malformed/buggy event which keeps making us panic.
+		cli.NextBatchStorer.Save(cli.UserID, nextToken)
+
+		if !isFirstSync {
+			channel <- syncResponse
+		}
 	}
 }
 
@@ -344,6 +367,7 @@ func (cli *Client) doSync(timeout int, since string) ([]byte, error) {
 	log.WithFields(log.Fields{
 		"since":   since,
 		"timeout": timeout,
+		"user_id": cli.UserID,
 	}).Print("Syncing")
 	res, err := http.Get(urlPath)
 	if err != nil {
@@ -366,6 +390,10 @@ func NewClient(homeserverURL *url.URL, accessToken string, userID string) *Clien
 		Prefix:        "/_matrix/client/r0",
 	}
 	cli.Worker = newWorker(&cli)
+	// By default, use a no-op next_batch storer which will never save tokens and always
+	// "load" the empty string as a token. The client will work with this storer: it just won't
+	// remember the token across restarts. In practice, a database backend should be used.
+	cli.NextBatchStorer = noopNextBatchStore{}
 	cli.Rooms = make(map[string]*Room)
 	cli.httpClient = &http.Client{}
 
