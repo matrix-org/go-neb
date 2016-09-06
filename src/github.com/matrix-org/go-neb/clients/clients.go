@@ -141,6 +141,71 @@ func (c *Clients) updateClientInDB(newConfig types.ClientConfig) (new clientEntr
 	return
 }
 
+func (c *Clients) onMessageEvent(client *matrix.Client, event *matrix.Event) {
+	services, err := c.db.LoadServicesForUser(client.UserID)
+	if err != nil {
+		log.WithFields(log.Fields{
+			log.ErrorKey:      err,
+			"room_id":         event.RoomID,
+			"service_user_id": client.UserID,
+		}).Warn("Error loading services")
+	}
+	var plugins []plugin.Plugin
+	for _, service := range services {
+		plugins = append(plugins, service.Plugin(client, event.RoomID))
+	}
+	plugin.OnMessage(plugins, client, event)
+}
+
+func (c *Clients) onBotOptionsEvent(client *matrix.Client, event *matrix.Event) {
+	// see if these options are for us. The state key is the user ID with a leading _
+	// to get around restrictions in the HS about having user IDs as state keys.
+	targetUserID := strings.TrimPrefix(event.StateKey, "_")
+	if targetUserID != client.UserID {
+		return
+	}
+	// these options fully clobber what was there previously.
+	opts := types.BotOptions{
+		UserID:      client.UserID,
+		RoomID:      event.RoomID,
+		SetByUserID: event.Sender,
+		Options:     event.Content,
+	}
+	if _, err := c.db.StoreBotOptions(opts); err != nil {
+		log.WithFields(log.Fields{
+			log.ErrorKey:     err,
+			"room_id":        event.RoomID,
+			"bot_user_id":    client.UserID,
+			"set_by_user_id": event.Sender,
+		}).Error("Failed to persist bot options")
+	}
+}
+
+func (c *Clients) onRoomMemberEvent(client *matrix.Client, event *matrix.Event) {
+	if event.StateKey != client.UserID {
+		return // not our member event
+	}
+	m := event.Content["membership"]
+	membership, ok := m.(string)
+	if !ok {
+		return
+	}
+	if membership == "invite" {
+		logger := log.WithFields(log.Fields{
+			"room_id":         event.RoomID,
+			"service_user_id": client.UserID,
+			"inviter":         event.Sender,
+		})
+		logger.Print("Accepting invite from user")
+
+		if _, err := client.JoinRoom(event.RoomID, "", event.Sender); err != nil {
+			logger.WithError(err).Print("Failed to join room")
+		} else {
+			logger.Print("Joined room")
+		}
+	}
+}
+
 func (c *Clients) newClient(config types.ClientConfig) (*matrix.Client, error) {
 	homeserverURL, err := url.Parse(config.HomeserverURL)
 	if err != nil {
@@ -149,73 +214,29 @@ func (c *Clients) newClient(config types.ClientConfig) (*matrix.Client, error) {
 
 	client := matrix.NewClient(homeserverURL, config.AccessToken, config.UserID)
 
+	client.OnSaveNextBatch(func(nextBatch string) {
+		if err := c.db.UpdateNextBatch(client.UserID, nextBatch); err != nil {
+			log.WithFields(log.Fields{
+				log.ErrorKey: err,
+				"next_batch": nextBatch,
+			}).Error("Failed to persist next_batch token")
+		}
+	})
+
 	// TODO: Check that the access token is valid for the userID by peforming
 	// a request against the server.
 
 	client.Worker.OnEventType("m.room.message", func(event *matrix.Event) {
-		services, err := c.db.LoadServicesForUser(client.UserID)
-		if err != nil {
-			log.WithFields(log.Fields{
-				log.ErrorKey:      err,
-				"room_id":         event.RoomID,
-				"service_user_id": client.UserID,
-			}).Warn("Error loading services")
-		}
-		var plugins []plugin.Plugin
-		for _, service := range services {
-			plugins = append(plugins, service.Plugin(client, event.RoomID))
-		}
-		plugin.OnMessage(plugins, client, event)
+		c.onMessageEvent(client, event)
 	})
 
 	client.Worker.OnEventType("m.room.bot.options", func(event *matrix.Event) {
-		// see if these options are for us. The state key is the user ID with a leading _
-		// to get around restrictions in the HS about having user IDs as state keys.
-		targetUserID := strings.TrimPrefix(event.StateKey, "_")
-		if targetUserID != client.UserID {
-			return
-		}
-		// these options fully clobber what was there previously.
-		opts := types.BotOptions{
-			UserID:      client.UserID,
-			RoomID:      event.RoomID,
-			SetByUserID: event.Sender,
-			Options:     event.Content,
-		}
-		if _, err := c.db.StoreBotOptions(opts); err != nil {
-			log.WithFields(log.Fields{
-				log.ErrorKey:     err,
-				"room_id":        event.RoomID,
-				"bot_user_id":    client.UserID,
-				"set_by_user_id": event.Sender,
-			}).Error("Failed to persist bot options")
-		}
+		c.onBotOptionsEvent(client, event)
 	})
 
 	if config.AutoJoinRooms {
 		client.Worker.OnEventType("m.room.member", func(event *matrix.Event) {
-			if event.StateKey != config.UserID {
-				return // not our member event
-			}
-			m := event.Content["membership"]
-			membership, ok := m.(string)
-			if !ok {
-				return
-			}
-			if membership == "invite" {
-				logger := log.WithFields(log.Fields{
-					"room_id":         event.RoomID,
-					"service_user_id": config.UserID,
-					"inviter":         event.Sender,
-				})
-				logger.Print("Accepting invite from user")
-
-				if _, err := client.JoinRoom(event.RoomID, "", event.Sender); err != nil {
-					logger.WithError(err).Print("Failed to join room")
-				} else {
-					logger.Print("Joined room")
-				}
-			}
+			c.onRoomMemberEvent(client, event)
 		})
 	}
 

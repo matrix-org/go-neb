@@ -129,6 +129,15 @@ func updateMatrixClientConfigTxn(txn *sql.Tx, now time.Time, config types.Client
 	return err
 }
 
+const updateNextBatchSQL = `
+UPDATE matrix_clients SET next_batch = $1 WHERE user_id = $2
+`
+
+func updateNextBatchTxn(txn *sql.Tx, userID, nextBatch string) error {
+	_, err := txn.Exec(updateNextBatchSQL, nextBatch, userID)
+	return err
+}
+
 const selectServiceSQL = `
 SELECT service_type, service_user_id, service_json FROM services
 	WHERE service_id = $1

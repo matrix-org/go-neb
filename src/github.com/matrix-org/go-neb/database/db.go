@@ -77,6 +77,14 @@ func (d *ServiceDB) LoadMatrixClientConfig(userID string) (config types.ClientCo
 	return
 }
 
+// UpdateNextBatch updates the next_batch token for the given user.
+func (d *ServiceDB) UpdateNextBatch(userID, nextBatch string) (err error) {
+	err = runTransaction(d.db, func(txn *sql.Tx) error {
+		return updateNextBatchTxn(txn, userID, nextBatch)
+	})
+	return
+}
+
 // LoadService loads a service from the database.
 // Returns sql.ErrNoRows if the service isn't in the database.
 func (d *ServiceDB) LoadService(serviceID string) (service types.Service, err error) {
