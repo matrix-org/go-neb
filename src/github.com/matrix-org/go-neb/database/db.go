@@ -104,6 +104,14 @@ func (d *ServiceDB) LoadService(serviceID string) (service types.Service, err er
 	return
 }
 
+// DeleteService deletes the given service from the database.
+func (d *ServiceDB) DeleteService(serviceID string) (err error) {
+	err = runTransaction(d.db, func(txn *sql.Tx) error {
+		return deleteServiceTxn(txn, serviceID)
+	})
+	return
+}
+
 // LoadServicesForUser loads all the bot services configured for a given user.
 // Returns an empty list if there aren't any services configured.
 func (d *ServiceDB) LoadServicesForUser(serviceUserID string) (services []types.Service, err error) {

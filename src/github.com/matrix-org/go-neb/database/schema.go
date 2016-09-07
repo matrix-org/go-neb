@@ -231,6 +231,15 @@ func selectServicesForUserTxn(txn *sql.Tx, userID string) (srvs []types.Service,
 	return
 }
 
+const deleteServiceSQL = `
+DELETE FROM services WHERE service_id = $1
+`
+
+func deleteServiceTxn(txn *sql.Tx, serviceID string) error {
+	_, err := txn.Exec(deleteServiceSQL, serviceID)
+	return err
+}
+
 const insertRealmSQL = `
 INSERT INTO auth_realms(
 	realm_id, realm_type, realm_json, time_added_ms, time_updated_ms

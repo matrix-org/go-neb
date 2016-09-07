@@ -192,6 +192,20 @@ func (s *githubWebhookService) PostRegister(oldService types.Service) {
 			}).Warn("Failed to remove webhook")
 		}
 	}
+
+	// If we are not tracking any repos any more then we are back to square 1 and not doing anything
+	// so remove ourselves from the database. This is safe because this is still within the critical
+	// section for this service.
+	if len(newRepos) == 0 {
+		logger := log.WithFields(log.Fields{
+			"service_type": s.ServiceType(),
+			"service_id":   s.ServiceID(),
+		})
+		logger.Info("Removing service as no webhooks are registered.")
+		if err := database.GetServiceDB().DeleteService(s.ServiceID()); err != nil {
+			logger.WithError(err).Error("Failed to delete service")
+		}
+	}
 }
 
 func (s *githubWebhookService) joinWebhookRooms(client *matrix.Client) error {
