@@ -280,6 +280,7 @@ func (cli *Client) shouldProcessResponse(tokenOnSync string, syncResponse *syncH
 	//
 	// Work around this by inspecting each room's timeline and seeing if an m.room.member event for us
 	// exists and is "join" and then discard processing that room entirely if so.
+	// TODO: We probably want to process the !commands from after the last join event in the timeline.
 	for roomID, roomData := range syncResponse.Rooms.Join {
 		for i := len(roomData.Timeline.Events) - 1; i >= 0; i-- {
 			e := roomData.Timeline.Events[i]
