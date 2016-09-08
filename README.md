@@ -1,3 +1,100 @@
+# Go-NEB
+
+Go-NEB is a [Matrix](https://matrix.org) bot written in Go. It is the successor to [Matrix-NEB](https://github.com/matrix-org/Matrix-NEB), the original Matrix bot written in Python.
+
+# Table of Contents
+ * [Features](#features)
+ * [Installing](#installing)
+ * [Running](#running)
+    * [Configuring clients](#configuring-clients)
+ * [Developing](#developing)
+
+# Features
+
+## Github
+ - Login with OAuth2.
+ - Ability to create Github issues on any project.
+ - Ability to track updates (add webhooks) to projects. This includes new issues, pull requests as well as commits.
+ - Ability to expand issues when mentioned as `foo/bar#1234`.
+ - Ability to assign a "default repository" for a Matrix room to allow `#1234` to automatically expand, as well as shorter issue creation command syntax.
+
+## JIRA
+ - Login with OAuth1.
+ - Ability to create JIRA issues on a project.
+ - Ability to expand JIRA issues when mentioned as `FOO-1234`.
+
+## Giphy
+ - Ability to query Giphy's "text-to-gif" engine.
+
+# Installing
+Go-NEB is built using Go 1.5+ and [GB](https://getgb.io/). Once you have installed Go, run the following commands:
+```bash
+# Install gb
+go get github.com/constabulary/gb/...
+
+# Clone the go-neb repository
+git clone https://github.com/matrix-org/go-neb
+cd go-neb
+
+# Build go-neb
+gb build github.com/matrix-org/go-neb
+```
+
+# Running
+Go-NEB uses environment variables to configure its SQLite database and bind address. To run Go-NEB, run the following command:
+```bash
+BIND_ADDRESS=:4050 DATABASE_TYPE=sqlite3 DATABASE_URL=go-neb.db BASE_URL=https://public.facing.endpoint bin/go-neb
+```
+ - `BIND_ADDRESS` is the port to listen on.
+ - `DATABASE_TYPE` MUST be "sqlite3". No other type is supported.
+ - `DATABASE_URL` is where to find the database file. One will be created if it does not exist.
+ - `BASE_URL` should be the public-facing endpoint that sites like Github can send webhooks to.
+
+Go-NEB needs to be "configured" with clients and services before it will do anything useful.
+
+## Configuring clients
+Go-NEB needs to connect as a matrix user to receive messages. Go-NEB can listen for messages as multiple matrix users. The users are configured using an HTTP API and the config is stored in the database. To create a user:
+```bash
+curl -X POST localhost:4050/admin/configureClient --data-binary '{
+    "UserID": "@goneb:localhost:8448",
+    "HomeserverURL": "http://localhost:8008",
+    "AccessToken": "<access_token>",
+    "Sync": true,
+    "AutoJoinRooms": true,
+    "DisplayName": "My Bot"
+}'
+```
+ - `UserID` is the complete user ID of the client to connect as. The user MUST already exist.
+ - `HomeserverURL` is the complete Homeserver URL for the given user ID.
+ - `AccessToken` is the user's access token.
+ - `Sync`, if `true`, will start a `/sync` stream so this client will receive incoming messages. This is required for services which need a live stream to the server (e.g. to respond to `!commands` and expand issues). It is not required for services which do not respond to Matrix users (e.g. webhook notifications).
+ - `AutoJoinRooms`, if `true`, will automatically join rooms when an invite is received. This option is only valid when `Sync: true`.
+ - `DisplayName`, if set, will set the given user's profile display name to the string given.
+
+Go-NEB will respond with the previous configuration for this client, if one exists, as well as echo back the complete configuration for the client:
+
+```json
+{
+    "OldClient": {},
+    "NewClient": {
+        "UserID": "@goneb:localhost:8448",
+        "HomeserverURL": "http://localhost:8008",
+        "AccessToken": "<access_token>",
+        "Sync": true,
+        "AutoJoinRooms": true,
+        "DisplayName": "My Bot"
+    }
+}
+```
+
+# Developing
+
+
+
+
+OLD STUFF BELOW
+
+
 # Building go-neb
 
 Go-neb is built using `gb` (https://getgb.io/). To build go-neb:
