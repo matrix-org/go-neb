@@ -16,8 +16,10 @@ Go-NEB is a [Matrix](https://matrix.org) bot written in Go. It is the successor 
         * [Giphy Service](#giphy-service)
     * [Configuring realms](#configuring-realms)
         * [Github Realm](#github-realm)
+           * [Github Authentication](#github-authentication)
         * [JIRA Realm](#jira-realm)
  * [Developing](#developing)
+    * [Architecture](#architecture)
 
 # Quick Start
 
@@ -165,6 +167,8 @@ If the service is not found, this will return:
 { "message": "Service not found" }
 ```
 
+If you configure an existing Service (based on ID), the entire service will be replaced with the new information.
+
 ### Echo Service
 The simplest service. This will echo back any `!echo` command. To configure one:
 ```bash
@@ -184,7 +188,7 @@ Then invite `@goneb:localhost:8448` to any Matrix room and it will automatically
 
 *This service [requires a client](#configuring-clients) which has `Sync: true`.*
 
-This service will add the following command:
+This service will add the following command for [users who have associated their account with Github](#github-authentication):
 ```
 !github create owner/repo "Some title" "Some description"
 ```
@@ -216,6 +220,7 @@ You can set a "default repository" for a Matrix room by sending a `m.room.bot.op
   }
 }
 ```
+This will allow you to omit the `owner/repo` from both commands and expansions e.g `#12` will be treated as `owner/repo#12`.
 
 ### Github Webhook Service
 *Before you can set up a Github Webhook Service, you need to set up a [Github Realm](#github-realm).*
@@ -259,9 +264,34 @@ curl -X POST localhost:4050/admin/configureService --data-binary '{
           - `pull_request_review_comment`: When a line comment is made on a pull request.
 
 ### JIRA Service
-Before you can set up a JIRA Service, you need to set up a [JIRA Realm](#jira-realm).
+*Before you can set up a JIRA Service, you need to set up a [JIRA Realm](#jira-realm).*
 
-TODO
+TODO: Expand this section.
+
+```
+curl -X POST localhost:4050/admin/configureService --data-binary '{
+    "Type": "jira",
+    "Id": "jid",
+    "UserID": "@goneb:localhost",
+    "Config": {
+        "ClientUserID": "@example:localhost",
+        "Rooms": {
+            "!EmwxeXCVubhskuWvaw:localhost": {
+                "Realms": {
+                    "jira_realm_id": {
+                        "Projects": {
+                            "BOTS": {
+                                "Expand": true,
+                                "Track": true
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}'
+```
 
 ### Giphy Service
 A simple service that adds the ability to use the `!giphy` command. To configure one:
@@ -276,7 +306,6 @@ curl -X POST localhost:4050/admin/configureService --data-binary '{
 }'
 ```
 Then invite the user into a room and type `!giphy food` and it will respond with a GIF.
-
 
 ## Configuring Realms
 Realms are how Go-NEB authenticates users on third-party websites. Every realm MUST have the following fields:
@@ -334,6 +363,16 @@ This request will return an OAuth URL:
 ```
 
 Follow this link to associate this user ID with this Github account. Once this is complete, Go-NEB will have an OAuth token for this user ID and will be able to create issues as their real Github account.
+
+To remove this session:
+
+```bash
+curl -X POST localhost:4050/admin/removeAuthSession --data-binary '{
+    "RealmID": "mygithubrealm",
+    "UserID": "@real_matrix_user:localhost",
+    "Config": {}
+}'
+```
  
 ### JIRA Realm
 This has the `Type` of `jira`. To set up this realm:
@@ -363,8 +402,41 @@ openssl genrsa -out privkey.pem 2048
 cat privkey.pem
 ```
 
+#### JIRA authentication
+
+```
+curl -X POST localhost:4050/admin/requestAuthSession --data-binary '{
+    "RealmID": "jirarealm",
+    "UserID": "@example:localhost",
+    "Config": {
+        "RedirectURL": "https://optional-url.com/to/redirect/to/after/auth"
+    }
+}'
+```
+
+Returns:
+```json
+{
+    "URL":"https://jira.somewhere.com/plugins/servlet/oauth/authorize?oauth_token=7yeuierbgweguiegrTbOT"
+}
+```
 
 # Developing
+There's a bunch more tools this project uses when developing in order to do
+things like linting. Some of them are bundled with go (fmt and vet) but some
+are not. You should install the ones which are not:
+
+```bash
+go get github.com/golang/lint/golint
+go get github.com/fzipp/gocyclo
+```
+
+You can then install the pre-commit hook:
+
+```bash
+./hooks/install.sh
+```
+
     
 ## Architecture
 
@@ -389,236 +461,13 @@ cat privkey.pem
     REQUEST            REQUEST
     
     
-Clients      = A thing which can talk to homeservers and listen for events.
-Service      = An individual bot, configured by a user.
-Auth Realm   = A place where a user can authenticate with.
-Auth Session = An individual authentication session
-
-
-```
-
-Some `AuthRealms` support "Starter Links". These are HTTP URLs which knowledgeable clients should use to *start* the auth process. They are commonly returned as metadata to `!commands`.
-These links require the client to prove that they own a given user ID by appending a token
-to the Starter Link. This token will be used to verify the client's identity by making an
-Open ID request to the user's Homeserver via federation.
-
-## Starting a Github Service
-
-### Register a Github realm
-
-This API allows for an optional `StarterLink` value.
+Clients      = A thing which can talk to homeservers and listen for events. /configureClient makes these.
+Service      = An individual bot, configured by a user. /configureService makes these.
+Auth Realm   = A place where a user can authenticate with. /configureAuthRealm makes these.
+Auth Session = An individual authentication session /requestAuthSession makes these.
 
 ```
-curl -X POST localhost:4050/admin/configureAuthRealm --data-binary '{
-    "ID": "mygithubrealm",
-    "Type": "github",
-    "Config": {
-        "ClientSecret": "YOUR_CLIENT_SECRET",
-        "ClientID": "YOUR_CLIENT_ID",
-        "StarterLink": "https://example.com/requestGithubOAuthToken"
-    }
-}'
-```
-Returns:
-```
-{
-  "ID":"mygithubrealm",
-  "Type":"github",
-  "OldConfig":null,
-  "NewConfig":{
-    "ClientSecret":"YOUR_CLIENT_SECRET",
-    "ClientID":"YOUR_CLIENT_ID",
-    "StarterLink": "https://example.com/requestGithubOAuthToken"
-  }
-}
-```
 
-### Make a request for Github Auth
-
-```
-curl -X POST localhost:4050/admin/requestAuthSession --data-binary '{
-    "RealmID": "mygithubrealm",
-    "UserID": "@your_user_id:localhost",
-    "Config": {
-        "RedirectURL": "https://optional-url.com/to/redirect/to/after/auth"
-    }
-}'
-```
-Returns:
-```
-{
-  "URL":"https://github.com/login/oauth/authorize?client_id=$ID\u0026client_secret=$SECRET\u0026redirect_uri=$REDIRECT_BASE_URI%2Frealms%2Fredirects%2Fmygithubrealm\u0026state=$RANDOM_STRING"
-}
-```
-Follow this link and grant access for NEB to act on your behalf.
-
-### Create a github bot
-
-```
-curl -X POST localhost:4050/admin/configureService --data-binary '{
-    "Type": "github",
-    "Id": "mygithubserviceid",
-    "UserID": "@goneb:localhost",
-    "Config": {
-    	"RealmID": "mygithubrealm",
-        "ClientUserID": "@example:localhost",
-        "HandleCommands": true,
-        "HandleExpansions": true,
-        "Rooms": {
-        	"!EmwxeXCVubhskuWvaw:localhost": {
-        		"Repos": {
-        			"owner/repo": {
-        				"Events": ["push","issues"]
-        			}
-        		}
-        	}
-        }
-    }
-}'
-```
-
-This request will make `BotUserID` join the `Rooms` specified and create webhooks for the `owner/repo` projects given.
-
-
-## Starting a JIRA Service
-
-### Register a JIRA realm
-
-Generate an RSA private key: (JIRA does not support key sizes >2048 bits)
-
-```bash
-openssl genrsa -out privkey.pem 2048
-cat privkey.pem
-```
-
-This API allows for an optional `StarterLink` value. Create the realm:
-
-```
-curl -X POST localhost:4050/admin/configureAuthRealm --data-binary '{
-    "ID": "jirarealm",
-    "Type": "jira",
-    "Config": {
-        "JIRAEndpoint": "matrix.org/jira/",
-        "StarterLink": "https://example.com/requestJIRAOAuthToken",
-        "ConsumerName": "goneb",
-        "ConsumerKey": "goneb",
-        "ConsumerSecret": "random_long_string",
-        "PrivateKeyPEM": "-----BEGIN RSA PRIVATE KEY-----\r\nMIIEowIBAAKCAQEA39UhbOvQHEkBP9fGnhU+eSObTWBDGWygVYzbcONOlqEOTJUN\r\n8gmnellWqJO45S4jB1vLLnuXiHqEWnmaShIvbUem3QnDDqghu0gfqXHMlQr5R8ZP\r\norTt1F2idWy1wk5rVXeLKSG7uriYhDVOVS69WuefoW5v55b5YZV283v2jROjxHuj\r\ngAsJA7k6tvpYiSXApUl6YHmECfBoiwG9bwItkHwhZ\/fG9i4H8\/aOyr3WlaWbVeKX\r\n+m38lmYZvzQFRAk5ab1vzCGz4cyc\r\nTk2qmZpcjHRd1ijcOkgC23KF8lHWF5Zx0tySR+DWL1JeGm8NJxKMRJZuE8MIkJYF\r\nryE7kjspNItk6npkA3\/A4PWwElhddI4JpiuK+29mMNipRcYYy9e0vH\/igejv7ayd\r\nPLCRMQKBgBDSNWlZT0nNd2DXVqTW9p+MG72VKhDgmEwFB1acOw0lpu1XE8R1wmwG\r\nZRl\/xzri3LOW2Gpc77xu6fs3NIkzQw3v1ifYhX3OrVsCIRBbDjPQI3yYjkhGx24s\r\nVhhZ5S\/TkGk3Kw59bDC6KGqAuQAwX9req2l1NiuNaPU9rE7tf6Bk\r\n-----END RSA PRIVATE KEY-----"
-    }
-}'
-```
-
-The following keys will be modified/added:
- - `JIRAEndpoint` in canonicalised form.
- - `Server` and `Version` keys which are purely informational for the caller.
- - `PublicKeyPEM` which the caller needs a human to insert into the JIRA Application Links web form.
-
-
-Returns:
-
-```json
-{
-    "ID": "jirarealm",
-    "Type": "jira",
-    "OldConfig": null,
-    "NewConfig": {
-        "JIRAEndpoint": "https://matrix.org/jira/",
-        "StarterLink": "https://example.com/requestJIRAOAuthToken",
-        "Server": "Matrix.org",
-        "Version": "6.3.5a",
-        "ConsumerName": "goneb",
-        "ConsumerKey": "goneb",
-        "ConsumerSecret": "random_long_string",
-        "PublicKeyPEM": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA39UhbOvQHEkBP9fGnhU+\neSObTWBDGWygVYzbcONOlqEOTJUN8gmnellWqJO45S4jB1vLLnuXiHqEWnmaShIv\nbUem3QnDDqghu0gfqXHMlQr5R8ZPorTt1F2idWy1wk5rVXeLKSG7uriYhDVOVS69\nWuefoW5v55b5YZV283v2jROjxHujgAsJA7k6tvpYiSXApUl6YHmECfBoiwG9bwIt\nkHwhZ/fG9i4H8/aOyr3WlaWbVeKX+m38lmYZvzQFRd7UPU7DuO6Aiqj7RxrbAvqq\ndPeoAvo6+V0TRPZ8YzKp2yQmDcGH69IbuKJ2BG1Qx8znZAvghKQ6P9Im+M4c7j9i\ndwIDAQAB\n-----END PUBLIC KEY-----\n",
-        "PrivateKeyPEM": "-----BEGIN RSA PRIVATE KEY-----\r\nMIIEowIBAAKCAQEA39UhbOvQHEkBP9fGnhU+eSObTWBDGWygVYzbcONOlqEOTJUN\r\n8gmnellWqJO45S4jB1vLLnuXiHqEWnmaShIvbUem3QnDDqghu0gfqXHMlQr5R8ZP\r\norTt1F2idWy1wk5rVXeLKSG7uriYhDVOVS69WuefoW5v55b5YZV283v2jROjxHuj\r\ngAsJA7k6tvpYiSXApUl6YHmECfBoiwG9bwItkHwhZ/fG9i4H8/aOyr3WlaWbVeKX\r\n+m38lmYZvzQFRd7UPU7DuO6Aiqj7RxrbAvqqdPeoAvo6+V0TRPZ8YzKp2yQmDcGH\r\n69IbuKJ2BG1Qx8znZAvghKQ6P9Im+M4c7j9iMG72VKhDgmEwFB1acOw0lpu1XE8R1wmwG\r\nZRl/xzri3LOW2Gpc77xu6fs3NIkzQw3v1ifYhX3OrVsCIRBbDjPQI3yYjkhGx24s\r\nVhhZ5S/TkGk3Kw59bDC6KGqAuQAwX9req2l1NiuNaPU9rE7tf6Bk\r\n-----END RSA PRIVATE KEY-----"
-    }
-}
-```
-
-The `ConsumerKey`, `ConsumerSecret`, `ConsumerName` and `PublicKeyPEM` must be manually inserted
-into the "Application Links" section under JIRA Admin Settings by a JIRA admin on the target
-JIRA installation. Once that is complete, users can OAuth on the target JIRA installation.
-
-
-### Make a request for JIRA Auth
-
-```
-curl -X POST localhost:4050/admin/requestAuthSession --data-binary '{
-    "RealmID": "jirarealm",
-    "UserID": "@example:localhost",
-    "Config": {
-        "RedirectURL": "https://optional-url.com/to/redirect/to/after/auth"
-    }
-}'
-```
-Returns:
-```json
-{
-    "URL":"https://jira.somewhere.com/plugins/servlet/oauth/authorize?oauth_token=7yeuierbgweguiegrTbOT"
-}
-```
-
-Follow this link and grant access for NEB to act on your behalf.
-
-### Create a JIRA bot
-
-```
-curl -X POST localhost:4050/admin/configureService --data-binary '{
-    "Type": "jira",
-    "Id": "jid",
-    "UserID": "@goneb:localhost",
-    "Config": {
-        "ClientUserID": "@example:localhost",
-        "Rooms": {
-            "!EmwxeXCVubhskuWvaw:localhost": {
-                "Realms": {
-                    "jira_realm_id": {
-                        "Projects": {
-                            "BOTS": {
-                                "Expand": true,
-                                "Track": true
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}'
-```
-
-## Starting a Giphy Service
-
-### Create a Giphy bot
-
-```
-curl -X POST localhost:4050/admin/configureService --data-binary '{
-    "Type": "giphy",
-    "Id": "giphyid",
-    "UserID": "@goneb:localhost",
-    "Config": {
-        "APIKey": "YOUR_API_KEY"
-    }
-}'
-```
-
-
-# Developing on go-neb.
-
-There's a bunch more tools this project uses when developing in order to do
-things like linting. Some of them are bundled with go (fmt and vet) but some
-are not. You should install the ones which are not:
-
-```bash
-go get github.com/golang/lint/golint
-go get github.com/fzipp/gocyclo
-```
-
-You can then install the pre-commit hook:
-
-```bash
-./hooks/install.sh
-```
 
 ## Viewing the API docs.
 
