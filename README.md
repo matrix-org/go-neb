@@ -11,6 +11,7 @@ Go-NEB is a [Matrix](https://matrix.org) bot written in Go. It is the successor 
     * [Configuring services](#configuring-services)
         * [Echo Service](#echo-service)
         * [Github Service](#github-service)
+        * [Github Webhook Service](#github-webhook-service)
         * [JIRA Service](#jira-service)
         * [Giphy Service](#giphy-service)
     * [Configuring realms](#configuring-realms)
@@ -179,15 +180,88 @@ curl -X POST localhost:4050/admin/configureService --data-binary '{
 Then invite `@goneb:localhost:8448` to any Matrix room and it will automatically join (if the client was configured to do so). Then try typing `!echo hello world` and the bot will respond with `hello world`.
 
 ### Github Service
-Before you can set up a Github Service, you need to set up a [Github Realm](#github-realm).
+*Before you can set up a Github Service, you need to set up a [Github Realm](#github-realm).*
+
+*This service [requires a client](#configuring-clients) which has `Sync: true`.*
 
 This service will add the following command:
 ```
 !github create owner/repo "Some title" "Some description"
 ```
 
+This service will also expand the following string into a short summary of the Github issue:
+```
+owner/repo#1234
+```
+
+You can create this service like so:
+
+```bash
+curl -X POST localhost:4050/admin/configureService --data-binary '{
+    "Type": "github",
+    "Id": "githubcommands",
+    "UserID": "@goneb:localhost",
+    "Config": {
+      "RealmID": "mygithubrealm"
+    }
+}'
+```
+ - `RealmID`: The ID of the Github Realm you created earlier.
+ 
+You can set a "default repository" for a Matrix room by sending a `m.room.bot.options` state event which has the following `content`:
+```json
+{
+  "github": {
+    "default_repo": "owner/repo"
+  }
+}
+```
+
+### Github Webhook Service
+*Before you can set up a Github Webhook Service, you need to set up a [Github Realm](#github-realm).*
+
+This service will send notices into a Matrix room when Github sends webhook events to it. It requires a public domain which Github can reach. This service does not require a syncing client. Notices will be sent as the given `UserID`. To create this service:
+
+```bash
+curl -X POST localhost:4050/admin/configureService --data-binary '{
+    "Type": "github-webhook",
+    "Id": "ghwebhooks",
+    "UserID": "@goneb:localhost",
+    "Config": {
+      "RealmID": "mygithubrealm",
+      "SecretToken": "a random string",
+      "ClientUserID": "@a_real_user:localhost",
+      "Rooms": {
+        "!wefiuwegfiuwhe:localhost": {
+          "Repos": {
+            "owner/repo": {
+              "Events": ["push"]
+            },
+            "owner/another-repo": {
+              "Events": ["issues"]
+            }
+          }
+        }
+      }
+    }
+}'
+```
+ - `RealmID`: The ID of the Github realm you created earlier.
+ - `SecretToken`: Optional. If supplied, Go-NEB will perform security checks on incoming webhook requests using this token.
+ - `ClientUserID`: The user ID of the Github user to setup webhooks as. This user MUST have [associated their user ID with a Github account](#github-authentication). Webhooks will be created using their OAuth token.
+ - `Rooms`: A map of room IDs to room info.
+    - `Repos`: A map of repositories to repo info.
+       - `Events`: A list of webhook events to send into this room. Can be any of:
+          - `push`: When users push to this repository.
+          - `pull_request`: When a pull request is made to this repository.
+          - `issues`: When an issue is opened/closed.
+          - `issue_comment`: When an issue or pull request is commented on.
+          - `pull_request_review_comment`: When a line comment is made on a pull request.
 
 ### JIRA Service
+Before you can set up a JIRA Service, you need to set up a [JIRA Realm](#jira-realm).
+
+TODO
 
 ### Giphy Service
 A simple service that adds the ability to use the `!giphy` command. To configure one:
@@ -222,41 +296,59 @@ curl -X POST localhost:4050/admin/configureAuthRealm --data-binary '{
 ```
 
 ### Github Realm
-This has the `Type` of `github`. The `Config` object looks like:
-```json
-{
-  "ClientSecret": "YOUR_CLIENT_SECRET",
-  "ClientID": "YOUR_CLIENT_ID",
-  "StarterLink": "https://example.com/requestGithubOAuthToken"
-}
-```
- - `ClientSecret`: Your Github application client secret
- - `ClientID`: Your Github application client ID
- - `StarterLink`: Optional. If supplied, `!github` commands will return this link whenever someone is prompted to login to Github.
-
-For example:
+This has the `Type` of `github`. To set up this realm:
 ```bash
 curl -X POST localhost:4050/admin/configureAuthRealm --data-binary '{
     "ID": "mygithubrealm",
     "Type": "github",
     "Config": {
         "ClientSecret": "YOUR_CLIENT_SECRET",
-        "ClientID": "YOUR_CLIENT_ID"
+        "ClientID": "YOUR_CLIENT_ID",
+        "StarterLink": "https://example.com/requestGithubOAuthToken"
     }
 }'
 ```
- 
-### JIRA Realm
-This has the `Type` of `jira`. The `Config` object looks like:
+ - `ClientSecret`: Your Github application client secret
+ - `ClientID`: Your Github application client ID
+ - `StarterLink`: Optional. If supplied, `!github` commands will return this link whenever someone is prompted to login to Github.
+
+#### Github authentication
+Once you have configured a Github realm, you can associate any Matrix user ID with any Github user. To do this:
+```bash
+curl -X POST localhost:4050/admin/requestAuthSession --data-binary '{
+    "RealmID": "mygithubrealm",
+    "UserID": "@real_matrix_user:localhost",
+    "Config": {
+        "RedirectURL": "https://optional-url.com/to/redirect/to/after/auth"
+    }
+}'
+```
+ - `UserID`: The Matrix user ID to associate with.
+ - `RedirectURL`: Optional. The URL to redirect to after authentication.
+
+This request will return an OAuth URL:
 ```json
 {
-     "JIRAEndpoint": "matrix.org/jira/",
-     "ConsumerName": "goneb",
-     "ConsumerKey": "goneb",
-     "ConsumerSecret": "random_long_string",
-     "PrivateKeyPEM": "-----BEGIN RSA PRIVATE KEY-----\r\nMIIEowIBAAKCAQEA39UhbOvQHEkBP9fGnhU+eSObTWBDGWygVYzbcONOlqEOTJUN\r\n8gmnellWqJO45S4jB1vLLnuXiHqEWnmaShIvbUem3QnDDqghu0gfqXHMlQr5R8ZP\r\norTt1F2idWy1wk5rVXeLKSG7uriYhDVOVS69WuefoW5v55b5YZV283v2jROjxHuj\r\ngAsJA7k6tvpYiSXApUl6YHmECfBoiwG9bwItkHwhZ\/fG9i4H8\/aOyr3WlaWbVeKX\r\n+m38lmYZvzQFRAk5ab1vzCGz4cyc\r\nTk2qmZpcjHRd1ijcOkgC23KF8lHWF5Zx0tySR+DWL1JeGm8NJxKMRJZuE8MIkJYF\r\nryE7kjspNItk6npkA3\/A4PWwElhddI4JpiuK+29mMNipRcYYy9e0vH\/igejv7ayd\r\nPLCRMQKBgBDSNWlZT0nNd2DXVqTW9p+MG72VKhDgmEwFB1acOw0lpu1XE8R1wmwG\r\nZRl\/xzri3LOW2Gpc77xu6fs3NIkzQw3v1ifYhX3OrVsCIRBbDjPQI3yYjkhGx24s\r\nVhhZ5S\/TkGk3Kw59bDC6KGqAuQAwX9req2l1NiuNaPU9rE7tf6Bk\r\n-----END RSA PRIVATE KEY-----",
-     "StarterLink": "https://example.com/requestJIRAOAuthToken"
- }
+  "URL": "https://github.com/login/oauth/authorize?client_id=abcdef&client_secret=acascacac...."
+}
+```
+
+Follow this link to associate this user ID with this Github account. Once this is complete, Go-NEB will have an OAuth token for this user ID and will be able to create issues as their real Github account.
+ 
+### JIRA Realm
+This has the `Type` of `jira`. To set up this realm:
+```bash
+curl -X POST localhost:4050/admin/configureAuthRealm --data-binary '{
+    "ID": "jirarealm",
+    "Type": "jira",
+    "Config": {
+        "JIRAEndpoint": "matrix.org/jira/",
+        "ConsumerName": "goneb",
+        "ConsumerKey": "goneb",
+        "ConsumerSecret": "random_long_string",
+        "PrivateKeyPEM": "-----BEGIN RSA PRIVATE KEY-----\r\nMIIEowIBAAKCAQEA39UhbOvQHEkBP9fGnhU+eSObTWBDGWygVYzbcONOlqEOTJUN\r\n8gmnellWqJO45S4jB1vLLnuXiHqEWnmaShIvbUem3QnDDqghu0gfqXHMlQr5R8ZP\r\norTt1F2idWy1wk5rVXeLKSG7uriYhDVOVS69WuefoW5v55b5YZV283v2jROjxHuj\r\ngAsJA7k6tvpYiSXApUl6YHmECfBoiwG9bwItkHwhZ\/fG9i4H8\/aOyr3WlaWbVeKX\r\n+m38lmYZvzQFRAk5ab1vzCGz4cyc\r\nTk2qmZpcjHRd1ijcOkgC23KF8lHWF5Zx0tySR+DWL1JeGm8NJxKMRJZuE8MIkJYF\r\nryE7kjspNItk6npkA3\/A4PWwElhddI4JpiuK+29mMNipRcYYy9e0vH\/igejv7ayd\r\nPLCRMQKBgBDSNWlZT0nNd2DXVqTW9p+MG72VKhDgmEwFB1acOw0lpu1XE8R1wmwG\r\nZRl\/xzri3LOW2Gpc77xu6fs3NIkzQw3v1ifYhX3OrVsCIRBbDjPQI3yYjkhGx24s\r\nVhhZ5S\/TkGk3Kw59bDC6KGqAuQAwX9req2l1NiuNaPU9rE7tf6Bk\r\n-----END RSA PRIVATE KEY-----"
+    }
+}'
 ```
  - `JIRAEndpoint`: The base URL of the JIRA installation you wish to talk to.
  - `ConsumerName`: The desired "Consumer Name" field of the "Application Links" admin page on JIRA. Generally this is the name of the service. Users will need to enter this string into their JIRA admin web form.
@@ -271,112 +363,8 @@ openssl genrsa -out privkey.pem 2048
 cat privkey.pem
 ```
 
-For example:
-```bash
-curl -X POST localhost:4050/admin/configureAuthRealm --data-binary '{
-    "ID": "jirarealm",
-    "Type": "jira",
-    "Config": {
-        "JIRAEndpoint": "matrix.org/jira/",
-        "ConsumerName": "goneb",
-        "ConsumerKey": "goneb",
-        "ConsumerSecret": "random_long_string",
-        "PrivateKeyPEM": "-----BEGIN RSA PRIVATE KEY-----\r\nMIIEowIBAAKCAQEA39UhbOvQHEkBP9fGnhU+eSObTWBDGWygVYzbcONOlqEOTJUN\r\n8gmnellWqJO45S4jB1vLLnuXiHqEWnmaShIvbUem3QnDDqghu0gfqXHMlQr5R8ZP\r\norTt1F2idWy1wk5rVXeLKSG7uriYhDVOVS69WuefoW5v55b5YZV283v2jROjxHuj\r\ngAsJA7k6tvpYiSXApUl6YHmECfBoiwG9bwItkHwhZ\/fG9i4H8\/aOyr3WlaWbVeKX\r\n+m38lmYZvzQFRAk5ab1vzCGz4cyc\r\nTk2qmZpcjHRd1ijcOkgC23KF8lHWF5Zx0tySR+DWL1JeGm8NJxKMRJZuE8MIkJYF\r\nryE7kjspNItk6npkA3\/A4PWwElhddI4JpiuK+29mMNipRcYYy9e0vH\/igejv7ayd\r\nPLCRMQKBgBDSNWlZT0nNd2DXVqTW9p+MG72VKhDgmEwFB1acOw0lpu1XE8R1wmwG\r\nZRl\/xzri3LOW2Gpc77xu6fs3NIkzQw3v1ifYhX3OrVsCIRBbDjPQI3yYjkhGx24s\r\nVhhZ5S\/TkGk3Kw59bDC6KGqAuQAwX9req2l1NiuNaPU9rE7tf6Bk\r\n-----END RSA PRIVATE KEY-----"
-    }
-}'
-```
 
 # Developing
-
-
-
-
-OLD STUFF BELOW
-
-
-# Building go-neb
-
-Go-neb is built using `gb` (https://getgb.io/). To build go-neb:
-
-```bash
-# Install gb
-go get github.com/constabulary/gb/...
-
-# Clone the go-neb repository
-git clone https://github.com/matrix-org/go-neb
-cd go-neb
-
-# Build go-neb
-gb build github.com/matrix-org/go-neb
-```
-
-# Running go-neb
-
-Go-neb uses environment variables to configure its database and bind address.
-To run go-neb:
-
-    BIND_ADDRESS=:4050 DATABASE_TYPE=sqlite3 DATABASE_URL=go-neb.db BASE_URL=https://public.facing.endpoint bin/go-neb
-
-
-Go-neb needs to connect as a matrix user to receive messages. Go-neb can listen
-for messages as multiple matrix users. The users are configured using an
-HTTP API and the config is stored in the database. Go-neb will automatically
-start syncing matrix messages when the user is configured. To create a user:
-
-    curl -X POST localhost:4050/admin/configureClient --data-binary '{
-        "UserID": "@goneb:localhost:8448",
-        "HomeserverURL": "http://localhost:8008",
-        "AccessToken": "<access_token>"
-    }'
-    {
-        "OldClient": {},
-        "NewClient": {
-            "UserID": "@goneb:localhost:8448",
-            "HomeserverURL": "http://localhost:8008",
-            "AccessToken": "<access_token>"
-        }
-    }
-
-Services in go-neb listen for messages in particular rooms using a given matrix
-user. Services are configured using an HTTP API and the config is stored in the
-database. Services use one of the matrix users configured on go-neb to receive
-matrix messages. Each service is configured to listen for messages in a set
-of rooms. Go-neb will automatically join the service to its rooms when it is
-configured. To start an echo service:
-
-    curl -X POST localhost:4050/admin/configureService --data-binary '{
-        "Type": "echo",
-        "Id": "myserviceid",
-        "UserID": "@goneb:localhost:8448",
-        "Config": {
-        }
-    }'
-    {
-        "Type": "echo",
-        "Id": "myserviceid",
-        "UserID": "@goneb:localhost:8448",
-        "OldConfig": {},
-        "NewConfig": {}
-    }
-    
-To retrieve an existing Service:
-
-    curl -X POST localhost:4050/admin/getService --data-binary '{
-        "Id": "myserviceid"
-    }'
-    {
-        "Type": "echo",
-        "Id": "myserviceid",
-        "UserID": "@goneb:localhost:8448",
-        "Config": {}
-    }
-
-Go-neb has a heartbeat listener that returns 200 OK so that load balancers can
-check that the server is still running.
-
-    curl -X GET localhost:4050/test
-
-    {}
     
 ## Architecture
 
