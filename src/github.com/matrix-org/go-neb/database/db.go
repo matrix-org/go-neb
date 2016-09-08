@@ -197,6 +197,14 @@ func (d *ServiceDB) StoreAuthSession(session types.AuthSession) (old types.AuthS
 	return
 }
 
+// RemoveAuthSession removes the auth session for the given user on the given realm.
+// No error is returned if the session did not exist in the first place.
+func (d *ServiceDB) RemoveAuthSession(realmID, userID string) error {
+	return runTransaction(d.db, func(txn *sql.Tx) error {
+		return deleteAuthSessionTxn(txn, realmID, userID)
+	})
+}
+
 // LoadAuthSessionByUser loads an AuthSession from the database based on the given
 // realm and user ID.
 // Returns sql.ErrNoRows if the session isn't in the database.

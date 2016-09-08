@@ -63,6 +63,7 @@ func main() {
 	http.Handle("/admin/configureService", server.MakeJSONAPI(newConfigureServiceHandler(db, clients)))
 	http.Handle("/admin/configureAuthRealm", server.MakeJSONAPI(&configureAuthRealmHandler{db: db}))
 	http.Handle("/admin/requestAuthSession", server.MakeJSONAPI(&requestAuthSessionHandler{db: db}))
+	http.Handle("/admin/removeAuthSession", server.MakeJSONAPI(&removeAuthSessionHandler{db: db}))
 	wh := &webhookHandler{db: db, clients: clients}
 	http.HandleFunc("/services/hooks/", wh.handle)
 	rh := &realmRedirectHandler{db: db}
