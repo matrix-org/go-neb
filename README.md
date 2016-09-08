@@ -13,6 +13,9 @@ Go-NEB is a [Matrix](https://matrix.org) bot written in Go. It is the successor 
         * [Github Service](#github-service)
         * [JIRA Service](#jira-service)
         * [Giphy Service](#giphy-service)
+    * [Configuring realms](#configuring-realms)
+        * [Github Realm](#github-realm)
+        * [JIRA Realm](#jira-realm)
  * [Developing](#developing)
 
 # Quick Start
@@ -176,10 +179,112 @@ curl -X POST localhost:4050/admin/configureService --data-binary '{
 Then invite `@goneb:localhost:8448` to any Matrix room and it will automatically join (if the client was configured to do so). Then try typing `!echo hello world` and the bot will respond with `hello world`.
 
 ### Github Service
+Before you can set up a Github Service, you need to set up a [Github Realm](#github-realm).
+
+This service will add the following command:
+```
+!github create owner/repo "Some title" "Some description"
+```
+
 
 ### JIRA Service
 
 ### Giphy Service
+A simple service that adds the ability to use the `!giphy` command. To configure one:
+```bash
+curl -X POST localhost:4050/admin/configureService --data-binary '{
+    "Type": "giphy",
+    "Id": "giphyid",
+    "UserID": "@goneb:localhost",
+    "Config": {
+        "APIKey": "YOUR_API_KEY"
+    }
+}'
+```
+Then invite the user into a room and type `!giphy food` and it will respond with a GIF.
+
+
+## Configuring Realms
+Realms are how Go-NEB authenticates users on third-party websites. Every realm MUST have the following fields:
+ - `ID` : An arbitrary string you can use to remember what the realm is.
+ - `Type`: The type of realm. This determines what code gets executed.
+ - `Config`: A JSON object. The contents depends on the realm `Type`.
+
+They are configured like so:
+```bash
+curl -X POST localhost:4050/admin/configureAuthRealm --data-binary '{
+    "ID": "some_arbitrary_string",
+    "Type": "some_realm_type",
+    "Config": {
+        ...
+    }
+}'
+```
+
+### Github Realm
+This has the `Type` of `github`. The `Config` object looks like:
+```json
+{
+  "ClientSecret": "YOUR_CLIENT_SECRET",
+  "ClientID": "YOUR_CLIENT_ID",
+  "StarterLink": "https://example.com/requestGithubOAuthToken"
+}
+```
+ - `ClientSecret`: Your Github application client secret
+ - `ClientID`: Your Github application client ID
+ - `StarterLink`: Optional. If supplied, `!github` commands will return this link whenever someone is prompted to login to Github.
+
+For example:
+```bash
+curl -X POST localhost:4050/admin/configureAuthRealm --data-binary '{
+    "ID": "mygithubrealm",
+    "Type": "github",
+    "Config": {
+        "ClientSecret": "YOUR_CLIENT_SECRET",
+        "ClientID": "YOUR_CLIENT_ID"
+    }
+}'
+```
+ 
+### JIRA Realm
+This has the `Type` of `jira`. The `Config` object looks like:
+```json
+{
+     "JIRAEndpoint": "matrix.org/jira/",
+     "ConsumerName": "goneb",
+     "ConsumerKey": "goneb",
+     "ConsumerSecret": "random_long_string",
+     "PrivateKeyPEM": "-----BEGIN RSA PRIVATE KEY-----\r\nMIIEowIBAAKCAQEA39UhbOvQHEkBP9fGnhU+eSObTWBDGWygVYzbcONOlqEOTJUN\r\n8gmnellWqJO45S4jB1vLLnuXiHqEWnmaShIvbUem3QnDDqghu0gfqXHMlQr5R8ZP\r\norTt1F2idWy1wk5rVXeLKSG7uriYhDVOVS69WuefoW5v55b5YZV283v2jROjxHuj\r\ngAsJA7k6tvpYiSXApUl6YHmECfBoiwG9bwItkHwhZ\/fG9i4H8\/aOyr3WlaWbVeKX\r\n+m38lmYZvzQFRAk5ab1vzCGz4cyc\r\nTk2qmZpcjHRd1ijcOkgC23KF8lHWF5Zx0tySR+DWL1JeGm8NJxKMRJZuE8MIkJYF\r\nryE7kjspNItk6npkA3\/A4PWwElhddI4JpiuK+29mMNipRcYYy9e0vH\/igejv7ayd\r\nPLCRMQKBgBDSNWlZT0nNd2DXVqTW9p+MG72VKhDgmEwFB1acOw0lpu1XE8R1wmwG\r\nZRl\/xzri3LOW2Gpc77xu6fs3NIkzQw3v1ifYhX3OrVsCIRBbDjPQI3yYjkhGx24s\r\nVhhZ5S\/TkGk3Kw59bDC6KGqAuQAwX9req2l1NiuNaPU9rE7tf6Bk\r\n-----END RSA PRIVATE KEY-----",
+     "StarterLink": "https://example.com/requestJIRAOAuthToken"
+ }
+```
+ - `JIRAEndpoint`: The base URL of the JIRA installation you wish to talk to.
+ - `ConsumerName`: The desired "Consumer Name" field of the "Application Links" admin page on JIRA. Generally this is the name of the service. Users will need to enter this string into their JIRA admin web form.
+ - `ConsumerKey`: The desired "Consumer Key" field of the "Application Links" admin page on JIRA. Generally this is the name of the service. Users will need to enter this string into their JIRA admin web form.
+ - `ConsumerSecret`: The desired "Consumer Secret" field of the "Application Links" admin page on JIRA. This should be a random long string. Users will need to enter this string into their JIRA admin web form.
+ - `PrivateKeyPEM`: A string which contains the private key for performing OAuth 1.0 requests. This MUST be in PEM format. It must NOT have a password. Go-NEB will convert this into a **public** key in PEM format and return this to users. Users will need to enter the public key into their JIRA admin web form.
+ - `StarterLink`: Optional. If supplied, `!jira` commands will return this link whenever someone is prompted to login to JIRA.
+
+To generate a private key PEM: (JIRA does not support bit lengths >2048)
+```bash
+openssl genrsa -out privkey.pem 2048
+cat privkey.pem
+```
+
+For example:
+```bash
+curl -X POST localhost:4050/admin/configureAuthRealm --data-binary '{
+    "ID": "jirarealm",
+    "Type": "jira",
+    "Config": {
+        "JIRAEndpoint": "matrix.org/jira/",
+        "ConsumerName": "goneb",
+        "ConsumerKey": "goneb",
+        "ConsumerSecret": "random_long_string",
+        "PrivateKeyPEM": "-----BEGIN RSA PRIVATE KEY-----\r\nMIIEowIBAAKCAQEA39UhbOvQHEkBP9fGnhU+eSObTWBDGWygVYzbcONOlqEOTJUN\r\n8gmnellWqJO45S4jB1vLLnuXiHqEWnmaShIvbUem3QnDDqghu0gfqXHMlQr5R8ZP\r\norTt1F2idWy1wk5rVXeLKSG7uriYhDVOVS69WuefoW5v55b5YZV283v2jROjxHuj\r\ngAsJA7k6tvpYiSXApUl6YHmECfBoiwG9bwItkHwhZ\/fG9i4H8\/aOyr3WlaWbVeKX\r\n+m38lmYZvzQFRAk5ab1vzCGz4cyc\r\nTk2qmZpcjHRd1ijcOkgC23KF8lHWF5Zx0tySR+DWL1JeGm8NJxKMRJZuE8MIkJYF\r\nryE7kjspNItk6npkA3\/A4PWwElhddI4JpiuK+29mMNipRcYYy9e0vH\/igejv7ayd\r\nPLCRMQKBgBDSNWlZT0nNd2DXVqTW9p+MG72VKhDgmEwFB1acOw0lpu1XE8R1wmwG\r\nZRl\/xzri3LOW2Gpc77xu6fs3NIkzQw3v1ifYhX3OrVsCIRBbDjPQI3yYjkhGx24s\r\nVhhZ5S\/TkGk3Kw59bDC6KGqAuQAwX9req2l1NiuNaPU9rE7tf6Bk\r\n-----END RSA PRIVATE KEY-----"
+    }
+}'
+```
 
 # Developing
 
