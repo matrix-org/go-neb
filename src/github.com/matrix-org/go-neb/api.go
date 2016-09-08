@@ -58,6 +58,42 @@ func (h *requestAuthSessionHandler) OnIncomingRequest(req *http.Request) (interf
 	return response, nil
 }
 
+type removeAuthSessionHandler struct {
+	db *database.ServiceDB
+}
+
+func (h *removeAuthSessionHandler) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError) {
+	if req.Method != "POST" {
+		return nil, &errors.HTTPError{nil, "Unsupported Method", 405}
+	}
+	var body struct {
+		RealmID string
+		UserID  string
+	}
+	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
+		return nil, &errors.HTTPError{err, "Error parsing request JSON", 400}
+	}
+	log.WithFields(log.Fields{
+		"realm_id": body.RealmID,
+		"user_id":  body.UserID,
+	}).Print("Incoming remove auth session request")
+
+	if body.UserID == "" || body.RealmID == "" {
+		return nil, &errors.HTTPError{nil, `Must supply a "UserID", a "RealmID"`, 400}
+	}
+
+	_, err := h.db.LoadAuthRealm(body.RealmID)
+	if err != nil {
+		return nil, &errors.HTTPError{err, "Unknown RealmID", 400}
+	}
+
+	if err := h.db.RemoveAuthSession(body.RealmID, body.UserID); err != nil {
+		return nil, &errors.HTTPError{err, "Failed to remove auth session", 500}
+	}
+
+	return []byte(`{}`), nil
+}
+
 type realmRedirectHandler struct {
 	db *database.ServiceDB
 }

@@ -336,6 +336,15 @@ func insertAuthSessionTxn(txn *sql.Tx, now time.Time, session types.AuthSession)
 	return err
 }
 
+const deleteAuthSessionSQL = `
+DELETE FROM auth_sessions WHERE realm_id=$1 AND user_id=$2
+`
+
+func deleteAuthSessionTxn(txn *sql.Tx, realmID, userID string) error {
+	_, err := txn.Exec(deleteAuthSessionSQL, realmID, userID)
+	return err
+}
+
 const selectAuthSessionByUserSQL = `
 SELECT session_id, realm_type, realm_json, session_json FROM auth_sessions
 	JOIN auth_realms ON auth_sessions.realm_id = auth_realms.realm_id
