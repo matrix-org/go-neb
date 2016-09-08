@@ -3,28 +3,71 @@
 Go-NEB is a [Matrix](https://matrix.org) bot written in Go. It is the successor to [Matrix-NEB](https://github.com/matrix-org/Matrix-NEB), the original Matrix bot written in Python.
 
 # Table of Contents
- * [Features](#features)
+ * [Quick Start](#quick-start)
+    * [Features](#features)
  * [Installing](#installing)
  * [Running](#running)
     * [Configuring clients](#configuring-clients)
+    * [Configuring services](#configuring-services)
+        * [Echo Service](#echo-service)
+        * [Github Service](#github-service)
+        * [JIRA Service](#jira-service)
+        * [Giphy Service](#giphy-service)
  * [Developing](#developing)
 
-# Features
+# Quick Start
 
-## Github
+Clone and run (Requires Go 1.5+ and GB):
+
+```bash
+gb build github.com/matrix-org/go-neb
+BIND_ADDRESS=:4050 DATABASE_TYPE=sqlite3 DATABASE_URL=go-neb.db BASE_URL=http://localhost:4050 bin/go-neb
+```
+
+Get a Matrix user ID and access token and give it to Go-NEB:
+
+```bash
+curl -X POST localhost:4050/admin/configureClient --data-binary '{
+    "UserID": "@goneb:localhost",
+    "HomeserverURL": "http://localhost:8008",
+    "AccessToken": "<access_token>",
+    "Sync": true,
+    "AutoJoinRooms": true,
+    "DisplayName": "My Bot"
+}'
+```
+
+Tell it what service to run:
+
+```bash
+curl -X POST localhost:4050/admin/configureService --data-binary '{
+    "Type": "echo",
+    "Id": "myserviceid",
+    "UserID": "@goneb:localhost",
+    "Config": {}
+}'
+```
+
+Invite the bot user into a Matrix room and type `!echo hello world`. It will reply with `hello world`.
+
+
+## Features
+
+### Github
  - Login with OAuth2.
  - Ability to create Github issues on any project.
  - Ability to track updates (add webhooks) to projects. This includes new issues, pull requests as well as commits.
  - Ability to expand issues when mentioned as `foo/bar#1234`.
  - Ability to assign a "default repository" for a Matrix room to allow `#1234` to automatically expand, as well as shorter issue creation command syntax.
 
-## JIRA
+### JIRA
  - Login with OAuth1.
  - Ability to create JIRA issues on a project.
  - Ability to expand JIRA issues when mentioned as `FOO-1234`.
 
-## Giphy
+### Giphy
  - Ability to query Giphy's "text-to-gif" engine.
+
 
 # Installing
 Go-NEB is built using Go 1.5+ and [GB](https://getgb.io/). Once you have installed Go, run the following commands:
@@ -52,7 +95,7 @@ BIND_ADDRESS=:4050 DATABASE_TYPE=sqlite3 DATABASE_URL=go-neb.db BASE_URL=https:/
 
 Go-NEB needs to be "configured" with clients and services before it will do anything useful.
 
-## Configuring clients
+## Configuring Clients
 Go-NEB needs to connect as a matrix user to receive messages. Go-NEB can listen for messages as multiple matrix users. The users are configured using an HTTP API and the config is stored in the database. To create a user:
 ```bash
 curl -X POST localhost:4050/admin/configureClient --data-binary '{
@@ -86,6 +129,57 @@ Go-NEB will respond with the previous configuration for this client, if one exis
     }
 }
 ```
+
+## Configuring Services
+Services contain all the useful functionality in Go-NEB. They require a client to operate. Services are configured using an HTTP API and the config is stored in the database. Services use one of the matrix users configured on Go-NEB to send/receive matrix messages.
+
+Every service MUST have the following fields:
+ - `Type` : The type of service. This determines which code is executed.
+ - `Id` : An arbitrary string which you can use to identify this service.
+ - `UserID` : A user ID of a client which has been previously configured on Go-NEB. If this user does not exist, an error will be returned.
+ - `Config` : A JSON object. The contents of this object depends on the service.
+ 
+The information about a Service can be retrieved based on their `Id` like so:
+```bash
+curl -X POST localhost:4050/admin/getService --data-binary '{
+    "Id": "myserviceid"
+}'
+```
+This will return:
+```yaml
+# HTTP 200 OK
+{
+    "Type": "echo",
+    "Id": "myserviceid",
+    "UserID": "@goneb:localhost:8448",
+    "Config": {}
+}
+```
+If the service is not found, this will return:
+```yaml
+# HTTP 404 Not Found
+{ "message": "Service not found" }
+```
+
+### Echo Service
+The simplest service. This will echo back any `!echo` command. To configure one:
+```bash
+curl -X POST localhost:4050/admin/configureService --data-binary '{
+    "Type": "echo",
+    "Id": "myserviceid",
+    "UserID": "@goneb:localhost:8448",
+    "Config": {
+    }
+}'
+```
+
+Then invite `@goneb:localhost:8448` to any Matrix room and it will automatically join (if the client was configured to do so). Then try typing `!echo hello world` and the bot will respond with `hello world`.
+
+### Github Service
+
+### JIRA Service
+
+### Giphy Service
 
 # Developing
 
