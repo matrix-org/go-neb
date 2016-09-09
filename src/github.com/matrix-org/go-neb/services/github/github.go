@@ -20,6 +20,7 @@ import (
 // Matches alphanumeric then a /, then more alphanumeric then a #, then a number.
 // E.g. owner/repo#11 (issue/PR numbers) - Captured groups for owner/repo/number
 var ownerRepoIssueRegex = regexp.MustCompile(`(([A-z0-9-_]+)/([A-z0-9-_]+))?#([0-9]+)`)
+var ownerRepoRegex = regexp.MustCompile(`^([A-z0-9-_]+)/([A-z0-9-_]+)$`)
 
 type githubService struct {
 	id            string
@@ -46,33 +47,40 @@ func (s *githubService) cmdGithubCreate(roomID, userID string, args []string) (i
 			Link: ghRealm.StarterLink,
 		}, nil
 	}
+	if len(args) == 0 {
+		return &matrix.TextMessage{"m.notice",
+			`Usage: !github create owner/repo "issue title" "description"`}, nil
+	}
 
 	// We expect the args to look like:
 	// [ "owner/repo", "title text", "desc text" ]
 	// They can omit the owner/repo if there is a default one set.
+	// Look for a default if the first arg doesn't look like an owner/repo
+	ownerRepoGroups := ownerRepoRegex.FindStringSubmatch(args[0])
 
-	if len(args) < 2 || strings.Count(args[0], "/") != 1 {
+	if len(ownerRepoGroups) == 0 {
 		// look for a default repo
 		defaultRepo := s.defaultRepo(roomID)
 		if defaultRepo == "" {
 			return &matrix.TextMessage{"m.notice",
 				`Usage: !github create owner/repo "issue title" "description"`}, nil
 		}
-		// insert the default as the first arg to reuse the same code path
+		// default repo should pass the regexp
+		ownerRepoGroups = ownerRepoRegex.FindStringSubmatch(defaultRepo)
+		if len(ownerRepoGroups) == 0 {
+			return &matrix.TextMessage{"m.notice",
+				`Malformed default repo. Usage: !github create owner/repo "issue title" "description"`}, nil
+		}
+
+		// insert the default as the first arg to reuse the same indices
 		args = append([]string{defaultRepo}, args...)
+		// continue through now that ownerRepoGroups has matching groups
 	}
 
 	var (
-		ownerRepo string
-		title     *string
-		desc      *string
+		title *string
+		desc  *string
 	)
-	ownerRepo = args[0]
-	o := strings.Split(ownerRepo, "/")
-	if len(o) != 2 {
-		return &matrix.TextMessage{"m.notice",
-			`Usage: !github create owner/repo "issue title" "description"`}, nil
-	}
 
 	if len(args) == 2 {
 		title = &args[1]
@@ -84,7 +92,7 @@ func (s *githubService) cmdGithubCreate(roomID, userID string, args []string) (i
 		title = &joinedTitle
 	}
 
-	issue, res, err := cli.Issues.Create(o[0], o[1], &github.IssueRequest{
+	issue, res, err := cli.Issues.Create(ownerRepoGroups[1], ownerRepoGroups[2], &github.IssueRequest{
 		Title: title,
 		Body:  desc,
 	})
