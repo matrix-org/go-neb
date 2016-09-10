@@ -8,37 +8,44 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/russross/blackfriday"
+	"html/template"
 	"io/ioutil"
 	"mime"
 	"net/http"
 	"regexp"
-	"text/template"
 	"time"
 )
 
 type slackAttachment struct {
-	Fallback string  `json:"fallback"`
-	Color    *string `json:"color"`
-	Pretext  string  `json:"pretext"`
+	Fallback         string `json:"fallback"`
+	FallbackRendered template.HTML
+	Color            *string `json:"color"`
+	ColorRendered    template.HTMLAttr
+	Pretext          string `json:"pretext"`
+	PretextRendered  template.HTML
 
-	AuthorName *string `json:"author_name"`
-	AuthorLink *string `json:"author_link"`
-	AuthorIcon *string `json:"author_icon"`
+	AuthorName    *string      `json:"author_name"`
+	AuthorLink    template.URL `json:"author_link"`
+	AuthorIcon    *string      `json:"author_icon"`
+	AuthorIconURL template.URL
 
 	Title     *string `json:"title"`
 	TitleLink *string `json:"title_link"`
 
-	Text     string   `json:"text"`
+	Text         string `json:"text"`
+	TextRendered template.HTML
+
 	MrkdwnIn []string `json:"mrkdwn_in"`
 	Ts       *int64   `json:"ts"`
 }
 
 type slackMessage struct {
-	Text        string            `json:"text"`
-	Username    string            `json:"username"`
-	Channel     string            `json:"channel"`
-	Mrkdwn      *bool             `json:"mrkdwn"`
-	Attachments []slackAttachment `json:"attachments"`
+	Text         string `json:"text"`
+	TextRendered template.HTML
+	Username     string            `json:"username"`
+	Channel      string            `json:"channel"`
+	Mrkdwn       *bool             `json:"mrkdwn"`
+	Attachments  []slackAttachment `json:"attachments"`
 }
 
 // We use text.template because any fields of any attachments could
@@ -46,19 +53,31 @@ type slackMessage struct {
 // We do not do this yet, since it's assumed that clients also escape the content we send them.
 var htmlTemplate, _ = template.New("htmlTemplate").Parse(`
 <strong>@{{ .Username }}</strong> via <strong>#{{ .Channel }}</strong><br />
-{{ if .Text }}{{ .Text }}<br />{{ end }}
-{{ range .Attachments }}
-		{{ if .AuthorName }}
-			{{if .AuthorLink }}<a href="{{ .AuthorLink }}">{{ end }}
-				{{ if .AuthorIcon }}{{ .AuthorIcon }}{{ end }}
-				{{ .AuthorName }}
-			{{if .AuthorLink }}</a>{{ end }}
+{{- with (or .TextRendered .Text nil) }}
+	{{- if . }}
+		{{- . }}<br />
+	{{- end }}
+{{- end }}
+{{- range .Attachments }}
+		{{- if .AuthorName }}
+			{{- if .AuthorLink }}<a href="{{ .AuthorLink }}">{{ end }}
+				{{- if .AuthorIconUrl }}<img src="{{ .AuthorIconUrl }}" />{{ end }}
+				{{- .AuthorName }}
+			{{- if .AuthorLink }}</a>{{ end }}
 			<br />
-		{{ end }}
-	<strong><font color="{{ .Color }}">▌</font>{{ if .TitleLink }}<a href="{{ .TitleLink}}">{{ .Title }}</a>{{ else }}{{ .Title }}{{ end }}<br /></strong>
-	{{ if .Pretext }}{{ .Pretext }}<br />{{ end }}
-	{{ if .Text }}{{ .Text }}<br />{{ end }}
-{{ end }}
+		{{- end }}
+	<strong>
+		<font color="{{- .ColorRendered }}">▌</font>
+		{{- if .TitleLink }}
+			<a href="{{ .TitleLink}}">{{ .Title }}</a>
+		{{- else }}
+			{{- .Title }}
+		{{- end }}
+		<br />
+	</strong>
+	{{- if .Pretext }}{{ or .PretextRendered .Pretext }}<br />{{ end }}
+	{{- if .Text }}{{ or .TextRendered .Text }}<br />{{ end }}
+{{- end }}
 `)
 
 var netClient = &http.Client{
@@ -80,7 +99,7 @@ func getSlackMessage(req http.Request) (message slackMessage, err error) {
 		decoder := json.NewDecoder(req.Body)
 		err = decoder.Decode(&message)
 	} else {
-		message.Text = fmt.Sprint("**Error:** unknown Content-Type `%s`", ct)
+		message.Text = fmt.Sprintf("**Error:** unknown Content-Type `%s`", ct)
 		log.Error(message.Text)
 	}
 
@@ -92,76 +111,99 @@ func linkifyString(text string) string {
 }
 
 func getColor(color *string) string {
-	if color != nil {
-		// https://api.slack.com/docs/message-attachments defines these aliases
-		mappedColor, ok := map[string]string{
-			"good":    "green",
-			"warning": "yellow",
-			"danger":  "red",
-		}[*color]
-		if ok {
-			return mappedColor
-		}
-		return *color
+	if color == nil {
+		return "black"
 	}
-	return "black"
+
+	// https://api.slack.com/docs/message-attachments defines these aliases
+	mappedColor, ok := map[string]string{
+		"good":    "green",
+		"warning": "yellow",
+		"danger":  "red",
+	}[*color]
+	if ok {
+		return mappedColor
+	}
+	return *color
+}
+
+// fetches an image and encodes it as a data URL
+// returns nil if fetch fails
+func fetchAndEncodeImage(url *string) (data template.URL) {
+	if url == nil {
+		return
+	}
+
+	var resp *http.Response
+	resp, err := netClient.Get(*url)
+	if err == nil {
+		var (
+			body        []byte
+			contentType string
+		)
+
+		if body, err = ioutil.ReadAll(resp.Body); err != nil {
+			return
+		}
+		if contentType, _, err = mime.ParseMediaType(resp.Header.Get("Content-Type")); err != nil {
+			return
+		}
+		base64Body := base64.StdEncoding.EncodeToString(body)
+		data = template.URL(fmt.Sprintf("data:%s;base64,%s", contentType, base64Body))
+	}
+
+	return
+}
+
+func renderSlackAttachment(attachment *slackAttachment) {
+	if attachment == nil {
+		return
+	}
+
+	attachment.ColorRendered = template.HTMLAttr(getColor(attachment.Color))
+	attachment.AuthorIconURL = fetchAndEncodeImage(attachment.AuthorIcon)
+
+	for _, fieldName := range attachment.MrkdwnIn {
+		var (
+			srcField    *string
+			targetField *template.HTML
+		)
+
+		switch fieldName {
+		case "text":
+			srcField = &attachment.Text
+			targetField = &attachment.TextRendered
+		case "pretext":
+			srcField = &attachment.Pretext
+			targetField = &attachment.PretextRendered
+		case "fallback":
+			srcField = &attachment.Fallback
+			targetField = &attachment.FallbackRendered
+		}
+
+		if targetField != nil && srcField != nil {
+			log.Info(targetField)
+			*targetField = template.HTML(
+				blackfriday.MarkdownBasic([]byte(linkifyString(*srcField))))
+		}
+	}
 }
 
 func slackMessageToHTMLMessage(message slackMessage) (html matrix.HTMLMessage, err error) {
-	processedMessage := message
-
+	text := linkifyString(message.Text)
 	if message.Mrkdwn == nil || *message.Mrkdwn == true {
-		text := linkifyString(message.Text)
-
-		processedMessage.Text = string(blackfriday.MarkdownBasic([]byte(text)))
+		message.TextRendered = template.HTML(blackfriday.MarkdownBasic([]byte(text)))
 	}
 
-	for attachmentID, attachment := range message.Attachments {
-		target := &processedMessage.Attachments[attachmentID]
-
-		color := getColor(attachment.Color)
-		target.Color = &color
-
-		if attachment.AuthorIcon != nil {
-			var resp *http.Response
-			resp, err = netClient.Get(*attachment.AuthorIcon)
-			if err == nil {
-				body, _ := ioutil.ReadAll(resp.Body)
-				ct, _, _ := mime.ParseMediaType(resp.Header.Get("Content-Type"))
-				b64body := base64.StdEncoding.EncodeToString(body)
-				*target.AuthorIcon = fmt.Sprintf("<img src=\"data:%s;base64,%s\" />", ct, b64body)
-			} else {
-				*target.AuthorIcon = ""
-			}
-		}
-
-		for _, fieldName := range attachment.MrkdwnIn {
-			var targetField, srcField *string
-
-			switch fieldName {
-			case "text":
-				srcField = &attachment.Text
-				targetField = &target.Text
-				break
-			case "pretext":
-				srcField = &attachment.Pretext
-				targetField = &target.Pretext
-				break
-			}
-
-			if targetField != nil && srcField != nil {
-				value := string(
-					blackfriday.MarkdownBasic([]byte(linkifyString(*srcField))))
-				targetField = &value
-			}
-		}
+	for attachmentID := range message.Attachments {
+		renderSlackAttachment(&message.Attachments[attachmentID])
 	}
 
 	var buffer bytes.Buffer
 	html.MsgType = "m.text"
 	html.Format = "org.matrix.custom.html"
 	html.Body, _ = slackMessageToMarkdown(message)
-	err = htmlTemplate.ExecuteTemplate(&buffer, "htmlTemplate", processedMessage)
+	err = htmlTemplate.ExecuteTemplate(&buffer, "htmlTemplate", message)
 	html.FormattedBody = buffer.String()
 	return
 }

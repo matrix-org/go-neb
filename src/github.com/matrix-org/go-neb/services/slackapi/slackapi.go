@@ -13,7 +13,11 @@ type slackAPIService struct {
 	serviceUserID      string
 	webhookEndpointURL string
 	ClientUserID       string
-	Hooks              map[string]string
+	// maps from hookID -> roomID
+	Hooks map[string]struct {
+		RoomID      string
+		MessageType string
+	}
 }
 
 func (s *slackAPIService) ServiceUserID() string                 { return s.serviceUserID }
@@ -30,15 +34,26 @@ func (s *slackAPIService) Plugin(cli *matrix.Client, roomID string) plugin.Plugi
 
 func (s *slackAPIService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client) {
 	segments := strings.Split(req.URL.Path, "/")
+
+	if len(segments) < 2 {
+		w.WriteHeader(400)
+	}
+
 	hookID := segments[len(segments)-2]
-	messageType := segments[len(segments)-3]
-	roomID := s.Hooks[hookID]
+	messageType := s.Hooks[hookID].MessageType
+	if messageType == "" {
+		messageType = "m.text"
+	}
+	roomID := s.Hooks[hookID].RoomID
 
 	slackMessage, err := getSlackMessage(*req)
 	if err != nil {
 		return
 	}
 	htmlMessage, err := slackMessageToHTMLMessage(slackMessage)
+	if err != nil {
+		return
+	}
 	htmlMessage.MsgType = messageType
 	cli.SendMessageEvent(
 		roomID,
