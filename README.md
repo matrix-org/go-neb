@@ -476,5 +476,5 @@ Auth Session = An individual authentication session /requestAuthSession makes th
 GOPATH=$GOPATH:$(pwd) godoc -v -http=localhost:6060 &
 
 # Open up the documentation for go-neb in a browser.
-sensible-browser http://localhost/pkg/github.com/matrix-org/go-neb
+sensible-browser http://localhost:6060/pkg/github.com/matrix-org/go-neb
 ```
