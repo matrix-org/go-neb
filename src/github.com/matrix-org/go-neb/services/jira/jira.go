@@ -24,6 +24,7 @@ var issueKeyRegex = regexp.MustCompile("([A-z]+)-([0-9]+)")
 var projectKeyRegex = regexp.MustCompile("^[A-z]+$")
 
 type jiraService struct {
+	types.DefaultService
 	id                 string
 	serviceUserID      string
 	webhookEndpointURL string
@@ -38,10 +39,9 @@ type jiraService struct {
 	}
 }
 
-func (s *jiraService) ServiceUserID() string                 { return s.serviceUserID }
-func (s *jiraService) ServiceID() string                     { return s.id }
-func (s *jiraService) ServiceType() string                   { return "jira" }
-func (s *jiraService) PostRegister(oldService types.Service) {}
+func (s *jiraService) ServiceUserID() string { return s.serviceUserID }
+func (s *jiraService) ServiceID() string     { return s.id }
+func (s *jiraService) ServiceType() string   { return "jira" }
 func (s *jiraService) Register(oldService types.Service, client *matrix.Client) error {
 	// We only ever make 1 JIRA webhook which listens for all projects and then filter
 	// on receive. So we simply need to know if we need to make a webhook or not. We

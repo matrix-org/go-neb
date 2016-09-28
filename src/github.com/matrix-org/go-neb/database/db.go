@@ -125,6 +125,19 @@ func (d *ServiceDB) LoadServicesForUser(serviceUserID string) (services []types.
 	return
 }
 
+// LoadServicesByType loads all the bot services configured for a given type.
+// Returns an empty list if there aren't any services configured.
+func (d *ServiceDB) LoadServicesByType(serviceType string) (services []types.Service, err error) {
+	err = runTransaction(d.db, func(txn *sql.Tx) error {
+		services, err = selectServicesByTypeTxn(txn, serviceType)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+	return
+}
+
 // StoreService stores a service into the database either by inserting a new
 // service or updating an existing service. Returns the old service if there
 // was one.

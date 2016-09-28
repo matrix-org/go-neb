@@ -6,7 +6,6 @@ import (
 	"github.com/google/go-github/github"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/matrix"
-	"github.com/matrix-org/go-neb/plugin"
 	"github.com/matrix-org/go-neb/services/github/client"
 	"github.com/matrix-org/go-neb/services/github/webhook"
 	"github.com/matrix-org/go-neb/types"
@@ -17,10 +16,11 @@ import (
 )
 
 type githubWebhookService struct {
+	types.DefaultService
 	id                 string
 	serviceUserID      string
 	webhookEndpointURL string
-	ClientUserID       string // optional; required for webhooks
+	ClientUserID       string
 	RealmID            string
 	SecretToken        string
 	Rooms              map[string]struct { // room_id => {}
@@ -33,9 +33,6 @@ type githubWebhookService struct {
 func (s *githubWebhookService) ServiceUserID() string { return s.serviceUserID }
 func (s *githubWebhookService) ServiceID() string     { return s.id }
 func (s *githubWebhookService) ServiceType() string   { return "github-webhook" }
-func (s *githubWebhookService) Plugin(cli *matrix.Client, roomID string) plugin.Plugin {
-	return plugin.Plugin{}
-}
 func (s *githubWebhookService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client) {
 	evType, repo, msg, err := webhook.OnReceiveRequest(req, s.SecretToken)
 	if err != nil {

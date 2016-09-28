@@ -231,6 +231,33 @@ func selectServicesForUserTxn(txn *sql.Tx, userID string) (srvs []types.Service,
 	return
 }
 
+const selectServicesByTypeSQL = `
+SELECT service_id, service_user_id, service_json FROM services WHERE service_type=$1 ORDER BY service_id
+`
+
+func selectServicesByTypeTxn(txn *sql.Tx, serviceType string) (srvs []types.Service, err error) {
+	rows, err := txn.Query(selectServicesByTypeSQL, serviceType)
+	if err != nil {
+		return
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var s types.Service
+		var serviceID string
+		var serviceUserID string
+		var serviceJSON []byte
+		if err = rows.Scan(&serviceID, &serviceUserID, &serviceJSON); err != nil {
+			return
+		}
+		s, err = types.CreateService(serviceID, serviceType, serviceUserID, serviceJSON)
+		if err != nil {
+			return
+		}
+		srvs = append(srvs, s)
+	}
+	return
+}
+
 const deleteServiceSQL = `
 DELETE FROM services WHERE service_id = $1
 `

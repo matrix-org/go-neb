@@ -11,7 +11,6 @@ import (
 	"github.com/matrix-org/go-neb/realms/github"
 	"github.com/matrix-org/go-neb/services/github/client"
 	"github.com/matrix-org/go-neb/types"
-	"net/http"
 	"regexp"
 	"strconv"
 	"strings"
@@ -23,6 +22,7 @@ var ownerRepoIssueRegex = regexp.MustCompile(`(([A-z0-9-_]+)/([A-z0-9-_]+))?#([0
 var ownerRepoRegex = regexp.MustCompile(`^([A-z0-9-_]+)/([A-z0-9-_]+)$`)
 
 type githubService struct {
+	types.DefaultService
 	id            string
 	serviceUserID string
 	RealmID       string
@@ -180,9 +180,6 @@ func (s *githubService) Plugin(cli *matrix.Client, roomID string) plugin.Plugin 
 		},
 	}
 }
-func (s *githubService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client) {
-	w.WriteHeader(400)
-}
 
 // Register will create webhooks for the repos specified in Rooms
 //
@@ -211,8 +208,6 @@ func (s *githubService) Register(oldService types.Service, client *matrix.Client
 	log.Infof("%+v", s)
 	return nil
 }
-
-func (s *githubService) PostRegister(oldService types.Service) {}
 
 // defaultRepo returns the default repo for the given room, or an empty string.
 func (s *githubService) defaultRepo(roomID string) string {

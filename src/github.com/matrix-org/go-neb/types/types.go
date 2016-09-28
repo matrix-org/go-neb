@@ -40,6 +40,12 @@ type BotOptions struct {
 	Options     map[string]interface{}
 }
 
+// Poller represents a thing that can be polled at a given rate.
+type Poller interface {
+	IntervalSecs() int
+	OnPoll()
+}
+
 // A Service is the configuration for a bot service.
 type Service interface {
 	ServiceUserID() string
@@ -57,6 +63,32 @@ type Service interface {
 	// concurrent modifications to this service whilst this function executes. This lifecycle hook should be used to clean
 	// up resources which are no longer needed (e.g. removing old webhooks).
 	PostRegister(oldService Service)
+	// Return a Poller object if you wish to be invoked every N seconds.
+	Poller() Poller
+}
+
+// DefaultService NO-OPs the implementation of optional Service interface methods. Feel free to override them.
+type DefaultService struct {
+	Service
+}
+
+// Plugin returns no plugins.
+func (s *DefaultService) Plugin(cli *matrix.Client, roomID string) plugin.Plugin {
+	return plugin.Plugin{}
+}
+
+// Register does nothing and returns no error.
+func (s *DefaultService) Register(oldService Service, client *matrix.Client) error { return nil }
+
+// PostRegister does nothing.
+func (s *DefaultService) PostRegister(oldService Service) {}
+
+// Poller returns no poller.
+func (s *DefaultService) Poller() Poller { return nil }
+
+// OnReceiveWebhook does nothing but 200 OK the request.
+func (s *DefaultService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client) {
+	w.WriteHeader(200) // Do nothing
 }
 
 var baseURL = ""
