@@ -13,7 +13,7 @@ import (
 	"strings"
 )
 type guggyQuery struct {
-	// "mp4" of "gif"
+	// "mp4" or "gif"
 	Format string `json:"format"`
 	// Query sentence
 	Sentence  string `json:"sentence"`
@@ -59,6 +59,14 @@ func (s *guggyService) cmdGuggy(client *matrix.Client, roomID, userID string, ar
 	if err != nil {
 		return nil, err
 	}
+
+	if gifResult.GIF == "" {
+		return matrix.TextMessage{
+			MsgType: "m.text.notice",
+			Body: "No GIF found!",
+		}, nil
+	}
+
 	mxc, err := client.UploadLink(gifResult.GIF)
 	if err != nil {
 		return nil, err
