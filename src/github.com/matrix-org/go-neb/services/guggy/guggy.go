@@ -73,7 +73,7 @@ func (s *guggyService) cmdGuggy(client *matrix.Client, roomID, userID string, ar
 
 	return matrix.ImageMessage{
 		MsgType: "m.image",
-		Body:    gifResult.ReqID,
+		Body:    querySentence,
 		URL:     mxc,
 		Info: matrix.ImageInfo{
 			Height:   uint(math.Floor(gifResult.Height)),
