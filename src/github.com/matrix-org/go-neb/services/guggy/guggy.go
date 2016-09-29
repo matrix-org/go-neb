@@ -2,30 +2,16 @@ package services
 
 import (
 	"encoding/json"
-	"errors"
+	"bytes"
+	"math"
 	log "github.com/Sirupsen/logrus"
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/plugin"
 	"github.com/matrix-org/go-neb/types"
 	"net/http"
-	"net/url"
 	"strconv"
 	"strings"
 )
-
-type result struct {
-	Slug   string `json:"slug"`
-	Images struct {
-		Original struct {
-			URL string `json:"url"`
-			// guggy returns ints as strings..
-			Width  string `json:"width"`
-			Height string `json:"height"`
-			Size   string `json:"size"`
-		} `json:"original"`
-	} `json:"images"`
-}
-
 type guggyQuery struct {
 	// "mp4" of "gif"
 	Format string `json:"format"`
@@ -33,14 +19,17 @@ type guggyQuery struct {
 	Sentence  string `json:"sentence"`
 }
 
-type guggySearch struct {
-	Data []result
+type guggyGifResult struct {
+	ReqID string `json:"reqId"`
+	GIF string `json:"gif"`
+	Width float64 `json:"width"`
+	Height float64 `json:"height"`
 }
 
 type guggyService struct {
 	id            string
 	serviceUserID string
-	APIKey        string // key is Cb7aEsJIdjD37c3
+	APIKey        string
 }
 
 func (s *guggyService) ServiceUserID() string { return s.serviceUserID }
@@ -70,45 +59,43 @@ func (s *guggyService) cmdGuggy(client *matrix.Client, roomID, userID string, ar
 	if err != nil {
 		return nil, err
 	}
-	mxc, err := client.UploadLink(gifResult.Images.Original.URL)
+	mxc, err := client.UploadLink(gifResult.GIF)
 	if err != nil {
 		return nil, err
 	}
 
 	return matrix.ImageMessage{
 		MsgType: "m.image",
-		Body:    gifResult.Slug,
+		Body:    gifResult.ReqID,
 		URL:     mxc,
 		Info: matrix.ImageInfo{
-			Height:   asInt(gifResult.Images.Original.Height),
-			Width:    asInt(gifResult.Images.Original.Width),
+			Height:   uint(math.Floor(gifResult.Height)),
+			Width:    uint(math.Floor(gifResult.Width)),
 			Mimetype: "image/gif",
-			Size:     asInt(gifResult.Images.Original.Size),
 		},
 	}, nil
 }
 
 // text2gifGuggy returns info about a gif
-func (s *guggyService) text2gifGuggy(querySentence string) (*result, error) {
+func (s *guggyService) text2gifGuggy(querySentence string) (*guggyGifResult, error) {
 	log.Info("Transforming to GIF query ", querySentence)
-	u, err := url.Parse("http://text2gif.guggy.com/guggify")
-	if err != nil {
-		return nil, err
-	}
 
 	client := &http.Client{ }
 
 	var query guggyQuery
-	query.format = "gif"
-	query.sentence = querySentence
+	query.Format = "gif"
+	query.Sentence = querySentence
 
-	var reqBody bytes.Buffer
-	if json.NewEncoder(reqBody).Encode(query); err != nil {
+	reqBody, err := json.Marshal(query);
+	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", u, reqBody)
+	reader := bytes.NewReader(reqBody)
+
+	req, err := http.NewRequest("POST", "http://text2gif.guggy.com/guggify", reader)
 	if err != nil {
+		log.Error(err)
 		return nil, err
 	}
 	req.Header.Add("Content-Type", "application/json")
@@ -119,16 +106,15 @@ func (s *guggyService) text2gifGuggy(querySentence string) (*result, error) {
 		defer res.Body.Close()
 	}
 	if err != nil {
+		log.Error(err)
 		return nil, err
 	}
-	var search guggySearch
-	if err := json.NewDecoder(res.Body).Decode(&search); err != nil {
+	var result guggyGifResult
+	if err := json.NewDecoder(res.Body).Decode(&result); err != nil {
 		return nil, err
 	}
-	if len(search.Data) == 0 {
-		return nil, errors.New("No results")
-	}
-	return &search.Data[0], nil
+
+	return &result, nil
 }
 
 func asInt(strInt string) uint {
