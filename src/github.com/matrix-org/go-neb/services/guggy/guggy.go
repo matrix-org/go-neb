@@ -9,7 +9,6 @@ import (
 	"github.com/matrix-org/go-neb/plugin"
 	"github.com/matrix-org/go-neb/types"
 	"net/http"
-	"strconv"
 	"strings"
 )
 type guggyQuery struct {
@@ -101,7 +100,7 @@ func (s *guggyService) text2gifGuggy(querySentence string) (*guggyGifResult, err
 
 	reader := bytes.NewReader(reqBody)
 
-	req, err := http.NewRequest("POST", "http://text2gif.guggy.com/guggify", reader)
+	req, err := http.NewRequest("POST", "https://text2gif.guggy.com/guggify", reader)
 	if err != nil {
 		log.Error(err)
 		return nil, err
