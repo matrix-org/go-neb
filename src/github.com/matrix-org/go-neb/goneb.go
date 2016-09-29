@@ -5,6 +5,7 @@ import (
 	"github.com/matrix-org/dugong"
 	"github.com/matrix-org/go-neb/clients"
 	"github.com/matrix-org/go-neb/database"
+	"github.com/matrix-org/go-neb/polling"
 	_ "github.com/matrix-org/go-neb/realms/github"
 	_ "github.com/matrix-org/go-neb/realms/jira"
 	"github.com/matrix-org/go-neb/server"
@@ -12,6 +13,7 @@ import (
 	_ "github.com/matrix-org/go-neb/services/giphy"
 	_ "github.com/matrix-org/go-neb/services/github"
 	_ "github.com/matrix-org/go-neb/services/jira"
+	_ "github.com/matrix-org/go-neb/services/rss"
 	"github.com/matrix-org/go-neb/types"
 	_ "github.com/mattn/go-sqlite3"
 	"net/http"
@@ -68,6 +70,10 @@ func main() {
 	http.HandleFunc("/services/hooks/", wh.handle)
 	rh := &realmRedirectHandler{db: db}
 	http.HandleFunc("/realms/redirects/", rh.handle)
+
+	if err := polling.Start(); err != nil {
+		log.Panic(err)
+	}
 
 	http.ListenAndServe(bindAddress, nil)
 }

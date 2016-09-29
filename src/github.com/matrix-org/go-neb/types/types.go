@@ -42,14 +42,17 @@ type BotOptions struct {
 
 // Poller represents a thing that can be polled at a given rate.
 type Poller interface {
-	IntervalSecs() int
-	OnPoll()
+	IntervalSecs() int64
+	OnPoll(service Service)
 }
 
 // A Service is the configuration for a bot service.
 type Service interface {
+	// Return the user ID of this service.
 	ServiceUserID() string
+	// Return an opaque ID used to identify this service.
 	ServiceID() string
+	// Return the type of service. This string MUST NOT change.
 	ServiceType() string
 	Plugin(cli *matrix.Client, roomID string) plugin.Plugin
 	OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client)
@@ -63,7 +66,10 @@ type Service interface {
 	// concurrent modifications to this service whilst this function executes. This lifecycle hook should be used to clean
 	// up resources which are no longer needed (e.g. removing old webhooks).
 	PostRegister(oldService Service)
-	// Return a Poller object if you wish to be invoked every N seconds.
+	// Return a Poller object if you wish to be invoked every N seconds. This struct MUST NOT conditionally change: either
+	// ALWAYS return a new Poller interface or NEVER return a Poller. The Poller will exist outside of the lifetime of the
+	// Service upon which it is being called on, so DO NOT wrap this inside a closure or else you will introduce a memory
+	// leak. An instantiated service will be passed into the `OnPoll(Service)` for you to extract state.
 	Poller() Poller
 }
 
@@ -110,10 +116,18 @@ func BaseURL(u string) error {
 }
 
 var servicesByType = map[string]func(string, string, string) Service{}
+var pollersByType = map[string]Poller{}
 
 // RegisterService registers a factory for creating Service instances.
 func RegisterService(factory func(string, string, string) Service) {
-	servicesByType[factory("", "", "").ServiceType()] = factory
+	s := factory("", "", "")
+	servicesByType[s.ServiceType()] = factory
+	pollersByType[s.ServiceType()] = s.Poller()
+}
+
+// PollersByType returns a map of service type to poller, which may be nil
+func PollersByType() map[string]Poller {
+	return pollersByType
 }
 
 // CreateService creates a Service of the given type and serviceID.
