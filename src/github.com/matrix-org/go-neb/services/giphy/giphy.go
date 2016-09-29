@@ -33,7 +33,7 @@ type giphySearch struct {
 type giphyService struct {
 	id            string
 	serviceUserID string
-	APIKey        string // beta key is dc6zaTOxFJmzC
+	APIKey string `json:"api_key"`// beta key is dc6zaTOxFJmzC
 }
 
 func (s *giphyService) ServiceUserID() string { return s.serviceUserID }
