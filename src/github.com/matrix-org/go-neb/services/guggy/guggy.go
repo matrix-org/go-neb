@@ -125,14 +125,6 @@ func (s *guggyService) text2gifGuggy(querySentence string) (*guggyGifResult, err
 	return &result, nil
 }
 
-func asInt(strInt string) uint {
-	u64, err := strconv.ParseUint(strInt, 10, 32)
-	if err != nil {
-		return 0 // default to 0 since these are all just hints to the client
-	}
-	return uint(u64)
-}
-
 func init() {
 	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
 		return &guggyService{
