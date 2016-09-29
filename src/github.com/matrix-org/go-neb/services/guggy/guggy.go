@@ -28,7 +28,7 @@ type guggyGifResult struct {
 type guggyService struct {
 	id            string
 	serviceUserID string
-	api_key       string
+	APIKey string `json:"api_key"`
 }
 
 func (s *guggyService) ServiceUserID() string { return s.serviceUserID }
@@ -106,7 +106,7 @@ func (s *guggyService) text2gifGuggy(querySentence string) (*guggyGifResult, err
 		return nil, err
 	}
 	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("apiKey", s.api_key)
+	req.Header.Add("apiKey", s.APIKey)
 
 	res, err := client.Do(req)
 	if res != nil {
