@@ -1,43 +1,41 @@
 package services
 
 import (
-	"encoding/json"
 	"bytes"
-	"math"
+	"encoding/json"
 	log "github.com/Sirupsen/logrus"
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/plugin"
 	"github.com/matrix-org/go-neb/types"
+	"math"
 	"net/http"
 	"strings"
 )
+
 type guggyQuery struct {
 	// "mp4" or "gif"
 	Format string `json:"format"`
 	// Query sentence
-	Sentence  string `json:"sentence"`
+	Sentence string `json:"sentence"`
 }
 
 type guggyGifResult struct {
-	ReqID string `json:"reqId"`
-	GIF string `json:"gif"`
-	Width float64 `json:"width"`
+	ReqID  string  `json:"reqId"`
+	GIF    string  `json:"gif"`
+	Width  float64 `json:"width"`
 	Height float64 `json:"height"`
 }
 
 type guggyService struct {
+	types.DefaultService
 	id            string
 	serviceUserID string
-	APIKey string `json:"api_key"`
+	APIKey        string `json:"api_key"`
 }
 
 func (s *guggyService) ServiceUserID() string { return s.serviceUserID }
 func (s *guggyService) ServiceID() string     { return s.id }
 func (s *guggyService) ServiceType() string   { return "guggy" }
-func (s *guggyService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client) {
-}
-func (s *guggyService) Register(oldService types.Service, client *matrix.Client) error { return nil }
-func (s *guggyService) PostRegister(oldService types.Service)                          {}
 
 func (s *guggyService) Plugin(client *matrix.Client, roomID string) plugin.Plugin {
 	return plugin.Plugin{
@@ -62,7 +60,7 @@ func (s *guggyService) cmdGuggy(client *matrix.Client, roomID, userID string, ar
 	if gifResult.GIF == "" {
 		return matrix.TextMessage{
 			MsgType: "m.text.notice",
-			Body: "No GIF found!",
+			Body:    "No GIF found!",
 		}, nil
 	}
 
@@ -87,13 +85,13 @@ func (s *guggyService) cmdGuggy(client *matrix.Client, roomID, userID string, ar
 func (s *guggyService) text2gifGuggy(querySentence string) (*guggyGifResult, error) {
 	log.Info("Transforming to GIF query ", querySentence)
 
-	client := &http.Client{ }
+	client := &http.Client{}
 
 	var query guggyQuery
 	query.Format = "gif"
 	query.Sentence = querySentence
 
-	reqBody, err := json.Marshal(query);
+	reqBody, err := json.Marshal(query)
 	if err != nil {
 		return nil, err
 	}

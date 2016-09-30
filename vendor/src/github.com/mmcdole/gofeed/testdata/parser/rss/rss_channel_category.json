@@ -1,0 +1,14 @@
+{
+    "categories": [
+        {
+            "domain": "http://www.example.org/cat/1",
+            "value": "Feed Category 1"
+        },
+        {
+            "domain": "http://www.example.org/cat/2",
+            "value": "Feed Category 2"
+        }
+    ],
+    "items": [],
+    "version": "2.0"
+}

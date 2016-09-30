@@ -1,0 +1,15 @@
+{
+    "entries": [
+        {
+            "source": {
+                "links": [
+                    {
+                        "rel": "alternate",
+                        "type": "text/html"
+                    }
+                ]
+            }
+        }
+    ],
+    "version": "1.0"
+}

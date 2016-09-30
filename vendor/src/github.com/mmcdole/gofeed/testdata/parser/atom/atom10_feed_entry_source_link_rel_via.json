@@ -1,0 +1,14 @@
+{
+    "entries": [
+        {
+            "source": {
+                "links": [
+                    {
+                        "rel": "via"
+                    }
+                ]
+            }
+        }
+    ],
+    "version": "1.0"
+}

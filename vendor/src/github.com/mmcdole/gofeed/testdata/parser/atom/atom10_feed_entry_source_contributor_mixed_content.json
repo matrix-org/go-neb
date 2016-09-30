@@ -1,0 +1,14 @@
+{
+    "entries": [
+        {
+            "source": {
+                "contributors": [
+                    {
+                        "name": "Contributor Name"
+                    }
+                ]
+            }
+        }
+    ],
+    "version": "1.0"
+}

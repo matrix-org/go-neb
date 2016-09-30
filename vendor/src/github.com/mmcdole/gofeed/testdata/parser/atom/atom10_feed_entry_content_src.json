@@ -1,0 +1,10 @@
+{
+    "entries": [
+        {
+            "content": {
+                "src": "http://example.org/video.mp4"
+            }
+        }
+    ],
+    "version": "1.0"
+}

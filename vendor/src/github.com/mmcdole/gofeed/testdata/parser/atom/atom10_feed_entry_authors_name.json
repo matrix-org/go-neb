@@ -1,0 +1,15 @@
+{
+    "entries": [
+        {
+            "authors": [
+                {
+                    "name": "Author Name 1"
+                },
+                {
+                    "name": "Author Name 2"
+                }
+            ]
+        }
+    ],
+    "version": "1.0"
+}

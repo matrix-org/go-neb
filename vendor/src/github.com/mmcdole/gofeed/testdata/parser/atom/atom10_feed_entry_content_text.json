@@ -1,0 +1,11 @@
+{
+    "entries": [
+        {
+            "content": {
+                "type": "text",
+                "value": "Entry Content"
+            }
+        }
+    ],
+    "version": "1.0"
+}

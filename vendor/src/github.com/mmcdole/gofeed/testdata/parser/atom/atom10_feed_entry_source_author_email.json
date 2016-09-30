@@ -1,0 +1,14 @@
+{
+    "entries": [
+        {
+            "source": {
+                "authors": [
+                    {
+                        "email": "email@example.org"
+                    }
+                ]
+            }
+        }
+    ],
+    "version": "1.0"
+}

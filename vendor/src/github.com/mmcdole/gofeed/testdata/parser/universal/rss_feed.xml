@@ -1,0 +1,8 @@
+<!--
+Description: rss feed 
+-->
+<rss version="2.0">
+  <channel>
+    <title>Feed Title</title>
+  </channel>
+</rss>

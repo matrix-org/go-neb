@@ -1,0 +1,11 @@
+{
+    "entries": [
+        {
+            "content": {
+                "type": "application/octet-stream",
+                "value": "Entry <b>Content</b>"
+            }
+        }
+    ],
+    "version": "1.0"
+}
