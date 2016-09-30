@@ -7,14 +7,15 @@ import (
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/polling"
 	"github.com/matrix-org/go-neb/types"
+	"github.com/mmcdole/gofeed"
 	"time"
 )
 
-type rssPoller struct{}
+type feedPoller struct{}
 
-func (p *rssPoller) IntervalSecs() int64 { return 10 }
-func (p *rssPoller) OnPoll(s types.Service) {
-	rsss, ok := s.(*rssService)
+func (p *feedPoller) IntervalSecs() int64 { return 10 }
+func (p *feedPoller) OnPoll(s types.Service) {
+	frService, ok := s.(*feedReaderService)
 	if !ok {
 		log.WithField("service_id", s.ServiceID()).Error("RSS: OnPoll called without an RSS Service")
 		return
@@ -23,7 +24,7 @@ func (p *rssPoller) OnPoll(s types.Service) {
 	// URL => [ RoomID ]
 	urlsToRooms := make(map[string][]string)
 
-	for roomID, roomInfo := range rsss.Rooms {
+	for roomID, roomInfo := range frService.Rooms {
 		for u, feedInfo := range roomInfo.Feeds {
 			if feedInfo.LastPollTimestampSecs == 0 || (feedInfo.LastPollTimestampSecs+(int64(feedInfo.PollIntervalMins)*60)) > now {
 				// re-query this feed
@@ -32,10 +33,28 @@ func (p *rssPoller) OnPoll(s types.Service) {
 		}
 	}
 
-	// TODO: Some polling
+	// TODO: Keep a "next poll ts" value (default 0)
+	// If ts is 0 or now > ts, then poll and work out next poll ts.
+	// Worked out by looking at the chosen interval period (prioritise the feed retry time where it exists)
+	// Persist the next poll ts to the database.
+
+	for u, _ := range urlsToRooms {
+		fp := gofeed.NewParser()
+		feed, err := fp.ParseURL(u)
+		if err != nil {
+			log.WithFields(log.Fields{
+				"service_id": s.ServiceID(),
+				"url":        u,
+				log.ErrorKey: err,
+			}).Error("Failed to parse feed")
+			continue
+		}
+		log.Print(feed)
+	}
+
 }
 
-type rssService struct {
+type feedReaderService struct {
 	types.DefaultService
 	id            string
 	serviceUserID string
@@ -47,13 +66,13 @@ type rssService struct {
 	}
 }
 
-func (s *rssService) ServiceUserID() string { return s.serviceUserID }
-func (s *rssService) ServiceID() string     { return s.id }
-func (s *rssService) ServiceType() string   { return "rss" }
-func (s *rssService) Poller() types.Poller  { return &rssPoller{} }
+func (s *feedReaderService) ServiceUserID() string { return s.serviceUserID }
+func (s *feedReaderService) ServiceID() string     { return s.id }
+func (s *feedReaderService) ServiceType() string   { return "feedreader" }
+func (s *feedReaderService) Poller() types.Poller  { return &feedPoller{} }
 
 // Register will check the liveness of each RSS feed given. If all feeds check out okay, no error is returned.
-func (s *rssService) Register(oldService types.Service, client *matrix.Client) error {
+func (s *feedReaderService) Register(oldService types.Service, client *matrix.Client) error {
 	feeds := feedUrls(s)
 	if len(feeds) == 0 {
 		// this is an error UNLESS the old service had some feeds in which case they are deleting us :(
@@ -65,7 +84,7 @@ func (s *rssService) Register(oldService types.Service, client *matrix.Client) e
 	return nil
 }
 
-func (s *rssService) PostRegister(oldService types.Service) {
+func (s *feedReaderService) PostRegister(oldService types.Service) {
 	if len(feedUrls(s)) == 0 { // bye-bye :(
 		logger := log.WithFields(log.Fields{
 			"service_id":   s.ServiceID(),
@@ -82,7 +101,7 @@ func (s *rssService) PostRegister(oldService types.Service) {
 // feedUrls returns a list of feed urls for this service
 func feedUrls(srv types.Service) []string {
 	var feeds []string
-	s, ok := srv.(*rssService)
+	s, ok := srv.(*feedReaderService)
 	if !ok {
 		return feeds
 	}
@@ -102,7 +121,7 @@ func feedUrls(srv types.Service) []string {
 
 func init() {
 	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
-		r := &rssService{
+		r := &feedReaderService{
 			id:            serviceID,
 			serviceUserID: serviceUserID,
 		}
