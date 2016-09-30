@@ -1,6 +1,7 @@
 package services
 
 import (
+	"bytes"
 	"database/sql"
 	"fmt"
 	log "github.com/Sirupsen/logrus"
@@ -11,6 +12,7 @@ import (
 	"github.com/matrix-org/go-neb/realms/github"
 	"github.com/matrix-org/go-neb/services/github/client"
 	"github.com/matrix-org/go-neb/types"
+	"html/template"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -21,6 +23,31 @@ import (
 // E.g. owner/repo#11 (issue/PR numbers) - Captured groups for owner/repo/number
 var ownerRepoIssueRegex = regexp.MustCompile(`(([A-z0-9-_]+)/([A-z0-9-_]+))?#([0-9]+)`)
 var ownerRepoRegex = regexp.MustCompile(`^([A-z0-9-_]+)/([A-z0-9-_]+)$`)
+var issueListTemplate = template.Must(template.New("issueList").Parse(`
+{{ if .Issues }}
+	<ul>
+		{{ range .Issues }}
+			<li>
+				<a href="{{ .HTMLURL }}">
+					<strong>#{{ .Number }}</strong>
+					{{ .Title }}
+					<strong>({{ .State }})</strong>
+					{{ range .Labels }}
+						<a href="{{ .URL }}">
+							<font color="{{ if .Color }}{{ .Color }}{{ else }}black{{ end }}">{{ .Name }}</font>
+						</a>
+					{{ end }}
+					{{ range .Assignees }}
+						<strong><a href="{{ .URL }}">@{{ .Login }}</a></strong>
+					{{ end }}
+				</a>
+			</li>
+		{{ end }}
+	</ul>
+{{ else }}
+	<strong>No issues found</strong>
+{{ end }}
+`))
 
 type githubService struct {
 	id            string
@@ -104,6 +131,61 @@ func (s *githubService) cmdGithubCreate(roomID, userID string, args []string) (i
 	return matrix.TextMessage{"m.notice", fmt.Sprintf("Created issue: %s", *issue.HTMLURL)}, nil
 }
 
+func (s *githubService) cmdGithubFind(roomID, userID string, args []string) (interface{}, error) {
+	cli := s.githubClientFor(userID, true)
+	if len(args) == 0 {
+		return &matrix.TextMessage{"m.notice",
+			`Usage: !github find owner/repo query`}, nil
+	}
+
+	// We expect the args to look like:
+	// [ "owner/repo", "title text", "desc text" ]
+	// They can omit the owner/repo if there is a default one set.
+	// Look for a default if the first arg doesn't look like an owner/repo
+	ownerRepoGroups := ownerRepoRegex.FindStringSubmatch(args[0])
+
+	if len(ownerRepoGroups) == 0 {
+		// look for a default repo
+		defaultRepo := s.defaultRepo(roomID)
+		if defaultRepo == "" {
+			return &matrix.TextMessage{"m.notice",
+				`Usage: !github find owner/repo query`}, nil
+		}
+		// default repo should pass the regexp
+		ownerRepoGroups = ownerRepoRegex.FindStringSubmatch(defaultRepo)
+		if len(ownerRepoGroups) == 0 {
+			return &matrix.TextMessage{"m.notice",
+				`Malformed default repo. Usage: !github find owner/repo query`}, nil
+		}
+
+		// insert the default as the first arg to reuse the same indices
+		args = append([]string{defaultRepo}, args...)
+		// continue through now that ownerRepoGroups has matching groups
+	}
+
+	var title *string
+
+	joinedTitle := strings.Join(args[1:], " ")
+	title = &joinedTitle
+	repo := args[0]
+	query := fmt.Sprintf("repo:%s %s", repo, *title)
+
+	result, res, err := cli.Search.Issues(query, &github.SearchOptions{})
+
+	if err != nil {
+		log.WithField("err", err).Print("Failed to create issue")
+		return nil, fmt.Errorf("Failed to create issue. HTTP %d", res.StatusCode)
+	}
+
+	var buffer bytes.Buffer
+	err = issueListTemplate.Execute(&buffer, result)
+	if err != nil {
+		log.Error(err)
+	}
+
+	return matrix.GetHTMLMessage("m.notice", buffer.String()), nil
+}
+
 func (s *githubService) expandIssue(roomID, userID, owner, repo string, issueNum int) interface{} {
 	cli := s.githubClientFor(userID, true)
 
@@ -130,6 +212,12 @@ func (s *githubService) Plugin(cli *matrix.Client, roomID string) plugin.Plugin 
 				Path: []string{"github", "create"},
 				Command: func(roomID, userID string, args []string) (interface{}, error) {
 					return s.cmdGithubCreate(roomID, userID, args)
+				},
+			},
+			plugin.Command{
+				Path: []string{"github", "find"},
+				Command: func(roomID, userID string, args []string) (interface{}, error) {
+					return s.cmdGithubFind(roomID, userID, args)
 				},
 			},
 		},
