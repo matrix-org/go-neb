@@ -31,6 +31,7 @@ type giphySearch struct {
 }
 
 type giphyService struct {
+	types.DefaultService
 	id            string
 	serviceUserID string
 	APIKey string `json:"api_key"`// beta key is dc6zaTOxFJmzC
@@ -39,10 +40,6 @@ type giphyService struct {
 func (s *giphyService) ServiceUserID() string { return s.serviceUserID }
 func (s *giphyService) ServiceID() string     { return s.id }
 func (s *giphyService) ServiceType() string   { return "giphy" }
-func (s *giphyService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client) {
-}
-func (s *giphyService) Register(oldService types.Service, client *matrix.Client) error { return nil }
-func (s *giphyService) PostRegister(oldService types.Service)                          {}
 
 func (s *giphyService) Plugin(client *matrix.Client, roomID string) plugin.Plugin {
 	return plugin.Plugin{
