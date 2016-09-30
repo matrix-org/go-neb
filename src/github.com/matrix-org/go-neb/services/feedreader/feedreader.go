@@ -38,7 +38,7 @@ func (p *feedPoller) OnPoll(s types.Service) {
 	// Worked out by looking at the chosen interval period (prioritise the feed retry time where it exists)
 	// Persist the next poll ts to the database.
 
-	for u, _ := range urlsToRooms {
+	for u := range urlsToRooms {
 		fp := gofeed.NewParser()
 		feed, err := fp.ParseURL(u)
 		if err != nil {
