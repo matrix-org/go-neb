@@ -32,7 +32,7 @@ func (p *rssPoller) OnPoll(s types.Service) {
 		}
 	}
 
-	log.Print(rsss.ServiceID()+" Polly poll poll ", rsss.Rooms)
+	// TODO: Some polling
 }
 
 type rssService struct {
