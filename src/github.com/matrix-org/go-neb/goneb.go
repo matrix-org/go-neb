@@ -13,7 +13,6 @@ import (
 	_ "github.com/matrix-org/go-neb/services/giphy"
 	_ "github.com/matrix-org/go-neb/services/github"
 	_ "github.com/matrix-org/go-neb/services/jira"
-	_ "github.com/matrix-org/go-neb/services/rss"
 	"github.com/matrix-org/go-neb/types"
 	_ "github.com/mattn/go-sqlite3"
 	"net/http"
