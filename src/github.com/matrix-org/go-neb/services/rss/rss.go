@@ -3,6 +3,7 @@ package services
 import (
 	"errors"
 	log "github.com/Sirupsen/logrus"
+	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/polling"
 	"github.com/matrix-org/go-neb/types"
@@ -53,26 +54,50 @@ func (s *rssService) Poller() types.Poller  { return &rssPoller{} }
 
 // Register will check the liveness of each RSS feed given. If all feeds check out okay, no error is returned.
 func (s *rssService) Register(oldService types.Service, client *matrix.Client) error {
-	urlSet := make(map[string]bool)
-	for _, roomInfo := range s.Rooms {
-		for u, feedInfo := range roomInfo.Feeds {
-			if feedInfo.PollIntervalMins == 0 {
-				feedInfo.PollIntervalMins = 1
-				log.Print("Set poll interval to 1 ", u)
-			}
-			urlSet[u] = true
+	feeds := feedUrls(s)
+	if len(feeds) == 0 {
+		// this is an error UNLESS the old service had some feeds in which case they are deleting us :(
+		oldFeeds := feedUrls(oldService)
+		if len(oldFeeds) == 0 {
+			return errors.New("An RSS feed must be specified.")
 		}
-	}
-	if len(urlSet) == 0 {
-		log.Print(s.Rooms)
-		return errors.New("An RSS feed must be specified.")
 	}
 	return nil
 }
 
-// PostRegister will start polling
 func (s *rssService) PostRegister(oldService types.Service) {
-	go polling.StartPolling(s, s.Poller())
+	if len(feedUrls(s)) == 0 { // bye-bye :(
+		logger := log.WithFields(log.Fields{
+			"service_id":   s.ServiceID(),
+			"service_type": s.ServiceType(),
+		})
+		logger.Info("Deleting service (0 feeds)")
+		polling.StopPolling(s)
+		if err := database.GetServiceDB().DeleteService(s.ServiceID()); err != nil {
+			logger.WithError(err).Error("Failed to delete service")
+		}
+	}
+}
+
+// feedUrls returns a list of feed urls for this service
+func feedUrls(srv types.Service) []string {
+	var feeds []string
+	s, ok := srv.(*rssService)
+	if !ok {
+		return feeds
+	}
+
+	urlSet := make(map[string]bool)
+	for _, roomInfo := range s.Rooms {
+		for u := range roomInfo.Feeds {
+			urlSet[u] = true
+		}
+	}
+
+	for u := range urlSet {
+		feeds = append(feeds, u)
+	}
+	return feeds
 }
 
 func init() {

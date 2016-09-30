@@ -8,6 +8,7 @@ import (
 	"github.com/matrix-org/go-neb/clients"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/errors"
+	"github.com/matrix-org/go-neb/polling"
 	"github.com/matrix-org/go-neb/types"
 	"net/http"
 	"strings"
@@ -304,6 +305,17 @@ func (s *configureServiceHandler) OnIncomingRequest(req *http.Request) (interfac
 	oldService, err := s.db.StoreService(service)
 	if err != nil {
 		return nil, &errors.HTTPError{err, "Error storing service", 500}
+	}
+
+	// Start any polling NOW because they may decide to stop it in PostRegister, and we want to make
+	// sure we'll actually stop.
+	if service.Poller() != nil {
+		if err := polling.StartPolling(service); err != nil {
+			log.WithFields(log.Fields{
+				"service_id": service.ServiceID(),
+				log.ErrorKey: err,
+			}).Error("Failed to start poll loop.")
+		}
 	}
 
 	service.PostRegister(old)
