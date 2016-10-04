@@ -45,18 +45,18 @@ func main() {
 
 	err := types.BaseURL(baseURL)
 	if err != nil {
-		log.Panic(err)
+		log.WithError(err).Panic("Failed to get base url")
 	}
 
 	db, err := database.Open(databaseType, databaseURL)
 	if err != nil {
-		log.Panic(err)
+		log.WithError(err).Panic("Failed to open database")
 	}
 	database.SetServiceDB(db)
 
 	clients := clients.New(db)
 	if err := clients.Start(); err != nil {
-		log.Panic(err)
+		log.WithError(err).Panic("Failed to start up clients")
 	}
 
 	http.Handle("/test", server.MakeJSONAPI(&heartbeatHandler{}))
@@ -73,7 +73,7 @@ func main() {
 	http.HandleFunc("/realms/redirects/", rh.handle)
 
 	if err := polling.Start(); err != nil {
-		log.Panic(err)
+		log.WithError(err).Panic("Failed to start polling")
 	}
 
 	http.ListenAndServe(bindAddress, nil)
