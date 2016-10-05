@@ -10,6 +10,7 @@ import (
 	_ "github.com/matrix-org/go-neb/realms/jira"
 	"github.com/matrix-org/go-neb/server"
 	_ "github.com/matrix-org/go-neb/services/echo"
+	_ "github.com/matrix-org/go-neb/services/feedreader"
 	_ "github.com/matrix-org/go-neb/services/giphy"
 	_ "github.com/matrix-org/go-neb/services/github"
 	_ "github.com/matrix-org/go-neb/services/guggy"
@@ -44,18 +45,18 @@ func main() {
 
 	err := types.BaseURL(baseURL)
 	if err != nil {
-		log.Panic(err)
+		log.WithError(err).Panic("Failed to get base url")
 	}
 
 	db, err := database.Open(databaseType, databaseURL)
 	if err != nil {
-		log.Panic(err)
+		log.WithError(err).Panic("Failed to open database")
 	}
 	database.SetServiceDB(db)
 
 	clients := clients.New(db)
 	if err := clients.Start(); err != nil {
-		log.Panic(err)
+		log.WithError(err).Panic("Failed to start up clients")
 	}
 
 	http.Handle("/test", server.MakeJSONAPI(&heartbeatHandler{}))
@@ -71,8 +72,9 @@ func main() {
 	rh := &realmRedirectHandler{db: db}
 	http.HandleFunc("/realms/redirects/", rh.handle)
 
+	polling.SetClients(clients)
 	if err := polling.Start(); err != nil {
-		log.Panic(err)
+		log.WithError(err).Panic("Failed to start polling")
 	}
 
 	http.ListenAndServe(bindAddress, nil)
