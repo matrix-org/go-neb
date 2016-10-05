@@ -26,7 +26,7 @@ func (p *feedPoller) OnPoll(s types.Service, cli *matrix.Client) {
 
 	frService, ok := s.(*feedReaderService)
 	if !ok {
-		logger.Error("FeedReader: OnPoll called without an Feed Service instance")
+		logger.Error("FeedReader: OnPoll called without a Feed Service instance")
 		return
 	}
 	now := time.Now().Unix() // Second resolution
@@ -38,6 +38,10 @@ func (p *feedPoller) OnPoll(s types.Service, cli *matrix.Client) {
 			// re-query this feed
 			pollFeeds = append(pollFeeds, u)
 		}
+	}
+
+	if len(pollFeeds) == 0 {
+		return
 	}
 
 	// Query each feed and send new items to subscribed rooms
@@ -60,10 +64,7 @@ func (p *feedPoller) OnPoll(s types.Service, cli *matrix.Client) {
 		}
 	}
 
-	// Persist the service to save the next poll times if we did some queries
-	if len(pollFeeds) == 0 {
-		return
-	}
+	// Persist the service to save the next poll times
 	if _, err := database.GetServiceDB().StoreService(frService); err != nil {
 		logger.WithError(err).Error("Failed to persist next poll times for service")
 	}
@@ -216,7 +217,7 @@ func (s *feedReaderService) PostRegister(oldService types.Service) {
 			"service_id":   s.ServiceID(),
 			"service_type": s.ServiceType(),
 		})
-		logger.Info("Deleting service (0 feeds)")
+		logger.Info("Deleting service: No feeds remaining.")
 		polling.StopPolling(s)
 		if err := database.GetServiceDB().DeleteService(s.ServiceID()); err != nil {
 			logger.WithError(err).Error("Failed to delete service")
