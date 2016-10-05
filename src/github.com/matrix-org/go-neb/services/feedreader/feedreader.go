@@ -47,12 +47,14 @@ func (p *feedPoller) OnPoll(s types.Service, cli *matrix.Client) {
 			logger.WithField("feed_url", u).WithError(err).Error("Failed to query feed")
 			continue
 		}
-		for _, i := range items {
-			if err := p.sendToRooms(frService, cli, u, feed, i); err != nil {
+		// Loop backwards since [0] is the most recent and we want to send in chronological order
+		for i := len(items) - 1; i >= 0; i-- {
+			item := items[i]
+			if err := p.sendToRooms(frService, cli, u, feed, item); err != nil {
 				logger.WithFields(log.Fields{
 					"feed_url":   u,
 					log.ErrorKey: err,
-					"item":       i,
+					"item":       item,
 				}).Error("Failed to send item to room")
 			}
 		}
@@ -69,6 +71,7 @@ func (p *feedPoller) OnPoll(s types.Service, cli *matrix.Client) {
 
 // Query the given feed, update relevant timestamps and return NEW items
 func (p *feedPoller) queryFeed(s *feedReaderService, feedURL string) (*gofeed.Feed, []gofeed.Item, error) {
+	log.WithField("feed_url", feedURL).Info("Querying feed")
 	var items []gofeed.Item
 	fp := gofeed.NewParser()
 	feed, err := fp.ParseURL(feedURL)
@@ -105,7 +108,7 @@ func (p *feedPoller) queryFeed(s *feedReaderService, feedURL string) (*gofeed.Fe
 
 	// Work out when to next poll this feed
 	nextPollTsSec := now + minPollingIntervalSeconds
-	if s.Feeds[feedURL].PollIntervalMins > 10 {
+	if s.Feeds[feedURL].PollIntervalMins > int(minPollingIntervalSeconds/60) {
 		nextPollTsSec = now + int64(s.Feeds[feedURL].PollIntervalMins*60)
 	}
 	// TODO: Handle the 'sy' Syndication extension to control update interval.
@@ -185,6 +188,23 @@ func (s *feedReaderService) Register(oldService types.Service, client *matrix.Cl
 		}
 		if numOldFeeds == 0 {
 			return errors.New("An RSS feed must be specified.")
+		}
+		return nil
+	}
+	// Make sure we can parse the feed
+	for feedURL := range s.Feeds {
+		fp := gofeed.NewParser()
+		if _, err := fp.ParseURL(feedURL); err != nil {
+			return fmt.Errorf("Failed to read URL %s: %s", feedURL, err.Error())
+		}
+	}
+	// Make sure all feeds are accounted for (appear at least once) in the room map, AND make sure there
+	// are no weird new feeds in those rooms
+	for roomID, roomFeeds := range s.Rooms {
+		for _, f := range roomFeeds {
+			if _, exists := s.Feeds[f]; !exists {
+				return fmt.Errorf("Feed URL %s in room %s does not exist in the Feeds section", f, roomID)
+			}
 		}
 	}
 	return nil
