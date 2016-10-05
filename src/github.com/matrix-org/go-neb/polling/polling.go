@@ -3,6 +3,7 @@ package polling
 import (
 	"fmt"
 	log "github.com/Sirupsen/logrus"
+	"github.com/matrix-org/go-neb/clients"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/types"
 	"sync"
@@ -16,6 +17,11 @@ var (
 	pollMutex     sync.Mutex
 	startPollTime = make(map[string]int64) // ServiceID => unix timestamp
 )
+var clientPool *clients.Clients
+
+func SetClients(clis *clients.Clients) {
+	clientPool = clis
+}
 
 // Start polling already existing services
 func Start() error {
@@ -74,8 +80,13 @@ func pollLoop(service types.Service, poller types.Poller, ts int64) {
 		"interval_secs": poller.IntervalSecs(),
 	})
 	logger.Info("Starting polling loop")
+	cli, err := clientPool.Client(service.ServiceUserID())
+	if err != nil {
+		logger.WithError(err).WithField("user_id", service.ServiceUserID()).Error("Poll setup failed: failed to load client")
+		return
+	}
 	for {
-		poller.OnPoll(service)
+		poller.OnPoll(service, cli)
 		if pollTimeChanged(service, ts) {
 			logger.Info("Terminating poll.")
 			break

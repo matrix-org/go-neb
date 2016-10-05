@@ -43,7 +43,7 @@ type BotOptions struct {
 // Poller represents a thing that can be polled at a given rate.
 type Poller interface {
 	IntervalSecs() int64
-	OnPoll(service Service)
+	OnPoll(service Service, client *matrix.Client)
 }
 
 // A Service is the configuration for a bot service.

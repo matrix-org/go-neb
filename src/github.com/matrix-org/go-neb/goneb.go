@@ -72,6 +72,7 @@ func main() {
 	rh := &realmRedirectHandler{db: db}
 	http.HandleFunc("/realms/redirects/", rh.handle)
 
+	polling.SetClients(clients)
 	if err := polling.Start(); err != nil {
 		log.WithError(err).Panic("Failed to start polling")
 	}

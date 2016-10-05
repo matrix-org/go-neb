@@ -2,12 +2,14 @@ package services
 
 import (
 	"errors"
+	"fmt"
 	log "github.com/Sirupsen/logrus"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/polling"
 	"github.com/matrix-org/go-neb/types"
 	"github.com/mmcdole/gofeed"
+	"html"
 	"time"
 )
 
@@ -16,7 +18,7 @@ const minPollingIntervalSeconds = (10 * 60) // 10min
 type feedPoller struct{}
 
 func (p *feedPoller) IntervalSecs() int64 { return 10 }
-func (p *feedPoller) OnPoll(s types.Service) {
+func (p *feedPoller) OnPoll(s types.Service, cli *matrix.Client) {
 	logger := log.WithFields(log.Fields{
 		"service_id":   s.ServiceID(),
 		"service_type": s.ServiceType(),
@@ -40,13 +42,13 @@ func (p *feedPoller) OnPoll(s types.Service) {
 
 	// Query each feed and send new items to subscribed rooms
 	for _, u := range pollFeeds {
-		items, err := p.queryFeed(frService, u)
+		feed, items, err := p.queryFeed(frService, u)
 		if err != nil {
 			logger.WithField("feed_url", u).WithError(err).Error("Failed to query feed")
 			continue
 		}
 		for _, i := range items {
-			if err := p.sendToRooms(frService, u, i); err != nil {
+			if err := p.sendToRooms(frService, cli, u, feed, i); err != nil {
 				logger.WithFields(log.Fields{
 					"feed_url":   u,
 					log.ErrorKey: err,
@@ -66,29 +68,26 @@ func (p *feedPoller) OnPoll(s types.Service) {
 }
 
 // Query the given feed, update relevant timestamps and return NEW items
-func (p *feedPoller) queryFeed(s *feedReaderService, feedURL string) ([]gofeed.Item, error) {
+func (p *feedPoller) queryFeed(s *feedReaderService, feedURL string) (*gofeed.Feed, []gofeed.Item, error) {
 	var items []gofeed.Item
 	fp := gofeed.NewParser()
 	feed, err := fp.ParseURL(feedURL)
 	if err != nil {
-		return items, err
+		return nil, items, err
 	}
 
 	// Work out which items are new, if any (based on the last updated TS we have)
 	// If the TS is 0 then this is the first ever poll, so let's not send 10s of events
 	// into the room and just do new ones from this point onwards.
-	// if s.Feeds[feedURL].FeedUpdatedTimestampSecs != 0 {
-	for _, i := range feed.Items {
-		if i == nil || i.PublishedParsed == nil {
-			continue
+	if s.Feeds[feedURL].FeedUpdatedTimestampSecs != 0 {
+		for _, i := range feed.Items {
+			if i == nil || i.PublishedParsed == nil {
+				continue
+			}
+			if i.PublishedParsed.Unix() > s.Feeds[feedURL].FeedUpdatedTimestampSecs {
+				items = append(items, *i)
+			}
 		}
-		if i.PublishedParsed.Unix() > s.Feeds[feedURL].FeedUpdatedTimestampSecs {
-			items = append(items, *i)
-		}
-	}
-	// }
-	if s.Feeds[feedURL].FeedUpdatedTimestampSecs == 0 {
-		log.Debug("ts is 0")
 	}
 
 	now := time.Now().Unix() // Second resolution
@@ -113,7 +112,7 @@ func (p *feedPoller) queryFeed(s *feedReaderService, feedURL string) ([]gofeed.I
 	// See http://www.feedforall.com/syndication.htm and http://web.resource.org/rss/1.0/modules/syndication/
 
 	p.updateFeedInfo(s, feedURL, nextPollTsSec, feedLastUpdatedTs)
-	return items, nil
+	return feed, items, nil
 }
 
 func (p *feedPoller) updateFeedInfo(s *feedReaderService, feedURL string, nextPollTs, feedUpdatedTs int64) {
@@ -128,8 +127,9 @@ func (p *feedPoller) updateFeedInfo(s *feedReaderService, feedURL string, nextPo
 	}
 }
 
-func (p *feedPoller) sendToRooms(s *feedReaderService, feedURL string, item gofeed.Item) error {
-	log.WithField("feed_url", feedURL).WithField("title", item.Title).Info("New feed item")
+func (p *feedPoller) sendToRooms(s *feedReaderService, cli *matrix.Client, feedURL string, feed *gofeed.Feed, item gofeed.Item) error {
+	logger := log.WithField("feed_url", feedURL).WithField("title", item.Title)
+	logger.Info("New feed item")
 	var rooms []string
 	for roomID, urls := range s.Rooms {
 		for _, u := range urls {
@@ -139,7 +139,20 @@ func (p *feedPoller) sendToRooms(s *feedReaderService, feedURL string, item gofe
 			}
 		}
 	}
+	for _, roomID := range rooms {
+		if _, err := cli.SendMessageEvent(roomID, "m.room.message", itemToHTML(feed, item)); err != nil {
+			logger.WithError(err).WithField("room_id", roomID).Error("Failed to send to room")
+		}
+	}
 	return nil
+}
+
+// SomeOne posted a new article: Title Of The Entry ( https://someurl.com/blag )
+func itemToHTML(feed *gofeed.Feed, item gofeed.Item) matrix.HTMLMessage {
+	return matrix.GetHTMLMessage("m.notice", fmt.Sprintf(
+		"<i>%s</i> posted a new article: %s ( %s )",
+		html.EscapeString(feed.Title), html.EscapeString(item.Title), html.EscapeString(item.Link),
+	))
 }
 
 type feedReaderService struct {
