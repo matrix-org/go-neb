@@ -85,7 +85,7 @@
 		{
 			"importpath": "github.com/mattn/go-sqlite3",
 			"repository": "https://github.com/mattn/go-sqlite3",
-			"revision": "e118d4451349065b8e7ce0f0af32e033995363f8",
+			"revision": "e5a3c16c5c1d80b24f633e68aecd6b0702786d3d",
 			"branch": "master"
 		},
 		{
