@@ -19,6 +19,7 @@ var (
 )
 var clientPool *clients.Clients
 
+// SetClients sets a pool of clients for passing into OnPoll
 func SetClients(clis *clients.Clients) {
 	clientPool = clis
 }
