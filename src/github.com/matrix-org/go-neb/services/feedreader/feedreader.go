@@ -134,16 +134,7 @@ func (p *feedPoller) updateFeedInfo(s *feedReaderService, feedURL string, nextPo
 func (p *feedPoller) sendToRooms(s *feedReaderService, cli *matrix.Client, feedURL string, feed *gofeed.Feed, item gofeed.Item) error {
 	logger := log.WithField("feed_url", feedURL).WithField("title", item.Title)
 	logger.Info("New feed item")
-	var rooms []string
-	for roomID, urls := range s.Rooms {
-		for _, u := range urls {
-			if u == feedURL {
-				rooms = append(rooms, roomID)
-				break
-			}
-		}
-	}
-	for _, roomID := range rooms {
+	for _, roomID := range s.Feeds[feedURL].Rooms {
 		if _, err := cli.SendMessageEvent(roomID, "m.room.message", itemToHTML(feed, item)); err != nil {
 			logger.WithError(err).WithField("room_id", roomID).Error("Failed to send to room")
 		}
@@ -164,11 +155,11 @@ type feedReaderService struct {
 	id            string
 	serviceUserID string
 	Feeds         map[string]struct { // feed_url => { }
-		PollIntervalMins         int   `json:"poll_interval_mins"`
-		NextPollTimestampSecs    int64 // Internal: When we should poll again
-		FeedUpdatedTimestampSecs int64 // Internal: The last time the feed was updated
+		PollIntervalMins         int      `json:"poll_interval_mins"`
+		Rooms                    []string `json:"rooms"`
+		NextPollTimestampSecs    int64    // Internal: When we should poll again
+		FeedUpdatedTimestampSecs int64    // Internal: The last time the feed was updated
 	} `json:"feeds"`
-	Rooms map[string][]string `json:"rooms"` // room_id => [ feed_url ]
 }
 
 func (s *feedReaderService) ServiceUserID() string { return s.serviceUserID }
@@ -193,19 +184,13 @@ func (s *feedReaderService) Register(oldService types.Service, client *matrix.Cl
 		return nil
 	}
 	// Make sure we can parse the feed
-	for feedURL := range s.Feeds {
+	for feedURL, feedInfo := range s.Feeds {
 		fp := gofeed.NewParser()
 		if _, err := fp.ParseURL(feedURL); err != nil {
 			return fmt.Errorf("Failed to read URL %s: %s", feedURL, err.Error())
 		}
-	}
-	// Make sure all feeds are accounted for (appear at least once) in the room map, AND make sure there
-	// are no weird new feeds in those rooms
-	for roomID, roomFeeds := range s.Rooms {
-		for _, f := range roomFeeds {
-			if _, exists := s.Feeds[f]; !exists {
-				return fmt.Errorf("Feed URL %s in room %s does not exist in the Feeds section", f, roomID)
-			}
+		if len(feedInfo.Rooms) == 0 {
+			return fmt.Errorf("Feed %s has no rooms to send updates to", feedURL)
 		}
 	}
 	return nil

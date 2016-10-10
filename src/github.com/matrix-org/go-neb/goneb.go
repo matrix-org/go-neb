@@ -77,5 +77,5 @@ func main() {
 		log.WithError(err).Panic("Failed to start polling")
 	}
 
-	http.ListenAndServe(bindAddress, nil)
+	log.Fatal(http.ListenAndServe(bindAddress, nil))
 }
