@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-const minPollingIntervalSeconds = (10 * 60) // 10min
+const minPollingIntervalSeconds = 60 // 1 min (News feeds can be genuinely spammy)
 
 type feedPoller struct{}
 
@@ -24,9 +24,9 @@ func (p *feedPoller) OnPoll(s types.Service, cli *matrix.Client) {
 		"service_type": s.ServiceType(),
 	})
 
-	frService, ok := s.(*feedReaderService)
+	frService, ok := s.(*rssBotService)
 	if !ok {
-		logger.Error("FeedReader: OnPoll called without a Feed Service instance")
+		logger.Error("RSSBot: OnPoll called without a Feed Service instance")
 		return
 	}
 	now := time.Now().Unix() // Second resolution
@@ -71,7 +71,7 @@ func (p *feedPoller) OnPoll(s types.Service, cli *matrix.Client) {
 }
 
 // Query the given feed, update relevant timestamps and return NEW items
-func (p *feedPoller) queryFeed(s *feedReaderService, feedURL string) (*gofeed.Feed, []gofeed.Item, error) {
+func (p *feedPoller) queryFeed(s *rssBotService, feedURL string) (*gofeed.Feed, []gofeed.Item, error) {
 	log.WithField("feed_url", feedURL).Info("Querying feed")
 	var items []gofeed.Item
 	fp := gofeed.NewParser()
@@ -119,7 +119,7 @@ func (p *feedPoller) queryFeed(s *feedReaderService, feedURL string) (*gofeed.Fe
 	return feed, items, nil
 }
 
-func (p *feedPoller) updateFeedInfo(s *feedReaderService, feedURL string, nextPollTs, feedUpdatedTs int64) {
+func (p *feedPoller) updateFeedInfo(s *rssBotService, feedURL string, nextPollTs, feedUpdatedTs int64) {
 	for u := range s.Feeds {
 		if u != feedURL {
 			continue
@@ -131,7 +131,7 @@ func (p *feedPoller) updateFeedInfo(s *feedReaderService, feedURL string, nextPo
 	}
 }
 
-func (p *feedPoller) sendToRooms(s *feedReaderService, cli *matrix.Client, feedURL string, feed *gofeed.Feed, item gofeed.Item) error {
+func (p *feedPoller) sendToRooms(s *rssBotService, cli *matrix.Client, feedURL string, feed *gofeed.Feed, item gofeed.Item) error {
 	logger := log.WithField("feed_url", feedURL).WithField("title", item.Title)
 	logger.Info("New feed item")
 	for _, roomID := range s.Feeds[feedURL].Rooms {
@@ -150,7 +150,7 @@ func itemToHTML(feed *gofeed.Feed, item gofeed.Item) matrix.HTMLMessage {
 	))
 }
 
-type feedReaderService struct {
+type rssBotService struct {
 	types.DefaultService
 	id            string
 	serviceUserID string
@@ -162,19 +162,19 @@ type feedReaderService struct {
 	} `json:"feeds"`
 }
 
-func (s *feedReaderService) ServiceUserID() string { return s.serviceUserID }
-func (s *feedReaderService) ServiceID() string     { return s.id }
-func (s *feedReaderService) ServiceType() string   { return "feedreader" }
-func (s *feedReaderService) Poller() types.Poller  { return &feedPoller{} }
+func (s *rssBotService) ServiceUserID() string { return s.serviceUserID }
+func (s *rssBotService) ServiceID() string     { return s.id }
+func (s *rssBotService) ServiceType() string   { return "rssbot" }
+func (s *rssBotService) Poller() types.Poller  { return &feedPoller{} }
 
 // Register will check the liveness of each RSS feed given. If all feeds check out okay, no error is returned.
-func (s *feedReaderService) Register(oldService types.Service, client *matrix.Client) error {
+func (s *rssBotService) Register(oldService types.Service, client *matrix.Client) error {
 	if len(s.Feeds) == 0 {
 		// this is an error UNLESS the old service had some feeds in which case they are deleting us :(
 		var numOldFeeds int
-		oldFeedService, ok := oldService.(*feedReaderService)
+		oldFeedService, ok := oldService.(*rssBotService)
 		if !ok {
-			log.WithField("service_id", oldService.ServiceID()).Error("Old service isn't a FeedReaderService")
+			log.WithField("service_id", oldService.ServiceID()).Error("Old service isn't a rssBotService")
 		} else {
 			numOldFeeds = len(oldFeedService.Feeds)
 		}
@@ -196,7 +196,7 @@ func (s *feedReaderService) Register(oldService types.Service, client *matrix.Cl
 	return nil
 }
 
-func (s *feedReaderService) PostRegister(oldService types.Service) {
+func (s *rssBotService) PostRegister(oldService types.Service) {
 	if len(s.Feeds) == 0 { // bye-bye :(
 		logger := log.WithFields(log.Fields{
 			"service_id":   s.ServiceID(),
@@ -212,7 +212,7 @@ func (s *feedReaderService) PostRegister(oldService types.Service) {
 
 func init() {
 	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
-		r := &feedReaderService{
+		r := &rssBotService{
 			id:            serviceID,
 			serviceUserID: serviceUserID,
 		}
