@@ -26,6 +26,13 @@
 			"branch": "master"
 		},
 		{
+			"importpath": "github.com/bradfitz/gomemcache/memcache",
+			"repository": "https://github.com/bradfitz/gomemcache",
+			"revision": "fb1f79c6b65acda83063cbc69f6bba1522558bfc",
+			"branch": "master",
+			"path": "/memcache"
+		},
+		{
 			"importpath": "github.com/cenkalti/backoff",
 			"repository": "https://github.com/cenkalti/backoff",
 			"revision": "cdf48bbc1eb78d1349cbda326a4a037f7ba565c6",
@@ -57,6 +64,32 @@
 			"branch": "master"
 		},
 		{
+			"importpath": "github.com/garyburd/redigo/internal",
+			"repository": "https://github.com/garyburd/redigo",
+			"revision": "ffa8d46ada782d81cfda81a0fbd9f45ceae448e8",
+			"branch": "master",
+			"path": "/internal"
+		},
+		{
+			"importpath": "github.com/garyburd/redigo/redis",
+			"repository": "https://github.com/garyburd/redigo",
+			"revision": "ffa8d46ada782d81cfda81a0fbd9f45ceae448e8",
+			"branch": "master",
+			"path": "/redis"
+		},
+		{
+			"importpath": "github.com/golang/snappy",
+			"repository": "https://github.com/golang/snappy",
+			"revision": "d9eb7a3d35ec988b8585d4a0068e462c27d28380",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/google/btree",
+			"repository": "https://github.com/google/btree",
+			"revision": "925471ac9e2131377a91e1595defec898166fe49",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/google/go-github/github",
 			"repository": "https://github.com/google/go-github",
 			"revision": "b5e5babef39c18002f177a134fc49dc5013374ba",
@@ -69,6 +102,12 @@
 			"revision": "9235644dd9e52eeae6fa48efd539fdc351a0af53",
 			"branch": "master",
 			"path": "/query"
+		},
+		{
+			"importpath": "github.com/gregjones/httpcache",
+			"repository": "https://github.com/gregjones/httpcache",
+			"revision": "413781778738c08fdbb98e1dd65f5abffe8832d0",
+			"branch": "master"
 		},
 		{
 			"importpath": "github.com/matrix-org/dugong",
@@ -99,6 +138,19 @@
 			"repository": "https://github.com/mmcdole/goxpp",
 			"revision": "e38884aa48c1952a416ba35f3c276e4f02f9b40e",
 			"branch": "master"
+		},
+		{
+			"importpath": "github.com/peterbourgon/diskv",
+			"repository": "https://github.com/peterbourgon/diskv",
+			"revision": "5dfcb07a075adbaaa4094cddfd160b1e1c77a043",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/syndtr/goleveldb/leveldb",
+			"repository": "https://github.com/syndtr/goleveldb",
+			"revision": "6b4daa5362b502898ddf367c5c11deb9e7a5c727",
+			"branch": "master",
+			"path": "/leveldb"
 		},
 		{
 			"importpath": "golang.org/x/net/context",
