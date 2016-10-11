@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	log "github.com/Sirupsen/logrus"
+	"github.com/die-net/lrucache"
 	"github.com/gregjones/httpcache"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/matrix"
@@ -220,7 +221,8 @@ func itemToHTML(feed *gofeed.Feed, item gofeed.Item) matrix.HTMLMessage {
 }
 
 func init() {
-	cachingClient = httpcache.NewMemoryCacheTransport().Client()
+	lruCache := lrucache.New(1024*1024*20, 0) // 20 MB cache, no max-age
+	cachingClient = httpcache.NewTransport(lruCache).Client()
 	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
 		r := &rssBotService{
 			id:            serviceID,
