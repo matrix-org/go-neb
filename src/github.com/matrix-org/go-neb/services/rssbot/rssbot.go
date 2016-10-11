@@ -174,7 +174,7 @@ func (s *rssBotService) Register(oldService types.Service, client *matrix.Client
 		var numOldFeeds int
 		oldFeedService, ok := oldService.(*rssBotService)
 		if !ok {
-			log.WithField("service_id", oldService.ServiceID()).Error("Old service isn't a rssBotService")
+			log.WithField("service", oldService).Error("Old service isn't a rssBotService")
 		} else {
 			numOldFeeds = len(oldFeedService.Feeds)
 		}
