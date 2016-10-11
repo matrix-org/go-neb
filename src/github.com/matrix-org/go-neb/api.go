@@ -309,7 +309,7 @@ func (s *configureServiceHandler) OnIncomingRequest(req *http.Request) (interfac
 
 	// Start any polling NOW because they may decide to stop it in PostRegister, and we want to make
 	// sure we'll actually stop.
-	if service.Poller() != nil {
+	if _, ok := service.(types.Poller); ok {
 		if err := polling.StartPolling(service); err != nil {
 			log.WithFields(log.Fields{
 				"service_id": service.ServiceID(),

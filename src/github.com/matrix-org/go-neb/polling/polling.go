@@ -1,7 +1,6 @@
 package polling
 
 import (
-	"fmt"
 	log "github.com/Sirupsen/logrus"
 	"github.com/matrix-org/go-neb/clients"
 	"github.com/matrix-org/go-neb/database"
@@ -27,10 +26,7 @@ func SetClients(clis *clients.Clients) {
 // Start polling already existing services
 func Start() error {
 	// Work out which service types require polling
-	for serviceType, poller := range types.PollersByType() {
-		if poller == nil {
-			continue
-		}
+	for _, serviceType := range types.PollingServiceTypes() {
 		// Query for all services with said service type
 		srvs, err := database.GetServiceDB().LoadServicesByType(serviceType)
 		if err != nil {
@@ -50,15 +46,11 @@ func Start() error {
 // so there may be a brief period of overlap. It is safe to immediately call `StopPolling(service)` to immediately terminate
 // this poll.
 func StartPolling(service types.Service) error {
-	p := types.PollersByType()[service.ServiceType()]
-	if p == nil {
-		return fmt.Errorf("Service %s (type=%s) doesn't have a Poller", service.ServiceID(), service.ServiceType())
-	}
 	// Set the poll time BEFORE spinning off the goroutine in case the caller immediately stops us. If we don't do this here,
 	// we risk them setting the ts to 0 BEFORE we've set the start time, resulting in a poll when one was not intended.
 	ts := time.Now().UnixNano()
 	setPollStartTime(service, ts)
-	go pollLoop(service, p, ts)
+	go pollLoop(service, ts)
 	return nil
 }
 
@@ -73,13 +65,17 @@ func StopPolling(service types.Service) {
 
 // pollLoop begins the polling loop for this service. Does not return, so call this
 // as a goroutine!
-func pollLoop(service types.Service, poller types.Poller, ts int64) {
+func pollLoop(service types.Service, ts int64) {
 	logger := log.WithFields(log.Fields{
-		"timestamp":     ts,
-		"service_id":    service.ServiceID(),
-		"service_type":  service.ServiceType(),
-		"interval_secs": poller.IntervalSecs(),
+		"timestamp":    ts,
+		"service_id":   service.ServiceID(),
+		"service_type": service.ServiceType(),
 	})
+	poller, ok := service.(types.Poller)
+	if !ok {
+		logger.Error("Service is not a Poller.")
+		return
+	}
 	logger.Info("Starting polling loop")
 	cli, err := clientPool.Client(service.ServiceUserID())
 	if err != nil {
@@ -87,12 +83,21 @@ func pollLoop(service types.Service, poller types.Poller, ts int64) {
 		return
 	}
 	for {
-		poller.OnPoll(service, cli)
+		logger.Info("OnPoll")
+		nextTime := poller.OnPoll(cli)
 		if pollTimeChanged(service, ts) {
 			logger.Info("Terminating poll.")
 			break
 		}
-		time.Sleep(time.Duration(poller.IntervalSecs()) * time.Second)
+		// work out how long to sleep
+		if nextTime.Unix() == 0 {
+			logger.Info("Terminating poll - OnPoll returned 0")
+			break
+		}
+		now := time.Now()
+		logger.Info("Sleeping for ", nextTime.Sub(now))
+		time.Sleep(nextTime.Sub(now))
+
 		if pollTimeChanged(service, ts) {
 			logger.Info("Terminating poll.")
 			break
