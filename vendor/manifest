@@ -64,6 +64,12 @@
 			"branch": "master"
 		},
 		{
+			"importpath": "github.com/die-net/lrucache",
+			"repository": "https://github.com/die-net/lrucache",
+			"revision": "0e55cff0d6054f900b91c0b5355fe6a6966fad4b",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/garyburd/redigo/internal",
 			"repository": "https://github.com/garyburd/redigo",
 			"revision": "ffa8d46ada782d81cfda81a0fbd9f45ceae448e8",
