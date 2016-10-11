@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 )
 
 // A ClientConfig is the configuration for a matrix client for a bot to use.
@@ -40,10 +41,11 @@ type BotOptions struct {
 	Options     map[string]interface{}
 }
 
-// Poller represents a thing that can be polled at a given rate.
+// Poller represents a thing which can poll. Services should implement this method signature to support polling.
 type Poller interface {
-	IntervalSecs() int64
-	OnPoll(service Service, client *matrix.Client)
+	// OnPoll is called when the poller should poll. Return the timestamp when you want to be polled again.
+	// Return 0 to never be polled again.
+	OnPoll(client *matrix.Client) time.Time
 }
 
 // A Service is the configuration for a bot service.
@@ -66,11 +68,6 @@ type Service interface {
 	// concurrent modifications to this service whilst this function executes. This lifecycle hook should be used to clean
 	// up resources which are no longer needed (e.g. removing old webhooks).
 	PostRegister(oldService Service)
-	// Return a Poller object if you wish to be invoked every N seconds. This struct MUST NOT conditionally change: either
-	// ALWAYS return a new Poller interface or NEVER return a Poller. The Poller will exist outside of the lifetime of the
-	// Service upon which it is being called on, so DO NOT wrap this inside a closure or else you will introduce a memory
-	// leak. An instantiated service will be passed into the `OnPoll(Service)` for you to extract state.
-	Poller() Poller
 }
 
 // DefaultService NO-OPs the implementation of optional Service interface methods. Feel free to override them.
@@ -88,9 +85,6 @@ func (s *DefaultService) Register(oldService Service, client *matrix.Client) err
 
 // PostRegister does nothing.
 func (s *DefaultService) PostRegister(oldService Service) {}
-
-// Poller returns no poller.
-func (s *DefaultService) Poller() Poller { return nil }
 
 // OnReceiveWebhook does nothing but 200 OK the request.
 func (s *DefaultService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client) {
@@ -116,18 +110,24 @@ func BaseURL(u string) error {
 }
 
 var servicesByType = map[string]func(string, string, string) Service{}
-var pollersByType = map[string]Poller{}
+var serviceTypesWhichPoll = map[string]bool{}
 
 // RegisterService registers a factory for creating Service instances.
 func RegisterService(factory func(string, string, string) Service) {
 	s := factory("", "", "")
 	servicesByType[s.ServiceType()] = factory
-	pollersByType[s.ServiceType()] = s.Poller()
+
+	if _, ok := s.(Poller); ok {
+		serviceTypesWhichPoll[s.ServiceType()] = true
+	}
 }
 
-// PollersByType returns a map of service type to poller, which may be nil
-func PollersByType() map[string]Poller {
-	return pollersByType
+// PollingServiceTypes returns a list of service types which meet the Poller interface
+func PollingServiceTypes() (types []string) {
+	for t := range serviceTypesWhichPoll {
+		types = append(types, t)
+	}
+	return
 }
 
 // CreateService creates a Service of the given type and serviceID.
