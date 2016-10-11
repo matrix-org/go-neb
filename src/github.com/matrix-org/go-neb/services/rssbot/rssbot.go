@@ -4,14 +4,19 @@ import (
 	"errors"
 	"fmt"
 	log "github.com/Sirupsen/logrus"
+	"github.com/die-net/lrucache"
+	"github.com/gregjones/httpcache"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/polling"
 	"github.com/matrix-org/go-neb/types"
 	"github.com/mmcdole/gofeed"
 	"html"
+	"net/http"
 	"time"
 )
+
+var cachingClient *http.Client
 
 const minPollingIntervalSeconds = 60 // 1 min (News feeds can be genuinely spammy)
 
@@ -50,6 +55,7 @@ func (s *rssBotService) Register(oldService types.Service, client *matrix.Client
 	// Make sure we can parse the feed
 	for feedURL, feedInfo := range s.Feeds {
 		fp := gofeed.NewParser()
+		fp.Client = cachingClient
 		if _, err := fp.ParseURL(feedURL); err != nil {
 			return fmt.Errorf("Failed to read URL %s: %s", feedURL, err.Error())
 		}
@@ -138,6 +144,7 @@ func (s *rssBotService) queryFeed(feedURL string) (*gofeed.Feed, []gofeed.Item, 
 	log.WithField("feed_url", feedURL).Info("Querying feed")
 	var items []gofeed.Item
 	fp := gofeed.NewParser()
+	fp.Client = cachingClient
 	feed, err := fp.ParseURL(feedURL)
 	if err != nil {
 		return nil, items, err
@@ -214,6 +221,8 @@ func itemToHTML(feed *gofeed.Feed, item gofeed.Item) matrix.HTMLMessage {
 }
 
 func init() {
+	lruCache := lrucache.New(1024*1024*20, 0) // 20 MB cache, no max-age
+	cachingClient = httpcache.NewTransport(lruCache).Client()
 	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
 		r := &rssBotService{
 			id:            serviceID,
