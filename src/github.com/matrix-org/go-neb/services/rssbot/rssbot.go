@@ -18,7 +18,7 @@ import (
 
 var cachingClient *http.Client
 
-const minPollingIntervalSeconds = 60 // 1 min (News feeds can be genuinely spammy)
+const minPollingIntervalSeconds = 60 * 5 // 5 min (News feeds can be genuinely spammy)
 
 type rssBotService struct {
 	types.DefaultService
