@@ -63,7 +63,28 @@ func (s *rssBotService) Register(oldService types.Service, client *matrix.Client
 			return fmt.Errorf("Feed %s has no rooms to send updates to", feedURL)
 		}
 	}
+
+	s.joinRooms(client)
 	return nil
+}
+
+func (s *rssBotService) joinRooms(client *matrix.Client) {
+	roomSet := make(map[string]bool)
+	for _, feedInfo := range s.Feeds {
+		for _, roomID := range feedInfo.Rooms {
+			roomSet[roomID] = true
+		}
+	}
+
+	for roomID := range roomSet {
+		if _, err := client.JoinRoom(roomID, "", ""); err != nil {
+			log.WithFields(log.Fields{
+				log.ErrorKey: err,
+				"room_id":    roomID,
+				"user_id":    client.UserID,
+			}).Error("Failed to join room")
+		}
+	}
 }
 
 func (s *rssBotService) PostRegister(oldService types.Service) {
