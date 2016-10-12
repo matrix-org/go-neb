@@ -254,7 +254,6 @@ func (cli *Client) Sync() {
 
 		processResponse := cli.shouldProcessResponse(nextToken, &syncResponse)
 		nextToken = syncResponse.NextBatch
-		logger.WithField("next_batch", nextToken).Print("Received sync response")
 
 		// Save the token now *before* passing it through to the worker. This means it's possible
 		// to not process some events, but it means that we won't get constantly stuck processing
@@ -405,11 +404,6 @@ func (cli *Client) doSync(timeout int, since string) ([]byte, error) {
 		query["filter"] = cli.filterID
 	}
 	urlPath := cli.buildURLWithQuery([]string{"sync"}, query)
-	log.WithFields(log.Fields{
-		"since":   since,
-		"timeout": timeout,
-		"user_id": cli.UserID,
-	}).Print("Syncing")
 	res, err := http.Get(urlPath)
 	if err != nil {
 		return nil, err
