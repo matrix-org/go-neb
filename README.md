@@ -27,7 +27,7 @@ Clone and run (Requires Go 1.5+ and GB):
 
 ```bash
 gb build github.com/matrix-org/go-neb
-BIND_ADDRESS=:4050 DATABASE_TYPE=sqlite3 DATABASE_URL=go-neb.db BASE_URL=http://localhost:4050 bin/go-neb
+BIND_ADDRESS=:4050 DATABASE_TYPE=sqlite3 DATABASE_URL=go-neb.db?_busy_timeout=5000 BASE_URL=http://localhost:4050 bin/go-neb
 ```
 
 Get a Matrix user ID and access token and give it to Go-NEB:
@@ -92,11 +92,11 @@ gb build github.com/matrix-org/go-neb
 # Running
 Go-NEB uses environment variables to configure its SQLite database and bind address. To run Go-NEB, run the following command:
 ```bash
-BIND_ADDRESS=:4050 DATABASE_TYPE=sqlite3 DATABASE_URL=go-neb.db BASE_URL=https://public.facing.endpoint bin/go-neb
+BIND_ADDRESS=:4050 DATABASE_TYPE=sqlite3 DATABASE_URL=go-neb.db?_busy_timeout=5000 BASE_URL=https://public.facing.endpoint bin/go-neb
 ```
  - `BIND_ADDRESS` is the port to listen on.
  - `DATABASE_TYPE` MUST be "sqlite3". No other type is supported.
- - `DATABASE_URL` is where to find the database file. One will be created if it does not exist.
+ - `DATABASE_URL` is where to find the database file. One will be created if it does not exist. It is a URL so parameters can be passed to it. We recommend setting `_busy_timeout=5000` to prevent sqlite3 "database is locked" errors.
  - `BASE_URL` should be the public-facing endpoint that sites like Github can send webhooks to.
 
 Go-NEB needs to be "configured" with clients and services before it will do anything useful.
