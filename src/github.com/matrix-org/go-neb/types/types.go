@@ -71,9 +71,7 @@ type Service interface {
 }
 
 // DefaultService NO-OPs the implementation of optional Service interface methods. Feel free to override them.
-type DefaultService struct {
-	Service
-}
+type DefaultService struct{}
 
 // Plugin returns no plugins.
 func (s *DefaultService) Plugin(cli *matrix.Client, roomID string) plugin.Plugin {
