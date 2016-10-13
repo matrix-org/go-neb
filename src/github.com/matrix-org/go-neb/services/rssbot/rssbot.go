@@ -29,6 +29,7 @@ type rssBotService struct {
 		Rooms                    []string `json:"rooms"`
 		NextPollTimestampSecs    int64    // Internal: When we should poll again
 		FeedUpdatedTimestampSecs int64    // Internal: The last time the feed was updated
+		RecentGUIDs              []string // Internal: The most recently seen GUIDs. Sized to the number of items in the feed.
 	} `json:"feeds"`
 }
 
@@ -175,14 +176,7 @@ func (s *rssBotService) queryFeed(feedURL string) (*gofeed.Feed, []gofeed.Item, 
 	// If the TS is 0 then this is the first ever poll, so let's not send 10s of events
 	// into the room and just do new ones from this point onwards.
 	if s.Feeds[feedURL].FeedUpdatedTimestampSecs != 0 {
-		for _, i := range feed.Items {
-			if i == nil || i.PublishedParsed == nil {
-				continue
-			}
-			if i.PublishedParsed.Unix() > s.Feeds[feedURL].FeedUpdatedTimestampSecs {
-				items = append(items, *i)
-			}
-		}
+		items = s.newItems(feedURL, feed.Items)
 	}
 
 	now := time.Now().Unix() // Second resolution
@@ -206,11 +200,42 @@ func (s *rssBotService) queryFeed(feedURL string) (*gofeed.Feed, []gofeed.Item, 
 	// TODO: Handle the 'sy' Syndication extension to control update interval.
 	// See http://www.feedforall.com/syndication.htm and http://web.resource.org/rss/1.0/modules/syndication/
 
-	s.updateFeedInfo(feedURL, nextPollTsSec, feedLastUpdatedTs)
+	s.updateFeedInfo(feedURL, feed.Items, nextPollTsSec, feedLastUpdatedTs)
 	return feed, items, nil
 }
 
-func (s *rssBotService) updateFeedInfo(feedURL string, nextPollTs, feedUpdatedTs int64) {
+func (s *rssBotService) newItems(feedURL string, allItems []*gofeed.Item) (items []gofeed.Item) {
+	for _, i := range allItems {
+		if i == nil || i.PublishedParsed == nil {
+			continue
+		}
+
+		if i.PublishedParsed.Unix() > s.Feeds[feedURL].FeedUpdatedTimestampSecs {
+			// if we've seen this guid before, we've sent it before (even if the timestamp is newer)
+			seenBefore := false
+			for _, guid := range s.Feeds[feedURL].RecentGUIDs {
+				if guid == i.GUID {
+					seenBefore = true
+					break
+				}
+			}
+			if seenBefore {
+				continue
+			}
+
+			items = append(items, *i)
+		}
+	}
+	return
+}
+
+func (s *rssBotService) updateFeedInfo(feedURL string, allFeedItems []*gofeed.Item, nextPollTs, feedUpdatedTs int64) {
+	// map items to guid strings
+	var guids []string
+	for _, i := range allFeedItems {
+		guids = append(guids, i.GUID)
+	}
+
 	for u := range s.Feeds {
 		if u != feedURL {
 			continue
@@ -218,6 +243,7 @@ func (s *rssBotService) updateFeedInfo(feedURL string, nextPollTs, feedUpdatedTs
 		f := s.Feeds[u]
 		f.NextPollTimestampSecs = nextPollTs
 		f.FeedUpdatedTimestampSecs = feedUpdatedTs
+		f.RecentGUIDs = guids
 		s.Feeds[u] = f
 	}
 }
