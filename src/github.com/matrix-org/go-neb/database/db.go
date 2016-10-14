@@ -36,6 +36,11 @@ func Open(databaseType, databaseURL string) (serviceDB *ServiceDB, err error) {
 	if _, err = db.Exec(schemaSQL); err != nil {
 		return
 	}
+	if databaseType == "sqlite3" {
+		// Fix for "database is locked" errors
+		// https://github.com/mattn/go-sqlite3/issues/274
+		db.SetMaxOpenConns(1)
+	}
 	serviceDB = &ServiceDB{db: db}
 	return
 }
