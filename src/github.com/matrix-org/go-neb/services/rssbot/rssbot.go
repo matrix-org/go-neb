@@ -158,6 +158,14 @@ func (s *rssBotService) nextTimestamp() time.Time {
 			earliestNextTs = feedInfo.NextPollTimestampSecs
 		}
 	}
+
+	// Don't allow times in the past. Set a min re-poll threshold of 20s to avoid
+	// tight-looping on feeds which 500.
+	now := time.Now().Unix()
+	if earliestNextTs <= now {
+		earliestNextTs = now + 20
+	}
+
 	return time.Unix(earliestNextTs, 0)
 }
 
