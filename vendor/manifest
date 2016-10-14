@@ -26,6 +26,13 @@
 			"branch": "master"
 		},
 		{
+			"importpath": "github.com/beorn7/perks/quantile",
+			"repository": "https://github.com/beorn7/perks",
+			"revision": "4c0e84591b9aa9e6dcfdf3e020114cd81f89d5f9",
+			"branch": "master",
+			"path": "/quantile"
+		},
+		{
 			"importpath": "github.com/bradfitz/gomemcache/memcache",
 			"repository": "https://github.com/bradfitz/gomemcache",
 			"revision": "fb1f79c6b65acda83063cbc69f6bba1522558bfc",
@@ -84,6 +91,13 @@
 			"path": "/redis"
 		},
 		{
+			"importpath": "github.com/golang/protobuf/proto",
+			"repository": "https://github.com/golang/protobuf",
+			"revision": "98fa357170587e470c5f27d3c3ea0947b71eb455",
+			"branch": "master",
+			"path": "/proto"
+		},
+		{
 			"importpath": "github.com/golang/snappy",
 			"repository": "https://github.com/golang/snappy",
 			"revision": "d9eb7a3d35ec988b8585d4a0068e462c27d28380",
@@ -134,6 +148,13 @@
 			"branch": "master"
 		},
 		{
+			"importpath": "github.com/matttproud/golang_protobuf_extensions/pbutil",
+			"repository": "https://github.com/matttproud/golang_protobuf_extensions",
+			"revision": "c12348ce28de40eed0136aa2b644d0ee0650e56c",
+			"branch": "master",
+			"path": "/pbutil"
+		},
+		{
 			"importpath": "github.com/mmcdole/gofeed",
 			"repository": "https://github.com/mmcdole/gofeed",
 			"revision": "1bc2cbeba25b7b594430cff43d7c9e9367cfdca0",
@@ -149,6 +170,46 @@
 			"importpath": "github.com/peterbourgon/diskv",
 			"repository": "https://github.com/peterbourgon/diskv",
 			"revision": "5dfcb07a075adbaaa4094cddfd160b1e1c77a043",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/prometheus/client_golang",
+			"repository": "https://github.com/prometheus/client_golang",
+			"revision": "5636dc67ae776adf5590da7349e70fbb9559972d",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/prometheus/client_model/go",
+			"repository": "https://github.com/prometheus/client_model",
+			"revision": "fa8ad6fec33561be4280a8f0514318c79d7f6cb6",
+			"branch": "master",
+			"path": "/go"
+		},
+		{
+			"importpath": "github.com/prometheus/common/expfmt",
+			"repository": "https://github.com/prometheus/common",
+			"revision": "85637ea67b04b5c3bb25e671dacded2977f8f9f6",
+			"branch": "master",
+			"path": "/expfmt"
+		},
+		{
+			"importpath": "github.com/prometheus/common/internal/bitbucket.org/ww/goautoneg",
+			"repository": "https://github.com/prometheus/common",
+			"revision": "85637ea67b04b5c3bb25e671dacded2977f8f9f6",
+			"branch": "master",
+			"path": "/internal/bitbucket.org/ww/goautoneg"
+		},
+		{
+			"importpath": "github.com/prometheus/common/model",
+			"repository": "https://github.com/prometheus/common",
+			"revision": "85637ea67b04b5c3bb25e671dacded2977f8f9f6",
+			"branch": "master",
+			"path": "/model"
+		},
+		{
+			"importpath": "github.com/prometheus/procfs",
+			"repository": "https://github.com/prometheus/procfs",
+			"revision": "abf152e5f3e97f2fafac028d2cc06c1feb87ffa5",
 			"branch": "master"
 		},
 		{
