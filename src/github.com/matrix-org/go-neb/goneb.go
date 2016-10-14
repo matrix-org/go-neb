@@ -17,6 +17,7 @@ import (
 	_ "github.com/matrix-org/go-neb/services/rssbot"
 	"github.com/matrix-org/go-neb/types"
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/prometheus/client_golang/prometheus"
 	"net/http"
 	_ "net/http/pprof"
 	"os"
@@ -59,18 +60,19 @@ func main() {
 		log.WithError(err).Panic("Failed to start up clients")
 	}
 
-	http.Handle("/test", server.MakeJSONAPI(&heartbeatHandler{}))
-	http.Handle("/admin/getService", server.MakeJSONAPI(&getServiceHandler{db: db}))
-	http.Handle("/admin/getSession", server.MakeJSONAPI(&getSessionHandler{db: db}))
-	http.Handle("/admin/configureClient", server.MakeJSONAPI(&configureClientHandler{db: db, clients: clients}))
-	http.Handle("/admin/configureService", server.MakeJSONAPI(newConfigureServiceHandler(db, clients)))
-	http.Handle("/admin/configureAuthRealm", server.MakeJSONAPI(&configureAuthRealmHandler{db: db}))
-	http.Handle("/admin/requestAuthSession", server.MakeJSONAPI(&requestAuthSessionHandler{db: db}))
-	http.Handle("/admin/removeAuthSession", server.MakeJSONAPI(&removeAuthSessionHandler{db: db}))
+	http.Handle("/metrics", prometheus.Handler())
+	http.Handle("/test", prometheus.InstrumentHandler("test", server.MakeJSONAPI(&heartbeatHandler{})))
+	http.Handle("/admin/getService", prometheus.InstrumentHandler("getService", server.MakeJSONAPI(&getServiceHandler{db: db})))
+	http.Handle("/admin/getSession", prometheus.InstrumentHandler("getSession", server.MakeJSONAPI(&getSessionHandler{db: db})))
+	http.Handle("/admin/configureClient", prometheus.InstrumentHandler("configureClient", server.MakeJSONAPI(&configureClientHandler{db: db, clients: clients})))
+	http.Handle("/admin/configureService", prometheus.InstrumentHandler("configureService", server.MakeJSONAPI(newConfigureServiceHandler(db, clients))))
+	http.Handle("/admin/configureAuthRealm", prometheus.InstrumentHandler("configureAuthRealm", server.MakeJSONAPI(&configureAuthRealmHandler{db: db})))
+	http.Handle("/admin/requestAuthSession", prometheus.InstrumentHandler("requestAuthSession", server.MakeJSONAPI(&requestAuthSessionHandler{db: db})))
+	http.Handle("/admin/removeAuthSession", prometheus.InstrumentHandler("removeAuthSession", server.MakeJSONAPI(&removeAuthSessionHandler{db: db})))
 	wh := &webhookHandler{db: db, clients: clients}
-	http.HandleFunc("/services/hooks/", wh.handle)
+	http.HandleFunc("/services/hooks/", prometheus.InstrumentHandlerFunc("webhookHandler", wh.handle))
 	rh := &realmRedirectHandler{db: db}
-	http.HandleFunc("/realms/redirects/", rh.handle)
+	http.HandleFunc("/realms/redirects/", prometheus.InstrumentHandlerFunc("realmRedirectHandler", rh.handle))
 
 	polling.SetClients(clients)
 	if err := polling.Start(); err != nil {
