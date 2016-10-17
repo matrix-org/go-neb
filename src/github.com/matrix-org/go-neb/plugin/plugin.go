@@ -72,7 +72,7 @@ func runCommandForPlugin(plugin Plugin, event *matrix.Event, arguments []string)
 		"user_id": event.Sender,
 		"command": bestMatch.Path,
 	}).Info("Executing command")
-	metrics.IncrementCommand(metrics.Pending)
+	metrics.IncrementCommand(bestMatch.Path[0], metrics.StatusPending)
 	content, err := bestMatch.Command(event.RoomID, event.Sender, cmdArgs)
 	if err != nil {
 		if content != nil {
@@ -84,10 +84,10 @@ func runCommandForPlugin(plugin Plugin, event *matrix.Event, arguments []string)
 				"args":       cmdArgs,
 			}).Warn("Command returned both error and content.")
 		}
-		metrics.IncrementCommand(metrics.Failure)
+		metrics.IncrementCommand(bestMatch.Path[0], metrics.StatusFailure)
 		content = matrix.TextMessage{"m.notice", err.Error()}
 	} else {
-		metrics.IncrementCommand(metrics.Success)
+		metrics.IncrementCommand(bestMatch.Path[0], metrics.StatusSuccess)
 	}
 
 	return content

@@ -9,35 +9,35 @@ type CommandStatus int
 
 // The command status values
 const (
-	Pending CommandStatus = iota
-	Success
-	Failure
+	StatusPending CommandStatus = iota
+	StatusSuccess
+	StatusFailure
 )
 
 var (
-	numIncomingCmds = prometheus.NewCounter(prometheus.CounterOpts{
+	numIncomingCmds = prometheus.NewCounterVec(prometheus.CounterOpts{
 		Name: "num_incoming_commands_total",
 		Help: "The number of incoming commands from matrix clients",
-	})
-	numSuccessCmds = prometheus.NewCounter(prometheus.CounterOpts{
+	}, []string{"cmd"})
+	numSuccessCmds = prometheus.NewCounterVec(prometheus.CounterOpts{
 		Name: "num_success_commands_total",
 		Help: "The number of incoming commands from matrix clients which were successful",
-	})
-	numErrorCmds = prometheus.NewCounter(prometheus.CounterOpts{
+	}, []string{"cmd"})
+	numErrorCmds = prometheus.NewCounterVec(prometheus.CounterOpts{
 		Name: "num_error_commands_total",
 		Help: "The number of incoming commands from matrix clients which failed",
-	})
+	}, []string{"cmd"})
 )
 
-// IncrementCommand increments the incoming command counter (TODO: cmd type)
-func IncrementCommand(st CommandStatus) {
+// IncrementCommand increments the incoming command counter
+func IncrementCommand(cmdName string, st CommandStatus) {
 	switch st {
-	case Pending:
-		numIncomingCmds.Inc()
-	case Success:
-		numSuccessCmds.Inc()
-	case Failure:
-		numErrorCmds.Inc()
+	case StatusPending:
+		numIncomingCmds.With(prometheus.Labels{"cmd": cmdName}).Inc()
+	case StatusSuccess:
+		numSuccessCmds.With(prometheus.Labels{"cmd": cmdName}).Inc()
+	case StatusFailure:
+		numErrorCmds.With(prometheus.Labels{"cmd": cmdName}).Inc()
 	}
 }
 
