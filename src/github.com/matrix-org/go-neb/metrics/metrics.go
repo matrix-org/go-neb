@@ -4,45 +4,47 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 )
 
-// CommandStatus is the status of a incoming command
-type CommandStatus int
+// Status is the status of a measurable metric (incoming commands, outgoing polls, etc)
+type Status string
 
-// The command status values
+// Common status values
 const (
-	StatusPending CommandStatus = iota
-	StatusSuccess
-	StatusFailure
+	StatusSuccess = "success"
+	StatusFailure = "failure"
 )
 
 var (
-	numIncomingCmds = prometheus.NewCounterVec(prometheus.CounterOpts{
-		Name: "num_incoming_commands_total",
+	cmdCounter = prometheus.NewCounterVec(prometheus.CounterOpts{
+		Name: "goneb_pling_cmd_total",
 		Help: "The number of incoming commands from matrix clients",
-	}, []string{"cmd"})
-	numSuccessCmds = prometheus.NewCounterVec(prometheus.CounterOpts{
-		Name: "num_success_commands_total",
-		Help: "The number of incoming commands from matrix clients which were successful",
-	}, []string{"cmd"})
-	numErrorCmds = prometheus.NewCounterVec(prometheus.CounterOpts{
-		Name: "num_error_commands_total",
-		Help: "The number of incoming commands from matrix clients which failed",
-	}, []string{"cmd"})
+	}, []string{"cmd", "status"})
+	configureServicesCounter = prometheus.NewCounterVec(prometheus.CounterOpts{
+		Name: "goneb_configure_services_total",
+		Help: "The total number of configured services requests",
+	}, []string{"service_type"})
+	webhookCounter = prometheus.NewCounterVec(prometheus.CounterOpts{
+		Name: "goneb_webhook_total",
+		Help: "The total number of recognised incoming webhook requests",
+	}, []string{"service_type"})
 )
 
-// IncrementCommand increments the incoming command counter
-func IncrementCommand(cmdName string, st CommandStatus) {
-	switch st {
-	case StatusPending:
-		numIncomingCmds.With(prometheus.Labels{"cmd": cmdName}).Inc()
-	case StatusSuccess:
-		numSuccessCmds.With(prometheus.Labels{"cmd": cmdName}).Inc()
-	case StatusFailure:
-		numErrorCmds.With(prometheus.Labels{"cmd": cmdName}).Inc()
-	}
+// IncrementCommand increments the pling command counter
+func IncrementCommand(cmdName string, st Status) {
+	cmdCounter.With(prometheus.Labels{"cmd": cmdName, "status": string(st)}).Inc()
+}
+
+// IncrementConfigureService increments the /configureService counter
+func IncrementConfigureService(serviceType string) {
+	configureServicesCounter.With(prometheus.Labels{"service_type": serviceType}).Inc()
+}
+
+// IncrementWebhook increments the incoming webhook request counter
+func IncrementWebhook(serviceType string) {
+	webhookCounter.With(prometheus.Labels{"service_type": serviceType}).Inc()
 }
 
 func init() {
-	prometheus.MustRegister(numIncomingCmds)
-	prometheus.MustRegister(numSuccessCmds)
-	prometheus.MustRegister(numErrorCmds)
+	prometheus.MustRegister(cmdCounter)
+	prometheus.MustRegister(configureServicesCounter)
+	prometheus.MustRegister(webhookCounter)
 }

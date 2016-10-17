@@ -72,7 +72,6 @@ func runCommandForPlugin(plugin Plugin, event *matrix.Event, arguments []string)
 		"user_id": event.Sender,
 		"command": bestMatch.Path,
 	}).Info("Executing command")
-	metrics.IncrementCommand(bestMatch.Path[0], metrics.StatusPending)
 	content, err := bestMatch.Command(event.RoomID, event.Sender, cmdArgs)
 	if err != nil {
 		if content != nil {
