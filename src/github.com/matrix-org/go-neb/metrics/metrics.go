@@ -4,6 +4,14 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 )
 
+type CommandStatus int
+
+const (
+	Pending CommandStatus = iota
+	Success
+	Failure
+)
+
 var (
 	numIncomingCmds = prometheus.NewCounter(prometheus.CounterOpts{
 		Name: "num_incoming_commands_total",
@@ -19,19 +27,16 @@ var (
 	})
 )
 
-// IncIncomingCommand increments the incoming command counter (TODO: cmd type)
-func IncIncomingCommand() {
-	numIncomingCmds.Inc()
-}
-
-// IncSuccessCommand increments the success command counter (TODO: cmd type)
-func IncSuccessCommand() {
-	numSuccessCmds.Inc()
-}
-
-// IncErrorCommand increments the error command counter (TODO: cmd type)
-func IncErrorCommand() {
-	numErrorCmds.Inc()
+// IncrementCommand increments the incoming command counter (TODO: cmd type)
+func IncrementCommand(st CommandStatus) {
+	switch st {
+	case Pending:
+		numIncomingCmds.Inc()
+	case Success:
+		numSuccessCmds.Inc()
+	case Failure:
+		numErrorCmds.Inc()
+	}
 }
 
 func init() {
