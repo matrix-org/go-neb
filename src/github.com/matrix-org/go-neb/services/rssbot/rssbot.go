@@ -15,6 +15,7 @@ import (
 	"html"
 	"net/http"
 	"net/url"
+	"strconv"
 	"time"
 )
 
@@ -174,7 +175,7 @@ func incrementMetrics(urlStr string, err error) {
 		if ok {
 			statusCode = herr.StatusCode
 		}
-		pollCounter.With(prometheus.Labels{"url": domain, "http_status": string(statusCode)}).Inc()
+		pollCounter.With(prometheus.Labels{"url": domain, "http_status": strconv.Itoa(statusCode)}).Inc()
 	} else {
 		pollCounter.With(prometheus.Labels{"url": domain, "http_status": "200"}).Inc() // technically 2xx but gofeed doesn't tell us which
 	}
