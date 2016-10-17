@@ -4,8 +4,10 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 )
 
+// CommandStatus is the status of a incoming command
 type CommandStatus int
 
+// The command status values
 const (
 	Pending CommandStatus = iota
 	Success
