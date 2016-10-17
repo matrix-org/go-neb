@@ -136,10 +136,10 @@ func (s *rssBotService) OnPoll(cli *matrix.Client) time.Time {
 		feed, items, err := s.queryFeed(u)
 		if err != nil {
 			logger.WithField("feed_url", u).WithError(err).Error("Failed to query feed")
-			sendMetric(u, err)
+			incrementMetrics(u, err)
 			continue
 		}
-		sendMetric(u, nil)
+		incrementMetrics(u, nil)
 		// Loop backwards since [0] is the most recent and we want to send in chronological order
 		for i := len(items) - 1; i >= 0; i-- {
 			item := items[i]
@@ -161,7 +161,7 @@ func (s *rssBotService) OnPoll(cli *matrix.Client) time.Time {
 	return s.nextTimestamp()
 }
 
-func sendMetric(urlStr string, err error) {
+func incrementMetrics(urlStr string, err error) {
 	// extract domain part of RSS feed URL to get coarser (more useful) statistics
 	domain := urlStr
 	u, urlErr := url.Parse(urlStr)
