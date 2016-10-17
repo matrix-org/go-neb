@@ -26,6 +26,10 @@ var (
 		Name: "goneb_webhook_total",
 		Help: "The total number of recognised incoming webhook requests",
 	}, []string{"service_type"})
+	authSessionCounter = prometheus.NewCounterVec(prometheus.CounterOpts{
+		Name: "goneb_auth_session_total",
+		Help: "The total number of successful /requestAuthSession requests",
+	}, []string{"realm_type"})
 )
 
 // IncrementCommand increments the pling command counter
@@ -43,8 +47,14 @@ func IncrementWebhook(serviceType string) {
 	webhookCounter.With(prometheus.Labels{"service_type": serviceType}).Inc()
 }
 
+// IncrementAuthSession increments the /requestAuthSession request counter
+func IncrementAuthSession(realmType string) {
+	authSessionCounter.With(prometheus.Labels{"realm_type": realmType}).Inc()
+}
+
 func init() {
 	prometheus.MustRegister(cmdCounter)
 	prometheus.MustRegister(configureServicesCounter)
 	prometheus.MustRegister(webhookCounter)
+	prometheus.MustRegister(authSessionCounter)
 }

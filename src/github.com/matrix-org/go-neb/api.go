@@ -57,6 +57,8 @@ func (h *requestAuthSessionHandler) OnIncomingRequest(req *http.Request) (interf
 		return nil, &errors.HTTPError{nil, "Failed to request auth session", 500}
 	}
 
+	metrics.IncrementAuthSession(realm.Type())
+
 	return response, nil
 }
 
