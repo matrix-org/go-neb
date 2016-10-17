@@ -14,6 +14,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"html"
 	"net/http"
+	"net/url"
 	"time"
 )
 
@@ -135,15 +136,10 @@ func (s *rssBotService) OnPoll(cli *matrix.Client) time.Time {
 		feed, items, err := s.queryFeed(u)
 		if err != nil {
 			logger.WithField("feed_url", u).WithError(err).Error("Failed to query feed")
-			herr, ok := err.(gofeed.HTTPError)
-			statusCode := 0 // e.g. network timeout
-			if ok {
-				statusCode = herr.StatusCode
-			}
-			pollCounter.With(prometheus.Labels{"url": u, "http_status": string(statusCode)}).Inc()
+			sendMetric(u, err)
 			continue
 		}
-		pollCounter.With(prometheus.Labels{"url": u, "http_status": "200"}).Inc() // technically 2xx but gofeed doesn't tell us which
+		sendMetric(u, nil)
 		// Loop backwards since [0] is the most recent and we want to send in chronological order
 		for i := len(items) - 1; i >= 0; i-- {
 			item := items[i]
@@ -163,6 +159,25 @@ func (s *rssBotService) OnPoll(cli *matrix.Client) time.Time {
 	}
 
 	return s.nextTimestamp()
+}
+
+func sendMetric(urlStr string, err error) {
+	// extract domain part of RSS feed URL to get coarser (more useful) statistics
+	domain := urlStr
+	u, urlErr := url.Parse(urlStr)
+	if urlErr == nil {
+		domain = u.Host
+	}
+	if err != nil {
+		herr, ok := err.(gofeed.HTTPError)
+		statusCode := 0 // e.g. network timeout
+		if ok {
+			statusCode = herr.StatusCode
+		}
+		pollCounter.With(prometheus.Labels{"url": domain, "http_status": string(statusCode)}).Inc()
+	} else {
+		pollCounter.With(prometheus.Labels{"url": domain, "http_status": "200"}).Inc() // technically 2xx but gofeed doesn't tell us which
+	}
 }
 
 func (s *rssBotService) nextTimestamp() time.Time {
