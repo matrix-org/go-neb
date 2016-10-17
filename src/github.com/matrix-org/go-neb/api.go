@@ -8,6 +8,7 @@ import (
 	"github.com/matrix-org/go-neb/clients"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/errors"
+	"github.com/matrix-org/go-neb/metrics"
 	"github.com/matrix-org/go-neb/polling"
 	"github.com/matrix-org/go-neb/types"
 	"net/http"
@@ -180,7 +181,6 @@ func (wh *webhookHandler) handle(w http.ResponseWriter, req *http.Request) {
 	// but we've base64d it.
 	base64srvID := segments[len(segments)-1]
 	bytesSrvID, err := base64.RawURLEncoding.DecodeString(base64srvID)
-	srvID := string(bytesSrvID)
 	if err != nil {
 		log.WithError(err).WithField("base64_service_id", base64srvID).Print(
 			"Not a b64 encoded string",
@@ -188,6 +188,7 @@ func (wh *webhookHandler) handle(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(400)
 		return
 	}
+	srvID := string(bytesSrvID)
 
 	service, err := wh.db.LoadService(srvID)
 	if err != nil {
@@ -203,9 +204,10 @@ func (wh *webhookHandler) handle(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	log.WithFields(log.Fields{
-		"service_id":  service.ServiceID(),
-		"service_typ": service.ServiceType(),
+		"service_id":   service.ServiceID(),
+		"service_type": service.ServiceType(),
 	}).Print("Incoming webhook for service")
+	metrics.IncrementWebhook(service.ServiceType())
 	service.OnReceiveWebhook(w, req, cli)
 }
 
@@ -319,6 +321,7 @@ func (s *configureServiceHandler) OnIncomingRequest(req *http.Request) (interfac
 	}
 
 	service.PostRegister(old)
+	metrics.IncrementConfigureService(service.ServiceType())
 
 	return &struct {
 		ID        string

@@ -5,6 +5,7 @@ import (
 	"github.com/matrix-org/dugong"
 	"github.com/matrix-org/go-neb/clients"
 	"github.com/matrix-org/go-neb/database"
+	_ "github.com/matrix-org/go-neb/metrics"
 	"github.com/matrix-org/go-neb/polling"
 	_ "github.com/matrix-org/go-neb/realms/github"
 	_ "github.com/matrix-org/go-neb/realms/jira"

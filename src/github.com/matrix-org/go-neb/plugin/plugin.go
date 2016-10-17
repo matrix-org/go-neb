@@ -3,6 +3,7 @@ package plugin
 import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/matrix-org/go-neb/matrix"
+	"github.com/matrix-org/go-neb/metrics"
 	"github.com/mattn/go-shellwords"
 	"regexp"
 	"strings"
@@ -82,7 +83,10 @@ func runCommandForPlugin(plugin Plugin, event *matrix.Event, arguments []string)
 				"args":       cmdArgs,
 			}).Warn("Command returned both error and content.")
 		}
+		metrics.IncrementCommand(bestMatch.Path[0], metrics.StatusFailure)
 		content = matrix.TextMessage{"m.notice", err.Error()}
+	} else {
+		metrics.IncrementCommand(bestMatch.Path[0], metrics.StatusSuccess)
 	}
 
 	return content

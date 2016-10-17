@@ -3,10 +3,12 @@ package services
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	log "github.com/Sirupsen/logrus"
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/plugin"
 	"github.com/matrix-org/go-neb/types"
+	"io/ioutil"
 	"math"
 	"net/http"
 	"strings"
@@ -54,7 +56,7 @@ func (s *guggyService) cmdGuggy(client *matrix.Client, roomID, userID string, ar
 	querySentence := strings.Join(args, " ")
 	gifResult, err := s.text2gifGuggy(querySentence)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Failed to query Guggy: %s", err.Error())
 	}
 
 	if gifResult.GIF == "" {
@@ -66,7 +68,7 @@ func (s *guggyService) cmdGuggy(client *matrix.Client, roomID, userID string, ar
 
 	mxc, err := client.UploadLink(gifResult.GIF)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Failed to upload Guggy image to matrix: %s", err.Error())
 	}
 
 	return matrix.ImageMessage{
@@ -114,9 +116,20 @@ func (s *guggyService) text2gifGuggy(querySentence string) (*guggyGifResult, err
 		log.Error(err)
 		return nil, err
 	}
+	if res.StatusCode < 200 || res.StatusCode >= 300 {
+		resBytes, err := ioutil.ReadAll(res.Body)
+		if err != nil {
+			log.WithError(err).Error("Failed to decode Guggy response body")
+		}
+		log.WithFields(log.Fields{
+			"code": res.StatusCode,
+			"body": string(resBytes),
+		}).Error("Failed to query Guggy")
+		return nil, fmt.Errorf("Failed to decode response (HTTP %d)", res.StatusCode)
+	}
 	var result guggyGifResult
 	if err := json.NewDecoder(res.Body).Decode(&result); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Failed to decode response (HTTP %d): %s", res.StatusCode, err.Error())
 	}
 
 	return &result, nil
