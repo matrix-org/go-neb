@@ -211,6 +211,19 @@ func (s *rssBotService) queryFeed(feedURL string) (*gofeed.Feed, []gofeed.Item, 
 		return nil, items, err
 	}
 
+	// Patch up the item list: make sure each item has a GUID.
+	for idx := 0; idx < len(feed.Items); idx++ {
+		itm := feed.Items[idx]
+		if itm.GUID == "" {
+			if itm.Link != "" {
+				itm.GUID = itm.Link
+			} else if itm.Title != "" {
+				itm.GUID = itm.Title
+			}
+			feed.Items[idx] = itm
+		}
+	}
+
 	// Work out which items are new, if any (based on the last updated TS we have)
 	// If the TS is 0 then this is the first ever poll, so let's not send 10s of events
 	// into the room and just do new ones from this point onwards.
@@ -228,6 +241,8 @@ func (s *rssBotService) queryFeed(feedURL string) (*gofeed.Feed, []gofeed.Item, 
 		i := feed.Items[0]
 		if i != nil && i.PublishedParsed != nil {
 			feedLastUpdatedTs = i.PublishedParsed.Unix()
+		} else {
+			feedLastUpdatedTs = time.Now().Unix()
 		}
 	}
 
@@ -245,25 +260,22 @@ func (s *rssBotService) queryFeed(feedURL string) (*gofeed.Feed, []gofeed.Item, 
 
 func (s *rssBotService) newItems(feedURL string, allItems []*gofeed.Item) (items []gofeed.Item) {
 	for _, i := range allItems {
-		if i == nil || i.PublishedParsed == nil {
+		if i == nil {
+			continue
+		}
+		// if we've seen this guid before, we've sent it before
+		seenBefore := false
+		for _, guid := range s.Feeds[feedURL].RecentGUIDs {
+			if guid == i.GUID {
+				seenBefore = true
+				break
+			}
+		}
+		if seenBefore {
 			continue
 		}
 
-		if i.PublishedParsed.Unix() > s.Feeds[feedURL].FeedUpdatedTimestampSecs {
-			// if we've seen this guid before, we've sent it before (even if the timestamp is newer)
-			seenBefore := false
-			for _, guid := range s.Feeds[feedURL].RecentGUIDs {
-				if guid == i.GUID {
-					seenBefore = true
-					break
-				}
-			}
-			if seenBefore {
-				continue
-			}
-
-			items = append(items, *i)
-		}
+		items = append(items, *i)
 	}
 	return
 }
