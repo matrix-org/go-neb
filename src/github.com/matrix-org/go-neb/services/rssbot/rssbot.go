@@ -306,9 +306,20 @@ func itemToHTML(feed *gofeed.Feed, item gofeed.Item) matrix.HTMLMessage {
 	))
 }
 
+type userAgentRoundTripper struct {
+	Transport http.RoundTripper
+}
+
+func (rt userAgentRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
+	req.Header.Set("User-Agent", "Go-NEB")
+	return rt.Transport.RoundTrip(req)
+}
+
 func init() {
 	lruCache := lrucache.New(1024*1024*20, 0) // 20 MB cache, no max-age
-	cachingClient = httpcache.NewTransport(lruCache).Client()
+	cachingClient = &http.Client{
+		Transport: userAgentRoundTripper{httpcache.NewTransport(lruCache)},
+	}
 	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
 		r := &rssBotService{
 			id:            serviceID,
