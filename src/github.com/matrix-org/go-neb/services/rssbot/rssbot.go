@@ -38,7 +38,8 @@ type rssBotService struct {
 		PollIntervalMins         int      `json:"poll_interval_mins"`
 		Rooms                    []string `json:"rooms"`
 		NextPollTimestampSecs    int64    // Internal: When we should poll again
-		FeedUpdatedTimestampSecs int64    // Internal: The last time the feed was updated
+		FeedUpdatedTimestampSecs int64    // Internal: The time of the last successful poll
+		IsFailing                bool     // Internal: True if rss bot is unable to poll this feed
 		RecentGUIDs              []string // Internal: The most recently seen GUIDs. Sized to the number of items in the feed.
 	} `json:"feeds"`
 }
@@ -190,11 +191,11 @@ func (s *rssBotService) nextTimestamp() time.Time {
 		}
 	}
 
-	// Don't allow times in the past. Set a min re-poll threshold of 20s to avoid
+	// Don't allow times in the past. Set a min re-poll threshold of 60s to avoid
 	// tight-looping on feeds which 500.
 	now := time.Now().Unix()
 	if earliestNextTs <= now {
-		earliestNextTs = now + 20
+		earliestNextTs = now + 60
 	}
 
 	return time.Unix(earliestNextTs, 0)
@@ -208,6 +209,9 @@ func (s *rssBotService) queryFeed(feedURL string) (*gofeed.Feed, []gofeed.Item, 
 	fp.Client = cachingClient
 	feed, err := fp.ParseURL(feedURL)
 	if err != nil {
+		f := s.Feeds[feedURL]
+		f.IsFailing = true
+		s.Feeds[feedURL] = f
 		return nil, items, err
 	}
 
@@ -233,19 +237,6 @@ func (s *rssBotService) queryFeed(feedURL string) (*gofeed.Feed, []gofeed.Item, 
 
 	now := time.Now().Unix() // Second resolution
 
-	// Work out when this feed was last updated
-	var feedLastUpdatedTs int64
-	if feed.UpdatedParsed != nil {
-		feedLastUpdatedTs = feed.UpdatedParsed.Unix()
-	} else if len(feed.Items) > 0 {
-		i := feed.Items[0]
-		if i != nil && i.PublishedParsed != nil {
-			feedLastUpdatedTs = i.PublishedParsed.Unix()
-		} else {
-			feedLastUpdatedTs = time.Now().Unix()
-		}
-	}
-
 	// Work out when to next poll this feed
 	nextPollTsSec := now + minPollingIntervalSeconds
 	if s.Feeds[feedURL].PollIntervalMins > int(minPollingIntervalSeconds/60) {
@@ -254,7 +245,20 @@ func (s *rssBotService) queryFeed(feedURL string) (*gofeed.Feed, []gofeed.Item, 
 	// TODO: Handle the 'sy' Syndication extension to control update interval.
 	// See http://www.feedforall.com/syndication.htm and http://web.resource.org/rss/1.0/modules/syndication/
 
-	s.updateFeedInfo(feedURL, feed.Items, nextPollTsSec, feedLastUpdatedTs)
+	// map items to guid strings
+	var guids []string
+	for _, itm := range feed.Items {
+		guids = append(guids, itm.GUID)
+	}
+
+	// Update the service config to persist the new times
+	f := s.Feeds[feedURL]
+	f.NextPollTimestampSecs = nextPollTsSec
+	f.FeedUpdatedTimestampSecs = now
+	f.RecentGUIDs = guids
+	f.IsFailing = false
+	s.Feeds[feedURL] = f
+
 	return feed, items, nil
 }
 
@@ -278,25 +282,6 @@ func (s *rssBotService) newItems(feedURL string, allItems []*gofeed.Item) (items
 		items = append(items, *i)
 	}
 	return
-}
-
-func (s *rssBotService) updateFeedInfo(feedURL string, allFeedItems []*gofeed.Item, nextPollTs, feedUpdatedTs int64) {
-	// map items to guid strings
-	var guids []string
-	for _, i := range allFeedItems {
-		guids = append(guids, i.GUID)
-	}
-
-	for u := range s.Feeds {
-		if u != feedURL {
-			continue
-		}
-		f := s.Feeds[u]
-		f.NextPollTimestampSecs = nextPollTs
-		f.FeedUpdatedTimestampSecs = feedUpdatedTs
-		f.RecentGUIDs = guids
-		s.Feeds[u] = f
-	}
 }
 
 func (s *rssBotService) sendToRooms(cli *matrix.Client, feedURL string, feed *gofeed.Feed, item gofeed.Item) error {
