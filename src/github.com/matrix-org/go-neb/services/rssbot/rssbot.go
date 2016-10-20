@@ -37,9 +37,9 @@ type rssBotService struct {
 	Feeds         map[string]struct { // feed_url => { }
 		PollIntervalMins         int      `json:"poll_interval_mins"`
 		Rooms                    []string `json:"rooms"`
+		IsFailing                bool     `json:"is_failing"`           // True if rss bot is unable to poll this feed
+		FeedUpdatedTimestampSecs int64    `json:"last_updated_ts_secs"` // The time of the last successful poll
 		NextPollTimestampSecs    int64    // Internal: When we should poll again
-		FeedUpdatedTimestampSecs int64    // Internal: The time of the last successful poll
-		IsFailing                bool     // Internal: True if rss bot is unable to poll this feed
 		RecentGUIDs              []string // Internal: The most recently seen GUIDs. Sized to the number of items in the feed.
 	} `json:"feeds"`
 }
