@@ -31,6 +31,7 @@ func main() {
 	databaseURL := os.Getenv("DATABASE_URL")
 	baseURL := os.Getenv("BASE_URL")
 	logDir := os.Getenv("LOG_DIR")
+	configYAML := os.Getenv("CONFIG_FILE")
 
 	if logDir != "" {
 		log.AddHook(dugong.NewFSHook(
@@ -41,8 +42,8 @@ func main() {
 	}
 
 	log.Infof(
-		"Go-NEB (BIND_ADDRESS=%s DATABASE_TYPE=%s DATABASE_URL=%s BASE_URL=%s LOG_DIR=%s)",
-		bindAddress, databaseType, databaseURL, baseURL, logDir,
+		"Go-NEB (BIND_ADDRESS=%s DATABASE_TYPE=%s DATABASE_URL=%s BASE_URL=%s LOG_DIR=%s CONFIG_FILE=%s)",
+		bindAddress, databaseType, databaseURL, baseURL, logDir, configYAML,
 	)
 
 	err := types.BaseURL(baseURL)
@@ -50,11 +51,22 @@ func main() {
 		log.WithError(err).Panic("Failed to get base url")
 	}
 
+	if configYAML != "" {
+		databaseType = "sqlite3"
+		databaseURL = ":memory:?_busy_timeout=5000"
+	}
+
 	db, err := database.Open(databaseType, databaseURL)
 	if err != nil {
 		log.WithError(err).Panic("Failed to open database")
 	}
 	database.SetServiceDB(db)
+
+	if configYAML != "" {
+		if err := loadFromConfig(db, configYAML); err != nil {
+			log.WithError(err).WithField("config_file", configYAML).Panic("Failed to load config file")
+		}
+	}
 
 	clients := clients.New(db)
 	if err := clients.Start(); err != nil {
