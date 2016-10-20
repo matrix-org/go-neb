@@ -231,7 +231,7 @@ func (s *rssBotService) queryFeed(feedURL string) (*gofeed.Feed, []gofeed.Item, 
 	// Work out which items are new, if any (based on the last updated TS we have)
 	// If the TS is 0 then this is the first ever poll, so let's not send 10s of events
 	// into the room and just do new ones from this point onwards.
-	if s.Feeds[feedURL].FeedUpdatedTimestampSecs != 0 {
+	if s.Feeds[feedURL].NextPollTimestampSecs != 0 {
 		items = s.newItems(feedURL, feed.Items)
 	}
 
