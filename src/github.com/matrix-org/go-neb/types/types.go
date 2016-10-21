@@ -14,12 +14,12 @@ import (
 
 // A ClientConfig is the configuration for a matrix client for a bot to use.
 type ClientConfig struct {
-	UserID        string // The matrix UserId to connect with.
-	HomeserverURL string // A URL with the host and port of the matrix server. E.g. https://matrix.org:8448
-	AccessToken   string // The matrix access token to authenticate the requests with.
-	Sync          bool   // True to start a sync stream for this user
-	AutoJoinRooms bool   // True to automatically join all rooms for this user
-	DisplayName   string // The display name to set for the matrix client
+	UserID        string `yaml:"user_id"`         // The matrix UserId to connect with.
+	HomeserverURL string `yaml:"homeserver_url"`  // A URL with the host and port of the matrix server. E.g. https://matrix.org:8448
+	AccessToken   string `yaml:"access_token"`    // The matrix access token to authenticate the requests with.
+	Sync          bool   `yaml:"sync"`            // True to start a sync stream for this user
+	AutoJoinRooms bool   `yaml:"auto_join_rooms"` // True to automatically join all rooms for this user
+	DisplayName   string `yaml:"display_name"`    // The display name to set for the matrix client
 }
 
 // Check that the client has the correct fields.

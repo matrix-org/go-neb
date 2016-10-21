@@ -18,27 +18,27 @@
 # Delete or modify this list as appropriate.
 # See the docs for /configureClient for the full list of options.
 clients:
-  - UserID: "@goneb:localhost"
-    AccessToken: "MDASDASJDIASDJASDAFGFRGER"
-    HomeserverURL: "http://localhost:8008"
-    Sync: true
-    AutoJoinRooms: true
-    DisplayName: "Go-NEB!"
+  - user_id: "@goneb:localhost"
+    access_token: "MDASDASJDIASDJASDAFGFRGER"
+    homeserver_url: "http://localhost:8008"
+    sync: true
+    auto_join_rooms: true
+    display_name: "Go-NEB!"
 
-  - UserID: "@another_goneb:localhost"
-    AccessToken: "MDASDASJDIASDJASDAFGFRGER"
-    HomeserverURL: "http://localhost:8008"
-    Sync: false
-    AutoJoinRooms: false
-    DisplayName: "Go-NEB!"
+  - user_id: "@another_goneb:localhost"
+    access_token: "MDASDASJDIASDJASDAFGFRGER"
+    homeserver_url: "http://localhost:8008"
+    sync: false
+    auto_join_rooms: false
+    display_name: "Go-NEB!"
 
 # The list of realms which Go-NEB is aware of.
 # Delete or modify this list as appropriate.
 # See the docs for /configureAuthRealm for the full list of options.
 realms:
-  - ID: "github_realm"
-    Type: "github"
-    Config:
+  - id: "github_realm"
+    type: "github"
+    config:
       ClientSecret: "YOUR_CLIENT_SECRET"
       ClientID: "YOUR_CLIENT_ID"
 

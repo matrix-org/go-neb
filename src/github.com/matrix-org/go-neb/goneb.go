@@ -63,9 +63,11 @@ func main() {
 	database.SetServiceDB(db)
 
 	if configYAML != "" {
-		if err := loadFromConfig(db, configYAML); err != nil {
+		var cfg *configFile
+		if cfg, err = loadFromConfig(db, configYAML); err != nil {
 			log.WithError(err).WithField("config_file", configYAML).Panic("Failed to load config file")
 		}
+		log.Info(cfg)
 	}
 
 	clients := clients.New(db)

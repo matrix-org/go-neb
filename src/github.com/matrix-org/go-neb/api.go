@@ -132,15 +132,17 @@ type configureAuthRealmHandler struct {
 	db *database.ServiceDB
 }
 
+type configureAuthRealmRequest struct {
+	ID     string          `yaml:"id"`
+	Type   string          `yaml:"type"`
+	Config json.RawMessage `yaml:"config"`
+}
+
 func (h *configureAuthRealmHandler) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError) {
 	if req.Method != "POST" {
 		return nil, &errors.HTTPError{nil, "Unsupported Method", 405}
 	}
-	var body struct {
-		ID     string
-		Type   string
-		Config json.RawMessage
-	}
+	var body configureAuthRealmRequest
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
 		return nil, &errors.HTTPError{err, "Error parsing request JSON", 400}
 	}
