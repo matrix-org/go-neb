@@ -6,12 +6,14 @@ import (
 	"net/url"
 )
 
+// ConfigureAuthRealmRequest is a request to /configureAuthRealm
 type ConfigureAuthRealmRequest struct {
 	ID     string
 	Type   string
 	Config json.RawMessage
 }
 
+// ConfigureServiceRequest is a request to /configureService
 type ConfigureServiceRequest struct {
 	ID     string
 	Type   string
@@ -19,7 +21,8 @@ type ConfigureServiceRequest struct {
 	Config json.RawMessage
 }
 
-// A ClientConfig is the configuration for a matrix client for a bot to use.
+// A ClientConfig is the configuration for a matrix client for a bot to use. It is
+// a request to /configureClient
 type ClientConfig struct {
 	UserID        string // The matrix UserId to connect with.
 	HomeserverURL string // A URL with the host and port of the matrix server. E.g. https://matrix.org:8448
@@ -43,6 +46,27 @@ type ConfigFile struct {
 	Realms   []ConfigureAuthRealmRequest
 	Services []ConfigureServiceRequest
 	Sessions []SessionRequest
+}
+
+func (c *ConfigureServiceRequest) Check() error {
+	if c.ID == "" || c.Type == "" || c.UserID == "" || c.Config == nil {
+		return errors.New(`Must supply an "ID", a "Type", a "UserID" and a "Config"`)
+	}
+	return nil
+}
+
+func (c *ConfigureAuthRealmRequest) Check() error {
+	if c.ID == "" || c.Type == "" || c.Config == nil {
+		return errors.New(`Must supply a "ID", a "Type" and a "Config"`)
+	}
+	return nil
+}
+
+func (c *SessionRequest) Check() error {
+	if c.SessionID == "" || c.UserID == "" || c.RealmID == "" || c.Config == nil {
+		return errors.New(`Must supply a "SessionID", a "RealmID", a "UserID" and a "Config"`)
+	}
+	return nil
 }
 
 // Check that the client has the correct fields.

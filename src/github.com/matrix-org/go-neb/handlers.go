@@ -142,8 +142,8 @@ func (h *configureAuthRealmHandler) OnIncomingRequest(req *http.Request) (interf
 		return nil, &errors.HTTPError{err, "Error parsing request JSON", 400}
 	}
 
-	if body.ID == "" || body.Type == "" || body.Config == nil {
-		return nil, &errors.HTTPError{nil, `Must supply a "ID", a "Type" and a "Config"`, 400}
+	if err := body.Check(); err != nil {
+		return nil, &errors.HTTPError{err, err.Error(), 400}
 	}
 
 	realm, err := types.CreateAuthRealm(body.ID, body.Type, body.Config)
@@ -336,10 +336,8 @@ func (s *configureServiceHandler) createService(req *http.Request) (types.Servic
 		return nil, &errors.HTTPError{err, "Error parsing request JSON", 400}
 	}
 
-	if body.ID == "" || body.Type == "" || body.UserID == "" || body.Config == nil {
-		return nil, &errors.HTTPError{
-			nil, `Must supply an "ID", a "Type", a "UserID" and a "Config"`, 400,
-		}
+	if err := body.Check(); err != nil {
+		return nil, &errors.HTTPError{err, err.Error(), 400}
 	}
 
 	service, err := types.CreateService(body.ID, body.Type, body.UserID, body.Config)

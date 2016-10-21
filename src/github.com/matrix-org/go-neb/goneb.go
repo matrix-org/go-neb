@@ -99,6 +99,33 @@ func convertKeysToStrings(iface interface{}) interface{} {
 	return iface // base type like string or number
 }
 
+func insertServicesFromConfig(clis *clients.Clients, services []api.ConfigureServiceRequest) error {
+	for i, s := range services {
+		if err := s.Check(); err != nil {
+			return fmt.Errorf("config: Service[%d] : %s", i, err)
+		}
+		service, err := types.CreateService(s.ID, s.Type, s.UserID, s.Config)
+		if err != nil {
+			return fmt.Errorf("config: Service[%d] : %s", i, err)
+		}
+
+		// Fetch the client for this service and register/poll
+		c, err := clis.Client(s.UserID)
+		if err != nil {
+			return fmt.Errorf("config: Service[%d] : %s", i, err)
+		}
+
+		if err = service.Register(nil, c); err != nil {
+			return fmt.Errorf("config: Service[%d] : %s", i, err)
+		}
+		if _, err := database.GetServiceDB().StoreService(service); err != nil {
+			return fmt.Errorf("config: Service[%d] : %s", i, err)
+		}
+		service.PostRegister(nil)
+	}
+	return nil
+}
+
 func main() {
 	bindAddress := os.Getenv("BIND_ADDRESS")
 	databaseType := os.Getenv("DATABASE_TYPE")
@@ -136,14 +163,17 @@ func main() {
 	}
 	database.SetServiceDB(db)
 
+	var cfg *api.ConfigFile
 	if configYAML != "" {
-		var cfg *api.ConfigFile
 		if cfg, err = loadFromConfig(db, configYAML); err != nil {
 			log.WithError(err).WithField("config_file", configYAML).Panic("Failed to load config file")
 		}
 		if err := db.InsertFromConfig(cfg); err != nil {
 			log.WithError(err).Panic("Failed to persist config data into in-memory DB")
 		}
+		log.Info("Inserted ", len(cfg.Clients), " clients")
+		log.Info("Inserted ", len(cfg.Realms), " realms")
+		log.Info("Inserted ", len(cfg.Sessions), " sessions")
 	}
 
 	clients := clients.New(db)
@@ -151,20 +181,29 @@ func main() {
 		log.WithError(err).Panic("Failed to start up clients")
 	}
 
+	// Handle non-admin paths for normal NEB functioning
 	http.Handle("/metrics", prometheus.Handler())
 	http.Handle("/test", prometheus.InstrumentHandler("test", server.MakeJSONAPI(&heartbeatHandler{})))
-	http.Handle("/admin/getService", prometheus.InstrumentHandler("getService", server.MakeJSONAPI(&getServiceHandler{db: db})))
-	http.Handle("/admin/getSession", prometheus.InstrumentHandler("getSession", server.MakeJSONAPI(&getSessionHandler{db: db})))
-	http.Handle("/admin/configureClient", prometheus.InstrumentHandler("configureClient", server.MakeJSONAPI(&configureClientHandler{db: db, clients: clients})))
-	http.Handle("/admin/configureService", prometheus.InstrumentHandler("configureService", server.MakeJSONAPI(newConfigureServiceHandler(db, clients))))
-	http.Handle("/admin/configureAuthRealm", prometheus.InstrumentHandler("configureAuthRealm", server.MakeJSONAPI(&configureAuthRealmHandler{db: db})))
-	http.Handle("/admin/requestAuthSession", prometheus.InstrumentHandler("requestAuthSession", server.MakeJSONAPI(&requestAuthSessionHandler{db: db})))
-	http.Handle("/admin/removeAuthSession", prometheus.InstrumentHandler("removeAuthSession", server.MakeJSONAPI(&removeAuthSessionHandler{db: db})))
 	wh := &webhookHandler{db: db, clients: clients}
 	http.HandleFunc("/services/hooks/", prometheus.InstrumentHandlerFunc("webhookHandler", wh.handle))
 	rh := &realmRedirectHandler{db: db}
 	http.HandleFunc("/realms/redirects/", prometheus.InstrumentHandlerFunc("realmRedirectHandler", rh.handle))
 
+	if configYAML != "" {
+		if err := insertServicesFromConfig(clients, cfg.Services); err != nil {
+			log.WithError(err).Panic("Failed to insert services")
+		}
+
+		log.Info("Inserted ", len(cfg.Services), " services")
+	} else {
+		http.Handle("/admin/getService", prometheus.InstrumentHandler("getService", server.MakeJSONAPI(&getServiceHandler{db: db})))
+		http.Handle("/admin/getSession", prometheus.InstrumentHandler("getSession", server.MakeJSONAPI(&getSessionHandler{db: db})))
+		http.Handle("/admin/configureClient", prometheus.InstrumentHandler("configureClient", server.MakeJSONAPI(&configureClientHandler{db: db, clients: clients})))
+		http.Handle("/admin/configureService", prometheus.InstrumentHandler("configureService", server.MakeJSONAPI(newConfigureServiceHandler(db, clients))))
+		http.Handle("/admin/configureAuthRealm", prometheus.InstrumentHandler("configureAuthRealm", server.MakeJSONAPI(&configureAuthRealmHandler{db: db})))
+		http.Handle("/admin/requestAuthSession", prometheus.InstrumentHandler("requestAuthSession", server.MakeJSONAPI(&requestAuthSessionHandler{db: db})))
+		http.Handle("/admin/removeAuthSession", prometheus.InstrumentHandler("removeAuthSession", server.MakeJSONAPI(&removeAuthSessionHandler{db: db})))
+	}
 	polling.SetClients(clients)
 	if err := polling.Start(); err != nil {
 		log.WithError(err).Panic("Failed to start polling")
