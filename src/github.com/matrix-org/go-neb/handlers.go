@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	log "github.com/Sirupsen/logrus"
+	"github.com/matrix-org/go-neb/api"
 	"github.com/matrix-org/go-neb/clients"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/errors"
@@ -132,17 +133,11 @@ type configureAuthRealmHandler struct {
 	db *database.ServiceDB
 }
 
-type configureAuthRealmRequest struct {
-	ID     string
-	Type   string
-	Config json.RawMessage
-}
-
 func (h *configureAuthRealmHandler) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError) {
 	if req.Method != "POST" {
 		return nil, &errors.HTTPError{nil, "Unsupported Method", 405}
 	}
-	var body configureAuthRealmRequest
+	var body api.ConfigureAuthRealmRequest
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
 		return nil, &errors.HTTPError{err, "Error parsing request JSON", 400}
 	}
@@ -225,7 +220,7 @@ func (s *configureClientHandler) OnIncomingRequest(req *http.Request) (interface
 		return nil, &errors.HTTPError{nil, "Unsupported Method", 405}
 	}
 
-	var body types.ClientConfig
+	var body api.ClientConfig
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
 		return nil, &errors.HTTPError{err, "Error parsing request JSON", 400}
 	}
@@ -240,8 +235,8 @@ func (s *configureClientHandler) OnIncomingRequest(req *http.Request) (interface
 	}
 
 	return &struct {
-		OldClient types.ClientConfig
-		NewClient types.ClientConfig
+		OldClient api.ClientConfig
+		NewClient api.ClientConfig
 	}{oldClient, body}, nil
 }
 
@@ -336,12 +331,7 @@ func (s *configureServiceHandler) OnIncomingRequest(req *http.Request) (interfac
 }
 
 func (s *configureServiceHandler) createService(req *http.Request) (types.Service, *errors.HTTPError) {
-	var body struct {
-		ID     string
-		Type   string
-		UserID string
-		Config json.RawMessage
-	}
+	var body api.ConfigureServiceRequest
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
 		return nil, &errors.HTTPError{err, "Error parsing request JSON", 400}
 	}

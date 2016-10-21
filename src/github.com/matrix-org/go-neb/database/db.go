@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"github.com/matrix-org/go-neb/api"
 	"github.com/matrix-org/go-neb/types"
 	"time"
 )
@@ -48,7 +49,7 @@ func Open(databaseType, databaseURL string) (serviceDB *ServiceDB, err error) {
 // StoreMatrixClientConfig stores the Matrix client config for a bot service.
 // If a config already exists then it will be updated, otherwise a new config
 // will be inserted. The previous config is returned.
-func (d *ServiceDB) StoreMatrixClientConfig(config types.ClientConfig) (oldConfig types.ClientConfig, err error) {
+func (d *ServiceDB) StoreMatrixClientConfig(config api.ClientConfig) (oldConfig api.ClientConfig, err error) {
 	err = runTransaction(d.db, func(txn *sql.Tx) error {
 		oldConfig, err = selectMatrixClientConfigTxn(txn, config.UserID)
 		now := time.Now()
@@ -64,7 +65,7 @@ func (d *ServiceDB) StoreMatrixClientConfig(config types.ClientConfig) (oldConfi
 }
 
 // LoadMatrixClientConfigs loads all Matrix client configs from the database.
-func (d *ServiceDB) LoadMatrixClientConfigs() (configs []types.ClientConfig, err error) {
+func (d *ServiceDB) LoadMatrixClientConfigs() (configs []api.ClientConfig, err error) {
 	err = runTransaction(d.db, func(txn *sql.Tx) error {
 		configs, err = selectMatrixClientConfigsTxn(txn)
 		return err
@@ -74,7 +75,7 @@ func (d *ServiceDB) LoadMatrixClientConfigs() (configs []types.ClientConfig, err
 
 // LoadMatrixClientConfig loads a Matrix client config from the database.
 // Returns sql.ErrNoRows if the client isn't in the database.
-func (d *ServiceDB) LoadMatrixClientConfig(userID string) (config types.ClientConfig, err error) {
+func (d *ServiceDB) LoadMatrixClientConfig(userID string) (config api.ClientConfig, err error) {
 	err = runTransaction(d.db, func(txn *sql.Tx) error {
 		config, err = selectMatrixClientConfigTxn(txn, userID)
 		return err
@@ -270,6 +271,10 @@ func (d *ServiceDB) StoreBotOptions(opts types.BotOptions) (oldOpts types.BotOpt
 		}
 	})
 	return
+}
+
+func (d *ServiceDB) InsertFromConfig(cfg *api.ConfigFile) error {
+	return nil
 }
 
 func runTransaction(db *sql.DB, fn func(txn *sql.Tx) error) (err error) {

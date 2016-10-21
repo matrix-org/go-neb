@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"github.com/matrix-org/go-neb/api"
 	"github.com/matrix-org/go-neb/types"
 	"time"
 )
@@ -64,7 +65,7 @@ const selectMatrixClientConfigSQL = `
 SELECT client_json FROM matrix_clients WHERE user_id = $1
 `
 
-func selectMatrixClientConfigTxn(txn *sql.Tx, userID string) (config types.ClientConfig, err error) {
+func selectMatrixClientConfigTxn(txn *sql.Tx, userID string) (config api.ClientConfig, err error) {
 	var configJSON []byte
 	err = txn.QueryRow(selectMatrixClientConfigSQL, userID).Scan(&configJSON)
 	if err != nil {
@@ -78,14 +79,14 @@ const selectMatrixClientConfigsSQL = `
 SELECT client_json FROM matrix_clients
 `
 
-func selectMatrixClientConfigsTxn(txn *sql.Tx) (configs []types.ClientConfig, err error) {
+func selectMatrixClientConfigsTxn(txn *sql.Tx) (configs []api.ClientConfig, err error) {
 	rows, err := txn.Query(selectMatrixClientConfigsSQL)
 	if err != nil {
 		return
 	}
 	defer rows.Close()
 	for rows.Next() {
-		var config types.ClientConfig
+		var config api.ClientConfig
 		var configJSON []byte
 		if err = rows.Scan(&configJSON); err != nil {
 			return
@@ -104,7 +105,7 @@ INSERT INTO matrix_clients(
 ) VALUES ($1, $2, '', $3, $4)
 `
 
-func insertMatrixClientConfigTxn(txn *sql.Tx, now time.Time, config types.ClientConfig) error {
+func insertMatrixClientConfigTxn(txn *sql.Tx, now time.Time, config api.ClientConfig) error {
 	t := now.UnixNano() / 1000000
 	configJSON, err := json.Marshal(&config)
 	if err != nil {
@@ -119,7 +120,7 @@ UPDATE matrix_clients SET client_json = $1, time_updated_ms = $2
 	WHERE user_id = $3
 `
 
-func updateMatrixClientConfigTxn(txn *sql.Tx, now time.Time, config types.ClientConfig) error {
+func updateMatrixClientConfigTxn(txn *sql.Tx, now time.Time, config api.ClientConfig) error {
 	t := now.UnixNano() / 1000000
 	configJSON, err := json.Marshal(&config)
 	if err != nil {
