@@ -133,9 +133,9 @@ type configureAuthRealmHandler struct {
 }
 
 type configureAuthRealmRequest struct {
-	ID     string          `yaml:"id"`
-	Type   string          `yaml:"type"`
-	Config json.RawMessage `yaml:"config"`
+	ID     string
+	Type   string
+	Config json.RawMessage
 }
 
 func (h *configureAuthRealmHandler) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError) {
