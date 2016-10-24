@@ -1,5 +1,10 @@
 package matrix
 
+import (
+	log "github.com/Sirupsen/logrus"
+	"runtime/debug"
+)
+
 // Worker processes incoming events and updates the Matrix client's data structures. It also informs
 // any attached listeners of the new events.
 type Worker struct {
@@ -38,6 +43,21 @@ func (worker *Worker) notifyListeners(event *Event) {
 }
 
 func (worker *Worker) onSyncHTTPResponse(res syncHTTPResponse) {
+	defer func() {
+		if r := recover(); r != nil {
+			userID := ""
+			if worker.client != nil {
+				userID = worker.client.UserID
+			}
+			log.WithFields(log.Fields{
+				"panic":   r,
+				"user_id": userID,
+			}).Errorf(
+				"onSyncHTTPResponse panicked!\n%s", debug.Stack(),
+			)
+		}
+	}()
+
 	for roomID, roomData := range res.Rooms.Join {
 		room := worker.client.getOrCreateRoom(roomID)
 		for _, event := range roomData.State.Events {

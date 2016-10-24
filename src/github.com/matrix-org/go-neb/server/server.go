@@ -45,7 +45,7 @@ func MakeJSONAPI(handler JSONRequestHandler) http.HandlerFunc {
 		logger.Print("Incoming request")
 		defer func() {
 			if r := recover(); r != nil {
-				logger.WithField("error", r).Errorf(
+				logger.WithField("panic", r).Errorf(
 					"Request panicked!\n%s", debug.Stack(),
 				)
 				jsonErrorResponse(
