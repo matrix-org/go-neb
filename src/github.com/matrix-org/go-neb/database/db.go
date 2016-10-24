@@ -2,6 +2,9 @@ package database
 
 import (
 	"database/sql"
+	"encoding/json"
+	"fmt"
+	"github.com/matrix-org/go-neb/api"
 	"github.com/matrix-org/go-neb/types"
 	"time"
 )
@@ -48,7 +51,7 @@ func Open(databaseType, databaseURL string) (serviceDB *ServiceDB, err error) {
 // StoreMatrixClientConfig stores the Matrix client config for a bot service.
 // If a config already exists then it will be updated, otherwise a new config
 // will be inserted. The previous config is returned.
-func (d *ServiceDB) StoreMatrixClientConfig(config types.ClientConfig) (oldConfig types.ClientConfig, err error) {
+func (d *ServiceDB) StoreMatrixClientConfig(config api.ClientConfig) (oldConfig api.ClientConfig, err error) {
 	err = runTransaction(d.db, func(txn *sql.Tx) error {
 		oldConfig, err = selectMatrixClientConfigTxn(txn, config.UserID)
 		now := time.Now()
@@ -64,7 +67,7 @@ func (d *ServiceDB) StoreMatrixClientConfig(config types.ClientConfig) (oldConfi
 }
 
 // LoadMatrixClientConfigs loads all Matrix client configs from the database.
-func (d *ServiceDB) LoadMatrixClientConfigs() (configs []types.ClientConfig, err error) {
+func (d *ServiceDB) LoadMatrixClientConfigs() (configs []api.ClientConfig, err error) {
 	err = runTransaction(d.db, func(txn *sql.Tx) error {
 		configs, err = selectMatrixClientConfigsTxn(txn)
 		return err
@@ -74,7 +77,7 @@ func (d *ServiceDB) LoadMatrixClientConfigs() (configs []types.ClientConfig, err
 
 // LoadMatrixClientConfig loads a Matrix client config from the database.
 // Returns sql.ErrNoRows if the client isn't in the database.
-func (d *ServiceDB) LoadMatrixClientConfig(userID string) (config types.ClientConfig, err error) {
+func (d *ServiceDB) LoadMatrixClientConfig(userID string) (config api.ClientConfig, err error) {
 	err = runTransaction(d.db, func(txn *sql.Tx) error {
 		config, err = selectMatrixClientConfigTxn(txn, userID)
 		return err
@@ -270,6 +273,58 @@ func (d *ServiceDB) StoreBotOptions(opts types.BotOptions) (oldOpts types.BotOpt
 		}
 	})
 	return
+}
+
+// InsertFromConfig inserts entries from the config file into the database. This only really
+// makes sense for in-memory databases.
+func (d *ServiceDB) InsertFromConfig(cfg *api.ConfigFile) error {
+	// Insert clients
+	for _, cli := range cfg.Clients {
+		if _, err := d.StoreMatrixClientConfig(cli); err != nil {
+			return err
+		}
+	}
+
+	// Keep a map of realms for inserting sessions
+	realms := map[string]types.AuthRealm{} // by realm ID
+
+	// Insert realms
+	for _, r := range cfg.Realms {
+		if err := r.Check(); err != nil {
+			return err
+		}
+		realm, err := types.CreateAuthRealm(r.ID, r.Type, r.Config)
+		if err != nil {
+			return err
+		}
+		if _, err := d.StoreAuthRealm(realm); err != nil {
+			return err
+		}
+		realms[realm.ID()] = realm
+	}
+
+	// Insert sessions
+	for _, s := range cfg.Sessions {
+		if err := s.Check(); err != nil {
+			return err
+		}
+		r := realms[s.RealmID]
+		if r == nil {
+			return fmt.Errorf("Session %s specifies an unknown realm ID %s", s.SessionID, s.RealmID)
+		}
+		session := r.AuthSession(s.SessionID, s.UserID, s.RealmID)
+		// dump the raw JSON config directly into the session. This is what
+		// selectAuthSessionByUserTxn does.
+		if err := json.Unmarshal(s.Config, session); err != nil {
+			return err
+		}
+		if _, err := d.StoreAuthSession(session); err != nil {
+			return err
+		}
+	}
+
+	// Do not insert services yet, they require more work to set up.
+	return nil
 }
 
 func runTransaction(db *sql.DB, fn func(txn *sql.Tx) error) (err error) {

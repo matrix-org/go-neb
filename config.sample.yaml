@@ -1,0 +1,106 @@
+# Go-NEB Configuration File
+#
+# This file provides an alternative way to configure Go-NEB which does not involve HTTP APIs.
+#
+# This file can be supplied to go-neb by the environment variable `CONFIG_FILE=config.yaml`.
+# It will force Go-NEB to operate in "config" mode. This means:
+#   - Go-NEB will ONLY use the data contained inside this file.
+#   - All of Go-NEB's /admin HTTP listeners will be disabled. You will be unable to add new services at runtime.
+#   - The environment variable `DATABASE_URL` will be ignored and an in-memory database will be used instead.
+#
+# This file is broken down into 4 sections which matches the following HTTP APIs:
+#   - /configureClient
+#   - /configureAuthRealm
+#   - /configureService
+#   - /requestAuthSession (redirects not supported)
+
+# The list of clients which Go-NEB is aware of.
+# Delete or modify this list as appropriate.
+# See the docs for /configureClient for the full list of options.
+clients:
+  - UserID: "@goneb:localhost"
+    AccessToken: "MDASDASJDIASDJASDAFGFRGER"
+    HomeserverURL: "http://localhost:8008"
+    Sync: true
+    AutoJoinRooms: true
+    DisplayName: "Go-NEB!"
+
+  - UserID: "@another_goneb:localhost"
+    AccessToken: "MDASDASJDIASDJASDAFGFRGER"
+    HomeserverURL: "http://localhost:8008"
+    Sync: false
+    AutoJoinRooms: false
+    DisplayName: "Go-NEB!"
+
+# The list of realms which Go-NEB is aware of.
+# Delete or modify this list as appropriate.
+# See the docs for /configureAuthRealm for the full list of options.
+realms:
+  - ID: "github_realm"
+    Type: "github"
+    Config: {} # No need for client ID or Secret as Go-NEB isn't generating OAuth URLs
+
+# The list of *authenticated* sessions which Go-NEB is aware of.
+# Delete or modify this list as appropriate.
+# The full list of options are shown below: there is no single HTTP endpoint
+# which maps to this section.
+sessions:
+  - SessionID: "your_github_session"
+    RealmID: "github_realm"
+    UserID: "@YOUR_USER_ID:localhost"
+    Config:
+      # Populate these fields by generating a "Personal Access Token" on github.com
+      AccessToken: "YOUR_GITHUB_ACCESS_TOKEN"
+      Scopes: "admin:org_hook,admin:repo_hook,repo,user"
+    
+
+# The list of services which Go-NEB is aware of.
+# Delete or modify this list as appropriate.
+# See the docs for /configureService for the full list of options.
+services:
+  - ID: "giphy_service"
+    Type: "giphy"
+    UserID: "@goneb:localhost" # requires a Syncing client
+    Config:
+      api_key: "qwg4672vsuyfsfe"
+
+  - ID: "guggy_service"
+    Type: "guggy"
+    UserID: "@goneb:localhost" # requires a Syncing client
+    Config:
+      api_key: "2356saaqfhgfe"
+
+  - ID: "rss_service"
+    Type: "rssbot"
+    UserID: "@another_goneb:localhost"
+    Config:
+      feeds:
+        "http://lorem-rss.herokuapp.com/feed?unit=second&interval=60":
+          rooms: ["!qmElAGdFYCHoCJuaNt:localhost"]
+
+  - ID: "github_cmd_service"
+    Type: "github"
+    UserID: "@goneb:localhost" # requires a Syncing client
+    Config:
+      RealmID: "github_realm"
+
+    # Make sure your BASE_URL can be accessed by Github!
+  - ID: "github_webhook_service"
+    Type: "github-webhook"
+    UserID: "@another_goneb:localhost"
+    Config:
+      RealmID: "github_realm"
+      ClientUserID: "@YOUR_USER_ID:localhost" # needs to be an authenticated user so Go-NEB can create webhooks.
+      Rooms:
+        "!someroom:id":
+          Repos:
+            "matrix-org/synapse":
+              Events: ["push", "issues"]
+            "matrix-org/dendron":
+              Events: ["pull_request"]
+        "!anotherroom:id":
+          Repos:
+            "matrix-org/synapse":
+              Events: ["push", "issues"]
+            "matrix-org/dendron":
+              Events: ["pull_request"]

@@ -7,31 +7,9 @@ import (
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/plugin"
 	"net/http"
-	"net/url"
 	"strings"
 	"time"
 )
-
-// A ClientConfig is the configuration for a matrix client for a bot to use.
-type ClientConfig struct {
-	UserID        string // The matrix UserId to connect with.
-	HomeserverURL string // A URL with the host and port of the matrix server. E.g. https://matrix.org:8448
-	AccessToken   string // The matrix access token to authenticate the requests with.
-	Sync          bool   // True to start a sync stream for this user
-	AutoJoinRooms bool   // True to automatically join all rooms for this user
-	DisplayName   string // The display name to set for the matrix client
-}
-
-// Check that the client has the correct fields.
-func (c *ClientConfig) Check() error {
-	if c.UserID == "" || c.HomeserverURL == "" || c.AccessToken == "" {
-		return errors.New(`Must supply a "UserID", a "HomeserverURL", and an "AccessToken"`)
-	}
-	if _, err := url.Parse(c.HomeserverURL); err != nil {
-		return err
-	}
-	return nil
-}
 
 // BotOptions for a given bot user in a given room
 type BotOptions struct {
