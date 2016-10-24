@@ -64,13 +64,13 @@ services:
     Type: "giphy"
     UserID: "@goneb:localhost" # requires a Syncing client
     Config:
-      APIKey: "qwg4672vsuyfsfe"
+      api_key: "qwg4672vsuyfsfe"
 
   - ID: "guggy_service"
     Type: "guggy"
     UserID: "@goneb:localhost" # requires a Syncing client
     Config:
-      APIKey: "2356saaqfhgfe"
+      api_key: "2356saaqfhgfe"
 
   - ID: "github_cmd_service"
     Type: "github"

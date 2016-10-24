@@ -99,8 +99,8 @@ func convertKeysToStrings(iface interface{}) interface{} {
 	return iface // base type like string or number
 }
 
-func insertServicesFromConfig(clis *clients.Clients, services []api.ConfigureServiceRequest) error {
-	for i, s := range services {
+func insertServicesFromConfig(clis *clients.Clients, serviceReqs []api.ConfigureServiceRequest) error {
+	for i, s := range serviceReqs {
 		if err := s.Check(); err != nil {
 			return fmt.Errorf("config: Service[%d] : %s", i, err)
 		}
