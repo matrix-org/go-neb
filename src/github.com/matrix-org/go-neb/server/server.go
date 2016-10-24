@@ -6,6 +6,7 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/matrix-org/go-neb/errors"
 	"net/http"
+	"runtime/debug"
 )
 
 // JSONRequestHandler represents an interface that must be satisfied in order to respond to incoming
@@ -34,14 +35,38 @@ func WithCORSOptions(handler http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
+// Protect panicking HTTP requests from taking down the entire process, and log them using
+// the correct logger, returning a 500 with a JSON response rather than abruptly closing the
+// connection.
+func Protect(handler http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		defer func() {
+			if r := recover(); r != nil {
+				log.WithFields(log.Fields{
+					"panic":  r,
+					"method": req.Method,
+					"url":    req.URL,
+				}).Errorf(
+					"Request panicked!\n%s", debug.Stack(),
+				)
+				jsonErrorResponse(
+					w, req, &errors.HTTPError{nil, "Internal Server Error", 500},
+				)
+			}
+		}()
+		handler(w, req)
+	}
+}
+
 // MakeJSONAPI creates an HTTP handler which always responds to incoming requests with JSON responses.
 func MakeJSONAPI(handler JSONRequestHandler) http.HandlerFunc {
-	return func(w http.ResponseWriter, req *http.Request) {
+	return Protect(func(w http.ResponseWriter, req *http.Request) {
 		logger := log.WithFields(log.Fields{
 			"method": req.Method,
 			"url":    req.URL,
 		})
-		logger.Print(">>> Incoming request")
+		logger.Print("Incoming request")
+
 		res, httpErr := handler.OnIncomingRequest(req)
 
 		// Set common headers returned regardless of the outcome of the request
@@ -67,7 +92,7 @@ func MakeJSONAPI(handler JSONRequestHandler) http.HandlerFunc {
 			resBytes = r
 		}
 		w.Write(resBytes)
-	}
+	})
 }
 
 func jsonErrorResponse(w http.ResponseWriter, req *http.Request, httpErr *errors.HTTPError) {
