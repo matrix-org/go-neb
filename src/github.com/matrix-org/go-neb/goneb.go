@@ -126,6 +126,19 @@ func insertServicesFromConfig(clis *clients.Clients, serviceReqs []api.Configure
 	return nil
 }
 
+func loadDatabase(databaseType, databaseURL, configYAML string) (*database.ServiceDB, error) {
+	if configYAML != "" {
+		databaseType = "sqlite3"
+		databaseURL = ":memory:?_busy_timeout=5000"
+	}
+
+	db, err := database.Open(databaseType, databaseURL)
+	if err == nil {
+		database.SetServiceDB(db) // set singleton
+	}
+	return db, err
+}
+
 func main() {
 	bindAddress := os.Getenv("BIND_ADDRESS")
 	databaseType := os.Getenv("DATABASE_TYPE")
@@ -152,17 +165,12 @@ func main() {
 		log.WithError(err).Panic("Failed to get base url")
 	}
 
-	if configYAML != "" {
-		databaseType = "sqlite3"
-		databaseURL = ":memory:?_busy_timeout=5000"
-	}
-
-	db, err := database.Open(databaseType, databaseURL)
+	db, err := loadDatabase(databaseType, databaseURL, configYAML)
 	if err != nil {
 		log.WithError(err).Panic("Failed to open database")
 	}
-	database.SetServiceDB(db)
 
+	// Populate the database from the config file if one was supplied.
 	var cfg *api.ConfigFile
 	if configYAML != "" {
 		if cfg, err = loadFromConfig(db, configYAML); err != nil {
@@ -189,6 +197,8 @@ func main() {
 	rh := &realmRedirectHandler{db: db}
 	http.HandleFunc("/realms/redirects/", prometheus.InstrumentHandlerFunc("realmRedirectHandler", rh.handle))
 
+	// Read exclusively from the config file if one was supplied.
+	// Otherwise, add HTTP listeners for new Services/Sessions/Clients/etc.
 	if configYAML != "" {
 		if err := insertServicesFromConfig(clients, cfg.Services); err != nil {
 			log.WithError(err).Panic("Failed to insert services")
