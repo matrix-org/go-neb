@@ -193,9 +193,9 @@ func main() {
 	http.Handle("/metrics", prometheus.Handler())
 	http.Handle("/test", prometheus.InstrumentHandler("test", server.MakeJSONAPI(&heartbeatHandler{})))
 	wh := &webhookHandler{db: db, clients: clients}
-	http.HandleFunc("/services/hooks/", prometheus.InstrumentHandlerFunc("webhookHandler", wh.handle))
+	http.HandleFunc("/services/hooks/", prometheus.InstrumentHandlerFunc("webhookHandler", server.Protect(wh.handle)))
 	rh := &realmRedirectHandler{db: db}
-	http.HandleFunc("/realms/redirects/", prometheus.InstrumentHandlerFunc("realmRedirectHandler", rh.handle))
+	http.HandleFunc("/realms/redirects/", prometheus.InstrumentHandlerFunc("realmRedirectHandler", server.Protect(rh.handle)))
 
 	// Read exclusively from the config file if one was supplied.
 	// Otherwise, add HTTP listeners for new Services/Sessions/Clients/etc.

@@ -35,17 +35,18 @@ func WithCORSOptions(handler http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-// MakeJSONAPI creates an HTTP handler which always responds to incoming requests with JSON responses.
-func MakeJSONAPI(handler JSONRequestHandler) http.HandlerFunc {
+// Protect panicking HTTP requests from taking down the entire process, and log them using
+// the correct logger, returning a 500 with a JSON response rather than abruptly closing the
+// connection.
+func Protect(handler http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		logger := log.WithFields(log.Fields{
-			"method": req.Method,
-			"url":    req.URL,
-		})
-		logger.Print("Incoming request")
 		defer func() {
 			if r := recover(); r != nil {
-				logger.WithField("panic", r).Errorf(
+				log.WithFields(log.Fields{
+					"panic":  r,
+					"method": req.Method,
+					"url":    req.URL,
+				}).Errorf(
 					"Request panicked!\n%s", debug.Stack(),
 				)
 				jsonErrorResponse(
@@ -53,6 +54,19 @@ func MakeJSONAPI(handler JSONRequestHandler) http.HandlerFunc {
 				)
 			}
 		}()
+		handler(w, req)
+	}
+}
+
+// MakeJSONAPI creates an HTTP handler which always responds to incoming requests with JSON responses.
+func MakeJSONAPI(handler JSONRequestHandler) http.HandlerFunc {
+	return Protect(func(w http.ResponseWriter, req *http.Request) {
+		logger := log.WithFields(log.Fields{
+			"method": req.Method,
+			"url":    req.URL,
+		})
+		logger.Print("Incoming request")
+
 		res, httpErr := handler.OnIncomingRequest(req)
 
 		// Set common headers returned regardless of the outcome of the request
@@ -78,7 +92,7 @@ func MakeJSONAPI(handler JSONRequestHandler) http.HandlerFunc {
 			resBytes = r
 		}
 		w.Write(resBytes)
-	}
+	})
 }
 
 func jsonErrorResponse(w http.ResponseWriter, req *http.Request, httpErr *errors.HTTPError) {
