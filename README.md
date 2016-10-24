@@ -7,6 +7,7 @@ Go-NEB is a [Matrix](https://matrix.org) bot written in Go. It is the successor 
     * [Features](#features)
  * [Installing](#installing)
  * [Running](#running)
+    * [Configuration file](#configuration-file)
     * [Configuring clients](#configuring-clients)
     * [Configuring services](#configuring-services)
         * [Echo Service](#echo-service)
@@ -20,6 +21,7 @@ Go-NEB is a [Matrix](https://matrix.org) bot written in Go. It is the successor 
         * [JIRA Realm](#jira-realm)
  * [Developing](#developing)
     * [Architecture](#architecture)
+    * [API Docs](#viewing-the-api-docs)
 
 # Quick Start
 
@@ -98,8 +100,12 @@ BIND_ADDRESS=:4050 DATABASE_TYPE=sqlite3 DATABASE_URL=go-neb.db?_busy_timeout=50
  - `DATABASE_TYPE` MUST be "sqlite3". No other type is supported.
  - `DATABASE_URL` is where to find the database file. One will be created if it does not exist. It is a URL so parameters can be passed to it. We recommend setting `_busy_timeout=5000` to prevent sqlite3 "database is locked" errors.
  - `BASE_URL` should be the public-facing endpoint that sites like Github can send webhooks to.
+ - `CONFIG_FILE` is the path to the configuration file to read from. This isn't included in the example above, so Go-NEB will operate in HTTP mode.
 
-Go-NEB needs to be "configured" with clients and services before it will do anything useful.
+Go-NEB needs to be "configured" with clients and services before it will do anything useful. It can be configured via a configuration file OR by an HTTP API.
+
+## Configuration file
+If you run Go-NEB with a `CONFIG_FILE` environment variable, it will load that file and use it for services, clients, etc. There is a [sample configuration file](config.sample.yaml) which explains all the options. In most cases, these are *direct mappings* to the corresponding HTTP API.
 
 ## Configuring Clients
 Go-NEB needs to connect as a matrix user to receive messages. Go-NEB can listen for messages as multiple matrix users. The users are configured using an HTTP API and the config is stored in the database. To create a user:
@@ -469,7 +475,7 @@ Auth Session = An individual authentication session /requestAuthSession makes th
 ```
 
 
-## Viewing the API docs.
+## Viewing the API docs
 
 ```
 # Start a documentation server listening on :6060
