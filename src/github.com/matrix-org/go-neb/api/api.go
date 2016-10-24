@@ -48,6 +48,7 @@ type ConfigFile struct {
 	Sessions []SessionRequest
 }
 
+// Check validates the /configureService request
 func (c *ConfigureServiceRequest) Check() error {
 	if c.ID == "" || c.Type == "" || c.UserID == "" || c.Config == nil {
 		return errors.New(`Must supply an "ID", a "Type", a "UserID" and a "Config"`)
@@ -55,6 +56,7 @@ func (c *ConfigureServiceRequest) Check() error {
 	return nil
 }
 
+// Check validates the /configureAuthRealm request
 func (c *ConfigureAuthRealmRequest) Check() error {
 	if c.ID == "" || c.Type == "" || c.Config == nil {
 		return errors.New(`Must supply a "ID", a "Type" and a "Config"`)
@@ -62,6 +64,7 @@ func (c *ConfigureAuthRealmRequest) Check() error {
 	return nil
 }
 
+// Check validates the session config request
 func (c *SessionRequest) Check() error {
 	if c.SessionID == "" || c.UserID == "" || c.RealmID == "" || c.Config == nil {
 		return errors.New(`Must supply a "SessionID", a "RealmID", a "UserID" and a "Config"`)
