@@ -5,6 +5,7 @@ import (
 	"github.com/matrix-org/go-neb/clients"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/types"
+	"runtime/debug"
 	"sync"
 	"time"
 )
@@ -71,6 +72,15 @@ func pollLoop(service types.Service, ts int64) {
 		"service_id":   service.ServiceID(),
 		"service_type": service.ServiceType(),
 	})
+
+	defer func() {
+		if r := recover(); r != nil {
+			logger.WithField("panic", r).Errorf(
+				"pollLoop panicked!\n%s", debug.Stack(),
+			)
+		}
+	}()
+
 	poller, ok := service.(types.Poller)
 	if !ok {
 		logger.Error("Service is not a Poller.")
