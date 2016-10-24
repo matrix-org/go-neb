@@ -98,6 +98,9 @@ func (s *githubService) cmdGithubCreate(roomID, userID string, args []string) (i
 	})
 	if err != nil {
 		log.WithField("err", err).Print("Failed to create issue")
+		if res == nil {
+			return nil, fmt.Errorf("Failed to create issue. Failed to connect to Github")
+		}
 		return nil, fmt.Errorf("Failed to create issue. HTTP %d", res.StatusCode)
 	}
 
