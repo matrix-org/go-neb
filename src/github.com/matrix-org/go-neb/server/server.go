@@ -6,6 +6,7 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/matrix-org/go-neb/errors"
 	"net/http"
+	"runtime/debug"
 )
 
 // JSONRequestHandler represents an interface that must be satisfied in order to respond to incoming
@@ -41,7 +42,17 @@ func MakeJSONAPI(handler JSONRequestHandler) http.HandlerFunc {
 			"method": req.Method,
 			"url":    req.URL,
 		})
-		logger.Print(">>> Incoming request")
+		logger.Print("Incoming request")
+		defer func() {
+			if r := recover(); r != nil {
+				logger.WithField("error", r).Errorf(
+					"Request panicked!\n%s", debug.Stack(),
+				)
+				jsonErrorResponse(
+					w, req, &errors.HTTPError{nil, "Internal Server Error", 500},
+				)
+			}
+		}()
 		res, httpErr := handler.OnIncomingRequest(req)
 
 		// Set common headers returned regardless of the outcome of the request
