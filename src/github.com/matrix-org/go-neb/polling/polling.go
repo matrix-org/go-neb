@@ -74,6 +74,8 @@ func pollLoop(service types.Service, ts int64) {
 	})
 
 	defer func() {
+		// Kill the poll loop entirely as it is likely that whatever made us panic will
+		// make us panic again. We can whine bitterly about it though.
 		if r := recover(); r != nil {
 			logger.WithField("panic", r).Errorf(
 				"pollLoop panicked!\n%s", debug.Stack(),
