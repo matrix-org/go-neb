@@ -2,10 +2,10 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"os"
-	"strconv"
 	"testing"
 )
 
@@ -20,8 +20,8 @@ func (rt MockTripper) RoundTrip(req *http.Request) (*http.Response, error) {
 	h := rt.handlers[key]
 	if h == nil {
 		panic(
-			"Test RoundTrip: Unhandled request: " + key + "\n" +
-				"Handlers: " + strconv.Itoa(len(rt.handlers)),
+			fmt.Sprintf("Test RoundTrip: Unhandled request: %s\nHandlers: %d",
+				key, len(rt.handlers)),
 		)
 	}
 	return h(req)
