@@ -7,6 +7,7 @@ import (
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/plugin"
 	"github.com/matrix-org/go-neb/types"
+	"net/http"
 	"net/url"
 	"strings"
 	"sync"
@@ -39,17 +40,19 @@ func (s nextBatchStore) Load(userID string) string {
 
 // A Clients is a collection of clients used for bot services.
 type Clients struct {
-	db       *database.ServiceDB
-	dbMutex  sync.Mutex
-	mapMutex sync.Mutex
-	clients  map[string]clientEntry
+	db         *database.ServiceDB
+	httpClient *http.Client
+	dbMutex    sync.Mutex
+	mapMutex   sync.Mutex
+	clients    map[string]clientEntry
 }
 
 // New makes a new collection of matrix clients
-func New(db *database.ServiceDB) *Clients {
+func New(db *database.ServiceDB, cli *http.Client) *Clients {
 	clients := &Clients{
-		db:      db,
-		clients: make(map[string]clientEntry), // user_id => clientEntry
+		db:         db,
+		httpClient: cli,
+		clients:    make(map[string]clientEntry), // user_id => clientEntry
 	}
 	return clients
 }
@@ -238,7 +241,7 @@ func (c *Clients) newClient(config api.ClientConfig) (*matrix.Client, error) {
 		return nil, err
 	}
 
-	client := matrix.NewClient(homeserverURL, config.AccessToken, config.UserID)
+	client := matrix.NewClient(c.httpClient, homeserverURL, config.AccessToken, config.UserID)
 	client.NextBatchStorer = nextBatchStore{c.db}
 
 	// TODO: Check that the access token is valid for the userID by peforming
