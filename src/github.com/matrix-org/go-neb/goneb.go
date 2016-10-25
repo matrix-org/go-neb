@@ -139,7 +139,7 @@ func loadDatabase(databaseType, databaseURL, configYAML string) (*database.Servi
 	return db, err
 }
 
-func setup(e envVars, mux *http.ServeMux) {
+func setup(e envVars, mux *http.ServeMux, matrixClient *http.Client) {
 	err := types.BaseURL(e.BaseURL)
 	if err != nil {
 		log.WithError(err).Panic("Failed to get base url")
@@ -164,7 +164,7 @@ func setup(e envVars, mux *http.ServeMux) {
 		log.Info("Inserted ", len(cfg.Sessions), " sessions")
 	}
 
-	clients := clients.New(db)
+	clients := clients.New(db, matrixClient)
 	if err := clients.Start(); err != nil {
 		log.WithError(err).Panic("Failed to start up clients")
 	}
@@ -229,6 +229,6 @@ func main() {
 
 	log.Infof("Go-NEB (%+v)", e)
 
-	setup(e, http.DefaultServeMux)
+	setup(e, http.DefaultServeMux, http.DefaultClient)
 	log.Fatal(http.ListenAndServe(e.BindAddress, nil))
 }

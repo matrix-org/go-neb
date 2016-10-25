@@ -404,7 +404,11 @@ func (cli *Client) doSync(timeout int, since string) ([]byte, error) {
 		query["filter"] = cli.filterID
 	}
 	urlPath := cli.buildURLWithQuery([]string{"sync"}, query)
-	res, err := http.Get(urlPath)
+	req, err := http.NewRequest("GET", urlPath, nil)
+	if err != nil {
+		return nil, err
+	}
+	res, err := cli.httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -417,7 +421,7 @@ func (cli *Client) doSync(timeout int, since string) ([]byte, error) {
 }
 
 // NewClient creates a new Matrix Client ready for syncing
-func NewClient(homeserverURL *url.URL, accessToken string, userID string) *Client {
+func NewClient(httpClient *http.Client, homeserverURL *url.URL, accessToken, userID string) *Client {
 	cli := Client{
 		AccessToken:   accessToken,
 		HomeserverURL: homeserverURL,
@@ -430,7 +434,7 @@ func NewClient(homeserverURL *url.URL, accessToken string, userID string) *Clien
 	// remember the token across restarts. In practice, a database backend should be used.
 	cli.NextBatchStorer = noopNextBatchStore{}
 	cli.Rooms = make(map[string]*Room)
-	cli.httpClient = &http.Client{}
+	cli.httpClient = httpClient
 
 	return &cli
 }
