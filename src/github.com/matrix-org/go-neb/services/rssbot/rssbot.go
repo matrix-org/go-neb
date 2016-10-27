@@ -279,6 +279,15 @@ func (s *rssBotService) newItems(feedURL string, allItems []*gofeed.Item) (items
 			continue
 		}
 
+		// Decode HTML for <title> and <description>:
+		//   The RSS 2.0 Spec http://cyber.harvard.edu/rss/rss.html#hrelementsOfLtitemgt supports a bunch
+		//   of weird ways to put HTML into <title> and <description> tags. Not all RSS feed producers run
+		//   these fields through entity encoders (some have ' unencoded, others have it as &#8217;). We'll
+		//   assume that all RSS fields are sending HTML for these fields and run them through a standard decoder.
+		//   This will inevitably break for some people, but that group of people are probably smaller, so *shrug*.
+		i.Title = html.UnescapeString(i.Title)
+		i.Description = html.UnescapeString(i.Description)
+
 		items = append(items, *i)
 	}
 	return
