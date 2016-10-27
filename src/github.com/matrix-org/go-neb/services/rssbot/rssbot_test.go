@@ -17,6 +17,25 @@ import (
 	"time"
 )
 
+const rssFeedXML = `
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+<channel>
+	<title>Mask Shop</title>
+	<item>
+		<title>New Item: Majora&#8217;s Mask</title>
+		<link>http://go.neb/rss/majoras-mask</link>
+	</item>
+</channel>
+</rss>`
+
 type MockTransport struct {
 	roundTrip func(*http.Request) (*http.Response, error)
 }
@@ -45,25 +64,7 @@ func TestHTMLEntities(t *testing.T) {
 		}
 		return &http.Response{
 			StatusCode: 200,
-			Body: ioutil.NopCloser(bytes.NewBufferString(`
-			<?xml version="1.0" encoding="UTF-8"?>
-			<rss version="2.0"
-				xmlns:content="http://purl.org/rss/1.0/modules/content/"
-				xmlns:wfw="http://wellformedweb.org/CommentAPI/"
-				xmlns:dc="http://purl.org/dc/elements/1.1/"
-				xmlns:atom="http://www.w3.org/2005/Atom"
-				xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
-				xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
-				>
-
-			<channel>
-				<title>Mask Shop</title>
-				<item>
-					<title>New Item: Majora&#8217;s Mask</title>
-					<link>http://go.neb/rss/majoras-mask</link>
-				</item>
-			</channel>
-			</rss>`)),
+			Body:       ioutil.NopCloser(bytes.NewBufferString(rssFeedXML)),
 		}, nil
 	}
 	cachingClient = &http.Client{Transport: rssTrans}
@@ -76,9 +77,11 @@ func TestHTMLEntities(t *testing.T) {
 		t.Fatal("Failed to create RSS bot: ", err)
 	}
 	rssbot := srv.(*rssBotService)
+
+	// Configure the service to force OnPoll to query the RSS feed and attempt to send results
+	// to the right room.
 	f := rssbot.Feeds[feedURL]
 	f.Rooms = []string{"!linksroom:hyrule"}
-	f.FeedUpdatedTimestampSecs = 12345
 	f.NextPollTimestampSecs = time.Now().Unix()
 	rssbot.Feeds[feedURL] = f
 
@@ -94,7 +97,7 @@ func TestHTMLEntities(t *testing.T) {
 				t.Fatal("Failed to decode request JSON: ", err)
 				return nil, errors.New("Error handling matrix client test request")
 			}
-			want := "New Item: Majora’s Mask"
+			want := "New Item: Majora\u2019s Mask" // 0x2019 = 8217
 			if !strings.Contains(msg.Body, want) {
 				t.Errorf("TestHTMLEntities: want '%s' in body, got '%s'", want, msg.Body)
 			}
