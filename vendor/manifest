@@ -132,7 +132,7 @@
 		{
 			"importpath": "github.com/matrix-org/dugong",
 			"repository": "https://github.com/matrix-org/dugong",
-			"revision": "6b893e5ef2dd0ddcbfdf00aafe0278237456512b",
+			"revision": "07b01e0bea3c53627f5a3fc9c5f36ad145a4b086",
 			"branch": "master"
 		},
 		{
