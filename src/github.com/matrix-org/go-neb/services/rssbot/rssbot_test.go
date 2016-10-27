@@ -94,7 +94,7 @@ func TestHTMLEntities(t *testing.T) {
 				t.Fatal("Failed to decode request JSON: ", err)
 				return nil, errors.New("Error handling matrix client test request")
 			}
-			want := "New Item: Majora's Mask"
+			want := "New Item: Majora’s Mask"
 			if !strings.Contains(msg.Body, want) {
 				t.Errorf("TestHTMLEntities: want '%s' in body, got '%s'", want, msg.Body)
 			}
