@@ -108,72 +108,17 @@ Go-NEB needs to be "configured" with clients and services before it will do anyt
 If you run Go-NEB with a `CONFIG_FILE` environment variable, it will load that file and use it for services, clients, etc. There is a [sample configuration file](config.sample.yaml) which explains all the options. In most cases, these are *direct mappings* to the corresponding HTTP API.
 
 ## Configuring Clients
-Go-NEB needs to connect as a matrix user to receive messages. Go-NEB can listen for messages as multiple matrix users. The users are configured using an HTTP API and the config is stored in the database. To create a user:
-```bash
-curl -X POST localhost:4050/admin/configureClient --data-binary '{
-    "UserID": "@goneb:localhost:8448",
-    "HomeserverURL": "http://localhost:8008",
-    "AccessToken": "<access_token>",
-    "Sync": true,
-    "AutoJoinRooms": true,
-    "DisplayName": "My Bot"
-}'
-```
- - `UserID` is the complete user ID of the client to connect as. The user MUST already exist.
- - `HomeserverURL` is the complete Homeserver URL for the given user ID.
- - `AccessToken` is the user's access token.
- - `Sync`, if `true`, will start a `/sync` stream so this client will receive incoming messages. This is required for services which need a live stream to the server (e.g. to respond to `!commands` and expand issues). It is not required for services which do not respond to Matrix users (e.g. webhook notifications).
- - `AutoJoinRooms`, if `true`, will automatically join rooms when an invite is received. This option is only valid when `Sync: true`.
- - `DisplayName`, if set, will set the given user's profile display name to the string given.
+Go-NEB needs to connect as a matrix user to receive messages. Go-NEB can listen for messages as multiple matrix users. The users are configured using an HTTP API and the config is stored in the database.
 
-Go-NEB will respond with the previous configuration for this client, if one exists, as well as echo back the complete configuration for the client:
-
-```json
-{
-    "OldClient": {},
-    "NewClient": {
-        "UserID": "@goneb:localhost:8448",
-        "HomeserverURL": "http://localhost:8008",
-        "AccessToken": "<access_token>",
-        "Sync": true,
-        "AutoJoinRooms": true,
-        "DisplayName": "My Bot"
-    }
-}
-```
+[http://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/api/handlers/#ConfigureClient.OnIncomingRequest](HTTP API Docs)
 
 ## Configuring Services
 Services contain all the useful functionality in Go-NEB. They require a client to operate. Services are configured using an HTTP API and the config is stored in the database. Services use one of the matrix users configured on Go-NEB to send/receive matrix messages.
 
-Every service MUST have the following fields:
- - `Type` : The type of service. This determines which code is executed.
- - `Id` : An arbitrary string which you can use to identify this service.
- - `UserID` : A user ID of a client which has been previously configured on Go-NEB. If this user does not exist, an error will be returned.
- - `Config` : A JSON object. The contents of this object depends on the service.
- 
-The information about a Service can be retrieved based on their `Id` like so:
-```bash
-curl -X POST localhost:4050/admin/getService --data-binary '{
-    "Id": "myserviceid"
-}'
-```
-This will return:
-```yaml
-# HTTP 200 OK
-{
-    "Type": "echo",
-    "Id": "myserviceid",
-    "UserID": "@goneb:localhost:8448",
-    "Config": {}
-}
-```
-If the service is not found, this will return:
-```yaml
-# HTTP 404 Not Found
-{ "message": "Service not found" }
-```
+ - [http://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/api/handlers/#ConfigureService.OnIncomingRequest](Configuring Services (HTTP API))
 
-If you configure an existing Service (based on ID), the entire service will be replaced with the new information.
+ - [http://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/api/handlers/#GetService.OnIncomingRequest](Retrieving Services (HTTP API))
+
 
 ### Echo Service
 The simplest service. This will echo back any `!echo` command. To configure one:
