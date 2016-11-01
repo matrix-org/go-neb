@@ -1,9 +1,12 @@
 package dugong
 
 import (
+	"compress/gzip"
 	"fmt"
 	log "github.com/Sirupsen/logrus"
+	"io"
 	"os"
+	"path/filepath"
 	"sync/atomic"
 	"time"
 )
@@ -13,6 +16,8 @@ type RotationScheduler interface {
 	// ShouldRotate returns true if the file should be rotated. The suffix to apply
 	// to the filename is returned as the 2nd arg.
 	ShouldRotate() (bool, string)
+	// ShouldGZip returns true if the file should be gzipped when it is rotated.
+	ShouldGZip() bool
 }
 
 // DailyRotationSchedule rotates log files daily. Logs are only rotated
@@ -20,6 +25,7 @@ type RotationScheduler interface {
 // the process on Day 4 then stop it and start it on Day 7, no rotation will
 // occur when the process starts.
 type DailyRotationSchedule struct {
+	GZip        bool
 	rotateAfter *time.Time
 }
 
@@ -51,6 +57,10 @@ func (rs *DailyRotationSchedule) ShouldRotate() (bool, string) {
 		return true, suffix
 	}
 	return false, ""
+}
+
+func (rs *DailyRotationSchedule) ShouldGZip() bool {
+	return rs.GZip
 }
 
 // NewFSHook makes a logging hook that writes formatted
@@ -107,7 +117,7 @@ func (hook *fsHook) writeEntry(entry *log.Entry) error {
 
 	if hook.scheduler != nil {
 		if should, suffix := hook.scheduler.ShouldRotate(); should {
-			if err := hook.rotate(suffix); err != nil {
+			if err := hook.rotate(suffix, hook.scheduler.ShouldGZip()); err != nil {
 				return err
 			}
 		}
@@ -150,13 +160,19 @@ func (hook *fsHook) Levels() []log.Level {
 // This requires no locking as the goroutine calling this is the same
 // one which does the logging. Since we don't hold open a handle to the
 // file when writing, a simple Rename is all that is required.
-func (hook *fsHook) rotate(suffix string) error {
+func (hook *fsHook) rotate(suffix string, gzip bool) error {
 	for _, fpath := range []string{hook.errorPath, hook.warnPath, hook.infoPath} {
-		if err := os.Rename(fpath, fpath+suffix); err != nil {
+		logFilePath := fpath + suffix
+		if err := os.Rename(fpath, logFilePath); err != nil {
 			// e.g. because there were no errors in error.log for this day
 			fmt.Fprintf(os.Stderr, "Error rotating file %s: %v\n", fpath, err)
+			continue // don't try to gzip if we failed to rotate
 		}
-
+		if gzip {
+			if err := gzipFile(logFilePath); err != nil {
+				fmt.Fprintf(os.Stderr, "Failed to gzip file %s: %v\n", logFilePath, err)
+			}
+		}
 	}
 	return nil
 }
@@ -168,5 +184,27 @@ func logToFile(path string, msg []byte) error {
 	}
 	defer fd.Close()
 	_, err = fd.Write(msg)
+	return err
+}
+
+func gzipFile(fpath string) error {
+	reader, err := os.Open(fpath)
+	if err != nil {
+		return err
+	}
+
+	filename := filepath.Base(fpath)
+	target := filepath.Join(filepath.Dir(fpath), filename+".gz")
+	writer, err := os.Create(target)
+	if err != nil {
+		return err
+	}
+	defer writer.Close()
+
+	archiver := gzip.NewWriter(writer)
+	archiver.Name = filename
+	defer archiver.Close()
+
+	_, err = io.Copy(archiver, reader)
 	return err
 }

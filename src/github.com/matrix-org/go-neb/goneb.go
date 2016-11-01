@@ -224,7 +224,7 @@ func main() {
 			filepath.Join(e.LogDir, "info.log"),
 			filepath.Join(e.LogDir, "warn.log"),
 			filepath.Join(e.LogDir, "error.log"),
-			nil, &dugong.DailyRotationSchedule{},
+			nil, &dugong.DailyRotationSchedule{GZip: true},
 		))
 	}
 
