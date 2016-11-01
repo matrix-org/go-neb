@@ -3,9 +3,16 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"net/http"
+	_ "net/http/pprof"
+	"os"
+	"path/filepath"
+
 	log "github.com/Sirupsen/logrus"
 	"github.com/matrix-org/dugong"
 	"github.com/matrix-org/go-neb/api"
+	"github.com/matrix-org/go-neb/api/handlers"
 	"github.com/matrix-org/go-neb/clients"
 	"github.com/matrix-org/go-neb/database"
 	_ "github.com/matrix-org/go-neb/metrics"
@@ -22,12 +29,7 @@ import (
 	"github.com/matrix-org/go-neb/types"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/prometheus/client_golang/prometheus"
-	"gopkg.in/yaml.v2"
-	"io/ioutil"
-	"net/http"
-	_ "net/http/pprof"
-	"os"
-	"path/filepath"
+	yaml "gopkg.in/yaml.v2"
 )
 
 // loadFromConfig loads a config file and returns a ConfigFile
@@ -171,11 +173,11 @@ func setup(e envVars, mux *http.ServeMux, matrixClient *http.Client) {
 
 	// Handle non-admin paths for normal NEB functioning
 	mux.Handle("/metrics", prometheus.Handler())
-	mux.Handle("/test", prometheus.InstrumentHandler("test", server.MakeJSONAPI(&heartbeatHandler{})))
-	wh := &webhookHandler{db: db, clients: clients}
-	mux.HandleFunc("/services/hooks/", prometheus.InstrumentHandlerFunc("webhookHandler", server.Protect(wh.handle)))
-	rh := &realmRedirectHandler{db: db}
-	mux.HandleFunc("/realms/redirects/", prometheus.InstrumentHandlerFunc("realmRedirectHandler", server.Protect(rh.handle)))
+	mux.Handle("/test", prometheus.InstrumentHandler("test", server.MakeJSONAPI(&handlers.Heartbeat{})))
+	wh := handlers.NewWebhook(db, clients)
+	mux.HandleFunc("/services/hooks/", prometheus.InstrumentHandlerFunc("webhookHandler", server.Protect(wh.Handle)))
+	rh := &handlers.RealmRedirect{db}
+	mux.HandleFunc("/realms/redirects/", prometheus.InstrumentHandlerFunc("realmRedirectHandler", server.Protect(rh.Handle)))
 
 	// Read exclusively from the config file if one was supplied.
 	// Otherwise, add HTTP listeners for new Services/Sessions/Clients/etc.
@@ -186,13 +188,13 @@ func setup(e envVars, mux *http.ServeMux, matrixClient *http.Client) {
 
 		log.Info("Inserted ", len(cfg.Services), " services")
 	} else {
-		mux.Handle("/admin/getService", prometheus.InstrumentHandler("getService", server.MakeJSONAPI(&getServiceHandler{db: db})))
-		mux.Handle("/admin/getSession", prometheus.InstrumentHandler("getSession", server.MakeJSONAPI(&getSessionHandler{db: db})))
-		mux.Handle("/admin/configureClient", prometheus.InstrumentHandler("configureClient", server.MakeJSONAPI(&configureClientHandler{db: db, clients: clients})))
-		mux.Handle("/admin/configureService", prometheus.InstrumentHandler("configureService", server.MakeJSONAPI(newConfigureServiceHandler(db, clients))))
-		mux.Handle("/admin/configureAuthRealm", prometheus.InstrumentHandler("configureAuthRealm", server.MakeJSONAPI(&configureAuthRealmHandler{db: db})))
-		mux.Handle("/admin/requestAuthSession", prometheus.InstrumentHandler("requestAuthSession", server.MakeJSONAPI(&requestAuthSessionHandler{db: db})))
-		mux.Handle("/admin/removeAuthSession", prometheus.InstrumentHandler("removeAuthSession", server.MakeJSONAPI(&removeAuthSessionHandler{db: db})))
+		mux.Handle("/admin/getService", prometheus.InstrumentHandler("getService", server.MakeJSONAPI(&handlers.GetService{db})))
+		mux.Handle("/admin/getSession", prometheus.InstrumentHandler("getSession", server.MakeJSONAPI(&handlers.GetSession{db})))
+		mux.Handle("/admin/configureClient", prometheus.InstrumentHandler("configureClient", server.MakeJSONAPI(&handlers.ConfigureClient{clients})))
+		mux.Handle("/admin/configureService", prometheus.InstrumentHandler("configureService", server.MakeJSONAPI(handlers.NewConfigureService(db, clients))))
+		mux.Handle("/admin/configureAuthRealm", prometheus.InstrumentHandler("configureAuthRealm", server.MakeJSONAPI(&handlers.ConfigureAuthRealm{db})))
+		mux.Handle("/admin/requestAuthSession", prometheus.InstrumentHandler("requestAuthSession", server.MakeJSONAPI(&handlers.RequestAuthSession{db})))
+		mux.Handle("/admin/removeAuthSession", prometheus.InstrumentHandler("removeAuthSession", server.MakeJSONAPI(&handlers.RemoveAuthSession{db})))
 	}
 	polling.SetClients(clients)
 	if err := polling.Start(); err != nil {
