@@ -15,19 +15,36 @@ import (
 	"github.com/matrix-org/go-neb/types"
 )
 
+// RequestAuthSession represents an HTTP handler capable of processing /admin/requestAuthSession requests.
 type RequestAuthSession struct {
 	Db *database.ServiceDB
 }
 
+// OnIncomingRequest handles POST requests to /admin/requestAuthSession. The HTTP body MUST be
+// a JSON object representing type "api.RequestAuthSessionRequest".
+//
+// This will return HTTP 400 if there are missing fields or the Realm ID is unknown.
+// For the format of the response, see the specific AuthRealm that the Realm ID corresponds to.
+//
+// Request:
+//  POST /admin/requestAuthSession
+//  {
+//      "RealmID": "github_realm_id",
+//      "UserID": "@my_user:localhost",
+//      "Config": {
+//          // AuthRealm specific config info
+//      }
+//  }
+// Response:
+//  HTTP/1.1 200 OK
+//  {
+//      // AuthRealm-specific information
+//  }
 func (h *RequestAuthSession) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError) {
 	if req.Method != "POST" {
 		return nil, &errors.HTTPError{nil, "Unsupported Method", 405}
 	}
-	var body struct {
-		RealmID string
-		UserID  string
-		Config  json.RawMessage
-	}
+	var body api.RequestAuthSessionRequest
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
 		return nil, &errors.HTTPError{err, "Error parsing request JSON", 400}
 	}
@@ -36,8 +53,8 @@ func (h *RequestAuthSession) OnIncomingRequest(req *http.Request) (interface{}, 
 		"user_id":  body.UserID,
 	}).Print("Incoming auth session request")
 
-	if body.UserID == "" || body.RealmID == "" || body.Config == nil {
-		return nil, &errors.HTTPError{nil, `Must supply a "UserID", a "RealmID" and a "Config"`, 400}
+	if err := body.Check(); err != nil {
+		return nil, &errors.HTTPError{err, err.Error(), 400}
 	}
 
 	realm, err := h.Db.LoadAuthRealm(body.RealmID)
@@ -55,10 +72,24 @@ func (h *RequestAuthSession) OnIncomingRequest(req *http.Request) (interface{}, 
 	return response, nil
 }
 
+// RemoveAuthSession represents an HTTP handler capable of processing /admin/removeAuthSession requests.
 type RemoveAuthSession struct {
 	Db *database.ServiceDB
 }
 
+// OnIncomingRequest handles POST requests to /admin/removeAuthSession.
+//
+// The JSON object MUST contain the keys "RealmID" and "UserID" to identify the session to remove.
+//
+// Request
+//  POST /admin/removeAuthSession
+//  {
+//      "RealmID": "github-realm",
+//      "UserID": "@my_user:localhost"
+//  }
+// Response:
+//  HTTP/1.1 200 OK
+//  {}
 func (h *RemoveAuthSession) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError) {
 	if req.Method != "POST" {
 		return nil, &errors.HTTPError{nil, "Unsupported Method", 405}
@@ -91,10 +122,15 @@ func (h *RemoveAuthSession) OnIncomingRequest(req *http.Request) (interface{}, *
 	return []byte(`{}`), nil
 }
 
+// RealmRedirect represents an HTTP handler which can process incoming redirects for auth realms.
 type RealmRedirect struct {
 	Db *database.ServiceDB
 }
 
+// Handle requests for an auth realm.
+//
+// The last path segment of the URL MUST be the base64 form of the Realm ID. What response
+// this returns depends on the specific AuthRealm implementation.
 func (rh *RealmRedirect) Handle(w http.ResponseWriter, req *http.Request) {
 	segments := strings.Split(req.URL.Path, "/")
 	// last path segment is the base64d realm ID which we will pass the incoming request to
@@ -121,10 +157,35 @@ func (rh *RealmRedirect) Handle(w http.ResponseWriter, req *http.Request) {
 	realm.OnReceiveRedirect(w, req)
 }
 
+// ConfigureAuthRealm represents an HTTP handler capable of processing /admin/configureAuthRealm requests.
 type ConfigureAuthRealm struct {
 	Db *database.ServiceDB
 }
 
+// OnIncomingRequest handles POST requests to /admin/configureAuthRealm. The JSON object
+// provided is of type "api.ConfigureAuthRealmRequest".
+//
+// Request:
+//  POST /admin/configureAuthRealm
+//  {
+//      "ID": "my-realm-id",
+//      "Type": "github",
+//      "Config": {
+//          // Realm-specific configuration information
+//      }
+//  }
+// Response:
+//  HTTP/1.1 200 OK
+//  {
+//      "ID": "my-realm-id",
+//      "Type": "github",
+//      "OldConfig": {
+//          // Old auth realm config information
+//      },
+//      "NewConfig": {
+//          // New auth realm config information
+//      },
+//  }
 func (h *ConfigureAuthRealm) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError) {
 	if req.Method != "POST" {
 		return nil, &errors.HTTPError{nil, "Unsupported Method", 405}
@@ -160,10 +221,37 @@ func (h *ConfigureAuthRealm) OnIncomingRequest(req *http.Request) (interface{}, 
 	}{body.ID, body.Type, oldRealm, realm}, nil
 }
 
+// GetSession represents an HTTP handler capable of processing /admin/getSession requests.
 type GetSession struct {
 	Db *database.ServiceDB
 }
 
+// OnIncomingRequest handles POST requests to /admin/getSession.
+//
+// The JSON object provided MUST have a "RealmID" and "UserID" in order to fetch the
+// correct AuthSession. If there is no session for this tuple of realm and user ID,
+// a 200 OK is still returned with "Authenticated" set to false.
+//
+// Request:
+//  POST /admin/getSession
+//  {
+//      "RealmID": "my-realm",
+//      "UserID": "@my_user:localhost"
+//  }
+// Response:
+//  HTTP/1.1 200 OK
+//  {
+//      "ID": "session_id",
+//      "Authenticated": true,
+//      "Info": {
+//          // Session-specific config info
+//      }
+//  }
+// Response if session not found:
+//  HTTP/1.1 200 OK
+//  {
+//      "Authenticated": false
+//  }
 func (h *GetSession) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError) {
 	if req.Method != "POST" {
 		return nil, &errors.HTTPError{nil, "Unsupported Method", 405}

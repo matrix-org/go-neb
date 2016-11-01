@@ -1,3 +1,11 @@
+// Package api contains the fundamental data types used by Go-NEB.
+//
+// Most HTTP API calls and/or config file sections are just ways of representing these
+// data types.
+//
+// See also
+//
+// Package "api.handlers" for information on the HTTP API calls.
 package api
 
 import (
@@ -8,31 +16,68 @@ import (
 
 // ConfigureAuthRealmRequest is a request to /configureAuthRealm
 type ConfigureAuthRealmRequest struct {
-	ID     string
-	Type   string
+	// An arbitrary unique identifier for this auth realm. This can be anything.
+	// Using the same ID will REPLACE the entire AuthRealm with the new information.
+	ID string
+	// The type of auth realm. This determines which code is loaded to execute the
+	// auth realm. It must be a known type.
+	Type string
+	// AuthRealm specific config information. See the docs for the auth realm you're interested in.
+	Config json.RawMessage
+}
+
+// RequestAuthSessionRequest is a request to /requestAuthSession
+type RequestAuthSessionRequest struct {
+	// The realm ID to request a new auth session on. The realm MUST already exist.
+	RealmID string
+	// The user ID of user requesting the auth session. If the auth is successful,
+	// this user ID will be associated with the third-party credentials obtained.
+	UserID string
+	// AuthRealm specific config information. See the docs for the auth realm you're interested in.
 	Config json.RawMessage
 }
 
 // ConfigureServiceRequest is a request to /configureService
 type ConfigureServiceRequest struct {
-	ID     string
-	Type   string
+	// An arbitrary unique identifier for this service. This can be anything.
+	// Using the same ID will REPLACE the entire Service with the new information.
+	ID string
+	// The type of service. This determines which code is loaded to execute the
+	// service. It must be a known type.
+	Type string
+	// The user ID of the configured client who will be controlled by this service.
+	// The user MUST already be configured.
 	UserID string
+	// Service-specific config information. See the docs for the service you're interested in.
 	Config json.RawMessage
 }
 
-// A ClientConfig is the configuration for a matrix client for a bot to use. It is
-// a request to /configureClient
+// A ClientConfig contains the configuration information for a matrix client so that
+// Go-NEB can drive it. It forms the HTTP body to /configureClient requests.
 type ClientConfig struct {
-	UserID        string // The matrix UserId to connect with.
-	HomeserverURL string // A URL with the host and port of the matrix server. E.g. https://matrix.org:8448
-	AccessToken   string // The matrix access token to authenticate the requests with.
-	Sync          bool   // True to start a sync stream for this user
-	AutoJoinRooms bool   // True to automatically join all rooms for this user
-	DisplayName   string // The display name to set for the matrix client
+	// The matrix User ID to connect with. E.g. @alice:matrix.org
+	UserID string
+	// A URL with the host and port of the matrix server. E.g. https://matrix.org:8448
+	HomeserverURL string
+	// The matrix access token to authenticate the requests with.
+	AccessToken string
+	// True to start a sync stream for this user. If false, no /sync goroutine will be
+	// created and this client will be unable to receive new events from Matrix. For services
+	// which only SEND events into Matrix, it may be desirable to set Sync to false to reduce the
+	// number of goroutines Go-NEB has to maintain. For services which respond to !commands,
+	// Sync MUST be set to true in order to receive those commands.
+	Sync bool
+	// True to automatically join every room this client is invited to.
+	// This is desirable for services which have !commands as that means anyone can pull the bot
+	// into the room. It is up to the service to decide which, if any, users to respond to however.
+	AutoJoinRooms bool
+	// The desired display name for this client.
+	// This does not automatically set the display name for this client. See /configureClient.
+	DisplayName string
 }
 
-// SessionRequest are usually multi-stage things so this type only exists for the config form
+// SessionRequests are usually multi-stage things so this type only exists for the config form
+// for use with ConfigFile.
 type SessionRequest struct {
 	SessionID string
 	RealmID   string
@@ -72,13 +117,21 @@ func (c *SessionRequest) Check() error {
 	return nil
 }
 
-// Check that the client has the correct fields.
+// Check that the client has supplied the correct fields.
 func (c *ClientConfig) Check() error {
 	if c.UserID == "" || c.HomeserverURL == "" || c.AccessToken == "" {
 		return errors.New(`Must supply a "UserID", a "HomeserverURL", and an "AccessToken"`)
 	}
 	if _, err := url.Parse(c.HomeserverURL); err != nil {
 		return err
+	}
+	return nil
+}
+
+// Check that the request is valid.
+func (r *RequestAuthSessionRequest) Check() error {
+	if r.UserID == "" || r.RealmID == "" || r.Config == nil {
+		return errors.New(`Must supply a "UserID", a "RealmID" and a "Config"`)
 	}
 	return nil
 }

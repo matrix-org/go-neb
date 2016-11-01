@@ -2,12 +2,13 @@ package handlers
 
 import (
 	"encoding/base64"
+	"net/http"
+	"strings"
+
 	log "github.com/Sirupsen/logrus"
 	"github.com/matrix-org/go-neb/clients"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/metrics"
-	"net/http"
-	"strings"
 )
 
 // Webhook represents an HTTP handler capable of accepting webhook requests on behalf of services.
@@ -24,7 +25,9 @@ func NewWebhook(db *database.ServiceDB, cli *clients.Clients) *Webhook {
 // Handle an incoming webhook HTTP request.
 //
 // The webhook MUST have a known base64 encoded service ID as the last path segment
-// in order for this request to be passed to the correct service.
+// in order for this request to be passed to the correct service, or else this will return
+// HTTP 400. If the base64 encoded service ID is unknown, this will return HTTP 404.
+// Beyond this, the exact response is determined by the specific Service implementation.
 func (wh *Webhook) Handle(w http.ResponseWriter, req *http.Request) {
 	log.WithField("path", req.URL.Path).Print("Incoming webhook request")
 	segments := strings.Split(req.URL.Path, "/")
