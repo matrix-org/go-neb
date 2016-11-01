@@ -7,7 +7,6 @@ import (
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/types"
-	_ "github.com/mattn/go-sqlite3"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -45,16 +44,7 @@ func (t MockTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 }
 
 func TestHTMLEntities(t *testing.T) {
-	// FIXME: Make ServiceDB an interface so we don't need to do this and import sqlite3!
-	//        We are NOT interested in db operations, but need them because OnPoll will
-	//        call StoreService.
-	db, err := database.Open("sqlite3", ":memory:")
-	if err != nil {
-		t.Fatal("Failed to create in-memory db: ", err)
-		return
-	}
-	database.SetServiceDB(db)
-
+	database.SetServiceDB(&database.NopStorage{})
 	feedURL := "https://thehappymaskshop.hyrule"
 	// Replace the cachingClient with a mock so we can intercept RSS requests
 	rssTrans := struct{ MockTransport }{}
