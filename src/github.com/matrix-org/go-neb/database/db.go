@@ -15,8 +15,6 @@ type ServiceDB struct {
 }
 
 // A single global instance of the service DB.
-// XXX: I can't think of any way of doing this without one without creating
-//      cyclical dependencies somewhere -- Kegan
 var globalServiceDB Storer
 
 // SetServiceDB sets the global service DB instance.
