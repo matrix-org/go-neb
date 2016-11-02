@@ -17,10 +17,10 @@ import (
 // ConfigureAuthRealmRequest is a request to /configureAuthRealm
 type ConfigureAuthRealmRequest struct {
 	// An arbitrary unique identifier for this auth realm. This can be anything.
-	// Using the same ID will REPLACE the entire AuthRealm with the new information.
+	// Using an existing ID will REPLACE the entire existing AuthRealm with the new information.
 	ID string
 	// The type of auth realm. This determines which code is loaded to execute the
-	// auth realm. It must be a known type.
+	// auth realm. It must be a known type. E.g. "github".
 	Type string
 	// AuthRealm specific config information. See the docs for the auth realm you're interested in.
 	Config json.RawMessage
@@ -30,7 +30,7 @@ type ConfigureAuthRealmRequest struct {
 type RequestAuthSessionRequest struct {
 	// The realm ID to request a new auth session on. The realm MUST already exist.
 	RealmID string
-	// The user ID of user requesting the auth session. If the auth is successful,
+	// The Matrix user ID requesting the auth session. If the auth is successful,
 	// this user ID will be associated with the third-party credentials obtained.
 	UserID string
 	// AuthRealm specific config information. See the docs for the auth realm you're interested in.
@@ -40,12 +40,12 @@ type RequestAuthSessionRequest struct {
 // ConfigureServiceRequest is a request to /configureService
 type ConfigureServiceRequest struct {
 	// An arbitrary unique identifier for this service. This can be anything.
-	// Using the same ID will REPLACE the entire Service with the new information.
+	// Using an existing ID will REPLACE the entire Service with the new information.
 	ID string
 	// The type of service. This determines which code is loaded to execute the
-	// service. It must be a known type.
+	// service. It must be a known type, e.g. "github".
 	Type string
-	// The user ID of the configured client who will be controlled by this service.
+	// The user ID of the configured client that this service will use to communicate with Matrix.
 	// The user MUST already be configured.
 	UserID string
 	// Service-specific config information. See the docs for the service you're interested in.
@@ -62,7 +62,7 @@ type ClientConfig struct {
 	// The matrix access token to authenticate the requests with.
 	AccessToken string
 	// True to start a sync stream for this user. If false, no /sync goroutine will be
-	// created and this client will be unable to receive new events from Matrix. For services
+	// created and this client won't listen for new events from Matrix. For services
 	// which only SEND events into Matrix, it may be desirable to set Sync to false to reduce the
 	// number of goroutines Go-NEB has to maintain. For services which respond to !commands,
 	// Sync MUST be set to true in order to receive those commands.
@@ -76,9 +76,9 @@ type ClientConfig struct {
 	DisplayName string
 }
 
-// SessionRequests are usually multi-stage things so this type only exists for the config form
-// for use with ConfigFile.
-type SessionRequest struct {
+// Sessions contain the complete auth session information for a given user on a given realm.
+// They are created for use with ConfigFile.
+type Session struct {
 	SessionID string
 	RealmID   string
 	UserID    string
@@ -90,7 +90,7 @@ type ConfigFile struct {
 	Clients  []ClientConfig
 	Realms   []ConfigureAuthRealmRequest
 	Services []ConfigureServiceRequest
-	Sessions []SessionRequest
+	Sessions []Session
 }
 
 // Check validates the /configureService request
@@ -110,7 +110,7 @@ func (c *ConfigureAuthRealmRequest) Check() error {
 }
 
 // Check validates the session config request
-func (c *SessionRequest) Check() error {
+func (c *Session) Check() error {
 	if c.SessionID == "" || c.UserID == "" || c.RealmID == "" || c.Config == nil {
 		return errors.New(`Must supply a "SessionID", a "RealmID", a "UserID" and a "Config"`)
 	}
