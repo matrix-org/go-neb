@@ -76,7 +76,7 @@ type ClientConfig struct {
 	DisplayName string
 }
 
-// Sessions contain the complete auth session information for a given user on a given realm.
+// Session contains the complete auth session information for a given user on a given realm.
 // They are created for use with ConfigFile.
 type Session struct {
 	SessionID string
