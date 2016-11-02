@@ -110,14 +110,14 @@ If you run Go-NEB with a `CONFIG_FILE` environment variable, it will load that f
 ## Configuring Clients
 Go-NEB needs to connect as a matrix user to receive messages. Go-NEB can listen for messages as multiple matrix users. The users are configured using an HTTP API and the config is stored in the database.
 
-[HTTP API Docs](http://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/api/handlers/#ConfigureClient.OnIncomingRequest)
+[http://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/api/handlers/#ConfigureClient.OnIncomingRequest](HTTP API Docs)
 
 ## Configuring Services
 Services contain all the useful functionality in Go-NEB. They require a client to operate. Services are configured using an HTTP API and the config is stored in the database. Services use one of the matrix users configured on Go-NEB to send/receive matrix messages.
 
- - [Configuring Services (HTTP API)](http://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/api/handlers/#ConfigureService.OnIncomingRequest)
+ - [http://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/api/handlers/#ConfigureService.OnIncomingRequest](Configuring Services (HTTP API))
 
- - [Retrieving Services (HTTP API)](http://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/api/handlers/#GetService.OnIncomingRequest)
+ - [http://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/api/handlers/#GetService.OnIncomingRequest](Retrieving Services (HTTP API))
 
 
 ### Echo Service
