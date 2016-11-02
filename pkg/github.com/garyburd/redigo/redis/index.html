@@ -1,0 +1,2264 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>redis - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package redis</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/garyburd/redigo/redis"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+				<dd><a href="index.html#pkg-examples" class="examplesLink">Examples</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package redis is a client for the Redis database.
+</p>
+<p>
+The Redigo FAQ (<a href="https://github.com/garyburd/redigo/wiki/FAQ">https://github.com/garyburd/redigo/wiki/FAQ</a>) contains more
+documentation about this package.
+</p>
+<h3 id="hdr-Connections">Connections</h3>
+<p>
+The Conn interface is the primary interface for working with Redis.
+Applications create connections by calling the Dial, DialWithTimeout or
+NewConn functions. In the future, functions will be added for creating
+sharded and other types of connections.
+</p>
+<p>
+The application must call the connection Close method when the application
+is done with the connection.
+</p>
+<h3 id="hdr-Executing_Commands">Executing Commands</h3>
+<p>
+The Conn interface has a generic method for executing Redis commands:
+</p>
+<pre>Do(commandName string, args ...interface{}) (reply interface{}, err error)
+</pre>
+<p>
+The Redis command reference (<a href="http://redis.io/commands">http://redis.io/commands</a>) lists the available
+commands. An example of using the Redis APPEND command is:
+</p>
+<pre>n, err := conn.Do(&#34;APPEND&#34;, &#34;key&#34;, &#34;value&#34;)
+</pre>
+<p>
+The Do method converts command arguments to binary strings for transmission
+to the server as follows:
+</p>
+<pre>Go Type                 Conversion
+[]byte                  Sent as is
+string                  Sent as is
+int, int64              strconv.FormatInt(v)
+float64                 strconv.FormatFloat(v, &#39;g&#39;, -1, 64)
+bool                    true -&gt; &#34;1&#34;, false -&gt; &#34;0&#34;
+nil                     &#34;&#34;
+all other types         fmt.Print(v)
+</pre>
+<p>
+Redis command reply types are represented using the following Go types:
+</p>
+<pre>Redis type              Go type
+error                   redis.Error
+integer                 int64
+simple string           string
+bulk string             []byte or nil if value not present.
+array                   []interface{} or nil if value not present.
+</pre>
+<p>
+Use type assertions or the reply helper functions to convert from
+interface{} to the specific Go type for the command result.
+</p>
+<h3 id="hdr-Pipelining">Pipelining</h3>
+<p>
+Connections support pipelining using the Send, Flush and Receive methods.
+</p>
+<pre>Send(commandName string, args ...interface{}) error
+Flush() error
+Receive() (reply interface{}, err error)
+</pre>
+<p>
+Send writes the command to the connection&#39;s output buffer. Flush flushes the
+connection&#39;s output buffer to the server. Receive reads a single reply from
+the server. The following example shows a simple pipeline.
+</p>
+<pre>c.Send(&#34;SET&#34;, &#34;foo&#34;, &#34;bar&#34;)
+c.Send(&#34;GET&#34;, &#34;foo&#34;)
+c.Flush()
+c.Receive() // reply from SET
+v, err = c.Receive() // reply from GET
+</pre>
+<p>
+The Do method combines the functionality of the Send, Flush and Receive
+methods. The Do method starts by writing the command and flushing the output
+buffer. Next, the Do method receives all pending replies including the reply
+for the command just sent by Do. If any of the received replies is an error,
+then Do returns the error. If there are no errors, then Do returns the last
+reply. If the command argument to the Do method is &#34;&#34;, then the Do method
+will flush the output buffer and receive pending replies without sending a
+command.
+</p>
+<p>
+Use the Send and Do methods to implement pipelined transactions.
+</p>
+<pre>c.Send(&#34;MULTI&#34;)
+c.Send(&#34;INCR&#34;, &#34;foo&#34;)
+c.Send(&#34;INCR&#34;, &#34;bar&#34;)
+r, err := c.Do(&#34;EXEC&#34;)
+fmt.Println(r) // prints [1, 1]
+</pre>
+<h3 id="hdr-Concurrency">Concurrency</h3>
+<p>
+Connections support one concurrent caller to the Receive method and one
+concurrent caller to the Send and Flush methods. No other concurrency is
+supported including concurrent calls to the Do method.
+</p>
+<p>
+For full concurrent access to Redis, use the thread-safe Pool to get, use
+and release a connection from within a goroutine. Connections returned from
+a Pool have the concurrency restrictions described in the previous
+paragraph.
+</p>
+<h3 id="hdr-Publish_and_Subscribe">Publish and Subscribe</h3>
+<p>
+Use the Send, Flush and Receive methods to implement Pub/Sub subscribers.
+</p>
+<pre>c.Send(&#34;SUBSCRIBE&#34;, &#34;example&#34;)
+c.Flush()
+for {
+    reply, err := c.Receive()
+    if err != nil {
+        return err
+    }
+    // process pushed message
+}
+</pre>
+<p>
+The PubSubConn type wraps a Conn with convenience methods for implementing
+subscribers. The Subscribe, PSubscribe, Unsubscribe and PUnsubscribe methods
+send and flush a subscription management command. The receive method
+converts a pushed message to convenient types for use in a type switch.
+</p>
+<pre>psc := redis.PubSubConn{c}
+psc.Subscribe(&#34;example&#34;)
+for {
+    switch v := psc.Receive().(type) {
+    case redis.Message:
+        fmt.Printf(&#34;%s: message: %s\n&#34;, v.Channel, v.Data)
+    case redis.Subscription:
+        fmt.Printf(&#34;%s: %s %d\n&#34;, v.Channel, v.Kind, v.Count)
+    case error:
+        return v
+    }
+}
+</pre>
+<h3 id="hdr-Reply_Helpers">Reply Helpers</h3>
+<p>
+The Bool, Int, Bytes, String, Strings and Values functions convert a reply
+to a value of a specific type. To allow convenient wrapping of calls to the
+connection Do and Receive methods, the functions take a second argument of
+type error.  If the error is non-nil, then the helper function returns the
+error. If the error is nil, the function converts the reply to the specified
+type:
+</p>
+<pre>exists, err := redis.Bool(c.Do(&#34;EXISTS&#34;, &#34;foo&#34;))
+if err != nil {
+    // handle error return from c.Do or type conversion error.
+}
+</pre>
+<p>
+The Scan function converts elements of a array reply to Go types:
+</p>
+<pre>var value1 int
+var value2 string
+reply, err := redis.Values(c.Do(&#34;MGET&#34;, &#34;key1&#34;, &#34;key2&#34;))
+if err != nil {
+    // handle error
+}
+ if _, err := redis.Scan(reply, &amp;value1, &amp;value2); err != nil {
+    // handle error
+}
+</pre>
+
+			</div>
+		</div>
+		<div id="example__zpop" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example (Zpop)</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example (Zpop)</span></p>
+		<p>This example implements ZPOP as described at
+http://redis.io/topics/transactions using WATCH/MULTI/EXEC and scripting.
+</p>
+		
+		
+			<p>Code:</p>
+			<pre class="code">package redis_test
+
+import (
+    &#34;fmt&#34;
+    &#34;github.com/garyburd/redigo/redis&#34;
+)
+
+<span class="comment">// zpop pops a value from the ZSET key using WATCH/MULTI/EXEC commands.</span>
+func zpop(c redis.Conn, key string) (result string, err error) {
+
+    defer func() {
+        <span class="comment">// Return connection to normal state on error.</span>
+        if err != nil {
+            c.Do(&#34;DISCARD&#34;)
+        }
+    }()
+
+    <span class="comment">// Loop until transaction is successful.</span>
+    for {
+        if _, err := c.Do(&#34;WATCH&#34;, key); err != nil {
+            return &#34;&#34;, err
+        }
+
+        members, err := redis.Strings(c.Do(&#34;ZRANGE&#34;, key, 0, 0))
+        if err != nil {
+            return &#34;&#34;, err
+        }
+        if len(members) != 1 {
+            return &#34;&#34;, redis.ErrNil
+        }
+
+        c.Send(&#34;MULTI&#34;)
+        c.Send(&#34;ZREM&#34;, key, members[0])
+        queued, err := c.Do(&#34;EXEC&#34;)
+        if err != nil {
+            return &#34;&#34;, err
+        }
+
+        if queued != nil {
+            result = members[0]
+            break
+        }
+    }
+
+    return result, nil
+}
+
+<span class="comment">// zpopScript pops a value from a ZSET.</span>
+var zpopScript = redis.NewScript(1, `
+    local r = redis.call(&#39;ZRANGE&#39;, KEYS[1], 0, 0)
+    if r ~= nil then
+        r = r[1]
+        redis.call(&#39;ZREM&#39;, KEYS[1], r)
+    end
+    return r
+`)
+
+<span class="comment">// This example implements ZPOP as described at</span>
+<span class="comment">// http://redis.io/topics/transactions using WATCH/MULTI/EXEC and scripting.</span>
+func Example_zpop() {
+    c, err := dial()
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+    defer c.Close()
+
+    <span class="comment">// Add test data using a pipeline.</span>
+
+    for i, member := range []string{&#34;red&#34;, &#34;blue&#34;, &#34;green&#34;} {
+        c.Send(&#34;ZADD&#34;, &#34;zset&#34;, i, member)
+    }
+    if _, err := c.Do(&#34;&#34;); err != nil {
+        fmt.Println(err)
+        return
+    }
+
+    <span class="comment">// Pop using WATCH/MULTI/EXEC</span>
+
+    v, err := zpop(c, &#34;zset&#34;)
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+    fmt.Println(v)
+
+    <span class="comment">// Pop using a script.</span>
+
+    v, err = redis.String(zpopScript.Do(c, &#34;zset&#34;))
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+    fmt.Println(v)
+
+    <span class="comment">// Output:</span>
+    <span class="comment">// red</span>
+    <span class="comment">// blue</span>
+}
+</pre>
+			
+		
+	</div>
+</div>
+
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+				
+				<dd><a href="index.html#Bool">func Bool(reply interface{}, err error) (bool, error)</a></dd>
+			
+				
+				<dd><a href="index.html#ByteSlices">func ByteSlices(reply interface{}, err error) ([][]byte, error)</a></dd>
+			
+				
+				<dd><a href="index.html#Bytes">func Bytes(reply interface{}, err error) ([]byte, error)</a></dd>
+			
+				
+				<dd><a href="index.html#Float64">func Float64(reply interface{}, err error) (float64, error)</a></dd>
+			
+				
+				<dd><a href="index.html#Int">func Int(reply interface{}, err error) (int, error)</a></dd>
+			
+				
+				<dd><a href="index.html#Int64">func Int64(reply interface{}, err error) (int64, error)</a></dd>
+			
+				
+				<dd><a href="index.html#Int64Map">func Int64Map(result interface{}, err error) (map[string]int64, error)</a></dd>
+			
+				
+				<dd><a href="index.html#IntMap">func IntMap(result interface{}, err error) (map[string]int, error)</a></dd>
+			
+				
+				<dd><a href="index.html#Ints">func Ints(reply interface{}, err error) ([]int, error)</a></dd>
+			
+				
+				<dd><a href="index.html#MultiBulk">func MultiBulk(reply interface{}, err error) ([]interface{}, error)</a></dd>
+			
+				
+				<dd><a href="index.html#Scan">func Scan(src []interface{}, dest ...interface{}) ([]interface{}, error)</a></dd>
+			
+				
+				<dd><a href="index.html#ScanSlice">func ScanSlice(src []interface{}, dest interface{}, fieldNames ...string) error</a></dd>
+			
+				
+				<dd><a href="index.html#ScanStruct">func ScanStruct(src []interface{}, dest interface{}) error</a></dd>
+			
+				
+				<dd><a href="index.html#String">func String(reply interface{}, err error) (string, error)</a></dd>
+			
+				
+				<dd><a href="index.html#StringMap">func StringMap(result interface{}, err error) (map[string]string, error)</a></dd>
+			
+				
+				<dd><a href="index.html#Strings">func Strings(reply interface{}, err error) ([]string, error)</a></dd>
+			
+				
+				<dd><a href="index.html#Uint64">func Uint64(reply interface{}, err error) (uint64, error)</a></dd>
+			
+				
+				<dd><a href="index.html#Values">func Values(reply interface{}, err error) ([]interface{}, error)</a></dd>
+			
+			
+				
+				<dd><a href="index.html#Args">type Args</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Args.Add">func (args Args) Add(value ...interface{}) Args</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Args.AddFlat">func (args Args) AddFlat(v interface{}) Args</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Conn">type Conn</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Dial">func Dial(network, address string, options ...DialOption) (Conn, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DialTimeout">func DialTimeout(network, address string, connectTimeout, readTimeout, writeTimeout time.Duration) (Conn, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DialURL">func DialURL(rawurl string, options ...DialOption) (Conn, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewConn">func NewConn(netConn net.Conn, readTimeout, writeTimeout time.Duration) Conn</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewLoggingConn">func NewLoggingConn(conn Conn, logger *log.Logger, prefix string) Conn</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#DialOption">type DialOption</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DialConnectTimeout">func DialConnectTimeout(d time.Duration) DialOption</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DialDatabase">func DialDatabase(db int) DialOption</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DialNetDial">func DialNetDial(dial func(network, addr string) (net.Conn, error)) DialOption</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DialPassword">func DialPassword(password string) DialOption</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DialReadTimeout">func DialReadTimeout(d time.Duration) DialOption</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DialWriteTimeout">func DialWriteTimeout(d time.Duration) DialOption</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Error">type Error</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Error.Error">func (err Error) Error() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Message">type Message</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#PMessage">type PMessage</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Pong">type Pong</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Pool">type Pool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewPool">func NewPool(newFn func() (Conn, error), maxIdle int) *Pool</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Pool.ActiveCount">func (p *Pool) ActiveCount() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Pool.Close">func (p *Pool) Close() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Pool.Get">func (p *Pool) Get() Conn</a></dd>
+				
+			
+				
+				<dd><a href="index.html#PubSubConn">type PubSubConn</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#PubSubConn.Close">func (c PubSubConn) Close() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#PubSubConn.PSubscribe">func (c PubSubConn) PSubscribe(channel ...interface{}) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#PubSubConn.PUnsubscribe">func (c PubSubConn) PUnsubscribe(channel ...interface{}) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#PubSubConn.Ping">func (c PubSubConn) Ping(data string) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#PubSubConn.Receive">func (c PubSubConn) Receive() interface{}</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#PubSubConn.Subscribe">func (c PubSubConn) Subscribe(channel ...interface{}) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#PubSubConn.Unsubscribe">func (c PubSubConn) Unsubscribe(channel ...interface{}) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Script">type Script</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewScript">func NewScript(keyCount int, src string) *Script</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Script.Do">func (s *Script) Do(c Conn, keysAndArgs ...interface{}) (interface{}, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Script.Load">func (s *Script) Load(c Conn) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Script.Send">func (s *Script) Send(c Conn, keysAndArgs ...interface{}) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Script.SendHash">func (s *Script) SendHash(c Conn, keysAndArgs ...interface{}) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Subscription">type Subscription</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+		<div id="pkg-examples">
+			<h4>Examples</h4>
+			<dl>
+			
+			<dd><a class="exampleLink" href="index.html#example_Args">Args</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Bool">Bool</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Dial">Dial</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_DialURL">DialURL</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Int">Int</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Ints">Ints</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_PubSubConn">PubSubConn</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Scan">Scan</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_ScanSlice">ScanSlice</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Script">Script</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_String">String</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example__zpop">Package (Zpop)</a></dd>
+			
+			</dl>
+		</div>
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/conn.go">conn.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/doc.go">doc.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/log.go">log.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/pool.go">pool.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/pubsub.go">pubsub.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/redis.go">redis.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/reply.go">reply.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/scan.go">scan.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/script.go">script.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var <span id="ErrNil">ErrNil</span> = <a href="../../../../errors/index.html">errors</a>.<a href="../../../../errors/index.html#New">New</a>(&#34;redigo: nil returned&#34;)</pre>
+				<p>
+ErrNil indicates that a reply value is nil.
+</p>
+
+			
+				<pre>var <span id="ErrPoolExhausted">ErrPoolExhausted</span> = <a href="../../../../errors/index.html">errors</a>.<a href="../../../../errors/index.html#New">New</a>(&#34;redigo: connection pool exhausted&#34;)</pre>
+				<p>
+ErrPoolExhausted is returned from a pool connection method (Do, Send,
+Receive, Flush, Err) when the maximum number of database connections in the
+pool has been reached.
+</p>
+
+			
+		
+		
+			
+			
+			<h2 id="Bool">func <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/reply.go?s=5571:5624#L191">Bool</a></h2>
+			<pre>func Bool(reply interface{}, err <a href="../../../../builtin/index.html#error">error</a>) (<a href="../../../../builtin/index.html#bool">bool</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+Bool is a helper that converts a command reply to a boolean. If err is not
+equal to nil, then Bool returns false, err. Otherwise Bool converts the
+reply to boolean as follows:
+</p>
+<pre>Reply type      Result
+integer         value != 0, nil
+bulk string     strconv.ParseBool(reply)
+nil             false, ErrNil
+other           false, error
+</pre>
+
+			<div id="example_Bool" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">c, err := dial()
+if err != nil {
+    fmt.Println(err)
+    return
+}
+defer c.Close()
+
+c.Do(&#34;SET&#34;, &#34;foo&#34;, 1)
+exists, _ := redis.Bool(c.Do(&#34;EXISTS&#34;, &#34;foo&#34;))
+fmt.Printf(&#34;%#v\n&#34;, exists)
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">true
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+
+		
+			
+			
+			<h2 id="ByteSlices">func <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/reply.go?s=7948:8011#L270">ByteSlices</a></h2>
+			<pre>func ByteSlices(reply interface{}, err <a href="../../../../builtin/index.html#error">error</a>) ([][]<a href="../../../../builtin/index.html#byte">byte</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+ByteSlices is a helper that converts an array command reply to a [][]byte.
+If err is not equal to nil, then ByteSlices returns nil, err. Nil array
+items are stay nil. ByteSlices returns an error if an array item is not a
+bulk string or nil.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Bytes">func <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/reply.go?s=4851:4907#L165">Bytes</a></h2>
+			<pre>func Bytes(reply interface{}, err <a href="../../../../builtin/index.html#error">error</a>) ([]<a href="../../../../builtin/index.html#byte">byte</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+Bytes is a helper that converts a command reply to a slice of bytes. If err
+is not equal to nil, then Bytes returns nil, err. Otherwise Bytes converts
+the reply to a slice of bytes as follows:
+</p>
+<pre>Reply type      Result
+bulk string     reply, nil
+simple string   []byte(reply), nil
+nil             nil, ErrNil
+other           nil, error
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Float64">func <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/reply.go?s=3422:3481#L114">Float64</a></h2>
+			<pre>func Float64(reply interface{}, err <a href="../../../../builtin/index.html#error">error</a>) (<a href="../../../../builtin/index.html#float64">float64</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+Float64 is a helper that converts a command reply to 64 bit float. If err is
+not equal to nil, then Float64 returns 0, err. Otherwise, Float64 converts
+the reply to an int as follows:
+</p>
+<pre>Reply type    Result
+bulk string   parsed reply, nil
+nil           0, ErrNil
+other         0, error
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Int">func <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/reply.go?s=1070:1121#L25">Int</a></h2>
+			<pre>func Int(reply interface{}, err <a href="../../../../builtin/index.html#error">error</a>) (<a href="../../../../builtin/index.html#int">int</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+Int is a helper that converts a command reply to an integer. If err is not
+equal to nil, then Int returns 0, err. Otherwise, Int converts the
+reply to an int as follows:
+</p>
+<pre>Reply type    Result
+integer       int(reply), nil
+bulk string   parsed reply, nil
+nil           0, ErrNil
+other         0, error
+</pre>
+
+			<div id="example_Int" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">c, err := dial()
+if err != nil {
+    fmt.Println(err)
+    return
+}
+defer c.Close()
+
+c.Do(&#34;SET&#34;, &#34;k1&#34;, 1)
+n, _ := redis.Int(c.Do(&#34;GET&#34;, &#34;k1&#34;))
+fmt.Printf(&#34;%#v\n&#34;, n)
+n, _ = redis.Int(c.Do(&#34;INCR&#34;, &#34;k1&#34;))
+fmt.Printf(&#34;%#v\n&#34;, n)
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">1
+2
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+
+		
+			
+			
+			<h2 id="Int64">func <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/reply.go?s=1865:1920#L56">Int64</a></h2>
+			<pre>func Int64(reply interface{}, err <a href="../../../../builtin/index.html#error">error</a>) (<a href="../../../../builtin/index.html#int64">int64</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+Int64 is a helper that converts a command reply to 64 bit integer. If err is
+not equal to nil, then Int returns 0, err. Otherwise, Int64 converts the
+reply to an int64 as follows:
+</p>
+<pre>Reply type    Result
+integer       reply, nil
+bulk string   parsed reply, nil
+nil           0, ErrNil
+other         0, error
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Int64Map">func <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/reply.go?s=10725:10795#L362">Int64Map</a></h2>
+			<pre>func Int64Map(result interface{}, err <a href="../../../../builtin/index.html#error">error</a>) (map[<a href="../../../../builtin/index.html#string">string</a>]<a href="../../../../builtin/index.html#int64">int64</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+Int64Map is a helper that converts an array of strings (alternating key, value)
+into a map[string]int64. The HGETALL commands return replies in this format.
+Requires an even number of values in result.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="IntMap">func <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/reply.go?s=9937:10003#L336">IntMap</a></h2>
+			<pre>func IntMap(result interface{}, err <a href="../../../../builtin/index.html#error">error</a>) (map[<a href="../../../../builtin/index.html#string">string</a>]<a href="../../../../builtin/index.html#int">int</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+IntMap is a helper that converts an array of strings (alternating key, value)
+into a map[string]int. The HGETALL commands return replies in this format.
+Requires an even number of values in result.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Ints">func <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/reply.go?s=8685:8739#L298">Ints</a></h2>
+			<pre>func Ints(reply interface{}, err <a href="../../../../builtin/index.html#error">error</a>) ([]<a href="../../../../builtin/index.html#int">int</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+Ints is a helper that converts an array command reply to a []int. If
+err is not equal to nil, then Ints returns nil, err.
+</p>
+
+			<div id="example_Ints" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">c, err := dial()
+if err != nil {
+    fmt.Println(err)
+    return
+}
+defer c.Close()
+
+c.Do(&#34;SADD&#34;, &#34;set_with_integers&#34;, 4, 5, 6)
+ints, _ := redis.Ints(c.Do(&#34;SMEMBERS&#34;, &#34;set_with_integers&#34;))
+fmt.Printf(&#34;%#v\n&#34;, ints)
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">[]int{4, 5, 6}
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+
+		
+			
+			
+			<h2 id="MultiBulk">func <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/reply.go?s=6070:6137#L211">MultiBulk</a></h2>
+			<pre>func MultiBulk(reply interface{}, err <a href="../../../../builtin/index.html#error">error</a>) ([]interface{}, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+MultiBulk is a helper that converts an array command reply to a []interface{}.
+</p>
+<p>
+Deprecated: Use Values instead.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Scan">func <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/scan.go?s=5368:5440#L218">Scan</a></h2>
+			<pre>func Scan(src []interface{}, dest ...interface{}) ([]interface{}, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+Scan copies from src to the values pointed at by dest.
+</p>
+<p>
+The values pointed at by dest must be an integer, float, boolean, string,
+[]byte, interface{} or slices of these types. Scan uses the standard strconv
+package to convert bulk strings to numeric and boolean types.
+</p>
+<p>
+If a dest value is nil, then the corresponding src value is skipped.
+</p>
+<p>
+If a src element is nil, then the corresponding dest value is not modified.
+</p>
+<p>
+To enable easy use of Scan in a loop, Scan returns the slice of src
+following the copied values.
+</p>
+
+			<div id="example_Scan" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">c, err := dial()
+if err != nil {
+    fmt.Println(err)
+    return
+}
+defer c.Close()
+
+c.Send(&#34;HMSET&#34;, &#34;album:1&#34;, &#34;title&#34;, &#34;Red&#34;, &#34;rating&#34;, 5)
+c.Send(&#34;HMSET&#34;, &#34;album:2&#34;, &#34;title&#34;, &#34;Earthbound&#34;, &#34;rating&#34;, 1)
+c.Send(&#34;HMSET&#34;, &#34;album:3&#34;, &#34;title&#34;, &#34;Beat&#34;)
+c.Send(&#34;LPUSH&#34;, &#34;albums&#34;, &#34;1&#34;)
+c.Send(&#34;LPUSH&#34;, &#34;albums&#34;, &#34;2&#34;)
+c.Send(&#34;LPUSH&#34;, &#34;albums&#34;, &#34;3&#34;)
+values, err := redis.Values(c.Do(&#34;SORT&#34;, &#34;albums&#34;,
+    &#34;BY&#34;, &#34;album:*-&gt;rating&#34;,
+    &#34;GET&#34;, &#34;album:*-&gt;title&#34;,
+    &#34;GET&#34;, &#34;album:*-&gt;rating&#34;))
+if err != nil {
+    fmt.Println(err)
+    return
+}
+
+for len(values) &gt; 0 {
+    var title string
+    rating := -1 <span class="comment">// initialize to illegal value to detect nil.</span>
+    values, err = redis.Scan(values, &amp;title, &amp;rating)
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+    if rating == -1 {
+        fmt.Println(title, &#34;not-rated&#34;)
+    } else {
+        fmt.Println(title, rating)
+    }
+}
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">Beat not-rated
+Earthbound 1
+Red 5
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+
+		
+			
+			
+			<h2 id="ScanSlice">func <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/scan.go?s=9900:9979#L398">ScanSlice</a></h2>
+			<pre>func ScanSlice(src []interface{}, dest interface{}, fieldNames ...<a href="../../../../builtin/index.html#string">string</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+			<p>
+ScanSlice scans src to the slice pointed to by dest. The elements the dest
+slice must be integer, float, boolean, string, struct or pointer to struct
+values.
+</p>
+<p>
+Struct fields must be integer, float, boolean or string values. All struct
+fields are used unless a subset is specified using fieldNames.
+</p>
+
+			<div id="example_ScanSlice" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">c, err := dial()
+if err != nil {
+    fmt.Println(err)
+    return
+}
+defer c.Close()
+
+c.Send(&#34;HMSET&#34;, &#34;album:1&#34;, &#34;title&#34;, &#34;Red&#34;, &#34;rating&#34;, 5)
+c.Send(&#34;HMSET&#34;, &#34;album:2&#34;, &#34;title&#34;, &#34;Earthbound&#34;, &#34;rating&#34;, 1)
+c.Send(&#34;HMSET&#34;, &#34;album:3&#34;, &#34;title&#34;, &#34;Beat&#34;, &#34;rating&#34;, 4)
+c.Send(&#34;LPUSH&#34;, &#34;albums&#34;, &#34;1&#34;)
+c.Send(&#34;LPUSH&#34;, &#34;albums&#34;, &#34;2&#34;)
+c.Send(&#34;LPUSH&#34;, &#34;albums&#34;, &#34;3&#34;)
+values, err := redis.Values(c.Do(&#34;SORT&#34;, &#34;albums&#34;,
+    &#34;BY&#34;, &#34;album:*-&gt;rating&#34;,
+    &#34;GET&#34;, &#34;album:*-&gt;title&#34;,
+    &#34;GET&#34;, &#34;album:*-&gt;rating&#34;))
+if err != nil {
+    fmt.Println(err)
+    return
+}
+
+var albums []struct {
+    Title  string
+    Rating int
+}
+if err := redis.ScanSlice(values, &amp;albums); err != nil {
+    fmt.Println(err)
+    return
+}
+fmt.Printf(&#34;%v\n&#34;, albums)
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">[{Earthbound 1} {Beat 4} {Red 5}]
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+
+		
+			
+			
+			<h2 id="ScanStruct">func <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/scan.go?s=8655:8713#L353">ScanStruct</a></h2>
+			<pre>func ScanStruct(src []interface{}, dest interface{}) <a href="../../../../builtin/index.html#error">error</a></pre>
+			<p>
+ScanStruct scans alternating names and values from src to a struct. The
+HGETALL and CONFIG GET commands return replies in this format.
+</p>
+<p>
+ScanStruct uses exported field names to match values in the response. Use
+&#39;redis&#39; field tag to override the name:
+</p>
+<pre>Field int `redis:&#34;myName&#34;`
+</pre>
+<p>
+Fields with the tag redis:&#34;-&#34; are ignored.
+</p>
+<p>
+Integer, float, boolean, string and []byte fields are supported. Scan uses the
+standard strconv package to convert bulk string values to numeric and
+boolean types.
+</p>
+<p>
+If a src element is nil, then the corresponding field is not modified.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="String">func <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/reply.go?s=4131:4188#L139">String</a></h2>
+			<pre>func String(reply interface{}, err <a href="../../../../builtin/index.html#error">error</a>) (<a href="../../../../builtin/index.html#string">string</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+String is a helper that converts a command reply to a string. If err is not
+equal to nil, then String returns &#34;&#34;, err. Otherwise String converts the
+reply to a string as follows:
+</p>
+<pre>Reply type      Result
+bulk string     string(reply), nil
+simple string   reply, nil
+nil             &#34;&#34;,  ErrNil
+other           &#34;&#34;,  error
+</pre>
+
+			<div id="example_String" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">c, err := dial()
+if err != nil {
+    fmt.Println(err)
+    return
+}
+defer c.Close()
+
+c.Do(&#34;SET&#34;, &#34;hello&#34;, &#34;world&#34;)
+s, err := redis.String(c.Do(&#34;GET&#34;, &#34;hello&#34;))
+fmt.Printf(&#34;%#v\n&#34;, s)
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">&#34;world&#34;
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+
+		
+			
+			
+			<h2 id="StringMap">func <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/reply.go?s=9153:9225#L313">StringMap</a></h2>
+			<pre>func StringMap(result interface{}, err <a href="../../../../builtin/index.html#error">error</a>) (map[<a href="../../../../builtin/index.html#string">string</a>]<a href="../../../../builtin/index.html#string">string</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+StringMap is a helper that converts an array of strings (alternating key, value)
+into a map[string]string. The HGETALL and CONFIG GET commands return replies in this format.
+Requires an even number of values in result.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Strings">func <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/reply.go?s=7087:7147#L240">Strings</a></h2>
+			<pre>func Strings(reply interface{}, err <a href="../../../../builtin/index.html#error">error</a>) ([]<a href="../../../../builtin/index.html#string">string</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+Strings is a helper that converts an array command reply to a []string. If
+err is not equal to nil, then Strings returns nil, err. Nil array items are
+converted to &#34;&#34; in the output slice. Strings returns an error if an array
+item is not a bulk string or nil.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Uint64">func <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/reply.go?s=2662:2719#L85">Uint64</a></h2>
+			<pre>func Uint64(reply interface{}, err <a href="../../../../builtin/index.html#error">error</a>) (<a href="../../../../builtin/index.html#uint64">uint64</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+Uint64 is a helper that converts a command reply to 64 bit integer. If err is
+not equal to nil, then Int returns 0, err. Otherwise, Int64 converts the
+reply to an int64 as follows:
+</p>
+<pre>Reply type    Result
+integer       reply, nil
+bulk string   parsed reply, nil
+nil           0, ErrNil
+other         0, error
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Values">func <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/reply.go?s=6485:6549#L221">Values</a></h2>
+			<pre>func Values(reply interface{}, err <a href="../../../../builtin/index.html#error">error</a>) ([]interface{}, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+Values is a helper that converts an array command reply to a []interface{}.
+If err is not equal to nil, then Values returns nil, err. Otherwise, Values
+converts the reply as follows:
+</p>
+<pre>Reply type      Result
+array           reply, nil
+nil             nil, ErrNil
+other           nil, error
+</pre>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="Args">type <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/scan.go?s=11617:11640#L472">Args</a></h2>
+			<pre>type Args []interface{}</pre>
+			<p>
+Args is a helper for constructing command arguments from structured values.
+</p>
+
+
+			
+
+			
+
+			<div id="example_Args" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">c, err := dial()
+if err != nil {
+    fmt.Println(err)
+    return
+}
+defer c.Close()
+
+var p1, p2 struct {
+    Title  string `redis:&#34;title&#34;`
+    Author string `redis:&#34;author&#34;`
+    Body   string `redis:&#34;body&#34;`
+}
+
+p1.Title = &#34;Example&#34;
+p1.Author = &#34;Gary&#34;
+p1.Body = &#34;Hello&#34;
+
+if _, err := c.Do(&#34;HMSET&#34;, redis.Args{}.Add(&#34;id1&#34;).AddFlat(&amp;p1)...); err != nil {
+    fmt.Println(err)
+    return
+}
+
+m := map[string]string{
+    &#34;title&#34;:  &#34;Example2&#34;,
+    &#34;author&#34;: &#34;Steve&#34;,
+    &#34;body&#34;:   &#34;Map&#34;,
+}
+
+if _, err := c.Do(&#34;HMSET&#34;, redis.Args{}.Add(&#34;id2&#34;).AddFlat(m)...); err != nil {
+    fmt.Println(err)
+    return
+}
+
+for _, id := range []string{&#34;id1&#34;, &#34;id2&#34;} {
+
+    v, err := redis.Values(c.Do(&#34;HGETALL&#34;, id))
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+
+    if err := redis.ScanStruct(v, &amp;p2); err != nil {
+        fmt.Println(err)
+        return
+    }
+
+    fmt.Printf(&#34;%+v\n&#34;, p2)
+}
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">{Title:Example Author:Gary Body:Hello}
+{Title:Example2 Author:Steve Body:Map}
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+			
+
+			
+
+			
+				
+				<h3 id="Args.Add">func (Args) <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/scan.go?s=11696:11743#L475">Add</a></h3>
+				<pre>func (args <a href="index.html#Args">Args</a>) Add(value ...interface{}) <a href="index.html#Args">Args</a></pre>
+				<p>
+Add returns the result of appending value to args.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Args.AddFlat">func (Args) <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/scan.go?s=12346:12390#L491">AddFlat</a></h3>
+				<pre>func (args <a href="index.html#Args">Args</a>) AddFlat(v interface{}) <a href="index.html#Args">Args</a></pre>
+				<p>
+AddFlat returns the result of appending the flattened value of v to args.
+</p>
+<p>
+Maps are flattened by appending the alternating keys and map values to args.
+</p>
+<p>
+Slices are flattened by appending the slice elements to args.
+</p>
+<p>
+Structs are flattened by appending the alternating names and values of
+exported fields to args. If v is a nil struct pointer, then nothing is
+appended. The &#39;redis&#39; field tag overrides struct field names. See ScanStruct
+for more information on the use of the &#39;redis&#39; field tag.
+</p>
+<p>
+Other types are appended to args as is.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Conn">type <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/redis.go?s=786:1553#L13">Conn</a></h2>
+			<pre>type Conn interface {
+    <span class="comment">// Close closes the connection.</span>
+    Close() <a href="../../../../builtin/index.html#error">error</a>
+
+    <span class="comment">// Err returns a non-nil value if the connection is broken. The returned</span>
+    <span class="comment">// value is either the first non-nil value returned from the underlying</span>
+    <span class="comment">// network connection or a protocol parsing error. Applications should</span>
+    <span class="comment">// close broken connections.</span>
+    Err() <a href="../../../../builtin/index.html#error">error</a>
+
+    <span class="comment">// Do sends a command to the server and returns the received reply.</span>
+    Do(commandName <a href="../../../../builtin/index.html#string">string</a>, args ...interface{}) (reply interface{}, err <a href="../../../../builtin/index.html#error">error</a>)
+
+    <span class="comment">// Send writes the command to the client&#39;s output buffer.</span>
+    Send(commandName <a href="../../../../builtin/index.html#string">string</a>, args ...interface{}) <a href="../../../../builtin/index.html#error">error</a>
+
+    <span class="comment">// Flush flushes the output buffer to the Redis server.</span>
+    Flush() <a href="../../../../builtin/index.html#error">error</a>
+
+    <span class="comment">// Receive receives a single reply from the Redis server</span>
+    Receive() (reply interface{}, err <a href="../../../../builtin/index.html#error">error</a>)
+}</pre>
+			<p>
+Conn represents a connection to a Redis server.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="Dial">func <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/conn.go?s=3355:3426#L118">Dial</a></h3>
+				<pre>func Dial(network, address <a href="../../../../builtin/index.html#string">string</a>, options ...<a href="index.html#DialOption">DialOption</a>) (<a href="index.html#Conn">Conn</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Dial connects to the Redis server at the given network and
+address using the specified options.
+</p>
+
+				<div id="example_Dial" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		<p>Connect to local instance of Redis running on the default port.
+</p>
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+c, err := redis.Dial(&#34;tcp&#34;, &#34;:6379&#34;)
+if err != nil {
+    <span class="comment">// handle error</span>
+}
+defer c.Close()
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+				
+				<h3 id="DialTimeout">func <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/conn.go?s=1355:1467#L50">DialTimeout</a></h3>
+				<pre>func DialTimeout(network, address <a href="../../../../builtin/index.html#string">string</a>, connectTimeout, readTimeout, writeTimeout <a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Duration">Duration</a>) (<a href="index.html#Conn">Conn</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+DialTimeout acts like Dial but takes timeouts for establishing the
+connection to the server, writing a command and reading a reply.
+</p>
+<p>
+Deprecated: Use Dial with options instead.
+</p>
+
+				
+				
+			
+				
+				<h3 id="DialURL">func <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/conn.go?s=4315:4379#L160">DialURL</a></h3>
+				<pre>func DialURL(rawurl <a href="../../../../builtin/index.html#string">string</a>, options ...<a href="index.html#DialOption">DialOption</a>) (<a href="index.html#Conn">Conn</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+DialURL connects to a Redis server at the given URL using the Redis
+URI scheme. URLs should follow the draft IANA specification for the
+scheme (<a href="https://www.iana.org/assignments/uri-schemes/prov/redis">https://www.iana.org/assignments/uri-schemes/prov/redis</a>).
+</p>
+
+				<div id="example_DialURL" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		<p>Connect to remote instance of Redis using a URL.
+</p>
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+c, err := redis.DialURL(os.Getenv(&#34;REDIS_URL&#34;))
+if err != nil {
+    <span class="comment">// handle connection error</span>
+}
+defer c.Close()
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+				
+				<h3 id="NewConn">func <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/conn.go?s=5495:5571#L210">NewConn</a></h3>
+				<pre>func NewConn(netConn <a href="../../../../net/index.html">net</a>.<a href="../../../../net/index.html#Conn">Conn</a>, readTimeout, writeTimeout <a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Duration">Duration</a>) <a href="index.html#Conn">Conn</a></pre>
+				<p>
+NewConn returns a new Redigo connection for the given net connection.
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewLoggingConn">func <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/log.go?s=702:772#L14">NewLoggingConn</a></h3>
+				<pre>func NewLoggingConn(conn <a href="index.html#Conn">Conn</a>, logger *<a href="../../../../log/index.html">log</a>.<a href="../../../../log/index.html#Logger">Logger</a>, prefix <a href="../../../../builtin/index.html#string">string</a>) <a href="index.html#Conn">Conn</a></pre>
+				<p>
+NewLoggingConn returns a logging wrapper around a connection.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="DialOption">type <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/conn.go?s=1670:1718#L58">DialOption</a></h2>
+			<pre>type DialOption struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+DialOption specifies an option for dialing a Redis server.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="DialConnectTimeout">func <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/conn.go?s=2378:2429#L85">DialConnectTimeout</a></h3>
+				<pre>func DialConnectTimeout(d <a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Duration">Duration</a>) <a href="index.html#DialOption">DialOption</a></pre>
+				<p>
+DialConnectTimeout specifies the timeout for connecting to the Redis server.
+</p>
+
+				
+				
+			
+				
+				<h3 id="DialDatabase">func <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/conn.go?s=2942:2978#L102">DialDatabase</a></h3>
+				<pre>func DialDatabase(db <a href="../../../../builtin/index.html#int">int</a>) <a href="index.html#DialOption">DialOption</a></pre>
+				<p>
+DialDatabase specifies the database to select when dialing a connection.
+</p>
+
+				
+				
+			
+				
+				<h3 id="DialNetDial">func <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/conn.go?s=2718:2796#L95">DialNetDial</a></h3>
+				<pre>func DialNetDial(dial func(network, addr <a href="../../../../builtin/index.html#string">string</a>) (<a href="../../../../net/index.html">net</a>.<a href="../../../../net/index.html#Conn">Conn</a>, <a href="../../../../builtin/index.html#error">error</a>)) <a href="index.html#DialOption">DialOption</a></pre>
+				<p>
+DialNetDial specifies a custom dial function for creating TCP
+connections. If this option is left out, then net.Dial is
+used. DialNetDial overrides DialConnectTimeout.
+</p>
+
+				
+				
+			
+				
+				<h3 id="DialPassword">func <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/conn.go?s=3130:3175#L110">DialPassword</a></h3>
+				<pre>func DialPassword(password <a href="../../../../builtin/index.html#string">string</a>) <a href="index.html#DialOption">DialOption</a></pre>
+				<p>
+DialPassword specifies the password to use when connecting to
+the Redis server.
+</p>
+
+				
+				
+			
+				
+				<h3 id="DialReadTimeout">func <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/conn.go?s=1980:2028#L71">DialReadTimeout</a></h3>
+				<pre>func DialReadTimeout(d <a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Duration">Duration</a>) <a href="index.html#DialOption">DialOption</a></pre>
+				<p>
+DialReadTimeout specifies the timeout for reading a single command reply.
+</p>
+
+				
+				
+			
+				
+				<h3 id="DialWriteTimeout">func <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/conn.go?s=2174:2223#L78">DialWriteTimeout</a></h3>
+				<pre>func DialWriteTimeout(d <a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Duration">Duration</a>) <a href="index.html#DialOption">DialOption</a></pre>
+				<p>
+DialWriteTimeout specifies the timeout for writing a single command.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="Error">type <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/redis.go?s=660:677#L8">Error</a></h2>
+			<pre>type Error <a href="../../../../builtin/index.html#string">string</a></pre>
+			<p>
+Error represents an error returned in a command reply.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Error.Error">func (Error) <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/redis.go?s=679:710#L10">Error</a></h3>
+				<pre>func (err <a href="index.html#Error">Error</a>) Error() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Message">type <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/pubsub.go?s=967:1072#L23">Message</a></h2>
+			<pre>type Message struct {
+
+    <span class="comment">// The originating channel.</span>
+    Channel <a href="../../../../builtin/index.html#string">string</a>
+
+    <span class="comment">// The message data.</span>
+    Data []<a href="../../../../builtin/index.html#byte">byte</a>
+}</pre>
+			<p>
+Message represents a message notification.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="PMessage">type <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/pubsub.go?s=1122:1270#L33">PMessage</a></h2>
+			<pre>type PMessage struct {
+
+    <span class="comment">// The matched pattern.</span>
+    Pattern <a href="../../../../builtin/index.html#string">string</a>
+
+    <span class="comment">// The originating channel.</span>
+    Channel <a href="../../../../builtin/index.html#string">string</a>
+
+    <span class="comment">// The message data.</span>
+    Data []<a href="../../../../builtin/index.html#byte">byte</a>
+}</pre>
+			<p>
+PMessage represents a pmessage notification.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Pong">type <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/pubsub.go?s=1319:1352#L46">Pong</a></h2>
+			<pre>type Pong struct {
+    Data <a href="../../../../builtin/index.html#string">string</a>
+}</pre>
+			<p>
+Pong represents a pubsub pong notification.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Pool">type <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/pool.go?s=2976:4413#L88">Pool</a></h2>
+			<pre>type Pool struct {
+
+    <span class="comment">// Dial is an application supplied function for creating and configuring a</span>
+    <span class="comment">// connection.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The connection returned from Dial must not be in a special state</span>
+    <span class="comment">// (subscribed to pubsub channel, transaction started, ...).</span>
+    Dial func() (<a href="index.html#Conn">Conn</a>, <a href="../../../../builtin/index.html#error">error</a>)
+
+    <span class="comment">// TestOnBorrow is an optional application supplied function for checking</span>
+    <span class="comment">// the health of an idle connection before the connection is used again by</span>
+    <span class="comment">// the application. Argument t is the time that the connection was returned</span>
+    <span class="comment">// to the pool. If the function returns an error, then the connection is</span>
+    <span class="comment">// closed.</span>
+    TestOnBorrow func(c <a href="index.html#Conn">Conn</a>, t <a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Time">Time</a>) <a href="../../../../builtin/index.html#error">error</a>
+
+    <span class="comment">// Maximum number of idle connections in the pool.</span>
+    MaxIdle <a href="../../../../builtin/index.html#int">int</a>
+
+    <span class="comment">// Maximum number of connections allocated by the pool at a given time.</span>
+    <span class="comment">// When zero, there is no limit on the number of connections in the pool.</span>
+    MaxActive <a href="../../../../builtin/index.html#int">int</a>
+
+    <span class="comment">// Close connections after remaining idle for this duration. If the value</span>
+    <span class="comment">// is zero, then idle connections are not closed. Applications should set</span>
+    <span class="comment">// the timeout to a value less than the server&#39;s timeout.</span>
+    IdleTimeout <a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Duration">Duration</a>
+
+    <span class="comment">// If Wait is true and the pool is at the MaxActive limit, then Get() waits</span>
+    <span class="comment">// for a connection to be returned to the pool before returning.</span>
+    Wait <a href="../../../../builtin/index.html#bool">bool</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Pool maintains a pool of connections. The application calls the Get method
+to get a connection from the pool and the connection&#39;s Close method to
+return the connection&#39;s resources to the pool.
+</p>
+<p>
+The following example shows how to use a pool in a web application. The
+application creates a pool at application startup and makes it available to
+request handlers using a global variable. The pool configuration used here
+is an example, not a recommendation.
+</p>
+<pre>func newPool(server, password string) *redis.Pool {
+    return &amp;redis.Pool{
+        MaxIdle: 3,
+        IdleTimeout: 240 * time.Second,
+        Dial: func () (redis.Conn, error) {
+            c, err := redis.Dial(&#34;tcp&#34;, server)
+            if err != nil {
+                return nil, err
+            }
+            if _, err := c.Do(&#34;AUTH&#34;, password); err != nil {
+                c.Close()
+                return nil, err
+            }
+            return c, err
+        },
+        TestOnBorrow: func(c redis.Conn, t time.Time) error {
+            if time.Since(t) &lt; time.Minute {
+                return nil
+            }
+            _, err := c.Do(&#34;PING&#34;)
+            return err
+        },
+    }
+}
+
+var (
+    pool *redis.Pool
+    redisServer = flag.String(&#34;redisServer&#34;, &#34;:6379&#34;, &#34;&#34;)
+    redisPassword = flag.String(&#34;redisPassword&#34;, &#34;&#34;, &#34;&#34;)
+)
+
+func main() {
+    flag.Parse()
+    pool = newPool(*redisServer, *redisPassword)
+    ...
+}
+</pre>
+<p>
+A request handler gets a connection from the pool and closes the connection
+when the handler is done:
+</p>
+<pre>func serveHome(w http.ResponseWriter, r *http.Request) {
+    conn := pool.Get()
+    defer conn.Close()
+    ....
+}
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewPool">func <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/pool.go?s=4566:4625#L138">NewPool</a></h3>
+				<pre>func NewPool(newFn func() (<a href="index.html#Conn">Conn</a>, <a href="../../../../builtin/index.html#error">error</a>), maxIdle <a href="../../../../builtin/index.html#int">int</a>) *<a href="index.html#Pool">Pool</a></pre>
+				<p>
+NewPool creates a new pool.
+</p>
+<p>
+Deprecated: Initialize the Pool directory as shown in the example.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Pool.ActiveCount">func (*Pool) <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/pool.go?s=5236:5268#L156">ActiveCount</a></h3>
+				<pre>func (p *<a href="index.html#Pool">Pool</a>) ActiveCount() <a href="../../../../builtin/index.html#int">int</a></pre>
+				<p>
+ActiveCount returns the number of active connections in the pool.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Pool.Close">func (*Pool) <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/pool.go?s=5387:5415#L164">Close</a></h3>
+				<pre>func (p *<a href="index.html#Pool">Pool</a>) Close() <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Close releases the resources used by the pool.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Pool.Get">func (*Pool) <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/pool.go?s=5029:5054#L147">Get</a></h3>
+				<pre>func (p *<a href="index.html#Pool">Pool</a>) Get() <a href="index.html#Conn">Conn</a></pre>
+				<p>
+Get gets a connection. The application must close the returned connection.
+This method always returns a valid connection so that applications can defer
+error handling to the first use of the connection. If there is an error
+getting an underlying connection, then the connection Err, Do, Send, Flush
+and Receive methods return that error.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="PubSubConn">type <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/pubsub.go?s=1423:1460#L51">PubSubConn</a></h2>
+			<pre>type PubSubConn struct {
+    Conn <a href="index.html#Conn">Conn</a>
+}</pre>
+			<p>
+PubSubConn wraps a Conn with convenience methods for subscribers.
+</p>
+
+
+			
+
+			
+
+			<div id="example_PubSubConn" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		<p>Applications can receive pushed messages from one goroutine and manage subscriptions from another goroutine.
+</p>
+		
+		
+			<p>Code:</p>
+			<pre class="code">c, err := dial()
+if err != nil {
+    fmt.Println(err)
+    return
+}
+defer c.Close()
+var wg sync.WaitGroup
+wg.Add(2)
+
+psc := redis.PubSubConn{Conn: c}
+
+<span class="comment">// This goroutine receives and prints pushed notifications from the server.</span>
+<span class="comment">// The goroutine exits when the connection is unsubscribed from all</span>
+<span class="comment">// channels or there is an error.</span>
+go func() {
+    defer wg.Done()
+    for {
+        switch n := psc.Receive().(type) {
+        case redis.Message:
+            fmt.Printf(&#34;Message: %s %s\n&#34;, n.Channel, n.Data)
+        case redis.PMessage:
+            fmt.Printf(&#34;PMessage: %s %s %s\n&#34;, n.Pattern, n.Channel, n.Data)
+        case redis.Subscription:
+            fmt.Printf(&#34;Subscription: %s %s %d\n&#34;, n.Kind, n.Channel, n.Count)
+            if n.Count == 0 {
+                return
+            }
+        case error:
+            fmt.Printf(&#34;error: %v\n&#34;, n)
+            return
+        }
+    }
+}()
+
+<span class="comment">// This goroutine manages subscriptions for the connection.</span>
+go func() {
+    defer wg.Done()
+
+    psc.Subscribe(&#34;example&#34;)
+    psc.PSubscribe(&#34;p*&#34;)
+
+    <span class="comment">// The following function calls publish a message using another</span>
+    <span class="comment">// connection to the Redis server.</span>
+    publish(&#34;example&#34;, &#34;hello&#34;)
+    publish(&#34;example&#34;, &#34;world&#34;)
+    publish(&#34;pexample&#34;, &#34;foo&#34;)
+    publish(&#34;pexample&#34;, &#34;bar&#34;)
+
+    <span class="comment">// Unsubscribe from all connections. This will cause the receiving</span>
+    <span class="comment">// goroutine to exit.</span>
+    psc.Unsubscribe()
+    psc.PUnsubscribe()
+}()
+
+wg.Wait()
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">Subscription: subscribe example 1
+Subscription: psubscribe p* 2
+Message: example hello
+Message: example world
+PMessage: p* pexample foo
+PMessage: p* pexample bar
+Subscription: unsubscribe example 1
+Subscription: punsubscribe p* 0
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+			
+
+			
+
+			
+				
+				<h3 id="PubSubConn.Close">func (PubSubConn) <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/pubsub.go?s=1494:1527#L56">Close</a></h3>
+				<pre>func (c <a href="index.html#PubSubConn">PubSubConn</a>) Close() <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Close closes the connection.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="PubSubConn.PSubscribe">func (PubSubConn) <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/pubsub.go?s=1811:1871#L67">PSubscribe</a></h3>
+				<pre>func (c <a href="index.html#PubSubConn">PubSubConn</a>) PSubscribe(channel ...interface{}) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+PSubscribe subscribes the connection to the given patterns.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="PubSubConn.PUnsubscribe">func (PubSubConn) <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/pubsub.go?s=2288:2350#L81">PUnsubscribe</a></h3>
+				<pre>func (c <a href="index.html#PubSubConn">PubSubConn</a>) PUnsubscribe(channel ...interface{}) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+PUnsubscribe unsubscribes the connection from the given patterns, or from all
+of them if none is given.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="PubSubConn.Ping">func (PubSubConn) <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/pubsub.go?s=2480:2523#L87">Ping</a></h3>
+				<pre>func (c <a href="index.html#PubSubConn">PubSubConn</a>) Ping(data <a href="../../../../builtin/index.html#string">string</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Ping sends a PING to the server with the specified data.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="PubSubConn.Receive">func (PubSubConn) <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/pubsub.go?s=2782:2823#L95">Receive</a></h3>
+				<pre>func (c <a href="index.html#PubSubConn">PubSubConn</a>) Receive() interface{}</pre>
+				<p>
+Receive returns a pushed message as a Subscription, Message, PMessage, Pong
+or error. The return value is intended to be used directly in a type switch
+as illustrated in the PubSubConn example.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="PubSubConn.Subscribe">func (PubSubConn) <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/pubsub.go?s=1622:1681#L61">Subscribe</a></h3>
+				<pre>func (c <a href="index.html#PubSubConn">PubSubConn</a>) Subscribe(channel ...interface{}) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Subscribe subscribes the connection to the specified channels.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="PubSubConn.Unsubscribe">func (PubSubConn) <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/pubsub.go?s=2048:2109#L74">Unsubscribe</a></h3>
+				<pre>func (c <a href="index.html#PubSubConn">PubSubConn</a>) Unsubscribe(channel ...interface{}) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Unsubscribe unsubscribes the connection from the given channels, or from all
+of them if none is given.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Script">type <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/script.go?s=808:878#L16">Script</a></h2>
+			<pre>type Script struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Script encapsulates the source, hash and key count for a Lua script. See
+<a href="http://redis.io/commands/eval">http://redis.io/commands/eval</a> for information on scripts in Redis.
+</p>
+
+
+			
+
+			
+
+			<div id="example_Script" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+<span class="comment">// Initialize a package-level variable with a script.</span>
+var getScript = redis.NewScript(1, `return redis.call(&#39;get&#39;, KEYS[1])`)
+
+<span class="comment">// In a function, use the script Do method to evaluate the script. The Do</span>
+<span class="comment">// method optimistically uses the EVALSHA command. If the script is not</span>
+<span class="comment">// loaded, then the Do method falls back to the EVAL command.</span>
+reply, err = getScript.Do(c, &#34;foo&#34;)
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+			
+
+			
+				
+				<h3 id="NewScript">func <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/script.go?s=1212:1260#L27">NewScript</a></h3>
+				<pre>func NewScript(keyCount <a href="../../../../builtin/index.html#int">int</a>, src <a href="../../../../builtin/index.html#string">string</a>) *<a href="index.html#Script">Script</a></pre>
+				<p>
+NewScript returns a new script object. If keyCount is greater than or equal
+to zero, then the count is automatically inserted in the EVAL command
+argument list. If keyCount is less than zero, then the application supplies
+the count as the first value in the keysAndArgs argument to the Do, Send and
+SendHash methods.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Script.Do">func (*Script) <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/script.go?s=2000:2076#L52">Do</a></h3>
+				<pre>func (s *<a href="index.html#Script">Script</a>) Do(c <a href="index.html#Conn">Conn</a>, keysAndArgs ...interface{}) (interface{}, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Do evaluates the script. Under the covers, Do optimistically evaluates the
+script using the EVALSHA command. If the command fails because the script is
+not loaded, then Do evaluates the script using the EVAL command (thus
+causing the script to load).
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Script.Load">func (*Script) <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/script.go?s=2874:2909#L73">Load</a></h3>
+				<pre>func (s *<a href="index.html#Script">Script</a>) Load(c <a href="index.html#Conn">Conn</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Load loads the script without evaluating it.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Script.Send">func (*Script) <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/script.go?s=2703:2766#L68">Send</a></h3>
+				<pre>func (s *<a href="index.html#Script">Script</a>) Send(c <a href="index.html#Conn">Conn</a>, keysAndArgs ...interface{}) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Send evaluates the script without waiting for the reply.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Script.SendHash">func (*Script) <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/script.go?s=2512:2579#L63">SendHash</a></h3>
+				<pre>func (s *<a href="index.html#Script">Script</a>) SendHash(c <a href="index.html#Conn">Conn</a>, keysAndArgs ...interface{}) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+SendHash evaluates the script without waiting for the reply. The script is
+evaluated with the EVALSHA command. The application must ensure that the
+script is loaded by a previous call to Send, Do or Load methods.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Subscription">type <a href="http://localhost:6060/src/github.com/garyburd/redigo/redis/pubsub.go?s=687:919#L10">Subscription</a></h2>
+			<pre>type Subscription struct {
+
+    <span class="comment">// Kind is &#34;subscribe&#34;, &#34;unsubscribe&#34;, &#34;psubscribe&#34; or &#34;punsubscribe&#34;</span>
+    Kind <a href="../../../../builtin/index.html#string">string</a>
+
+    <span class="comment">// The channel that was changed.</span>
+    Channel <a href="../../../../builtin/index.html#string">string</a>
+
+    <span class="comment">// The current number of subscriptions for connection.</span>
+    Count <a href="../../../../builtin/index.html#int">int</a>
+}</pre>
+			<p>
+Subscription represents a subscribe or unsubscribe notification.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

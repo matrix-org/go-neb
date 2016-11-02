@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>unsafe - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package unsafe</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "unsafe"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package unsafe contains operations that step around the type safety of Go programs.
+</p>
+<p>
+Packages that import unsafe may be non-portable and are not protected by the
+Go 1 compatibility guidelines.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+				
+				<dd><a href="index.html#Alignof">func Alignof(x ArbitraryType) uintptr</a></dd>
+			
+				
+				<dd><a href="index.html#Offsetof">func Offsetof(x ArbitraryType) uintptr</a></dd>
+			
+				
+				<dd><a href="index.html#Sizeof">func Sizeof(x ArbitraryType) uintptr</a></dd>
+			
+			
+				
+				<dd><a href="index.html#ArbitraryType">type ArbitraryType</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Pointer">type Pointer</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/unsafe/unsafe.go">unsafe.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+			
+			
+			<h2 id="Alignof">func <a href="http://localhost:6060/src/unsafe/unsafe.go?s=8764:8801#L184">Alignof</a></h2>
+			<pre>func Alignof(x <a href="index.html#ArbitraryType">ArbitraryType</a>) <a href="../builtin/index.html#uintptr">uintptr</a></pre>
+			<p>
+Alignof takes an expression x of any type and returns the required alignment
+of a hypothetical variable v as if v was declared via var v = x.
+It is the largest value m such that the address of v is always zero mod m.
+It is the same as the value returned by reflect.TypeOf(x).Align().
+As a special case, if a variable s is of struct type and f is a field
+within that struct, then Alignof(s.f) will return the required alignment
+of a field of that type within a struct.  This case is the same as the
+value returned by reflect.TypeOf(s.f).FieldAlign().
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Offsetof">func <a href="http://localhost:6060/src/unsafe/unsafe.go?s=8150:8188#L174">Offsetof</a></h2>
+			<pre>func Offsetof(x <a href="index.html#ArbitraryType">ArbitraryType</a>) <a href="../builtin/index.html#uintptr">uintptr</a></pre>
+			<p>
+Offsetof returns the offset within the struct of the field represented by x,
+which must be of the form structValue.field.  In other words, it returns the
+number of bytes between the start of the struct and the start of the field.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Sizeof">func <a href="http://localhost:6060/src/unsafe/unsafe.go?s=7873:7909#L169">Sizeof</a></h2>
+			<pre>func Sizeof(x <a href="index.html#ArbitraryType">ArbitraryType</a>) <a href="../builtin/index.html#uintptr">uintptr</a></pre>
+			<p>
+Sizeof takes an expression x of any type and returns the size in bytes
+of a hypothetical variable v as if v was declared via var v = x.
+The size does not include any memory possibly referenced by x.
+For instance, if x is a slice,  Sizeof returns the size of the slice
+descriptor, not the size of the memory referenced by the slice.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="ArbitraryType">type <a href="http://localhost:6060/src/unsafe/unsafe.go?s=548:570#L5">ArbitraryType</a></h2>
+			<pre>type ArbitraryType <a href="../builtin/index.html#int">int</a></pre>
+			<p>
+ArbitraryType is here for the purposes of documentation only and is not actually
+part of the unsafe package.  It represents the type of an arbitrary Go expression.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Pointer">type <a href="http://localhost:6060/src/unsafe/unsafe.go?s=7497:7524#L162">Pointer</a></h2>
+			<pre>type Pointer *<a href="index.html#ArbitraryType">ArbitraryType</a></pre>
+			<p>
+Pointer represents a pointer to an arbitrary type.  There are four special operations
+available for type Pointer that are not available for other types:
+</p>
+<pre>- A pointer value of any type can be converted to a Pointer.
+- A Pointer can be converted to a pointer value of any type.
+- A uintptr can be converted to a Pointer.
+- A Pointer can be converted to a uintptr.
+</pre>
+<p>
+Pointer therefore allows a program to defeat the type system and read and write
+arbitrary memory. It should be used with extreme care.
+</p>
+<p>
+The following patterns involving Pointer are valid.
+Code not using these patterns is likely to be invalid today
+or to become invalid in the future.
+Even the valid patterns below come with important caveats.
+</p>
+<p>
+Running &#34;go vet&#34; can help find uses of Pointer that do not conform to these patterns,
+but silence from &#34;go vet&#34; is not a guarantee that the code is valid.
+</p>
+<p>
+(1) Conversion of a *T1 to Pointer to *T2.
+</p>
+<p>
+Provided that T2 is no larger than T1 and that the two share an equivalent
+memory layout, this conversion allows reinterpreting data of one type as
+data of another type. An example is the implementation of
+math.Float64bits:
+</p>
+<pre>func Float64bits(f float64) uint64 {
+	return *(*uint64)(unsafe.Pointer(&amp;f))
+}
+</pre>
+<p>
+(2) Conversion of a Pointer to a uintptr (but not back to Pointer).
+</p>
+<p>
+Converting a Pointer to a uintptr produces the memory address of the value
+pointed at, as an integer. The usual use for such a uintptr is to print it.
+</p>
+<p>
+Conversion of a uintptr back to Pointer is not valid in general.
+</p>
+<p>
+A uintptr is an integer, not a reference.
+Converting a Pointer to a uintptr creates an integer value
+with no pointer semantics.
+Even if a uintptr holds the address of some object,
+the garbage collector will not update that uintptr&#39;s value
+if the object moves, nor will that uintptr keep the object
+from being reclaimed.
+</p>
+<p>
+The remaining patterns enumerate the only valid conversions
+from uintptr to Pointer.
+</p>
+<p>
+(3) Conversion of a Pointer to a uintptr and back, with arithmetic.
+</p>
+<p>
+If p points into an allocated object, it can be advanced through the object
+by conversion to uintptr, addition of an offset, and conversion back to Pointer.
+</p>
+<pre>p = unsafe.Pointer(uintptr(p) + offset)
+</pre>
+<p>
+The most common use of this pattern is to access fields in a struct
+or elements of an array:
+</p>
+<pre>// equivalent to f := unsafe.Pointer(&amp;s.f)
+f := unsafe.Pointer(uintptr(unsafe.Pointer(&amp;s)) + unsafe.Offsetof(s.f))
+
+// equivalent to e := unsafe.Pointer(&amp;x[i])
+e := unsafe.Pointer(uintptr(unsafe.Pointer(&amp;x[0])) + i*unsafe.Sizeof(x[0]))
+</pre>
+<p>
+It is valid both to add and to subtract offsets from a pointer in this way,
+but the result must continue to point into the original allocated object.
+Unlike in C, it is not valid to advance a pointer just beyond the end of
+its original allocation:
+</p>
+<pre>// INVALID: end points outside allocated space.
+var s thing
+end = unsafe.Pointer(uintptr(unsafe.Pointer(&amp;s)) + unsafe.Sizeof(s))
+
+// INVALID: end points outside allocated space.
+b := make([]byte, n)
+end = unsafe.Pointer(uintptr(unsafe.Pointer(&amp;b[0])) + uintptr(n))
+</pre>
+<p>
+Note that both conversions must appear in the same expression, with only
+the intervening arithmetic between them:
+</p>
+<pre>// INVALID: uintptr cannot be stored in variable
+// before conversion back to Pointer.
+u := uintptr(p)
+p = unsafe.Pointer(u + offset)
+</pre>
+<p>
+(4) Conversion of a Pointer to a uintptr when calling syscall.Syscall.
+</p>
+<p>
+The Syscall functions in package syscall pass their uintptr arguments directly
+to the operating system, which then may, depending on the details of the call,
+reinterpret some of them as pointers.
+That is, the system call implementation is implicitly converting certain arguments
+back from uintptr to pointer.
+</p>
+<p>
+If a pointer argument must be converted to uintptr for use as an argument,
+that conversion must appear in the call expression itself:
+</p>
+<pre>syscall.Syscall(SYS_READ, uintptr(fd), uintptr(unsafe.Pointer(p)), uintptr(n))
+</pre>
+<p>
+The compiler handles a Pointer converted to a uintptr in the argument list of
+a call to a function implemented in assembly by arranging that the referenced
+allocated object, if any, is retained and not moved until the call completes,
+even though from the types alone it would appear that the object is no longer
+needed during the call.
+</p>
+<p>
+For the compiler to recognize this pattern,
+the conversion must appear in the argument list:
+</p>
+<pre>// INVALID: uintptr cannot be stored in variable
+// before implicit conversion back to Pointer during system call.
+u := uintptr(unsafe.Pointer(p))
+syscall.Syscall(SYS_READ, uintptr(fd), u, uintptr(n))
+</pre>
+<p>
+(5) Conversion of the result of reflect.Value.Pointer or reflect.Value.UnsafeAddr
+from uintptr to Pointer.
+</p>
+<p>
+Package reflect&#39;s Value methods named Pointer and UnsafeAddr return type uintptr
+instead of unsafe.Pointer to keep callers from changing the result to an arbitrary
+type without first importing &#34;unsafe&#34;. However, this means that the result is
+fragile and must be converted to Pointer immediately after making the call,
+in the same expression:
+</p>
+<pre>p := (*int)(unsafe.Pointer(reflect.ValueOf(new(int)).Pointer()))
+</pre>
+<p>
+As in the cases above, it is invalid to store the result before the conversion:
+</p>
+<pre>// INVALID: uintptr cannot be stored in variable
+// before conversion back to Pointer.
+u := reflect.ValueOf(new(int)).Pointer()
+p := (*int)(unsafe.Pointer(u))
+</pre>
+<p>
+(6) Conversion of a reflect.SliceHeader or reflect.StringHeader Data field to or from Pointer.
+</p>
+<p>
+As in the previous case, the reflect data structures SliceHeader and StringHeader
+declare the field Data as a uintptr to keep callers from changing the result to
+an arbitrary type without first importing &#34;unsafe&#34;. However, this means that
+SliceHeader and StringHeader are only valid when interpreting the content
+of an actual slice or string value.
+</p>
+<pre>var s string
+hdr := (*reflect.StringHeader)(unsafe.Pointer(&amp;s)) // case 1
+hdr.Data = uintptr(unsafe.Pointer(p))              // case 6 (this case)
+hdr.Len = uintptr(n)
+</pre>
+<p>
+In this usage hdr.Data is really an alternate way to refer to the underlying
+pointer in the slice header, not a uintptr variable itself.
+</p>
+<p>
+In general, reflect.SliceHeader and reflect.StringHeader should be used
+only as *reflect.SliceHeader and *reflect.StringHeader pointing at actual
+slices or strings, never as plain structs.
+A program should not declare or allocate variables of these struct types.
+</p>
+<pre>// INVALID: a directly-declared header will not hold Data as a reference.
+var hdr reflect.StringHeader
+hdr.Data = uintptr(unsafe.Pointer(p))
+hdr.Len = uintptr(n)
+s := *(*string)(unsafe.Pointer(&amp;hdr)) // p possibly already lost
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

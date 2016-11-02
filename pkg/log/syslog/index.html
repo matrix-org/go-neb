@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>syslog - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package syslog</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "log/syslog"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package syslog provides a simple interface to the system log
+service. It can send messages to the syslog daemon using UNIX
+domain sockets, UDP or TCP.
+</p>
+<p>
+Only one call to Dial is necessary. On write failures,
+the syslog client will attempt to reconnect to the server
+and write again.
+</p>
+<p>
+The syslog package is frozen and not accepting new features.
+Some external packages provide more functionality. See:
+</p>
+<pre><a href="https://godoc.org/?q=syslog">https://godoc.org/?q=syslog</a>
+</pre>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+				
+				<dd><a href="index.html#NewLogger">func NewLogger(p Priority, logFlag int) (*log.Logger, error)</a></dd>
+			
+			
+				
+				<dd><a href="index.html#Priority">type Priority</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Writer">type Writer</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Dial">func Dial(network, raddr string, priority Priority, tag string) (*Writer, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#New">func New(priority Priority, tag string) (w *Writer, err error)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Writer.Alert">func (w *Writer) Alert(m string) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Writer.Close">func (w *Writer) Close() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Writer.Crit">func (w *Writer) Crit(m string) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Writer.Debug">func (w *Writer) Debug(m string) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Writer.Emerg">func (w *Writer) Emerg(m string) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Writer.Err">func (w *Writer) Err(m string) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Writer.Info">func (w *Writer) Info(m string) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Writer.Notice">func (w *Writer) Notice(m string) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Writer.Warning">func (w *Writer) Warning(m string) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Writer.Write">func (w *Writer) Write(b []byte) (int, error)</a></dd>
+				
+			
+			
+				
+				<dd><a href="index.html#pkg-note-BUG">Bugs</a></dd>
+				
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/log/syslog/doc.go">doc.go</a>
+			
+				<a href="http://localhost:6060/src/log/syslog/syslog.go">syslog.go</a>
+			
+				<a href="http://localhost:6060/src/log/syslog/syslog_unix.go">syslog_unix.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+			
+			
+			<h2 id="NewLogger">func <a href="http://localhost:6060/src/log/syslog/syslog.go?s=7160:7220#L296">NewLogger</a></h2>
+			<pre>func NewLogger(p <a href="index.html#Priority">Priority</a>, logFlag <a href="../../builtin/index.html#int">int</a>) (*<a href="../index.html">log</a>.<a href="../index.html#Logger">Logger</a>, <a href="../../builtin/index.html#error">error</a>)</pre>
+			<p>
+NewLogger creates a log.Logger whose output is written to
+the system log service with the specified priority. The logFlag
+argument is the flag set passed through to log.New to create
+the Logger.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="Priority">type <a href="http://localhost:6060/src/log/syslog/syslog.go?s=521:538#L14">Priority</a></h2>
+			<pre>type Priority <a href="../../builtin/index.html#int">int</a></pre>
+			<p>
+The Priority is a combination of the syslog facility and
+severity. For example, LOG_ALERT | LOG_FTP sends an alert severity
+message from the FTP facility. The default severity is LOG_EMERG;
+the default facility is LOG_KERN.
+</p>
+
+
+			
+				<pre>const (
+
+    <span class="comment">// From /usr/include/sys/syslog.h.</span>
+    <span class="comment">// These are the same on Linux, BSD, and OS X.</span>
+    <span id="LOG_EMERG">LOG_EMERG</span> <a href="index.html#Priority">Priority</a> = <a href="../../builtin/index.html#iota">iota</a>
+    <span id="LOG_ALERT">LOG_ALERT</span>
+    <span id="LOG_CRIT">LOG_CRIT</span>
+    <span id="LOG_ERR">LOG_ERR</span>
+    <span id="LOG_WARNING">LOG_WARNING</span>
+    <span id="LOG_NOTICE">LOG_NOTICE</span>
+    <span id="LOG_INFO">LOG_INFO</span>
+    <span id="LOG_DEBUG">LOG_DEBUG</span>
+)</pre>
+				
+			
+				<pre>const (
+
+    <span class="comment">// From /usr/include/sys/syslog.h.</span>
+    <span class="comment">// These are the same up to LOG_FTP on Linux, BSD, and OS X.</span>
+    <span id="LOG_KERN">LOG_KERN</span> <a href="index.html#Priority">Priority</a> = <a href="../../builtin/index.html#iota">iota</a> &lt;&lt; 3
+    <span id="LOG_USER">LOG_USER</span>
+    <span id="LOG_MAIL">LOG_MAIL</span>
+    <span id="LOG_DAEMON">LOG_DAEMON</span>
+    <span id="LOG_AUTH">LOG_AUTH</span>
+    <span id="LOG_SYSLOG">LOG_SYSLOG</span>
+    <span id="LOG_LPR">LOG_LPR</span>
+    <span id="LOG_NEWS">LOG_NEWS</span>
+    <span id="LOG_UUCP">LOG_UUCP</span>
+    <span id="LOG_CRON">LOG_CRON</span>
+    <span id="LOG_AUTHPRIV">LOG_AUTHPRIV</span>
+    <span id="LOG_FTP">LOG_FTP</span>
+
+    <span id="LOG_LOCAL0">LOG_LOCAL0</span>
+    <span id="LOG_LOCAL1">LOG_LOCAL1</span>
+    <span id="LOG_LOCAL2">LOG_LOCAL2</span>
+    <span id="LOG_LOCAL3">LOG_LOCAL3</span>
+    <span id="LOG_LOCAL4">LOG_LOCAL4</span>
+    <span id="LOG_LOCAL5">LOG_LOCAL5</span>
+    <span id="LOG_LOCAL6">LOG_LOCAL6</span>
+    <span id="LOG_LOCAL7">LOG_LOCAL7</span>
+)</pre>
+				
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Writer">type <a href="http://localhost:6060/src/log/syslog/syslog.go?s=1273:1432#L66">Writer</a></h2>
+			<pre>type Writer struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+A Writer is a connection to a syslog server.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="Dial">func <a href="http://localhost:6060/src/log/syslog/syslog.go?s=2506:2586#L105">Dial</a></h3>
+				<pre>func Dial(network, raddr <a href="../../builtin/index.html#string">string</a>, priority <a href="index.html#Priority">Priority</a>, tag <a href="../../builtin/index.html#string">string</a>) (*<a href="index.html#Writer">Writer</a>, <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Dial establishes a connection to a log daemon by connecting to
+address raddr on the specified network.  Each write to the returned
+writer sends a log message with the given facility, severity and
+tag.
+If network is empty, Dial will connect to the local syslog server.
+</p>
+
+				
+				
+			
+				
+				<h3 id="New">func <a href="http://localhost:6060/src/log/syslog/syslog.go?s=2119:2181#L96">New</a></h3>
+				<pre>func New(priority <a href="index.html#Priority">Priority</a>, tag <a href="../../builtin/index.html#string">string</a>) (w *<a href="index.html#Writer">Writer</a>, err <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+New establishes a new connection to the system log daemon.  Each
+write to the returned writer sends a log message with the given
+priority and prefix.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Writer.Alert">func (*Writer) <a href="http://localhost:6060/src/log/syslog/syslog.go?s=4200:4244#L187">Alert</a></h3>
+				<pre>func (w *<a href="index.html#Writer">Writer</a>) Alert(m <a href="../../builtin/index.html#string">string</a>) (err <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Alert logs a message with severity LOG_ALERT, ignoring the severity
+passed to New.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Writer.Close">func (*Writer) <a href="http://localhost:6060/src/log/syslog/syslog.go?s=3762:3792#L166">Close</a></h3>
+				<pre>func (w *<a href="index.html#Writer">Writer</a>) Close() <a href="../../builtin/index.html#error">error</a></pre>
+				<p>
+Close closes a connection to the syslog daemon.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Writer.Crit">func (*Writer) <a href="http://localhost:6060/src/log/syslog/syslog.go?s=4389:4432#L194">Crit</a></h3>
+				<pre>func (w *<a href="index.html#Writer">Writer</a>) Crit(m <a href="../../builtin/index.html#string">string</a>) (err <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Crit logs a message with severity LOG_CRIT, ignoring the severity
+passed to New.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Writer.Debug">func (*Writer) <a href="http://localhost:6060/src/log/syslog/syslog.go?s=5342:5386#L229">Debug</a></h3>
+				<pre>func (w *<a href="index.html#Writer">Writer</a>) Debug(m <a href="../../builtin/index.html#string">string</a>) (err <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Debug logs a message with severity LOG_DEBUG, ignoring the severity
+passed to New.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Writer.Emerg">func (*Writer) <a href="http://localhost:6060/src/log/syslog/syslog.go?s=4009:4053#L180">Emerg</a></h3>
+				<pre>func (w *<a href="index.html#Writer">Writer</a>) Emerg(m <a href="../../builtin/index.html#string">string</a>) (err <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Emerg logs a message with severity LOG_EMERG, ignoring the severity
+passed to New.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Writer.Err">func (*Writer) <a href="http://localhost:6060/src/log/syslog/syslog.go?s=4574:4616#L201">Err</a></h3>
+				<pre>func (w *<a href="index.html#Writer">Writer</a>) Err(m <a href="../../builtin/index.html#string">string</a>) (err <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Err logs a message with severity LOG_ERR, ignoring the severity
+passed to New.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Writer.Info">func (*Writer) <a href="http://localhost:6060/src/log/syslog/syslog.go?s=5153:5196#L222">Info</a></h3>
+				<pre>func (w *<a href="index.html#Writer">Writer</a>) Info(m <a href="../../builtin/index.html#string">string</a>) (err <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Info logs a message with severity LOG_INFO, ignoring the severity
+passed to New.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Writer.Notice">func (*Writer) <a href="http://localhost:6060/src/log/syslog/syslog.go?s=4962:5007#L215">Notice</a></h3>
+				<pre>func (w *<a href="index.html#Writer">Writer</a>) Notice(m <a href="../../builtin/index.html#string">string</a>) (err <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Notice logs a message with severity LOG_NOTICE, ignoring the
+severity passed to New.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Writer.Warning">func (*Writer) <a href="http://localhost:6060/src/log/syslog/syslog.go?s=4765:4811#L208">Warning</a></h3>
+				<pre>func (w *<a href="index.html#Writer">Writer</a>) Warning(m <a href="../../builtin/index.html#string">string</a>) (err <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Warning logs a message with severity LOG_WARNING, ignoring the
+severity passed to New.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Writer.Write">func (*Writer) <a href="http://localhost:6060/src/log/syslog/syslog.go?s=3613:3658#L161">Write</a></h3>
+				<pre>func (w *<a href="index.html#Writer">Writer</a>) Write(b []<a href="../../builtin/index.html#byte">byte</a>) (<a href="../../builtin/index.html#int">int</a>, <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Write sends a log message to the syslog daemon.
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+		
+			<h2 id="pkg-note-BUG">Bugs</h2>
+			<ul style="list-style: none; padding: 0;">
+			
+			<li><a href="http://localhost:6060/src/log/syslog/doc.go?s=640:873#L9">&#x261e;</a> This package is not implemented on Windows. As the
+syslog package is frozen, Windows users are encouraged to
+use a package outside of the standard library. For background,
+see https://golang.org/issue/1108.
+</li>
+			
+			<li><a href="http://localhost:6060/src/log/syslog/doc.go?s=875:933#L14">&#x261e;</a> This package is not implemented on Plan 9.
+</li>
+			
+			<li><a href="http://localhost:6060/src/log/syslog/doc.go?s=935:1006#L16">&#x261e;</a> This package is not implemented on NaCl (Native Client).
+</li>
+			
+			</ul>
+		
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

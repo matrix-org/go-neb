@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>smtp - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package smtp</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "net/smtp"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+				<dd><a href="index.html#pkg-examples" class="examplesLink">Examples</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package smtp implements the Simple Mail Transfer Protocol as defined in RFC 5321.
+It also implements the following extensions:
+</p>
+<pre>8BITMIME  RFC 1652
+AUTH      RFC 2554
+STARTTLS  RFC 3207
+</pre>
+<p>
+Additional extensions may be handled by clients.
+</p>
+
+			</div>
+		</div>
+		<div id="example_" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+<span class="comment">// Connect to the remote SMTP server.</span>
+c, err := smtp.Dial(&#34;mail.example.com:25&#34;)
+if err != nil {
+    log.Fatal(err)
+}
+
+<span class="comment">// Set the sender and recipient first</span>
+if err := c.Mail(&#34;sender@example.org&#34;); err != nil {
+    log.Fatal(err)
+}
+if err := c.Rcpt(&#34;recipient@example.net&#34;); err != nil {
+    log.Fatal(err)
+}
+
+<span class="comment">// Send the email body.</span>
+wc, err := c.Data()
+if err != nil {
+    log.Fatal(err)
+}
+_, err = fmt.Fprintf(wc, &#34;This is the email body&#34;)
+if err != nil {
+    log.Fatal(err)
+}
+err = wc.Close()
+if err != nil {
+    log.Fatal(err)
+}
+
+<span class="comment">// Send the QUIT command and close the connection.</span>
+err = c.Quit()
+if err != nil {
+    log.Fatal(err)
+}
+</pre>
+			
+		
+	</div>
+</div>
+
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+				
+				<dd><a href="index.html#SendMail">func SendMail(addr string, a Auth, from string, to []string, msg []byte) error</a></dd>
+			
+			
+				
+				<dd><a href="index.html#Auth">type Auth</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CRAMMD5Auth">func CRAMMD5Auth(username, secret string) Auth</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#PlainAuth">func PlainAuth(identity, username, password, host string) Auth</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Client">type Client</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Dial">func Dial(addr string) (*Client, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewClient">func NewClient(conn net.Conn, host string) (*Client, error)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.Auth">func (c *Client) Auth(a Auth) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.Close">func (c *Client) Close() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.Data">func (c *Client) Data() (io.WriteCloser, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.Extension">func (c *Client) Extension(ext string) (bool, string)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.Hello">func (c *Client) Hello(localName string) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.Mail">func (c *Client) Mail(from string) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.Quit">func (c *Client) Quit() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.Rcpt">func (c *Client) Rcpt(to string) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.Reset">func (c *Client) Reset() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.StartTLS">func (c *Client) StartTLS(config *tls.Config) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.TLSConnectionState">func (c *Client) TLSConnectionState() (state tls.ConnectionState, ok bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.Verify">func (c *Client) Verify(addr string) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#ServerInfo">type ServerInfo</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+		<div id="pkg-examples">
+			<h4>Examples</h4>
+			<dl>
+			
+			<dd><a class="exampleLink" href="index.html#example_">Package</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_PlainAuth">PlainAuth</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_SendMail">SendMail</a></dd>
+			
+			</dl>
+		</div>
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/net/smtp/auth.go">auth.go</a>
+			
+				<a href="http://localhost:6060/src/net/smtp/smtp.go">smtp.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+			
+			
+			<h2 id="SendMail">func <a href="http://localhost:6060/src/net/smtp/smtp.go?s=8766:8844#L290">SendMail</a></h2>
+			<pre>func SendMail(addr <a href="../../builtin/index.html#string">string</a>, a <a href="index.html#Auth">Auth</a>, from <a href="../../builtin/index.html#string">string</a>, to []<a href="../../builtin/index.html#string">string</a>, msg []<a href="../../builtin/index.html#byte">byte</a>) <a href="../../builtin/index.html#error">error</a></pre>
+			<p>
+SendMail connects to the server at addr, switches to TLS if
+possible, authenticates with the optional mechanism a if possible,
+and then sends an email from address from, to addresses to, with
+message msg.
+The addr must include a port, as in &#34;mail.example.com:smtp&#34;.
+</p>
+<p>
+The addresses in the to parameter are the SMTP RCPT addresses.
+</p>
+<p>
+The msg parameter should be an RFC 822-style email with headers
+first, a blank line, and then the message body. The lines of msg
+should be CRLF terminated.  The msg headers should usually include
+fields such as &#34;From&#34;, &#34;To&#34;, &#34;Subject&#34;, and &#34;Cc&#34;.  Sending &#34;Bcc&#34;
+messages is accomplished by including an email address in the to
+parameter but not including it in the msg headers.
+</p>
+<p>
+The SendMail function and the the net/smtp package are low-level
+mechanisms and provide no support for DKIM signing, MIME
+attachments (see the mime/multipart package), or other mail
+functionality. Higher-level packages exist outside of the standard
+library.
+</p>
+
+			<div id="example_SendMail" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+<span class="comment">// Set up authentication information.</span>
+auth := smtp.PlainAuth(&#34;&#34;, &#34;user@example.com&#34;, &#34;password&#34;, &#34;mail.example.com&#34;)
+
+<span class="comment">// Connect to the server, authenticate, set the sender and recipient,</span>
+<span class="comment">// and send the email all in one step.</span>
+to := []string{&#34;recipient@example.net&#34;}
+msg := []byte(&#34;To: recipient@example.net\r\n&#34; +
+    &#34;Subject: discount Gophers!\r\n&#34; +
+    &#34;\r\n&#34; +
+    &#34;This is the email body.\r\n&#34;)
+err := smtp.SendMail(&#34;mail.example.com:25&#34;, auth, &#34;sender@example.org&#34;, to, msg)
+if err != nil {
+    log.Fatal(err)
+}
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+
+		
+		
+			
+			
+			<h2 id="Auth">type <a href="http://localhost:6060/src/net/smtp/auth.go?s=292:1191#L5">Auth</a></h2>
+			<pre>type Auth interface {
+    <span class="comment">// Start begins an authentication with a server.</span>
+    <span class="comment">// It returns the name of the authentication protocol</span>
+    <span class="comment">// and optionally data to include in the initial AUTH message</span>
+    <span class="comment">// sent to the server. It can return proto == &#34;&#34; to indicate</span>
+    <span class="comment">// that the authentication should be skipped.</span>
+    <span class="comment">// If it returns a non-nil error, the SMTP client aborts</span>
+    <span class="comment">// the authentication attempt and closes the connection.</span>
+    Start(server *<a href="index.html#ServerInfo">ServerInfo</a>) (proto <a href="../../builtin/index.html#string">string</a>, toServer []<a href="../../builtin/index.html#byte">byte</a>, err <a href="../../builtin/index.html#error">error</a>)
+
+    <span class="comment">// Next continues the authentication. The server has just sent</span>
+    <span class="comment">// the fromServer data. If more is true, the server expects a</span>
+    <span class="comment">// response, which Next should return as toServer; otherwise</span>
+    <span class="comment">// Next should return toServer == nil.</span>
+    <span class="comment">// If Next returns a non-nil error, the SMTP client aborts</span>
+    <span class="comment">// the authentication attempt and closes the connection.</span>
+    Next(fromServer []<a href="../../builtin/index.html#byte">byte</a>, more <a href="../../builtin/index.html#bool">bool</a>) (toServer []<a href="../../builtin/index.html#byte">byte</a>, err <a href="../../builtin/index.html#error">error</a>)
+}</pre>
+			<p>
+Auth is implemented by an SMTP authentication mechanism.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="CRAMMD5Auth">func <a href="http://localhost:6060/src/net/smtp/auth.go?s=2924:2970#L81">CRAMMD5Auth</a></h3>
+				<pre>func CRAMMD5Auth(username, secret <a href="../../builtin/index.html#string">string</a>) <a href="index.html#Auth">Auth</a></pre>
+				<p>
+CRAMMD5Auth returns an Auth that implements the CRAM-MD5 authentication
+mechanism as defined in RFC 2195.
+The returned Auth uses the given username and secret to authenticate
+to the server using the challenge-response mechanism.
+</p>
+
+				
+				
+			
+				
+				<h3 id="PlainAuth">func <a href="http://localhost:6060/src/net/smtp/auth.go?s=1820:1882#L41">PlainAuth</a></h3>
+				<pre>func PlainAuth(identity, username, password, host <a href="../../builtin/index.html#string">string</a>) <a href="index.html#Auth">Auth</a></pre>
+				<p>
+PlainAuth returns an Auth that implements the PLAIN authentication
+mechanism as defined in RFC 4616.
+The returned Auth uses the given username and password to authenticate
+on TLS connections to host and act as identity. Usually identity will be
+left blank to act as username.
+</p>
+
+				<div id="example_PlainAuth" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+<span class="comment">// hostname is used by PlainAuth to validate the TLS certificate.</span>
+hostname := &#34;mail.example.com&#34;
+auth := smtp.PlainAuth(&#34;&#34;, &#34;user@example.com&#34;, &#34;password&#34;, hostname)
+
+err := smtp.SendMail(hostname+&#34;:25&#34;, auth, from, recipients, msg)
+if err != nil {
+    log.Fatal(err)
+}
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+
+			
+		
+			
+			
+			<h2 id="Client">type <a href="http://localhost:6060/src/net/smtp/smtp.go?s=583:1173#L14">Client</a></h2>
+			<pre>type Client struct {
+    <span class="comment">// Text is the textproto.Conn used by the Client. It is exported to allow for</span>
+    <span class="comment">// clients to add extensions.</span>
+    Text *<a href="../textproto/index.html">textproto</a>.<a href="../textproto/index.html#Conn">Conn</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+A Client represents a client connection to an SMTP server.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="Dial">func <a href="http://localhost:6060/src/net/smtp/smtp.go?s=1305:1344#L35">Dial</a></h3>
+				<pre>func Dial(addr <a href="../../builtin/index.html#string">string</a>) (*<a href="index.html#Client">Client</a>, <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Dial returns a new Client connected to an SMTP server at addr.
+The addr must include a port, as in &#34;mail.example.com:smtp&#34;.
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewClient">func <a href="http://localhost:6060/src/net/smtp/smtp.go?s=1617:1676#L46">NewClient</a></h3>
+				<pre>func NewClient(conn <a href="../index.html">net</a>.<a href="../index.html#Conn">Conn</a>, host <a href="../../builtin/index.html#string">string</a>) (*<a href="index.html#Client">Client</a>, <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+NewClient returns a new Client using an existing connection and host as a
+server name to be used when authenticating.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Client.Auth">func (*Client) <a href="http://localhost:6060/src/net/smtp/smtp.go?s=5280:5315#L176">Auth</a></h3>
+				<pre>func (c *<a href="index.html#Client">Client</a>) Auth(a <a href="index.html#Auth">Auth</a>) <a href="../../builtin/index.html#error">error</a></pre>
+				<p>
+Auth authenticates a client using the provided authentication mechanism.
+A failed authentication closes the connection.
+Only servers that advertise the AUTH extension support this function.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Client.Close">func (*Client) <a href="http://localhost:6060/src/net/smtp/smtp.go?s=1932:1962#L58">Close</a></h3>
+				<pre>func (c *<a href="index.html#Client">Client</a>) Close() <a href="../../builtin/index.html#error">error</a></pre>
+				<p>
+Close closes the connection.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Client.Data">func (*Client) <a href="http://localhost:6060/src/net/smtp/smtp.go?s=7505:7552#L260">Data</a></h3>
+				<pre>func (c *<a href="index.html#Client">Client</a>) Data() (<a href="../../io/index.html">io</a>.<a href="../../io/index.html#WriteCloser">WriteCloser</a>, <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Data issues a DATA command to the server and returns a writer that
+can be used to write the mail headers and body. The caller should
+close the writer before calling any more methods on c.  A call to
+Data must be preceded by one or more calls to Rcpt.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Client.Extension">func (*Client) <a href="http://localhost:6060/src/net/smtp/smtp.go?s=9885:9938#L342">Extension</a></h3>
+				<pre>func (c *<a href="index.html#Client">Client</a>) Extension(ext <a href="../../builtin/index.html#string">string</a>) (<a href="../../builtin/index.html#bool">bool</a>, <a href="../../builtin/index.html#string">string</a>)</pre>
+				<p>
+Extension reports whether an extension is support by the server.
+The extension name is case-insensitive. If the extension is supported,
+Extension also returns a string that contains any parameters the
+server specifies for the extension.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Client.Hello">func (*Client) <a href="http://localhost:6060/src/net/smtp/smtp.go?s=2515:2561#L79">Hello</a></h3>
+				<pre>func (c *<a href="index.html#Client">Client</a>) Hello(localName <a href="../../builtin/index.html#string">string</a>) <a href="../../builtin/index.html#error">error</a></pre>
+				<p>
+Hello sends a HELO or EHLO to the server as the given host name.
+Calling this method is only necessary if the client needs control
+over the host name used.  The client will introduce itself as &#34;localhost&#34;
+automatically otherwise.  If Hello is called, it must be called before
+any of the other methods.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Client.Mail">func (*Client) <a href="http://localhost:6060/src/net/smtp/smtp.go?s=6510:6550#L223">Mail</a></h3>
+				<pre>func (c *<a href="index.html#Client">Client</a>) Mail(from <a href="../../builtin/index.html#string">string</a>) <a href="../../builtin/index.html#error">error</a></pre>
+				<p>
+Mail issues a MAIL command to the server using the provided email address.
+If the server supports the 8BITMIME extension, Mail adds the BODY=8BITMIME
+parameter.
+This initiates a mail transaction and is followed by one or more Rcpt calls.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Client.Quit">func (*Client) <a href="http://localhost:6060/src/net/smtp/smtp.go?s=10406:10435#L365">Quit</a></h3>
+				<pre>func (c *<a href="index.html#Client">Client</a>) Quit() <a href="../../builtin/index.html#error">error</a></pre>
+				<p>
+Quit sends the QUIT command and closes the connection to the server.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Client.Rcpt">func (*Client) <a href="http://localhost:6060/src/net/smtp/smtp.go?s=6971:7009#L240">Rcpt</a></h3>
+				<pre>func (c *<a href="index.html#Client">Client</a>) Rcpt(to <a href="../../builtin/index.html#string">string</a>) <a href="../../builtin/index.html#error">error</a></pre>
+				<p>
+Rcpt issues a RCPT command to the server using the provided email address.
+A call to Rcpt must be preceded by a call to Mail and may be followed by
+a Data call or another Rcpt call.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Client.Reset">func (*Client) <a href="http://localhost:6060/src/net/smtp/smtp.go?s=10202:10232#L356">Reset</a></h3>
+				<pre>func (c *<a href="index.html#Client">Client</a>) Reset() <a href="../../builtin/index.html#error">error</a></pre>
+				<p>
+Reset sends the RSET command to the server, aborting the current mail
+transaction.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Client.StartTLS">func (*Client) <a href="http://localhost:6060/src/net/smtp/smtp.go?s=4092:4143#L136">StartTLS</a></h3>
+				<pre>func (c *<a href="index.html#Client">Client</a>) StartTLS(config *<a href="../../crypto/tls/index.html">tls</a>.<a href="../../crypto/tls/index.html#Config">Config</a>) <a href="../../builtin/index.html#error">error</a></pre>
+				<p>
+StartTLS sends the STARTTLS command and encrypts all further communication.
+Only servers that advertise the STARTTLS extension support this function.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Client.TLSConnectionState">func (*Client) <a href="http://localhost:6060/src/net/smtp/smtp.go?s=4514:4588#L153">TLSConnectionState</a></h3>
+				<pre>func (c *<a href="index.html#Client">Client</a>) TLSConnectionState() (state <a href="../../crypto/tls/index.html">tls</a>.<a href="../../crypto/tls/index.html#ConnectionState">ConnectionState</a>, ok <a href="../../builtin/index.html#bool">bool</a>)</pre>
+				<p>
+TLSConnectionState returns the client&#39;s TLS connection state.
+The return values are their zero values if StartTLS did
+not succeed.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Client.Verify">func (*Client) <a href="http://localhost:6060/src/net/smtp/smtp.go?s=4928:4970#L165">Verify</a></h3>
+				<pre>func (c *<a href="index.html#Client">Client</a>) Verify(addr <a href="../../builtin/index.html#string">string</a>) <a href="../../builtin/index.html#error">error</a></pre>
+				<p>
+Verify checks the validity of an email address on the server.
+If Verify returns nil, the address is valid. A non-nil return
+does not necessarily indicate an invalid address. Many servers
+will not verify addresses for security reasons.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ServerInfo">type <a href="http://localhost:6060/src/net/smtp/auth.go?s=1249:1426#L25">ServerInfo</a></h2>
+			<pre>type ServerInfo struct {
+    Name <a href="../../builtin/index.html#string">string</a>   <span class="comment">// SMTP server name</span>
+    TLS  <a href="../../builtin/index.html#bool">bool</a>     <span class="comment">// using TLS, with valid certificate for Name</span>
+    Auth []<a href="../../builtin/index.html#string">string</a> <span class="comment">// advertised authentication mechanisms</span>
+}</pre>
+			<p>
+ServerInfo records information about an SMTP server.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>tls - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package tls</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "crypto/tls"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+				<dd><a href="index.html#pkg-examples" class="examplesLink">Examples</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package tls partially implements TLS 1.2, as specified in RFC 5246.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="index.html#pkg-constants">Constants</a></dd>
+			
+			
+			
+				
+				<dd><a href="index.html#Listen">func Listen(network, laddr string, config *Config) (net.Listener, error)</a></dd>
+			
+				
+				<dd><a href="index.html#NewListener">func NewListener(inner net.Listener, config *Config) net.Listener</a></dd>
+			
+			
+				
+				<dd><a href="index.html#Certificate">type Certificate</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LoadX509KeyPair">func LoadX509KeyPair(certFile, keyFile string) (Certificate, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#X509KeyPair">func X509KeyPair(certPEMBlock, keyPEMBlock []byte) (Certificate, error)</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ClientAuthType">type ClientAuthType</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ClientHelloInfo">type ClientHelloInfo</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ClientSessionCache">type ClientSessionCache</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewLRUClientSessionCache">func NewLRUClientSessionCache(capacity int) ClientSessionCache</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ClientSessionState">type ClientSessionState</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Config">type Config</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Config.BuildNameToCertificate">func (c *Config) BuildNameToCertificate()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Config.SetSessionTicketKeys">func (c *Config) SetSessionTicketKeys(keys [][32]byte)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Conn">type Conn</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client">func Client(conn net.Conn, config *Config) *Conn</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Dial">func Dial(network, addr string, config *Config) (*Conn, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DialWithDialer">func DialWithDialer(dialer *net.Dialer, network, addr string, config *Config) (*Conn, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Server">func Server(conn net.Conn, config *Config) *Conn</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Conn.Close">func (c *Conn) Close() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Conn.ConnectionState">func (c *Conn) ConnectionState() ConnectionState</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Conn.Handshake">func (c *Conn) Handshake() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Conn.LocalAddr">func (c *Conn) LocalAddr() net.Addr</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Conn.OCSPResponse">func (c *Conn) OCSPResponse() []byte</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Conn.Read">func (c *Conn) Read(b []byte) (n int, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Conn.RemoteAddr">func (c *Conn) RemoteAddr() net.Addr</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Conn.SetDeadline">func (c *Conn) SetDeadline(t time.Time) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Conn.SetReadDeadline">func (c *Conn) SetReadDeadline(t time.Time) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Conn.SetWriteDeadline">func (c *Conn) SetWriteDeadline(t time.Time) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Conn.VerifyHostname">func (c *Conn) VerifyHostname(host string) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Conn.Write">func (c *Conn) Write(b []byte) (int, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#ConnectionState">type ConnectionState</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#CurveID">type CurveID</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#RecordHeaderError">type RecordHeaderError</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#RecordHeaderError.Error">func (e RecordHeaderError) Error() string</a></dd>
+				
+			
+			
+				
+				<dd><a href="index.html#pkg-note-BUG">Bugs</a></dd>
+				
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+		<div id="pkg-examples">
+			<h4>Examples</h4>
+			<dl>
+			
+			<dd><a class="exampleLink" href="index.html#example_Dial">Dial</a></dd>
+			
+			</dl>
+		</div>
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/crypto/tls/alert.go">alert.go</a>
+			
+				<a href="http://localhost:6060/src/crypto/tls/cipher_suites.go">cipher_suites.go</a>
+			
+				<a href="http://localhost:6060/src/crypto/tls/common.go">common.go</a>
+			
+				<a href="http://localhost:6060/src/crypto/tls/conn.go">conn.go</a>
+			
+				<a href="http://localhost:6060/src/crypto/tls/handshake_client.go">handshake_client.go</a>
+			
+				<a href="http://localhost:6060/src/crypto/tls/handshake_messages.go">handshake_messages.go</a>
+			
+				<a href="http://localhost:6060/src/crypto/tls/handshake_server.go">handshake_server.go</a>
+			
+				<a href="http://localhost:6060/src/crypto/tls/key_agreement.go">key_agreement.go</a>
+			
+				<a href="http://localhost:6060/src/crypto/tls/prf.go">prf.go</a>
+			
+				<a href="http://localhost:6060/src/crypto/tls/ticket.go">ticket.go</a>
+			
+				<a href="http://localhost:6060/src/crypto/tls/tls.go">tls.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const (
+    <span id="TLS_RSA_WITH_RC4_128_SHA">TLS_RSA_WITH_RC4_128_SHA</span>                <a href="../../builtin/index.html#uint16">uint16</a> = 0x0005
+    <span id="TLS_RSA_WITH_3DES_EDE_CBC_SHA">TLS_RSA_WITH_3DES_EDE_CBC_SHA</span>           <a href="../../builtin/index.html#uint16">uint16</a> = 0x000a
+    <span id="TLS_RSA_WITH_AES_128_CBC_SHA">TLS_RSA_WITH_AES_128_CBC_SHA</span>            <a href="../../builtin/index.html#uint16">uint16</a> = 0x002f
+    <span id="TLS_RSA_WITH_AES_256_CBC_SHA">TLS_RSA_WITH_AES_256_CBC_SHA</span>            <a href="../../builtin/index.html#uint16">uint16</a> = 0x0035
+    <span id="TLS_RSA_WITH_AES_128_GCM_SHA256">TLS_RSA_WITH_AES_128_GCM_SHA256</span>         <a href="../../builtin/index.html#uint16">uint16</a> = 0x009c
+    <span id="TLS_RSA_WITH_AES_256_GCM_SHA384">TLS_RSA_WITH_AES_256_GCM_SHA384</span>         <a href="../../builtin/index.html#uint16">uint16</a> = 0x009d
+    <span id="TLS_ECDHE_ECDSA_WITH_RC4_128_SHA">TLS_ECDHE_ECDSA_WITH_RC4_128_SHA</span>        <a href="../../builtin/index.html#uint16">uint16</a> = 0xc007
+    <span id="TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA">TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA</span>    <a href="../../builtin/index.html#uint16">uint16</a> = 0xc009
+    <span id="TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA">TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA</span>    <a href="../../builtin/index.html#uint16">uint16</a> = 0xc00a
+    <span id="TLS_ECDHE_RSA_WITH_RC4_128_SHA">TLS_ECDHE_RSA_WITH_RC4_128_SHA</span>          <a href="../../builtin/index.html#uint16">uint16</a> = 0xc011
+    <span id="TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA">TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA</span>     <a href="../../builtin/index.html#uint16">uint16</a> = 0xc012
+    <span id="TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA">TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA</span>      <a href="../../builtin/index.html#uint16">uint16</a> = 0xc013
+    <span id="TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA">TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA</span>      <a href="../../builtin/index.html#uint16">uint16</a> = 0xc014
+    <span id="TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256">TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256</span>   <a href="../../builtin/index.html#uint16">uint16</a> = 0xc02f
+    <span id="TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256">TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256</span> <a href="../../builtin/index.html#uint16">uint16</a> = 0xc02b
+    <span id="TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384">TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384</span>   <a href="../../builtin/index.html#uint16">uint16</a> = 0xc030
+    <span id="TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384">TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384</span> <a href="../../builtin/index.html#uint16">uint16</a> = 0xc02c
+
+    <span class="comment">// TLS_FALLBACK_SCSV isn&#39;t a standard cipher suite but an indicator</span>
+    <span class="comment">// that the client is doing version fallback. See</span>
+    <span class="comment">// https://tools.ietf.org/html/draft-ietf-tls-downgrade-scsv-00.</span>
+    <span id="TLS_FALLBACK_SCSV">TLS_FALLBACK_SCSV</span> <a href="../../builtin/index.html#uint16">uint16</a> = 0x5600
+)</pre>
+				<p>
+A list of the possible cipher suite ids. Taken from
+<a href="http://www.iana.org/assignments/tls-parameters/tls-parameters.xml">http://www.iana.org/assignments/tls-parameters/tls-parameters.xml</a>
+</p>
+
+			
+				<pre>const (
+    <span id="VersionSSL30">VersionSSL30</span> = 0x0300
+    <span id="VersionTLS10">VersionTLS10</span> = 0x0301
+    <span id="VersionTLS11">VersionTLS11</span> = 0x0302
+    <span id="VersionTLS12">VersionTLS12</span> = 0x0303
+)</pre>
+				
+			
+		
+		
+		
+			
+			
+			<h2 id="Listen">func <a href="http://localhost:6060/src/crypto/tls/tls.go?s=2241:2313#L65">Listen</a></h2>
+			<pre>func Listen(network, laddr <a href="../../builtin/index.html#string">string</a>, config *<a href="index.html#Config">Config</a>) (<a href="../../net/index.html">net</a>.<a href="../../net/index.html#Listener">Listener</a>, <a href="../../builtin/index.html#error">error</a>)</pre>
+			<p>
+Listen creates a TLS listener accepting connections on the
+given network address using net.Listen.
+The configuration config must be non-nil and must include
+at least one certificate or else set GetCertificate.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="NewListener">func <a href="http://localhost:6060/src/crypto/tls/tls.go?s=1879:1944#L54">NewListener</a></h2>
+			<pre>func NewListener(inner <a href="../../net/index.html">net</a>.<a href="../../net/index.html#Listener">Listener</a>, config *<a href="index.html#Config">Config</a>) <a href="../../net/index.html">net</a>.<a href="../../net/index.html#Listener">Listener</a></pre>
+			<p>
+NewListener creates a Listener which accepts connections from an inner
+Listener and wraps each connection with Server.
+The configuration config must be non-nil and must include
+at least one certificate or else set GetCertificate.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="Certificate">type <a href="http://localhost:6060/src/crypto/tls/common.go?s=18722:19694#L556">Certificate</a></h2>
+			<pre>type Certificate struct {
+    Certificate [][]<a href="../../builtin/index.html#byte">byte</a>
+    <span class="comment">// PrivateKey contains the private key corresponding to the public key</span>
+    <span class="comment">// in Leaf. For a server, this must implement crypto.Signer and/or</span>
+    <span class="comment">// crypto.Decrypter, with an RSA or ECDSA PublicKey. For a client</span>
+    <span class="comment">// (performing client authentication), this must be a crypto.Signer</span>
+    <span class="comment">// with an RSA or ECDSA PublicKey.</span>
+    PrivateKey <a href="../index.html">crypto</a>.<a href="../index.html#PrivateKey">PrivateKey</a>
+    <span class="comment">// OCSPStaple contains an optional OCSP response which will be served</span>
+    <span class="comment">// to clients that request it.</span>
+    OCSPStaple []<a href="../../builtin/index.html#byte">byte</a>
+    <span class="comment">// SignedCertificateTimestamps contains an optional list of Signed</span>
+    <span class="comment">// Certificate Timestamps which will be served to clients that request it.</span>
+    SignedCertificateTimestamps [][]<a href="../../builtin/index.html#byte">byte</a>
+    <span class="comment">// Leaf is the parsed form of the leaf certificate, which may be</span>
+    <span class="comment">// initialized using x509.ParseCertificate to reduce per-handshake</span>
+    <span class="comment">// processing for TLS clients doing client authentication. If nil, the</span>
+    <span class="comment">// leaf certificate will be parsed as needed.</span>
+    Leaf *<a href="../x509/index.html">x509</a>.<a href="../x509/index.html#Certificate">Certificate</a>
+}</pre>
+			<p>
+A Certificate is a chain of one or more certificates, leaf first.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="LoadX509KeyPair">func <a href="http://localhost:6060/src/crypto/tls/tls.go?s=5250:5317#L168">LoadX509KeyPair</a></h3>
+				<pre>func LoadX509KeyPair(certFile, keyFile <a href="../../builtin/index.html#string">string</a>) (<a href="index.html#Certificate">Certificate</a>, <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+LoadX509KeyPair reads and parses a public/private key pair from a pair of
+files. The files must contain PEM encoded data. On successful return,
+Certificate.Leaf will be nil because the parsed form of the certificate is
+not retained.
+</p>
+
+				
+				
+			
+				
+				<h3 id="X509KeyPair">func <a href="http://localhost:6060/src/crypto/tls/tls.go?s=5758:5829#L183">X509KeyPair</a></h3>
+				<pre>func X509KeyPair(certPEMBlock, keyPEMBlock []<a href="../../builtin/index.html#byte">byte</a>) (<a href="index.html#Certificate">Certificate</a>, <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+X509KeyPair parses a public/private key pair from a pair of
+PEM encoded data. On successful return, Certificate.Leaf will be nil because
+the parsed form of the certificate is not retained.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="ClientAuthType">type <a href="http://localhost:6060/src/crypto/tls/common.go?s=5897:5920#L171">ClientAuthType</a></h2>
+			<pre>type ClientAuthType <a href="../../builtin/index.html#int">int</a></pre>
+			<p>
+ClientAuthType declares the policy the server will follow for
+TLS Client Authentication.
+</p>
+
+
+			
+				<pre>const (
+    <span id="NoClientCert">NoClientCert</span> <a href="index.html#ClientAuthType">ClientAuthType</a> = <a href="../../builtin/index.html#iota">iota</a>
+    <span id="RequestClientCert">RequestClientCert</span>
+    <span id="RequireAnyClientCert">RequireAnyClientCert</span>
+    <span id="VerifyClientCertIfGiven">VerifyClientCertIfGiven</span>
+    <span id="RequireAndVerifyClientCert">RequireAndVerifyClientCert</span>
+)</pre>
+				
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ClientHelloInfo">type <a href="http://localhost:6060/src/crypto/tls/common.go?s=7461:8359#L207">ClientHelloInfo</a></h2>
+			<pre>type ClientHelloInfo struct {
+    <span class="comment">// CipherSuites lists the CipherSuites supported by the client (e.g.</span>
+    <span class="comment">// TLS_RSA_WITH_RC4_128_SHA).</span>
+    CipherSuites []<a href="../../builtin/index.html#uint16">uint16</a>
+
+    <span class="comment">// ServerName indicates the name of the server requested by the client</span>
+    <span class="comment">// in order to support virtual hosting. ServerName is only set if the</span>
+    <span class="comment">// client is using SNI (see</span>
+    <span class="comment">// http://tools.ietf.org/html/rfc4366#section-3.1).</span>
+    ServerName <a href="../../builtin/index.html#string">string</a>
+
+    <span class="comment">// SupportedCurves lists the elliptic curves supported by the client.</span>
+    <span class="comment">// SupportedCurves is set only if the Supported Elliptic Curves</span>
+    <span class="comment">// Extension is being used (see</span>
+    <span class="comment">// http://tools.ietf.org/html/rfc4492#section-5.1.1).</span>
+    SupportedCurves []<a href="index.html#CurveID">CurveID</a>
+
+    <span class="comment">// SupportedPoints lists the point formats supported by the client.</span>
+    <span class="comment">// SupportedPoints is set only if the Supported Point Formats Extension</span>
+    <span class="comment">// is being used (see</span>
+    <span class="comment">// http://tools.ietf.org/html/rfc4492#section-5.1.2).</span>
+    SupportedPoints []<a href="../../builtin/index.html#uint8">uint8</a>
+}</pre>
+			<p>
+ClientHelloInfo contains information from a ClientHello message in order to
+guide certificate selection in the GetCertificate callback.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ClientSessionCache">type <a href="http://localhost:6060/src/crypto/tls/common.go?s=6982:7317#L196">ClientSessionCache</a></h2>
+			<pre>type ClientSessionCache interface {
+    <span class="comment">// Get searches for a ClientSessionState associated with the given key.</span>
+    <span class="comment">// On return, ok is true if one was found.</span>
+    Get(sessionKey <a href="../../builtin/index.html#string">string</a>) (session *<a href="index.html#ClientSessionState">ClientSessionState</a>, ok <a href="../../builtin/index.html#bool">bool</a>)
+
+    <span class="comment">// Put adds the ClientSessionState to the cache with the given key.</span>
+    Put(sessionKey <a href="../../builtin/index.html#string">string</a>, cs *<a href="index.html#ClientSessionState">ClientSessionState</a>)
+}</pre>
+			<p>
+ClientSessionCache is a cache of ClientSessionState objects that can be used
+by a client to resume a TLS session with a given server. ClientSessionCache
+implementations should expect to be called concurrently from different
+goroutines.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewLRUClientSessionCache">func <a href="http://localhost:6060/src/crypto/tls/common.go?s=20353:20415#L607">NewLRUClientSessionCache</a></h3>
+				<pre>func NewLRUClientSessionCache(capacity <a href="../../builtin/index.html#int">int</a>) <a href="index.html#ClientSessionCache">ClientSessionCache</a></pre>
+				<p>
+NewLRUClientSessionCache returns a ClientSessionCache with the given
+capacity that uses an LRU strategy. If capacity is &lt; 1, a default capacity
+is used instead.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="ClientSessionState">type <a href="http://localhost:6060/src/crypto/tls/common.go?s=6149:6732#L183">ClientSessionState</a></h2>
+			<pre>type ClientSessionState struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+ClientSessionState contains the state needed by clients to resume TLS
+sessions.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Config">type <a href="http://localhost:6060/src/crypto/tls/common.go?s=8571:13326#L235">Config</a></h2>
+			<pre>type Config struct {
+    <span class="comment">// Rand provides the source of entropy for nonces and RSA blinding.</span>
+    <span class="comment">// If Rand is nil, TLS uses the cryptographic random reader in package</span>
+    <span class="comment">// crypto/rand.</span>
+    <span class="comment">// The Reader must be safe for use by multiple goroutines.</span>
+    Rand <a href="../../io/index.html">io</a>.<a href="../../io/index.html#Reader">Reader</a>
+
+    <span class="comment">// Time returns the current time as the number of seconds since the epoch.</span>
+    <span class="comment">// If Time is nil, TLS uses time.Now.</span>
+    Time func() <a href="../../time/index.html">time</a>.<a href="../../time/index.html#Time">Time</a>
+
+    <span class="comment">// Certificates contains one or more certificate chains</span>
+    <span class="comment">// to present to the other side of the connection.</span>
+    <span class="comment">// Server configurations must include at least one certificate</span>
+    <span class="comment">// or else set GetCertificate.</span>
+    Certificates []<a href="index.html#Certificate">Certificate</a>
+
+    <span class="comment">// NameToCertificate maps from a certificate name to an element of</span>
+    <span class="comment">// Certificates. Note that a certificate name can be of the form</span>
+    <span class="comment">// &#39;*.example.com&#39; and so doesn&#39;t have to be a domain name as such.</span>
+    <span class="comment">// See Config.BuildNameToCertificate</span>
+    <span class="comment">// The nil value causes the first element of Certificates to be used</span>
+    <span class="comment">// for all connections.</span>
+    NameToCertificate map[<a href="../../builtin/index.html#string">string</a>]*<a href="index.html#Certificate">Certificate</a>
+
+    <span class="comment">// GetCertificate returns a Certificate based on the given</span>
+    <span class="comment">// ClientHelloInfo. It will only be called if the client supplies SNI</span>
+    <span class="comment">// information or if Certificates is empty.</span>
+    <span class="comment">//</span>
+    <span class="comment">// If GetCertificate is nil or returns nil, then the certificate is</span>
+    <span class="comment">// retrieved from NameToCertificate. If NameToCertificate is nil, the</span>
+    <span class="comment">// first element of Certificates will be used.</span>
+    GetCertificate func(clientHello *<a href="index.html#ClientHelloInfo">ClientHelloInfo</a>) (*<a href="index.html#Certificate">Certificate</a>, <a href="../../builtin/index.html#error">error</a>)
+
+    <span class="comment">// RootCAs defines the set of root certificate authorities</span>
+    <span class="comment">// that clients use when verifying server certificates.</span>
+    <span class="comment">// If RootCAs is nil, TLS uses the host&#39;s root CA set.</span>
+    RootCAs *<a href="../x509/index.html">x509</a>.<a href="../x509/index.html#CertPool">CertPool</a>
+
+    <span class="comment">// NextProtos is a list of supported, application level protocols.</span>
+    NextProtos []<a href="../../builtin/index.html#string">string</a>
+
+    <span class="comment">// ServerName is used to verify the hostname on the returned</span>
+    <span class="comment">// certificates unless InsecureSkipVerify is given. It is also included</span>
+    <span class="comment">// in the client&#39;s handshake to support virtual hosting unless it is</span>
+    <span class="comment">// an IP address.</span>
+    ServerName <a href="../../builtin/index.html#string">string</a>
+
+    <span class="comment">// ClientAuth determines the server&#39;s policy for</span>
+    <span class="comment">// TLS Client Authentication. The default is NoClientCert.</span>
+    ClientAuth <a href="index.html#ClientAuthType">ClientAuthType</a>
+
+    <span class="comment">// ClientCAs defines the set of root certificate authorities</span>
+    <span class="comment">// that servers use if required to verify a client certificate</span>
+    <span class="comment">// by the policy in ClientAuth.</span>
+    ClientCAs *<a href="../x509/index.html">x509</a>.<a href="../x509/index.html#CertPool">CertPool</a>
+
+    <span class="comment">// InsecureSkipVerify controls whether a client verifies the</span>
+    <span class="comment">// server&#39;s certificate chain and host name.</span>
+    <span class="comment">// If InsecureSkipVerify is true, TLS accepts any certificate</span>
+    <span class="comment">// presented by the server and any host name in that certificate.</span>
+    <span class="comment">// In this mode, TLS is susceptible to man-in-the-middle attacks.</span>
+    <span class="comment">// This should be used only for testing.</span>
+    InsecureSkipVerify <a href="../../builtin/index.html#bool">bool</a>
+
+    <span class="comment">// CipherSuites is a list of supported cipher suites. If CipherSuites</span>
+    <span class="comment">// is nil, TLS uses a list of suites supported by the implementation.</span>
+    CipherSuites []<a href="../../builtin/index.html#uint16">uint16</a>
+
+    <span class="comment">// PreferServerCipherSuites controls whether the server selects the</span>
+    <span class="comment">// client&#39;s most preferred ciphersuite, or the server&#39;s most preferred</span>
+    <span class="comment">// ciphersuite. If true then the server&#39;s preference, as expressed in</span>
+    <span class="comment">// the order of elements in CipherSuites, is used.</span>
+    PreferServerCipherSuites <a href="../../builtin/index.html#bool">bool</a>
+
+    <span class="comment">// SessionTicketsDisabled may be set to true to disable session ticket</span>
+    <span class="comment">// (resumption) support.</span>
+    SessionTicketsDisabled <a href="../../builtin/index.html#bool">bool</a>
+
+    <span class="comment">// SessionTicketKey is used by TLS servers to provide session</span>
+    <span class="comment">// resumption. See RFC 5077. If zero, it will be filled with</span>
+    <span class="comment">// random data before the first server handshake.</span>
+    <span class="comment">//</span>
+    <span class="comment">// If multiple servers are terminating connections for the same host</span>
+    <span class="comment">// they should all have the same SessionTicketKey. If the</span>
+    <span class="comment">// SessionTicketKey leaks, previously recorded and future TLS</span>
+    <span class="comment">// connections using that key are compromised.</span>
+    SessionTicketKey [32]<a href="../../builtin/index.html#byte">byte</a>
+
+    <span class="comment">// SessionCache is a cache of ClientSessionState entries for TLS session</span>
+    <span class="comment">// resumption.</span>
+    ClientSessionCache <a href="index.html#ClientSessionCache">ClientSessionCache</a>
+
+    <span class="comment">// MinVersion contains the minimum SSL/TLS version that is acceptable.</span>
+    <span class="comment">// If zero, then TLS 1.0 is taken as the minimum.</span>
+    MinVersion <a href="../../builtin/index.html#uint16">uint16</a>
+
+    <span class="comment">// MaxVersion contains the maximum SSL/TLS version that is acceptable.</span>
+    <span class="comment">// If zero, then the maximum version supported by this package is used,</span>
+    <span class="comment">// which is currently TLS 1.2.</span>
+    MaxVersion <a href="../../builtin/index.html#uint16">uint16</a>
+
+    <span class="comment">// CurvePreferences contains the elliptic curves that will be used in</span>
+    <span class="comment">// an ECDHE handshake, in preference order. If empty, the default will</span>
+    <span class="comment">// be used.</span>
+    CurvePreferences []<a href="index.html#CurveID">CurveID</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+A Config structure is used to configure a TLS client or server.
+After one has been passed to a TLS function it must not be
+modified. A Config may be reused; the tls package will also not
+modify it.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Config.BuildNameToCertificate">func (*Config) <a href="http://localhost:6060/src/crypto/tls/common.go?s=18204:18245#L538">BuildNameToCertificate</a></h3>
+				<pre>func (c *<a href="index.html#Config">Config</a>) BuildNameToCertificate()</pre>
+				<p>
+BuildNameToCertificate parses c.Certificates and builds c.NameToCertificate
+from the CommonName and SubjectAlternateName fields of each of the leaf
+certificates.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Config.SetSessionTicketKeys">func (*Config) <a href="http://localhost:6060/src/crypto/tls/common.go?s=15336:15390#L414">SetSessionTicketKeys</a></h3>
+				<pre>func (c *<a href="index.html#Config">Config</a>) SetSessionTicketKeys(keys [][32]<a href="../../builtin/index.html#byte">byte</a>)</pre>
+				<p>
+SetSessionTicketKeys updates the session ticket keys for a server. The first
+key will be used when creating new tickets, while all keys can be used for
+decrypting tickets. It is safe to call this function while the server is
+running in order to rotate the session ticket keys. The function will panic
+if keys is empty.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Conn">type <a href="http://localhost:6060/src/crypto/tls/conn.go?s=434:2064#L15">Conn</a></h2>
+			<pre>type Conn struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+A Conn represents a secured connection.
+It implements the net.Conn interface.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="Client">func <a href="http://localhost:6060/src/crypto/tls/tls.go?s=1129:1177#L29">Client</a></h3>
+				<pre>func Client(conn <a href="../../net/index.html">net</a>.<a href="../../net/index.html#Conn">Conn</a>, config *<a href="index.html#Config">Config</a>) *<a href="index.html#Conn">Conn</a></pre>
+				<p>
+Client returns a new TLS client side connection
+using conn as the underlying transport.
+The config cannot be nil: users must set either ServerName or
+InsecureSkipVerify in the config.
+</p>
+
+				
+				
+			
+				
+				<h3 id="Dial">func <a href="http://localhost:6060/src/crypto/tls/tls.go?s=4874:4936#L160">Dial</a></h3>
+				<pre>func Dial(network, addr <a href="../../builtin/index.html#string">string</a>, config *<a href="index.html#Config">Config</a>) (*<a href="index.html#Conn">Conn</a>, <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Dial connects to the given network address using net.Dial
+and then initiates a TLS handshake, returning the resulting
+TLS connection.
+Dial interprets a nil configuration as equivalent to
+the zero configuration; see the documentation of Config
+for the defaults.
+</p>
+
+				<div id="example_Dial" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+<span class="comment">// Connecting with a custom root-certificate set.</span>
+
+const rootPEM = `
+-----BEGIN CERTIFICATE-----
+MIIEBDCCAuygAwIBAgIDAjppMA0GCSqGSIb3DQEBBQUAMEIxCzAJBgNVBAYTAlVT
+MRYwFAYDVQQKEw1HZW9UcnVzdCBJbmMuMRswGQYDVQQDExJHZW9UcnVzdCBHbG9i
+YWwgQ0EwHhcNMTMwNDA1MTUxNTU1WhcNMTUwNDA0MTUxNTU1WjBJMQswCQYDVQQG
+EwJVUzETMBEGA1UEChMKR29vZ2xlIEluYzElMCMGA1UEAxMcR29vZ2xlIEludGVy
+bmV0IEF1dGhvcml0eSBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
+AJwqBHdc2FCROgajguDYUEi8iT/xGXAaiEZ+4I/F8YnOIe5a/mENtzJEiaB0C1NP
+VaTOgmKV7utZX8bhBYASxF6UP7xbSDj0U/ck5vuR6RXEz/RTDfRK/J9U3n2+oGtv
+h8DQUB8oMANA2ghzUWx//zo8pzcGjr1LEQTrfSTe5vn8MXH7lNVg8y5Kr0LSy+rE
+ahqyzFPdFUuLH8gZYR/Nnag+YyuENWllhMgZxUYi+FOVvuOAShDGKuy6lyARxzmZ
+EASg8GF6lSWMTlJ14rbtCMoU/M4iarNOz0YDl5cDfsCx3nuvRTPPuj5xt970JSXC
+DTWJnZ37DhF5iR43xa+OcmkCAwEAAaOB+zCB+DAfBgNVHSMEGDAWgBTAephojYn7
+qwVkDBF9qn1luMrMTjAdBgNVHQ4EFgQUSt0GFhu89mi1dvWBtrtiGrpagS8wEgYD
+VR0TAQH/BAgwBgEB/wIBADAOBgNVHQ8BAf8EBAMCAQYwOgYDVR0fBDMwMTAvoC2g
+K4YpaHR0cDovL2NybC5nZW90cnVzdC5jb20vY3Jscy9ndGdsb2JhbC5jcmwwPQYI
+KwYBBQUHAQEEMTAvMC0GCCsGAQUFBzABhiFodHRwOi8vZ3RnbG9iYWwtb2NzcC5n
+ZW90cnVzdC5jb20wFwYDVR0gBBAwDjAMBgorBgEEAdZ5AgUBMA0GCSqGSIb3DQEB
+BQUAA4IBAQA21waAESetKhSbOHezI6B1WLuxfoNCunLaHtiONgaX4PCVOzf9G0JY
+/iLIa704XtE7JW4S615ndkZAkNoUyHgN7ZVm2o6Gb4ChulYylYbc3GrKBIxbf/a/
+zG+FA1jDaFETzf3I93k9mTXwVqO94FntT0QJo544evZG0R0SnU++0ED8Vf4GXjza
+HFa9llF7b1cq26KqltyMdMKVvvBulRP/F/A8rLIQjcxz++iPAsbw+zOzlTvjwsto
+WHPbqCRiOwY1nQ2pM714A5AuTHhdUDqB1O6gyHA43LL5Z/qHQF1hwFGPa4NrzQU6
+yuGnBXj8ytqU0CwIPX4WecigUCAkVDNx
+-----END CERTIFICATE-----`
+
+<span class="comment">// First, create the set of root certificates. For this example we only</span>
+<span class="comment">// have one. It&#39;s also possible to omit this in order to use the</span>
+<span class="comment">// default root set of the current operating system.</span>
+roots := x509.NewCertPool()
+ok := roots.AppendCertsFromPEM([]byte(rootPEM))
+if !ok {
+    panic(&#34;failed to parse root certificate&#34;)
+}
+
+conn, err := tls.Dial(&#34;tcp&#34;, &#34;mail.google.com:443&#34;, &amp;tls.Config{
+    RootCAs: roots,
+})
+if err != nil {
+    panic(&#34;failed to connect: &#34; + err.Error())
+}
+conn.Close()
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+				
+				<h3 id="DialWithDialer">func <a href="http://localhost:6060/src/crypto/tls/tls.go?s=3222:3314#L89">DialWithDialer</a></h3>
+				<pre>func DialWithDialer(dialer *<a href="../../net/index.html">net</a>.<a href="../../net/index.html#Dialer">Dialer</a>, network, addr <a href="../../builtin/index.html#string">string</a>, config *<a href="index.html#Config">Config</a>) (*<a href="index.html#Conn">Conn</a>, <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+DialWithDialer connects to the given network address using dialer.Dial and
+then initiates a TLS handshake, returning the resulting TLS connection. Any
+timeout or deadline given in the dialer apply to connection and TLS
+handshake as a whole.
+</p>
+<p>
+DialWithDialer interprets a nil configuration as equivalent to the zero
+configuration; see the documentation of Config for the defaults.
+</p>
+
+				
+				
+			
+				
+				<h3 id="Server">func <a href="http://localhost:6060/src/crypto/tls/tls.go?s=837:885#L21">Server</a></h3>
+				<pre>func Server(conn <a href="../../net/index.html">net</a>.<a href="../../net/index.html#Conn">Conn</a>, config *<a href="index.html#Config">Config</a>) *<a href="index.html#Conn">Conn</a></pre>
+				<p>
+Server returns a new TLS server side connection
+using conn as the underlying transport.
+The configuration config must be non-nil and must include
+at least one certificate or else set GetCertificate.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Conn.Close">func (*Conn) <a href="http://localhost:6060/src/crypto/tls/conn.go?s=27608:27636#L972">Close</a></h3>
+				<pre>func (c *<a href="index.html#Conn">Conn</a>) Close() <a href="../../builtin/index.html#error">error</a></pre>
+				<p>
+Close closes the connection.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Conn.ConnectionState">func (*Conn) <a href="http://localhost:6060/src/crypto/tls/conn.go?s=29076:29124#L1031">ConnectionState</a></h3>
+				<pre>func (c *<a href="index.html#Conn">Conn</a>) ConnectionState() <a href="index.html#ConnectionState">ConnectionState</a></pre>
+				<p>
+ConnectionState returns basic TLS details about the connection.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Conn.Handshake">func (*Conn) <a href="http://localhost:6060/src/crypto/tls/conn.go?s=28683:28715#L1012">Handshake</a></h3>
+				<pre>func (c *<a href="index.html#Conn">Conn</a>) Handshake() <a href="../../builtin/index.html#error">error</a></pre>
+				<p>
+Handshake runs the client or server handshake
+protocol if it has not yet been run.
+Most uses of this package need not call Handshake
+explicitly: the first Read or Write will call it automatically.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Conn.LocalAddr">func (*Conn) <a href="http://localhost:6060/src/crypto/tls/conn.go?s=2227:2262#L63">LocalAddr</a></h3>
+				<pre>func (c *<a href="index.html#Conn">Conn</a>) LocalAddr() <a href="../../net/index.html">net</a>.<a href="../../net/index.html#Addr">Addr</a></pre>
+				<p>
+LocalAddr returns the local network address.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Conn.OCSPResponse">func (*Conn) <a href="http://localhost:6060/src/crypto/tls/conn.go?s=29897:29933#L1058">OCSPResponse</a></h3>
+				<pre>func (c *<a href="index.html#Conn">Conn</a>) OCSPResponse() []<a href="../../builtin/index.html#byte">byte</a></pre>
+				<p>
+OCSPResponse returns the stapled OCSP response from the TLS server, if
+any. (Only valid for client connections.)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Conn.Read">func (*Conn) <a href="http://localhost:6060/src/crypto/tls/conn.go?s=25776:25824#L911">Read</a></h3>
+				<pre>func (c *<a href="index.html#Conn">Conn</a>) Read(b []<a href="../../builtin/index.html#byte">byte</a>) (n <a href="../../builtin/index.html#int">int</a>, err <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Read can be made to time out and return a net.Error with Timeout() == true
+after a fixed time limit; see SetDeadline and SetReadDeadline.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Conn.RemoteAddr">func (*Conn) <a href="http://localhost:6060/src/crypto/tls/conn.go?s=2345:2381#L68">RemoteAddr</a></h3>
+				<pre>func (c *<a href="index.html#Conn">Conn</a>) RemoteAddr() <a href="../../net/index.html">net</a>.<a href="../../net/index.html#Addr">Addr</a></pre>
+				<p>
+RemoteAddr returns the remote network address.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Conn.SetDeadline">func (*Conn) <a href="http://localhost:6060/src/crypto/tls/conn.go?s=2665:2710#L75">SetDeadline</a></h3>
+				<pre>func (c *<a href="index.html#Conn">Conn</a>) SetDeadline(t <a href="../../time/index.html">time</a>.<a href="../../time/index.html#Time">Time</a>) <a href="../../builtin/index.html#error">error</a></pre>
+				<p>
+SetDeadline sets the read and write deadlines associated with the connection.
+A zero value for t means Read and Write will not time out.
+After a Write has timed out, the TLS state is corrupt and all future writes will return the same error.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Conn.SetReadDeadline">func (*Conn) <a href="http://localhost:6060/src/crypto/tls/conn.go?s=2870:2919#L81">SetReadDeadline</a></h3>
+				<pre>func (c *<a href="index.html#Conn">Conn</a>) SetReadDeadline(t <a href="../../time/index.html">time</a>.<a href="../../time/index.html#Time">Time</a>) <a href="../../builtin/index.html#error">error</a></pre>
+				<p>
+SetReadDeadline sets the read deadline on the underlying connection.
+A zero value for t means Read will not time out.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Conn.SetWriteDeadline">func (*Conn) <a href="http://localhost:6060/src/crypto/tls/conn.go?s=3193:3243#L88">SetWriteDeadline</a></h3>
+				<pre>func (c *<a href="index.html#Conn">Conn</a>) SetWriteDeadline(t <a href="../../time/index.html">time</a>.<a href="../../time/index.html#Time">Time</a>) <a href="../../builtin/index.html#error">error</a></pre>
+				<p>
+SetWriteDeadline sets the write deadline on the underlying connection.
+A zero value for t means Write will not time out.
+After a Write has timed out, the TLS state is corrupt and all future writes will return the same error.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Conn.VerifyHostname">func (*Conn) <a href="http://localhost:6060/src/crypto/tls/conn.go?s=30193:30241#L1068">VerifyHostname</a></h3>
+				<pre>func (c *<a href="index.html#Conn">Conn</a>) VerifyHostname(host <a href="../../builtin/index.html#string">string</a>) <a href="../../builtin/index.html#error">error</a></pre>
+				<p>
+VerifyHostname checks that the peer certificate chain is valid for
+connecting to host.  If so, it returns nil; if not, it returns an error
+describing the problem.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Conn.Write">func (*Conn) <a href="http://localhost:6060/src/crypto/tls/conn.go?s=24359:24402#L857">Write</a></h3>
+				<pre>func (c *<a href="index.html#Conn">Conn</a>) Write(b []<a href="../../builtin/index.html#byte">byte</a>) (<a href="../../builtin/index.html#int">int</a>, <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Write writes data to the connection.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ConnectionState">type <a href="http://localhost:6060/src/crypto/tls/common.go?s=4296:5800#L147">ConnectionState</a></h2>
+			<pre>type ConnectionState struct {
+    Version                     <a href="../../builtin/index.html#uint16">uint16</a>                <span class="comment">// TLS version used by the connection (e.g. VersionTLS12)</span>
+    HandshakeComplete           <a href="../../builtin/index.html#bool">bool</a>                  <span class="comment">// TLS handshake is complete</span>
+    DidResume                   <a href="../../builtin/index.html#bool">bool</a>                  <span class="comment">// connection resumes a previous TLS connection</span>
+    CipherSuite                 <a href="../../builtin/index.html#uint16">uint16</a>                <span class="comment">// cipher suite in use (TLS_RSA_WITH_RC4_128_SHA, ...)</span>
+    NegotiatedProtocol          <a href="../../builtin/index.html#string">string</a>                <span class="comment">// negotiated next protocol (from Config.NextProtos)</span>
+    NegotiatedProtocolIsMutual  <a href="../../builtin/index.html#bool">bool</a>                  <span class="comment">// negotiated protocol was advertised by server</span>
+    ServerName                  <a href="../../builtin/index.html#string">string</a>                <span class="comment">// server name requested by client, if any (server side only)</span>
+    PeerCertificates            []*<a href="../x509/index.html">x509</a>.<a href="../x509/index.html#Certificate">Certificate</a>   <span class="comment">// certificate chain presented by remote peer</span>
+    VerifiedChains              [][]*<a href="../x509/index.html">x509</a>.<a href="../x509/index.html#Certificate">Certificate</a> <span class="comment">// verified chains built from PeerCertificates</span>
+    SignedCertificateTimestamps [][]<a href="../../builtin/index.html#byte">byte</a>              <span class="comment">// SCTs from the server, if any</span>
+    OCSPResponse                []<a href="../../builtin/index.html#byte">byte</a>                <span class="comment">// stapled OCSP response from server, if any</span>
+
+    <span class="comment">// TLSUnique contains the &#34;tls-unique&#34; channel binding value (see RFC</span>
+    <span class="comment">// 5929, section 3). For resumed sessions this value will be nil</span>
+    <span class="comment">// because resumption does not include enough context (see</span>
+    <span class="comment">// https://secure-resumption.com/#channelbindings). This will change in</span>
+    <span class="comment">// future versions of Go once the TLS master-secret fix has been</span>
+    <span class="comment">// standardized and implemented.</span>
+    TLSUnique []<a href="../../builtin/index.html#byte">byte</a>
+}</pre>
+			<p>
+ConnectionState records basic TLS details about the connection.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="CurveID">type <a href="http://localhost:6060/src/crypto/tls/common.go?s=2318:2337#L81">CurveID</a></h2>
+			<pre>type CurveID <a href="../../builtin/index.html#uint16">uint16</a></pre>
+			<p>
+CurveID is the type of a TLS identifier for an elliptic curve. See
+<a href="http://www.iana.org/assignments/tls-parameters/tls-parameters.xml#tls-parameters-8">http://www.iana.org/assignments/tls-parameters/tls-parameters.xml#tls-parameters-8</a>
+</p>
+
+
+			
+				<pre>const (
+    <span id="CurveP256">CurveP256</span> <a href="index.html#CurveID">CurveID</a> = 23
+    <span id="CurveP384">CurveP384</span> <a href="index.html#CurveID">CurveID</a> = 24
+    <span id="CurveP521">CurveP521</span> <a href="index.html#CurveID">CurveID</a> = 25
+)</pre>
+				
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="RecordHeaderError">type <a href="http://localhost:6060/src/crypto/tls/conn.go?s=14495:14721#L506">RecordHeaderError</a></h2>
+			<pre>type RecordHeaderError struct {
+    <span class="comment">// Msg contains a human readable string that describes the error.</span>
+    Msg <a href="../../builtin/index.html#string">string</a>
+    <span class="comment">// RecordHeader contains the five bytes of TLS record header that</span>
+    <span class="comment">// triggered the error.</span>
+    RecordHeader [5]<a href="../../builtin/index.html#byte">byte</a>
+}</pre>
+			<p>
+RecordHeaderError results when a TLS record header is invalid.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="RecordHeaderError.Error">func (RecordHeaderError) <a href="http://localhost:6060/src/crypto/tls/conn.go?s=14723:14764#L514">Error</a></h3>
+				<pre>func (e <a href="index.html#RecordHeaderError">RecordHeaderError</a>) Error() <a href="../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+	
+
+	
+		
+			<h2 id="pkg-note-BUG">Bugs</h2>
+			<ul style="list-style: none; padding: 0;">
+			
+			<li><a href="http://localhost:6060/src/crypto/tls/tls.go?s=244:485#L1">&#x261e;</a> The crypto/tls package does not implement countermeasures
+against Lucky13 attacks on CBC-mode encryption. See
+http://www.isg.rhul.ac.uk/tls/TLStiming.pdf and
+https://www.imperialviolet.org/2013/02/04/luckythirteen.html.
+</li>
+			
+			</ul>
+		
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

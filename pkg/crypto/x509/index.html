@@ -1,0 +1,1602 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>x509 - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package x509</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "crypto/x509"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+				<dd><a href="index.html#pkg-examples" class="examplesLink">Examples</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-subdirectories">Subdirectories</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package x509 parses X.509-encoded keys and certificates.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+				
+				<dd><a href="index.html#CreateCertificate">func CreateCertificate(rand io.Reader, template, parent *Certificate, pub, priv interface{}) (cert []byte, err error)</a></dd>
+			
+				
+				<dd><a href="index.html#CreateCertificateRequest">func CreateCertificateRequest(rand io.Reader, template *CertificateRequest, priv interface{}) (csr []byte, err error)</a></dd>
+			
+				
+				<dd><a href="index.html#DecryptPEMBlock">func DecryptPEMBlock(b *pem.Block, password []byte) ([]byte, error)</a></dd>
+			
+				
+				<dd><a href="index.html#EncryptPEMBlock">func EncryptPEMBlock(rand io.Reader, blockType string, data, password []byte, alg PEMCipher) (*pem.Block, error)</a></dd>
+			
+				
+				<dd><a href="index.html#IsEncryptedPEMBlock">func IsEncryptedPEMBlock(b *pem.Block) bool</a></dd>
+			
+				
+				<dd><a href="index.html#MarshalECPrivateKey">func MarshalECPrivateKey(key *ecdsa.PrivateKey) ([]byte, error)</a></dd>
+			
+				
+				<dd><a href="index.html#MarshalPKCS1PrivateKey">func MarshalPKCS1PrivateKey(key *rsa.PrivateKey) []byte</a></dd>
+			
+				
+				<dd><a href="index.html#MarshalPKIXPublicKey">func MarshalPKIXPublicKey(pub interface{}) ([]byte, error)</a></dd>
+			
+				
+				<dd><a href="index.html#ParseCRL">func ParseCRL(crlBytes []byte) (certList *pkix.CertificateList, err error)</a></dd>
+			
+				
+				<dd><a href="index.html#ParseCertificates">func ParseCertificates(asn1Data []byte) ([]*Certificate, error)</a></dd>
+			
+				
+				<dd><a href="index.html#ParseDERCRL">func ParseDERCRL(derBytes []byte) (certList *pkix.CertificateList, err error)</a></dd>
+			
+				
+				<dd><a href="index.html#ParseECPrivateKey">func ParseECPrivateKey(der []byte) (key *ecdsa.PrivateKey, err error)</a></dd>
+			
+				
+				<dd><a href="index.html#ParsePKCS1PrivateKey">func ParsePKCS1PrivateKey(der []byte) (key *rsa.PrivateKey, err error)</a></dd>
+			
+				
+				<dd><a href="index.html#ParsePKCS8PrivateKey">func ParsePKCS8PrivateKey(der []byte) (key interface{}, err error)</a></dd>
+			
+				
+				<dd><a href="index.html#ParsePKIXPublicKey">func ParsePKIXPublicKey(derBytes []byte) (pub interface{}, err error)</a></dd>
+			
+			
+				
+				<dd><a href="index.html#CertPool">type CertPool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewCertPool">func NewCertPool() *CertPool</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CertPool.AddCert">func (s *CertPool) AddCert(cert *Certificate)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CertPool.AppendCertsFromPEM">func (s *CertPool) AppendCertsFromPEM(pemCerts []byte) (ok bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CertPool.Subjects">func (s *CertPool) Subjects() (res [][]byte)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Certificate">type Certificate</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ParseCertificate">func ParseCertificate(asn1Data []byte) (*Certificate, error)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Certificate.CheckCRLSignature">func (c *Certificate) CheckCRLSignature(crl *pkix.CertificateList) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Certificate.CheckSignature">func (c *Certificate) CheckSignature(algo SignatureAlgorithm, signed, signature []byte) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Certificate.CheckSignatureFrom">func (c *Certificate) CheckSignatureFrom(parent *Certificate) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Certificate.CreateCRL">func (c *Certificate) CreateCRL(rand io.Reader, priv interface{}, revokedCerts []pkix.RevokedCertificate, now, expiry time.Time) (crlBytes []byte, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Certificate.Equal">func (c *Certificate) Equal(other *Certificate) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Certificate.Verify">func (c *Certificate) Verify(opts VerifyOptions) (chains [][]*Certificate, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Certificate.VerifyHostname">func (c *Certificate) VerifyHostname(h string) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#CertificateInvalidError">type CertificateInvalidError</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CertificateInvalidError.Error">func (e CertificateInvalidError) Error() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#CertificateRequest">type CertificateRequest</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ParseCertificateRequest">func ParseCertificateRequest(asn1Data []byte) (*CertificateRequest, error)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CertificateRequest.CheckSignature">func (c *CertificateRequest) CheckSignature() (err error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#ConstraintViolationError">type ConstraintViolationError</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ConstraintViolationError.Error">func (ConstraintViolationError) Error() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#ExtKeyUsage">type ExtKeyUsage</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#HostnameError">type HostnameError</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#HostnameError.Error">func (h HostnameError) Error() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#InsecureAlgorithmError">type InsecureAlgorithmError</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#InsecureAlgorithmError.Error">func (e InsecureAlgorithmError) Error() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#InvalidReason">type InvalidReason</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#KeyUsage">type KeyUsage</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#PEMCipher">type PEMCipher</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#PublicKeyAlgorithm">type PublicKeyAlgorithm</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#SignatureAlgorithm">type SignatureAlgorithm</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SignatureAlgorithm.String">func (algo SignatureAlgorithm) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#SystemRootsError">type SystemRootsError</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SystemRootsError.Error">func (SystemRootsError) Error() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#UnhandledCriticalExtension">type UnhandledCriticalExtension</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#UnhandledCriticalExtension.Error">func (h UnhandledCriticalExtension) Error() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#UnknownAuthorityError">type UnknownAuthorityError</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#UnknownAuthorityError.Error">func (e UnknownAuthorityError) Error() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#VerifyOptions">type VerifyOptions</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+		<div id="pkg-examples">
+			<h4>Examples</h4>
+			<dl>
+			
+			<dd><a class="exampleLink" href="index.html#example_Certificate_Verify">Certificate.Verify</a></dd>
+			
+			</dl>
+		</div>
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/crypto/x509/cert_pool.go">cert_pool.go</a>
+			
+				<a href="http://localhost:6060/src/crypto/x509/pem_decrypt.go">pem_decrypt.go</a>
+			
+				<a href="http://localhost:6060/src/crypto/x509/pkcs1.go">pkcs1.go</a>
+			
+				<a href="http://localhost:6060/src/crypto/x509/pkcs8.go">pkcs8.go</a>
+			
+				<a href="http://localhost:6060/src/crypto/x509/root.go">root.go</a>
+			
+				<a href="http://localhost:6060/src/crypto/x509/root_linux.go">root_linux.go</a>
+			
+				<a href="http://localhost:6060/src/crypto/x509/root_unix.go">root_unix.go</a>
+			
+				<a href="http://localhost:6060/src/crypto/x509/sec1.go">sec1.go</a>
+			
+				<a href="http://localhost:6060/src/crypto/x509/verify.go">verify.go</a>
+			
+				<a href="http://localhost:6060/src/crypto/x509/x509.go">x509.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var <span id="ErrUnsupportedAlgorithm">ErrUnsupportedAlgorithm</span> = <a href="../../errors/index.html">errors</a>.<a href="../../errors/index.html#New">New</a>(&#34;x509: cannot verify signature: algorithm unimplemented&#34;)</pre>
+				<p>
+ErrUnsupportedAlgorithm results from attempting to perform an operation that
+involves algorithms that are not currently implemented.
+</p>
+
+			
+				<pre>var <span id="IncorrectPasswordError">IncorrectPasswordError</span> = <a href="../../errors/index.html">errors</a>.<a href="../../errors/index.html#New">New</a>(&#34;x509: decryption password incorrect&#34;)</pre>
+				<p>
+IncorrectPasswordError is returned when an incorrect password is detected.
+</p>
+
+			
+		
+		
+			
+			
+			<h2 id="CreateCertificate">func <a href="http://localhost:6060/src/crypto/x509/x509.go?s=49450:49567#L1558">CreateCertificate</a></h2>
+			<pre>func CreateCertificate(rand <a href="../../io/index.html">io</a>.<a href="../../io/index.html#Reader">Reader</a>, template, parent *<a href="index.html#Certificate">Certificate</a>, pub, priv interface{}) (cert []<a href="../../builtin/index.html#byte">byte</a>, err <a href="../../builtin/index.html#error">error</a>)</pre>
+			<p>
+CreateCertificate creates a new certificate based on a template. The
+following members of template are used: SerialNumber, Subject, NotBefore,
+NotAfter, KeyUsage, ExtKeyUsage, UnknownExtKeyUsage, BasicConstraintsValid,
+IsCA, MaxPathLen, SubjectKeyId, DNSNames, PermittedDNSDomainsCritical,
+PermittedDNSDomains, SignatureAlgorithm.
+</p>
+<p>
+The certificate is signed by parent. If parent is equal to template then the
+certificate is self-signed. The parameter pub is the public key of the
+signee and priv is the private key of the signer.
+</p>
+<p>
+The returned slice is the certificate in DER encoding.
+</p>
+<p>
+All keys types that are implemented via crypto.Signer are supported (This
+includes *rsa.PublicKey and *ecdsa.PublicKey.)
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="CreateCertificateRequest">func <a href="http://localhost:6060/src/crypto/x509/x509.go?s=58474:58591#L1849">CreateCertificateRequest</a></h2>
+			<pre>func CreateCertificateRequest(rand <a href="../../io/index.html">io</a>.<a href="../../io/index.html#Reader">Reader</a>, template *<a href="index.html#CertificateRequest">CertificateRequest</a>, priv interface{}) (csr []<a href="../../builtin/index.html#byte">byte</a>, err <a href="../../builtin/index.html#error">error</a>)</pre>
+			<p>
+CreateCertificateRequest creates a new certificate based on a template. The
+following members of template are used: Subject, Attributes,
+SignatureAlgorithm, Extensions, DNSNames, EmailAddresses, and IPAddresses.
+The private key is the private key of the signer.
+</p>
+<p>
+The returned slice is the certificate request in DER encoding.
+</p>
+<p>
+All keys types that are implemented via crypto.Signer are supported (This
+includes *rsa.PublicKey and *ecdsa.PublicKey.)
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="DecryptPEMBlock">func <a href="http://localhost:6060/src/crypto/x509/pem_decrypt.go?s=3144:3211#L105">DecryptPEMBlock</a></h2>
+			<pre>func DecryptPEMBlock(b *<a href="../../encoding/pem/index.html">pem</a>.<a href="../../encoding/pem/index.html#Block">Block</a>, password []<a href="../../builtin/index.html#byte">byte</a>) ([]<a href="../../builtin/index.html#byte">byte</a>, <a href="../../builtin/index.html#error">error</a>)</pre>
+			<p>
+DecryptPEMBlock takes a password encrypted PEM block and the password used to
+encrypt it and returns a slice of decrypted DER encoded bytes. It inspects
+the DEK-Info header to determine the algorithm used for decryption. If no
+DEK-Info header is present, an error is returned. If an incorrect password
+is detected an IncorrectPasswordError is returned. Because of deficiencies
+in the encrypted-PEM format, it&#39;s not always possible to detect an incorrect
+password. In these cases no error will be returned but the decrypted DER
+bytes will be random noise.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="EncryptPEMBlock">func <a href="http://localhost:6060/src/crypto/x509/pem_decrypt.go?s=5073:5185#L173">EncryptPEMBlock</a></h2>
+			<pre>func EncryptPEMBlock(rand <a href="../../io/index.html">io</a>.<a href="../../io/index.html#Reader">Reader</a>, blockType <a href="../../builtin/index.html#string">string</a>, data, password []<a href="../../builtin/index.html#byte">byte</a>, alg <a href="index.html#PEMCipher">PEMCipher</a>) (*<a href="../../encoding/pem/index.html">pem</a>.<a href="../../encoding/pem/index.html#Block">Block</a>, <a href="../../builtin/index.html#error">error</a>)</pre>
+			<p>
+EncryptPEMBlock returns a PEM block of the specified type holding the
+given DER-encoded data encrypted with the specified algorithm and
+password.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="IsEncryptedPEMBlock">func <a href="http://localhost:6060/src/crypto/x509/pem_decrypt.go?s=2315:2358#L89">IsEncryptedPEMBlock</a></h2>
+			<pre>func IsEncryptedPEMBlock(b *<a href="../../encoding/pem/index.html">pem</a>.<a href="../../encoding/pem/index.html#Block">Block</a>) <a href="../../builtin/index.html#bool">bool</a></pre>
+			<p>
+IsEncryptedPEMBlock returns if the PEM block is password encrypted.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MarshalECPrivateKey">func <a href="http://localhost:6060/src/crypto/x509/sec1.go?s=1008:1071#L27">MarshalECPrivateKey</a></h2>
+			<pre>func MarshalECPrivateKey(key *<a href="../ecdsa/index.html">ecdsa</a>.<a href="../ecdsa/index.html#PrivateKey">PrivateKey</a>) ([]<a href="../../builtin/index.html#byte">byte</a>, <a href="../../builtin/index.html#error">error</a>)</pre>
+			<p>
+MarshalECPrivateKey marshals an EC private key into ASN.1, DER format.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MarshalPKCS1PrivateKey">func <a href="http://localhost:6060/src/crypto/x509/pkcs1.go?s=2109:2164#L77">MarshalPKCS1PrivateKey</a></h2>
+			<pre>func MarshalPKCS1PrivateKey(key *<a href="../rsa/index.html">rsa</a>.<a href="../rsa/index.html#PrivateKey">PrivateKey</a>) []<a href="../../builtin/index.html#byte">byte</a></pre>
+			<p>
+MarshalPKCS1PrivateKey converts a private key to ASN.1 DER encoded form.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MarshalPKIXPublicKey">func <a href="http://localhost:6060/src/crypto/x509/x509.go?s=2581:2639#L81">MarshalPKIXPublicKey</a></h2>
+			<pre>func MarshalPKIXPublicKey(pub interface{}) ([]<a href="../../builtin/index.html#byte">byte</a>, <a href="../../builtin/index.html#error">error</a>)</pre>
+			<p>
+MarshalPKIXPublicKey serialises a public key to DER-encoded PKIX format.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ParseCRL">func <a href="http://localhost:6060/src/crypto/x509/x509.go?s=51681:51755#L1641">ParseCRL</a></h2>
+			<pre>func ParseCRL(crlBytes []<a href="../../builtin/index.html#byte">byte</a>) (certList *<a href="pkix/index.html">pkix</a>.<a href="pkix/index.html#CertificateList">CertificateList</a>, err <a href="../../builtin/index.html#error">error</a>)</pre>
+			<p>
+ParseCRL parses a CRL from the given bytes. It&#39;s often the case that PEM
+encoded CRLs will appear where they should be DER encoded, so this function
+will transparently handle PEM encoding as long as there isn&#39;t any leading
+garbage.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ParseCertificates">func <a href="http://localhost:6060/src/crypto/x509/x509.go?s=38729:38792#L1190">ParseCertificates</a></h2>
+			<pre>func ParseCertificates(asn1Data []<a href="../../builtin/index.html#byte">byte</a>) ([]*<a href="index.html#Certificate">Certificate</a>, <a href="../../builtin/index.html#error">error</a>)</pre>
+			<p>
+ParseCertificates parses one or more certificates from the given ASN.1 DER
+data. The certificates must be concatenated with no intermediate padding.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ParseDERCRL">func <a href="http://localhost:6060/src/crypto/x509/x509.go?s=52012:52089#L1652">ParseDERCRL</a></h2>
+			<pre>func ParseDERCRL(derBytes []<a href="../../builtin/index.html#byte">byte</a>) (certList *<a href="pkix/index.html">pkix</a>.<a href="pkix/index.html#CertificateList">CertificateList</a>, err <a href="../../builtin/index.html#error">error</a>)</pre>
+			<p>
+ParseDERCRL parses a DER encoded CRL from the given bytes.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ParseECPrivateKey">func <a href="http://localhost:6060/src/crypto/x509/sec1.go?s=823:892#L22">ParseECPrivateKey</a></h2>
+			<pre>func ParseECPrivateKey(der []<a href="../../builtin/index.html#byte">byte</a>) (key *<a href="../ecdsa/index.html">ecdsa</a>.<a href="../ecdsa/index.html#PrivateKey">PrivateKey</a>, err <a href="../../builtin/index.html#error">error</a>)</pre>
+			<p>
+ParseECPrivateKey parses an ASN.1 Elliptic Curve Private Key Structure.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ParsePKCS1PrivateKey">func <a href="http://localhost:6060/src/crypto/x509/pkcs1.go?s=945:1015#L29">ParsePKCS1PrivateKey</a></h2>
+			<pre>func ParsePKCS1PrivateKey(der []<a href="../../builtin/index.html#byte">byte</a>) (key *<a href="../rsa/index.html">rsa</a>.<a href="../rsa/index.html#PrivateKey">PrivateKey</a>, err <a href="../../builtin/index.html#error">error</a>)</pre>
+			<p>
+ParsePKCS1PrivateKey returns an RSA private key from its ASN.1 PKCS#1 DER encoded form.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ParsePKCS8PrivateKey">func <a href="http://localhost:6060/src/crypto/x509/pkcs8.go?s=626:692#L16">ParsePKCS8PrivateKey</a></h2>
+			<pre>func ParsePKCS8PrivateKey(der []<a href="../../builtin/index.html#byte">byte</a>) (key interface{}, err <a href="../../builtin/index.html#error">error</a>)</pre>
+			<p>
+ParsePKCS8PrivateKey parses an unencrypted, PKCS#8 private key. See
+<a href="http://www.rsa.com/rsalabs/node.asp?id=2130">http://www.rsa.com/rsalabs/node.asp?id=2130</a> and RFC5208.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ParsePKIXPublicKey">func <a href="http://localhost:6060/src/crypto/x509/x509.go?s=816:885#L29">ParsePKIXPublicKey</a></h2>
+			<pre>func ParsePKIXPublicKey(derBytes []<a href="../../builtin/index.html#byte">byte</a>) (pub interface{}, err <a href="../../builtin/index.html#error">error</a>)</pre>
+			<p>
+ParsePKIXPublicKey parses a DER encoded public key. These values are
+typically found in PEM blocks with &#34;BEGIN PUBLIC KEY&#34;.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="CertPool">type <a href="http://localhost:6060/src/crypto/x509/cert_pool.go?s=240:361#L2">CertPool</a></h2>
+			<pre>type CertPool struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+CertPool is a set of certificates.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewCertPool">func <a href="http://localhost:6060/src/crypto/x509/cert_pool.go?s=409:437#L9">NewCertPool</a></h3>
+				<pre>func NewCertPool() *<a href="index.html#CertPool">CertPool</a></pre>
+				<p>
+NewCertPool returns a new, empty CertPool.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="CertPool.AddCert">func (*CertPool) <a href="http://localhost:6060/src/crypto/x509/cert_pool.go?s=1329:1374#L46">AddCert</a></h3>
+				<pre>func (s *<a href="index.html#CertPool">CertPool</a>) AddCert(cert *<a href="index.html#Certificate">Certificate</a>)</pre>
+				<p>
+AddCert adds a certificate to a pool.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="CertPool.AppendCertsFromPEM">func (*CertPool) <a href="http://localhost:6060/src/crypto/x509/cert_pool.go?s=2159:2223#L75">AppendCertsFromPEM</a></h3>
+				<pre>func (s *<a href="index.html#CertPool">CertPool</a>) AppendCertsFromPEM(pemCerts []<a href="../../builtin/index.html#byte">byte</a>) (ok <a href="../../builtin/index.html#bool">bool</a>)</pre>
+				<p>
+AppendCertsFromPEM attempts to parse a series of PEM encoded certificates.
+It appends any certificates found to s and reports whether any certificates
+were successfully parsed.
+</p>
+<p>
+On many Linux systems, /etc/ssl/cert.pem will contain the system wide set
+of root CAs in a format suitable for this function.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="CertPool.Subjects">func (*CertPool) <a href="http://localhost:6060/src/crypto/x509/cert_pool.go?s=2650:2694#L100">Subjects</a></h3>
+				<pre>func (s *<a href="index.html#CertPool">CertPool</a>) Subjects() (res [][]<a href="../../builtin/index.html#byte">byte</a>)</pre>
+				<p>
+Subjects returns a list of the DER-encoded subjects of
+all of the certificates in the pool.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Certificate">type <a href="http://localhost:6060/src/crypto/x509/x509.go?s=15246:18151#L477">Certificate</a></h2>
+			<pre>type Certificate struct {
+    Raw                     []<a href="../../builtin/index.html#byte">byte</a> <span class="comment">// Complete ASN.1 DER content (certificate, signature algorithm and signature).</span>
+    RawTBSCertificate       []<a href="../../builtin/index.html#byte">byte</a> <span class="comment">// Certificate part of raw ASN.1 DER content.</span>
+    RawSubjectPublicKeyInfo []<a href="../../builtin/index.html#byte">byte</a> <span class="comment">// DER encoded SubjectPublicKeyInfo.</span>
+    RawSubject              []<a href="../../builtin/index.html#byte">byte</a> <span class="comment">// DER encoded Subject</span>
+    RawIssuer               []<a href="../../builtin/index.html#byte">byte</a> <span class="comment">// DER encoded Issuer</span>
+
+    Signature          []<a href="../../builtin/index.html#byte">byte</a>
+    SignatureAlgorithm <a href="index.html#SignatureAlgorithm">SignatureAlgorithm</a>
+
+    PublicKeyAlgorithm <a href="index.html#PublicKeyAlgorithm">PublicKeyAlgorithm</a>
+    PublicKey          interface{}
+
+    Version             <a href="../../builtin/index.html#int">int</a>
+    SerialNumber        *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>
+    Issuer              <a href="pkix/index.html">pkix</a>.<a href="pkix/index.html#Name">Name</a>
+    Subject             <a href="pkix/index.html">pkix</a>.<a href="pkix/index.html#Name">Name</a>
+    NotBefore, NotAfter <a href="../../time/index.html">time</a>.<a href="../../time/index.html#Time">Time</a> <span class="comment">// Validity bounds.</span>
+    KeyUsage            <a href="index.html#KeyUsage">KeyUsage</a>
+
+    <span class="comment">// Extensions contains raw X.509 extensions. When parsing certificates,</span>
+    <span class="comment">// this can be used to extract non-critical extensions that are not</span>
+    <span class="comment">// parsed by this package. When marshaling certificates, the Extensions</span>
+    <span class="comment">// field is ignored, see ExtraExtensions.</span>
+    Extensions []<a href="pkix/index.html">pkix</a>.<a href="pkix/index.html#Extension">Extension</a>
+
+    <span class="comment">// ExtraExtensions contains extensions to be copied, raw, into any</span>
+    <span class="comment">// marshaled certificates. Values override any extensions that would</span>
+    <span class="comment">// otherwise be produced based on the other fields. The ExtraExtensions</span>
+    <span class="comment">// field is not populated when parsing certificates, see Extensions.</span>
+    ExtraExtensions []<a href="pkix/index.html">pkix</a>.<a href="pkix/index.html#Extension">Extension</a>
+
+    <span class="comment">// UnhandledCriticalExtensions contains a list of extension IDs that</span>
+    <span class="comment">// were not (fully) processed when parsing. Verify will fail if this</span>
+    <span class="comment">// slice is non-empty, unless verification is delegated to an OS</span>
+    <span class="comment">// library which understands all the critical extensions.</span>
+    <span class="comment">//</span>
+    <span class="comment">// Users can access these extensions using Extensions and can remove</span>
+    <span class="comment">// elements from this slice if they believe that they have been</span>
+    <span class="comment">// handled.</span>
+    UnhandledCriticalExtensions []<a href="../../encoding/asn1/index.html">asn1</a>.<a href="../../encoding/asn1/index.html#ObjectIdentifier">ObjectIdentifier</a>
+
+    ExtKeyUsage        []<a href="index.html#ExtKeyUsage">ExtKeyUsage</a>           <span class="comment">// Sequence of extended key usages.</span>
+    UnknownExtKeyUsage []<a href="../../encoding/asn1/index.html">asn1</a>.<a href="../../encoding/asn1/index.html#ObjectIdentifier">ObjectIdentifier</a> <span class="comment">// Encountered extended key usages unknown to this package.</span>
+
+    BasicConstraintsValid <a href="../../builtin/index.html#bool">bool</a> <span class="comment">// if true then the next two fields are valid.</span>
+    IsCA                  <a href="../../builtin/index.html#bool">bool</a>
+    MaxPathLen            <a href="../../builtin/index.html#int">int</a>
+    <span class="comment">// MaxPathLenZero indicates that BasicConstraintsValid==true and</span>
+    <span class="comment">// MaxPathLen==0 should be interpreted as an actual maximum path length</span>
+    <span class="comment">// of zero. Otherwise, that combination is interpreted as MaxPathLen</span>
+    <span class="comment">// not being set.</span>
+    MaxPathLenZero <a href="../../builtin/index.html#bool">bool</a>
+
+    SubjectKeyId   []<a href="../../builtin/index.html#byte">byte</a>
+    AuthorityKeyId []<a href="../../builtin/index.html#byte">byte</a>
+
+    <span class="comment">// RFC 5280, 4.2.2.1 (Authority Information Access)</span>
+    OCSPServer            []<a href="../../builtin/index.html#string">string</a>
+    IssuingCertificateURL []<a href="../../builtin/index.html#string">string</a>
+
+    <span class="comment">// Subject Alternate Name values</span>
+    DNSNames       []<a href="../../builtin/index.html#string">string</a>
+    EmailAddresses []<a href="../../builtin/index.html#string">string</a>
+    IPAddresses    []<a href="../../net/index.html">net</a>.<a href="../../net/index.html#IP">IP</a>
+
+    <span class="comment">// Name constraints</span>
+    PermittedDNSDomainsCritical <a href="../../builtin/index.html#bool">bool</a> <span class="comment">// if true then the name constraints are marked critical.</span>
+    PermittedDNSDomains         []<a href="../../builtin/index.html#string">string</a>
+
+    <span class="comment">// CRL Distribution Points</span>
+    CRLDistributionPoints []<a href="../../builtin/index.html#string">string</a>
+
+    PolicyIdentifiers []<a href="../../encoding/asn1/index.html">asn1</a>.<a href="../../encoding/asn1/index.html#ObjectIdentifier">ObjectIdentifier</a>
+}</pre>
+			<p>
+A Certificate represents an X.509 certificate.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="ParseCertificate">func <a href="http://localhost:6060/src/crypto/x509/x509.go?s=38293:38353#L1175">ParseCertificate</a></h3>
+				<pre>func ParseCertificate(asn1Data []<a href="../../builtin/index.html#byte">byte</a>) (*<a href="index.html#Certificate">Certificate</a>, <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+ParseCertificate parses a single certificate from the given ASN.1 DER data.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Certificate.CheckCRLSignature">func (*Certificate) <a href="http://localhost:6060/src/crypto/x509/x509.go?s=24688:24766#L724">CheckCRLSignature</a></h3>
+				<pre>func (c *<a href="index.html#Certificate">Certificate</a>) CheckCRLSignature(crl *<a href="pkix/index.html">pkix</a>.<a href="pkix/index.html#CertificateList">CertificateList</a>) (err <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+CheckCRLSignature checks that the signature in crl is from c.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Certificate.CheckSignature">func (*Certificate) <a href="http://localhost:6060/src/crypto/x509/x509.go?s=22530:22629#L656">CheckSignature</a></h3>
+				<pre>func (c *<a href="index.html#Certificate">Certificate</a>) CheckSignature(algo <a href="index.html#SignatureAlgorithm">SignatureAlgorithm</a>, signed, signature []<a href="../../builtin/index.html#byte">byte</a>) (err <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+CheckSignature verifies that signature is a valid signature over signed from
+c&#39;s public key.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Certificate.CheckSignatureFrom">func (*Certificate) <a href="http://localhost:6060/src/crypto/x509/x509.go?s=21462:21535#L628">CheckSignatureFrom</a></h3>
+				<pre>func (c *<a href="index.html#Certificate">Certificate</a>) CheckSignatureFrom(parent *<a href="index.html#Certificate">Certificate</a>) (err <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+CheckSignatureFrom verifies that the signature on c is a valid signature
+from parent.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Certificate.CreateCRL">func (*Certificate) <a href="http://localhost:6060/src/crypto/x509/x509.go?s=52453:52610#L1664">CreateCRL</a></h3>
+				<pre>func (c *<a href="index.html#Certificate">Certificate</a>) CreateCRL(rand <a href="../../io/index.html">io</a>.<a href="../../io/index.html#Reader">Reader</a>, priv interface{}, revokedCerts []<a href="pkix/index.html">pkix</a>.<a href="pkix/index.html#RevokedCertificate">RevokedCertificate</a>, now, expiry <a href="../../time/index.html">time</a>.<a href="../../time/index.html#Time">Time</a>) (crlBytes []<a href="../../builtin/index.html#byte">byte</a>, err <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+CreateCRL returns a DER encoded CRL, signed by this Certificate, that
+contains the given list of revoked certificates.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Certificate.Equal">func (*Certificate) <a href="http://localhost:6060/src/crypto/x509/x509.go?s=18990:19042#L573">Equal</a></h3>
+				<pre>func (c *<a href="index.html#Certificate">Certificate</a>) Equal(other *<a href="index.html#Certificate">Certificate</a>) <a href="../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Certificate.Verify">func (*Certificate) <a href="http://localhost:6060/src/crypto/x509/verify.go?s=7315:7400#L207">Verify</a></h3>
+				<pre>func (c *<a href="index.html#Certificate">Certificate</a>) Verify(opts <a href="index.html#VerifyOptions">VerifyOptions</a>) (chains [][]*<a href="index.html#Certificate">Certificate</a>, err <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Verify attempts to verify c by building one or more chains from c to a
+certificate in opts.Roots, using certificates in opts.Intermediates if
+needed. If successful, it returns one or more chains where the first
+element of the chain is c and the last element is from opts.Roots.
+</p>
+<p>
+If opts.Roots is nil and system roots are unavailable the returned error
+will be of type SystemRootsError.
+</p>
+<p>
+WARNING: this doesn&#39;t do any revocation checking.
+</p>
+
+				
+				<div id="example_Certificate_Verify" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+<span class="comment">// Verifying with a custom list of root certificates.</span>
+
+const rootPEM = `
+-----BEGIN CERTIFICATE-----
+MIIEBDCCAuygAwIBAgIDAjppMA0GCSqGSIb3DQEBBQUAMEIxCzAJBgNVBAYTAlVT
+MRYwFAYDVQQKEw1HZW9UcnVzdCBJbmMuMRswGQYDVQQDExJHZW9UcnVzdCBHbG9i
+YWwgQ0EwHhcNMTMwNDA1MTUxNTU1WhcNMTUwNDA0MTUxNTU1WjBJMQswCQYDVQQG
+EwJVUzETMBEGA1UEChMKR29vZ2xlIEluYzElMCMGA1UEAxMcR29vZ2xlIEludGVy
+bmV0IEF1dGhvcml0eSBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
+AJwqBHdc2FCROgajguDYUEi8iT/xGXAaiEZ+4I/F8YnOIe5a/mENtzJEiaB0C1NP
+VaTOgmKV7utZX8bhBYASxF6UP7xbSDj0U/ck5vuR6RXEz/RTDfRK/J9U3n2+oGtv
+h8DQUB8oMANA2ghzUWx//zo8pzcGjr1LEQTrfSTe5vn8MXH7lNVg8y5Kr0LSy+rE
+ahqyzFPdFUuLH8gZYR/Nnag+YyuENWllhMgZxUYi+FOVvuOAShDGKuy6lyARxzmZ
+EASg8GF6lSWMTlJ14rbtCMoU/M4iarNOz0YDl5cDfsCx3nuvRTPPuj5xt970JSXC
+DTWJnZ37DhF5iR43xa+OcmkCAwEAAaOB+zCB+DAfBgNVHSMEGDAWgBTAephojYn7
+qwVkDBF9qn1luMrMTjAdBgNVHQ4EFgQUSt0GFhu89mi1dvWBtrtiGrpagS8wEgYD
+VR0TAQH/BAgwBgEB/wIBADAOBgNVHQ8BAf8EBAMCAQYwOgYDVR0fBDMwMTAvoC2g
+K4YpaHR0cDovL2NybC5nZW90cnVzdC5jb20vY3Jscy9ndGdsb2JhbC5jcmwwPQYI
+KwYBBQUHAQEEMTAvMC0GCCsGAQUFBzABhiFodHRwOi8vZ3RnbG9iYWwtb2NzcC5n
+ZW90cnVzdC5jb20wFwYDVR0gBBAwDjAMBgorBgEEAdZ5AgUBMA0GCSqGSIb3DQEB
+BQUAA4IBAQA21waAESetKhSbOHezI6B1WLuxfoNCunLaHtiONgaX4PCVOzf9G0JY
+/iLIa704XtE7JW4S615ndkZAkNoUyHgN7ZVm2o6Gb4ChulYylYbc3GrKBIxbf/a/
+zG+FA1jDaFETzf3I93k9mTXwVqO94FntT0QJo544evZG0R0SnU++0ED8Vf4GXjza
+HFa9llF7b1cq26KqltyMdMKVvvBulRP/F/A8rLIQjcxz++iPAsbw+zOzlTvjwsto
+WHPbqCRiOwY1nQ2pM714A5AuTHhdUDqB1O6gyHA43LL5Z/qHQF1hwFGPa4NrzQU6
+yuGnBXj8ytqU0CwIPX4WecigUCAkVDNx
+-----END CERTIFICATE-----`
+
+const certPEM = `
+-----BEGIN CERTIFICATE-----
+MIIDujCCAqKgAwIBAgIIE31FZVaPXTUwDQYJKoZIhvcNAQEFBQAwSTELMAkGA1UE
+BhMCVVMxEzARBgNVBAoTCkdvb2dsZSBJbmMxJTAjBgNVBAMTHEdvb2dsZSBJbnRl
+cm5ldCBBdXRob3JpdHkgRzIwHhcNMTQwMTI5MTMyNzQzWhcNMTQwNTI5MDAwMDAw
+WjBpMQswCQYDVQQGEwJVUzETMBEGA1UECAwKQ2FsaWZvcm5pYTEWMBQGA1UEBwwN
+TW91bnRhaW4gVmlldzETMBEGA1UECgwKR29vZ2xlIEluYzEYMBYGA1UEAwwPbWFp
+bC5nb29nbGUuY29tMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEfRrObuSW5T7q
+5CnSEqefEmtH4CCv6+5EckuriNr1CjfVvqzwfAhopXkLrq45EQm8vkmf7W96XJhC
+7ZM0dYi1/qOCAU8wggFLMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjAa
+BgNVHREEEzARgg9tYWlsLmdvb2dsZS5jb20wCwYDVR0PBAQDAgeAMGgGCCsGAQUF
+BwEBBFwwWjArBggrBgEFBQcwAoYfaHR0cDovL3BraS5nb29nbGUuY29tL0dJQUcy
+LmNydDArBggrBgEFBQcwAYYfaHR0cDovL2NsaWVudHMxLmdvb2dsZS5jb20vb2Nz
+cDAdBgNVHQ4EFgQUiJxtimAuTfwb+aUtBn5UYKreKvMwDAYDVR0TAQH/BAIwADAf
+BgNVHSMEGDAWgBRK3QYWG7z2aLV29YG2u2IaulqBLzAXBgNVHSAEEDAOMAwGCisG
+AQQB1nkCBQEwMAYDVR0fBCkwJzAloCOgIYYfaHR0cDovL3BraS5nb29nbGUuY29t
+L0dJQUcyLmNybDANBgkqhkiG9w0BAQUFAAOCAQEAH6RYHxHdcGpMpFE3oxDoFnP+
+gtuBCHan2yE2GRbJ2Cw8Lw0MmuKqHlf9RSeYfd3BXeKkj1qO6TVKwCh+0HdZk283
+TZZyzmEOyclm3UGFYe82P/iDFt+CeQ3NpmBg+GoaVCuWAARJN/KfglbLyyYygcQq
+0SgeDh8dRKUiaW3HQSoYvTvdTuqzwK4CXsr3b5/dAOY8uMuG/IAR3FgwTbZ1dtoW
+RvOTa8hYiU6A475WuZKyEHcwnGYe57u2I2KbMgcKjPniocj4QzgYsVAVKW3IwaOh
+yE+vPxsiUkvQHdO2fojCkY8jg70jxM+gu59tPDNbw3Uh/2Ij310FgTHsnGQMyA==
+-----END CERTIFICATE-----`
+
+<span class="comment">// First, create the set of root certificates. For this example we only</span>
+<span class="comment">// have one. It&#39;s also possible to omit this in order to use the</span>
+<span class="comment">// default root set of the current operating system.</span>
+roots := x509.NewCertPool()
+ok := roots.AppendCertsFromPEM([]byte(rootPEM))
+if !ok {
+    panic(&#34;failed to parse root certificate&#34;)
+}
+
+block, _ := pem.Decode([]byte(certPEM))
+if block == nil {
+    panic(&#34;failed to parse certificate PEM&#34;)
+}
+cert, err := x509.ParseCertificate(block.Bytes)
+if err != nil {
+    panic(&#34;failed to parse certificate: &#34; + err.Error())
+}
+
+opts := x509.VerifyOptions{
+    DNSName: &#34;mail.google.com&#34;,
+    Roots:   roots,
+}
+
+if _, err := cert.Verify(opts); err != nil {
+    panic(&#34;failed to verify certificate: &#34; + err.Error())
+}
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+				
+				<h3 id="Certificate.VerifyHostname">func (*Certificate) <a href="http://localhost:6060/src/crypto/x509/verify.go?s=12003:12055#L398">VerifyHostname</a></h3>
+				<pre>func (c *<a href="index.html#Certificate">Certificate</a>) VerifyHostname(h <a href="../../builtin/index.html#string">string</a>) <a href="../../builtin/index.html#error">error</a></pre>
+				<p>
+VerifyHostname returns nil if c is a valid certificate for the named host.
+Otherwise it returns an error describing the mismatch.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="CertificateInvalidError">type <a href="http://localhost:6060/src/crypto/x509/verify.go?s=1130:1212#L30">CertificateInvalidError</a></h2>
+			<pre>type CertificateInvalidError struct {
+    Cert   *<a href="index.html#Certificate">Certificate</a>
+    Reason <a href="index.html#InvalidReason">InvalidReason</a>
+}</pre>
+			<p>
+CertificateInvalidError results when an odd error occurs. Users of this
+library probably want to handle all these errors uniformly.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="CertificateInvalidError.Error">func (CertificateInvalidError) <a href="http://localhost:6060/src/crypto/x509/verify.go?s=1214:1261#L35">Error</a></h3>
+				<pre>func (e <a href="index.html#CertificateInvalidError">CertificateInvalidError</a>) Error() <a href="../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="CertificateRequest">type <a href="http://localhost:6060/src/crypto/x509/x509.go?s=53971:55284#L1718">CertificateRequest</a></h2>
+			<pre>type CertificateRequest struct {
+    Raw                      []<a href="../../builtin/index.html#byte">byte</a> <span class="comment">// Complete ASN.1 DER content (CSR, signature algorithm and signature).</span>
+    RawTBSCertificateRequest []<a href="../../builtin/index.html#byte">byte</a> <span class="comment">// Certificate request info part of raw ASN.1 DER content.</span>
+    RawSubjectPublicKeyInfo  []<a href="../../builtin/index.html#byte">byte</a> <span class="comment">// DER encoded SubjectPublicKeyInfo.</span>
+    RawSubject               []<a href="../../builtin/index.html#byte">byte</a> <span class="comment">// DER encoded Subject.</span>
+
+    Version            <a href="../../builtin/index.html#int">int</a>
+    Signature          []<a href="../../builtin/index.html#byte">byte</a>
+    SignatureAlgorithm <a href="index.html#SignatureAlgorithm">SignatureAlgorithm</a>
+
+    PublicKeyAlgorithm <a href="index.html#PublicKeyAlgorithm">PublicKeyAlgorithm</a>
+    PublicKey          interface{}
+
+    Subject <a href="pkix/index.html">pkix</a>.<a href="pkix/index.html#Name">Name</a>
+
+    <span class="comment">// Attributes is the dried husk of a bug and shouldn&#39;t be used.</span>
+    Attributes []<a href="pkix/index.html">pkix</a>.<a href="pkix/index.html#AttributeTypeAndValueSET">AttributeTypeAndValueSET</a>
+
+    <span class="comment">// Extensions contains raw X.509 extensions. When parsing CSRs, this</span>
+    <span class="comment">// can be used to extract extensions that are not parsed by this</span>
+    <span class="comment">// package.</span>
+    Extensions []<a href="pkix/index.html">pkix</a>.<a href="pkix/index.html#Extension">Extension</a>
+
+    <span class="comment">// ExtraExtensions contains extensions to be copied, raw, into any</span>
+    <span class="comment">// marshaled CSR. Values override any extensions that would otherwise</span>
+    <span class="comment">// be produced based on the other fields but are overridden by any</span>
+    <span class="comment">// extensions specified in Attributes.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The ExtraExtensions field is not populated when parsing CSRs, see</span>
+    <span class="comment">// Extensions.</span>
+    ExtraExtensions []<a href="pkix/index.html">pkix</a>.<a href="pkix/index.html#Extension">Extension</a>
+
+    <span class="comment">// Subject Alternate Name values.</span>
+    DNSNames       []<a href="../../builtin/index.html#string">string</a>
+    EmailAddresses []<a href="../../builtin/index.html#string">string</a>
+    IPAddresses    []<a href="../../net/index.html">net</a>.<a href="../../net/index.html#IP">IP</a>
+}</pre>
+			<p>
+CertificateRequest represents a PKCS #10, certificate signature request.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="ParseCertificateRequest">func <a href="http://localhost:6060/src/crypto/x509/x509.go?s=62307:62381#L1998">ParseCertificateRequest</a></h3>
+				<pre>func ParseCertificateRequest(asn1Data []<a href="../../builtin/index.html#byte">byte</a>) (*<a href="index.html#CertificateRequest">CertificateRequest</a>, <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+ParseCertificateRequest parses a single certificate request from the
+given ASN.1 DER data.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="CertificateRequest.CheckSignature">func (*CertificateRequest) <a href="http://localhost:6060/src/crypto/x509/x509.go?s=64088:64145#L2059">CheckSignature</a></h3>
+				<pre>func (c *<a href="index.html#CertificateRequest">CertificateRequest</a>) CheckSignature() (err <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+CheckSignature verifies that the signature on c is a valid signature
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ConstraintViolationError">type <a href="http://localhost:6060/src/crypto/x509/x509.go?s=18807:18845#L567">ConstraintViolationError</a></h2>
+			<pre>type ConstraintViolationError struct{}</pre>
+			<p>
+ConstraintViolationError results when a requested usage is not permitted by
+a certificate. For example: checking a signature when the public key isn&#39;t a
+certificate signing key.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ConstraintViolationError.Error">func (ConstraintViolationError) <a href="http://localhost:6060/src/crypto/x509/x509.go?s=18847:18893#L569">Error</a></h3>
+				<pre>func (<a href="index.html#ConstraintViolationError">ConstraintViolationError</a>) Error() <a href="../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ExtKeyUsage">type <a href="http://localhost:6060/src/crypto/x509/x509.go?s=13566:13586#L422">ExtKeyUsage</a></h2>
+			<pre>type ExtKeyUsage <a href="../../builtin/index.html#int">int</a></pre>
+			<p>
+ExtKeyUsage represents an extended set of actions that are valid for a given key.
+Each of the ExtKeyUsage* constants define a unique action.
+</p>
+
+
+			
+				<pre>const (
+    <span id="ExtKeyUsageAny">ExtKeyUsageAny</span> <a href="index.html#ExtKeyUsage">ExtKeyUsage</a> = <a href="../../builtin/index.html#iota">iota</a>
+    <span id="ExtKeyUsageServerAuth">ExtKeyUsageServerAuth</span>
+    <span id="ExtKeyUsageClientAuth">ExtKeyUsageClientAuth</span>
+    <span id="ExtKeyUsageCodeSigning">ExtKeyUsageCodeSigning</span>
+    <span id="ExtKeyUsageEmailProtection">ExtKeyUsageEmailProtection</span>
+    <span id="ExtKeyUsageIPSECEndSystem">ExtKeyUsageIPSECEndSystem</span>
+    <span id="ExtKeyUsageIPSECTunnel">ExtKeyUsageIPSECTunnel</span>
+    <span id="ExtKeyUsageIPSECUser">ExtKeyUsageIPSECUser</span>
+    <span id="ExtKeyUsageTimeStamping">ExtKeyUsageTimeStamping</span>
+    <span id="ExtKeyUsageOCSPSigning">ExtKeyUsageOCSPSigning</span>
+    <span id="ExtKeyUsageMicrosoftServerGatedCrypto">ExtKeyUsageMicrosoftServerGatedCrypto</span>
+    <span id="ExtKeyUsageNetscapeServerGatedCrypto">ExtKeyUsageNetscapeServerGatedCrypto</span>
+)</pre>
+				
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="HostnameError">type <a href="http://localhost:6060/src/crypto/x509/verify.go?s=1903:1978#L53">HostnameError</a></h2>
+			<pre>type HostnameError struct {
+    Certificate *<a href="index.html#Certificate">Certificate</a>
+    Host        <a href="../../builtin/index.html#string">string</a>
+}</pre>
+			<p>
+HostnameError results when the set of authorized names doesn&#39;t match the
+requested name.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="HostnameError.Error">func (HostnameError) <a href="http://localhost:6060/src/crypto/x509/verify.go?s=1980:2017#L58">Error</a></h3>
+				<pre>func (h <a href="index.html#HostnameError">HostnameError</a>) Error() <a href="../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="InsecureAlgorithmError">type <a href="http://localhost:6060/src/crypto/x509/x509.go?s=18421:18467#L558">InsecureAlgorithmError</a></h2>
+			<pre>type InsecureAlgorithmError <a href="index.html#SignatureAlgorithm">SignatureAlgorithm</a></pre>
+			<p>
+An InsecureAlgorithmError
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="InsecureAlgorithmError.Error">func (InsecureAlgorithmError) <a href="http://localhost:6060/src/crypto/x509/x509.go?s=18469:18515#L560">Error</a></h3>
+				<pre>func (e <a href="index.html#InsecureAlgorithmError">InsecureAlgorithmError</a>) Error() <a href="../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="InvalidReason">type <a href="http://localhost:6060/src/crypto/x509/verify.go?s=256:278#L7">InvalidReason</a></h2>
+			<pre>type InvalidReason <a href="../../builtin/index.html#int">int</a></pre>
+			
+
+			
+				<pre>const (
+    <span class="comment">// NotAuthorizedToSign results when a certificate is signed by another</span>
+    <span class="comment">// which isn&#39;t marked as a CA certificate.</span>
+    <span id="NotAuthorizedToSign">NotAuthorizedToSign</span> <a href="index.html#InvalidReason">InvalidReason</a> = <a href="../../builtin/index.html#iota">iota</a>
+    <span class="comment">// Expired results when a certificate has expired, based on the time</span>
+    <span class="comment">// given in the VerifyOptions.</span>
+    <span id="Expired">Expired</span>
+    <span class="comment">// CANotAuthorizedForThisName results when an intermediate or root</span>
+    <span class="comment">// certificate has a name constraint which doesn&#39;t include the name</span>
+    <span class="comment">// being checked.</span>
+    <span id="CANotAuthorizedForThisName">CANotAuthorizedForThisName</span>
+    <span class="comment">// TooManyIntermediates results when a path length constraint is</span>
+    <span class="comment">// violated.</span>
+    <span id="TooManyIntermediates">TooManyIntermediates</span>
+    <span class="comment">// IncompatibleUsage results when the certificate&#39;s key usage indicates</span>
+    <span class="comment">// that it may only be used for a different purpose.</span>
+    <span id="IncompatibleUsage">IncompatibleUsage</span>
+)</pre>
+				
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="KeyUsage">type <a href="http://localhost:6060/src/crypto/x509/x509.go?s=11479:11496#L379">KeyUsage</a></h2>
+			<pre>type KeyUsage <a href="../../builtin/index.html#int">int</a></pre>
+			<p>
+KeyUsage represents the set of actions that are valid for a given key. It&#39;s
+a bitmap of the KeyUsage* constants.
+</p>
+
+
+			
+				<pre>const (
+    <span id="KeyUsageDigitalSignature">KeyUsageDigitalSignature</span> <a href="index.html#KeyUsage">KeyUsage</a> = 1 &lt;&lt; <a href="../../builtin/index.html#iota">iota</a>
+    <span id="KeyUsageContentCommitment">KeyUsageContentCommitment</span>
+    <span id="KeyUsageKeyEncipherment">KeyUsageKeyEncipherment</span>
+    <span id="KeyUsageDataEncipherment">KeyUsageDataEncipherment</span>
+    <span id="KeyUsageKeyAgreement">KeyUsageKeyAgreement</span>
+    <span id="KeyUsageCertSign">KeyUsageCertSign</span>
+    <span id="KeyUsageCRLSign">KeyUsageCRLSign</span>
+    <span id="KeyUsageEncipherOnly">KeyUsageEncipherOnly</span>
+    <span id="KeyUsageDecipherOnly">KeyUsageDecipherOnly</span>
+)</pre>
+				
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="PEMCipher">type <a href="http://localhost:6060/src/crypto/x509/pem_decrypt.go?s=472:490#L13">PEMCipher</a></h2>
+			<pre>type PEMCipher <a href="../../builtin/index.html#int">int</a></pre>
+			
+
+			
+				<pre>const (
+    <span id="PEMCipherDES">PEMCipherDES</span> <a href="index.html#PEMCipher">PEMCipher</a>
+    <span id="PEMCipher3DES">PEMCipher3DES</span>
+    <span id="PEMCipherAES128">PEMCipherAES128</span>
+    <span id="PEMCipherAES192">PEMCipherAES192</span>
+    <span id="PEMCipherAES256">PEMCipherAES256</span>
+)</pre>
+				<p>
+Possible values for the EncryptPEMBlock encryption algorithm.
+</p>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="PublicKeyAlgorithm">type <a href="http://localhost:6060/src/crypto/x509/x509.go?s=5065:5092#L190">PublicKeyAlgorithm</a></h2>
+			<pre>type PublicKeyAlgorithm <a href="../../builtin/index.html#int">int</a></pre>
+			
+
+			
+				<pre>const (
+    <span id="UnknownPublicKeyAlgorithm">UnknownPublicKeyAlgorithm</span> <a href="index.html#PublicKeyAlgorithm">PublicKeyAlgorithm</a> = <a href="../../builtin/index.html#iota">iota</a>
+    <span id="RSA">RSA</span>
+    <span id="DSA">DSA</span>
+    <span id="ECDSA">ECDSA</span>
+)</pre>
+				
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="SignatureAlgorithm">type <a href="http://localhost:6060/src/crypto/x509/x509.go?s=4230:4257#L150">SignatureAlgorithm</a></h2>
+			<pre>type SignatureAlgorithm <a href="../../builtin/index.html#int">int</a></pre>
+			
+
+			
+				<pre>const (
+    <span id="UnknownSignatureAlgorithm">UnknownSignatureAlgorithm</span> <a href="index.html#SignatureAlgorithm">SignatureAlgorithm</a> = <a href="../../builtin/index.html#iota">iota</a>
+    <span id="MD2WithRSA">MD2WithRSA</span>
+    <span id="MD5WithRSA">MD5WithRSA</span>
+    <span id="SHA1WithRSA">SHA1WithRSA</span>
+    <span id="SHA256WithRSA">SHA256WithRSA</span>
+    <span id="SHA384WithRSA">SHA384WithRSA</span>
+    <span id="SHA512WithRSA">SHA512WithRSA</span>
+    <span id="DSAWithSHA1">DSAWithSHA1</span>
+    <span id="DSAWithSHA256">DSAWithSHA256</span>
+    <span id="ECDSAWithSHA1">ECDSAWithSHA1</span>
+    <span id="ECDSAWithSHA256">ECDSAWithSHA256</span>
+    <span id="ECDSAWithSHA384">ECDSAWithSHA384</span>
+    <span id="ECDSAWithSHA512">ECDSAWithSHA512</span>
+)</pre>
+				
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="SignatureAlgorithm.String">func (SignatureAlgorithm) <a href="http://localhost:6060/src/crypto/x509/x509.go?s=4910:4956#L183">String</a></h3>
+				<pre>func (algo <a href="index.html#SignatureAlgorithm">SignatureAlgorithm</a>) String() <a href="../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="SystemRootsError">type <a href="http://localhost:6060/src/crypto/x509/verify.go?s=3548:3578#L110">SystemRootsError</a></h2>
+			<pre>type SystemRootsError struct{}</pre>
+			<p>
+SystemRootsError results when we fail to load the system root certificates.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="SystemRootsError.Error">func (SystemRootsError) <a href="http://localhost:6060/src/crypto/x509/verify.go?s=3580:3618#L112">Error</a></h3>
+				<pre>func (<a href="index.html#SystemRootsError">SystemRootsError</a>) Error() <a href="../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="UnhandledCriticalExtension">type <a href="http://localhost:6060/src/crypto/x509/x509.go?s=24929:24969#L729">UnhandledCriticalExtension</a></h2>
+			<pre>type UnhandledCriticalExtension struct{}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="UnhandledCriticalExtension.Error">func (UnhandledCriticalExtension) <a href="http://localhost:6060/src/crypto/x509/x509.go?s=24971:25021#L731">Error</a></h3>
+				<pre>func (h <a href="index.html#UnhandledCriticalExtension">UnhandledCriticalExtension</a>) Error() <a href="../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="UnknownAuthorityError">type <a href="http://localhost:6060/src/crypto/x509/verify.go?s=2658:2962#L84">UnknownAuthorityError</a></h2>
+			<pre>type UnknownAuthorityError struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+UnknownAuthorityError results when the certificate issuer is unknown
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="UnknownAuthorityError.Error">func (UnknownAuthorityError) <a href="http://localhost:6060/src/crypto/x509/verify.go?s=2964:3009#L94">Error</a></h3>
+				<pre>func (e <a href="index.html#UnknownAuthorityError">UnknownAuthorityError</a>) Error() <a href="../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="VerifyOptions">type <a href="http://localhost:6060/src/crypto/x509/verify.go?s=4072:4585#L122">VerifyOptions</a></h2>
+			<pre>type VerifyOptions struct {
+    DNSName       <a href="../../builtin/index.html#string">string</a>
+    Intermediates *<a href="index.html#CertPool">CertPool</a>
+    Roots         *<a href="index.html#CertPool">CertPool</a> <span class="comment">// if nil, the system roots are used</span>
+    CurrentTime   <a href="../../time/index.html">time</a>.<a href="../../time/index.html#Time">Time</a> <span class="comment">// if zero, the current time is used</span>
+    <span class="comment">// KeyUsage specifies which Extended Key Usage values are acceptable.</span>
+    <span class="comment">// An empty list means ExtKeyUsageServerAuth. Key usage is considered a</span>
+    <span class="comment">// constraint down the chain which mirrors Windows CryptoAPI behaviour,</span>
+    <span class="comment">// but not the spec. To accept any key usage, include ExtKeyUsageAny.</span>
+    KeyUsages []<a href="index.html#ExtKeyUsage">ExtKeyUsage</a>
+}</pre>
+			<p>
+VerifyOptions contains parameters for Certificate.Verify. It&#39;s a structure
+because other PKIX verification APIs have ended up needing many options.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+
+
+	<div class="pkg-dir">
+		<table>
+			<tr>
+				<th class="pkg-name">Name</th>
+				<th class="pkg-synopsis">Synopsis</th>
+			</tr>
+
+			
+			<tr>
+				<td colspan="2"><a href="../index.html">..</a></td>
+			</tr>
+			
+
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="pkix/index.html">pkix</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package pkix contains shared, low level structures used for ASN.1 parsing and serialization of X.509 certificates, CRL and OCSP.
+						</td>
+					</tr>
+				
+			
+		</table>
+	</div>
+
+
+	
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

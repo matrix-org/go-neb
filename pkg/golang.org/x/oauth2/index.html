@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>oauth2 - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package oauth2</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "golang.org/x/oauth2"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+				<dd><a href="index.html#pkg-examples" class="examplesLink">Examples</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-subdirectories">Subdirectories</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package oauth2 provides support for making
+OAuth2 authorized and authenticated HTTP requests.
+It can additionally grant authorization with Bearer JWT.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+				
+				<dd><a href="index.html#NewClient">func NewClient(ctx context.Context, src TokenSource) *http.Client</a></dd>
+			
+				
+				<dd><a href="index.html#RegisterBrokenAuthHeaderProvider">func RegisterBrokenAuthHeaderProvider(tokenURL string)</a></dd>
+			
+			
+				
+				<dd><a href="index.html#AuthCodeOption">type AuthCodeOption</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SetAuthURLParam">func SetAuthURLParam(key, value string) AuthCodeOption</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Config">type Config</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Config.AuthCodeURL">func (c *Config) AuthCodeURL(state string, opts ...AuthCodeOption) string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Config.Client">func (c *Config) Client(ctx context.Context, t *Token) *http.Client</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Config.Exchange">func (c *Config) Exchange(ctx context.Context, code string) (*Token, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Config.PasswordCredentialsToken">func (c *Config) PasswordCredentialsToken(ctx context.Context, username, password string) (*Token, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Config.TokenSource">func (c *Config) TokenSource(ctx context.Context, t *Token) TokenSource</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Endpoint">type Endpoint</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Token">type Token</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Token.Extra">func (t *Token) Extra(key string) interface{}</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Token.SetAuthHeader">func (t *Token) SetAuthHeader(r *http.Request)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Token.Type">func (t *Token) Type() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Token.Valid">func (t *Token) Valid() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Token.WithExtra">func (t *Token) WithExtra(extra interface{}) *Token</a></dd>
+				
+			
+				
+				<dd><a href="index.html#TokenSource">type TokenSource</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ReuseTokenSource">func ReuseTokenSource(t *Token, src TokenSource) TokenSource</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#StaticTokenSource">func StaticTokenSource(t *Token) TokenSource</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Transport">type Transport</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Transport.CancelRequest">func (t *Transport) CancelRequest(req *http.Request)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Transport.RoundTrip">func (t *Transport) RoundTrip(req *http.Request) (*http.Response, error)</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+		<div id="pkg-examples">
+			<h4>Examples</h4>
+			<dl>
+			
+			<dd><a class="exampleLink" href="index.html#example_Config">Config</a></dd>
+			
+			</dl>
+		</div>
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/golang.org/x/oauth2/oauth2.go">oauth2.go</a>
+			
+				<a href="http://localhost:6060/src/golang.org/x/oauth2/token.go">token.go</a>
+			
+				<a href="http://localhost:6060/src/golang.org/x/oauth2/transport.go">transport.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var <span id="HTTPClient">HTTPClient</span> <a href="internal/index.html">internal</a>.<a href="internal/index.html#ContextKey">ContextKey</a></pre>
+				<p>
+HTTPClient is the context key to use with golang.org/x/net/context&#39;s
+WithValue function to associate an *http.Client value with a context.
+</p>
+
+			
+				<pre>var <span id="NoContext">NoContext</span> = <a href="../net/context/index.html">context</a>.<a href="../net/context/index.html#TODO">TODO</a>()</pre>
+				<p>
+NoContext is the default context you should supply if not using
+your own context.Context (see <a href="https://golang.org/x/net/context">https://golang.org/x/net/context</a>).
+</p>
+
+			
+		
+		
+			
+			
+			<h2 id="NewClient">func <a href="http://localhost:6060/src/golang.org/x/oauth2/oauth2.go?s=9853:9918#L284">NewClient</a></h2>
+			<pre>func NewClient(ctx <a href="../net/context/index.html">context</a>.<a href="../net/context/index.html#Context">Context</a>, src <a href="index.html#TokenSource">TokenSource</a>) *<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Client">Client</a></pre>
+			<p>
+NewClient creates an *http.Client from a Context and TokenSource.
+The returned client is not valid beyond the lifetime of the context.
+</p>
+<p>
+As a special case, if src is nil, a non-OAuth2 client is returned
+using the provided context. This exists to support related OAuth2
+packages.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="RegisterBrokenAuthHeaderProvider">func <a href="http://localhost:6060/src/golang.org/x/oauth2/oauth2.go?s=1156:1210#L24">RegisterBrokenAuthHeaderProvider</a></h2>
+			<pre>func RegisterBrokenAuthHeaderProvider(tokenURL <a href="../../../builtin/index.html#string">string</a>)</pre>
+			<p>
+RegisterBrokenAuthHeaderProvider registers an OAuth2 server
+identified by the tokenURL prefix as an OAuth2 implementation
+which doesn&#39;t support the HTTP Basic authentication
+scheme to authenticate with the authorization server.
+Once a server is registered, credentials (client_id and client_secret)
+will be passed as query parameters rather than being present
+in the Authorization header.
+See <a href="https://code.google.com/p/goauth2/issues/detail?id=31">https://code.google.com/p/goauth2/issues/detail?id=31</a> for background.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="AuthCodeOption">type <a href="http://localhost:6060/src/golang.org/x/oauth2/oauth2.go?s=3393:3448#L88">AuthCodeOption</a></h2>
+			<pre>type AuthCodeOption interface {
+    <span class="comment">// contains filtered or unexported methods</span>
+}</pre>
+			<p>
+An AuthCodeOption is passed to Config.AuthCodeURL.
+</p>
+
+
+			
+
+			
+				<pre>var (
+    <span class="comment">// AccessTypeOnline and AccessTypeOffline are options passed</span>
+    <span class="comment">// to the Options.AuthCodeURL method. They modify the</span>
+    <span class="comment">// &#34;access_type&#34; field that gets sent in the URL returned by</span>
+    <span class="comment">// AuthCodeURL.</span>
+    <span class="comment">//</span>
+    <span class="comment">// Online is the default if neither is specified. If your</span>
+    <span class="comment">// application needs to refresh access tokens when the user</span>
+    <span class="comment">// is not present at the browser, then use offline. This will</span>
+    <span class="comment">// result in your application obtaining a refresh token the</span>
+    <span class="comment">// first time your application exchanges an authorization</span>
+    <span class="comment">// code for a user.</span>
+    <span id="AccessTypeOnline">AccessTypeOnline</span>  <a href="index.html#AuthCodeOption">AuthCodeOption</a> = <a href="index.html#SetAuthURLParam">SetAuthURLParam</a>(&#34;access_type&#34;, &#34;online&#34;)
+    <span id="AccessTypeOffline">AccessTypeOffline</span> <a href="index.html#AuthCodeOption">AuthCodeOption</a> = <a href="index.html#SetAuthURLParam">SetAuthURLParam</a>(&#34;access_type&#34;, &#34;offline&#34;)
+
+    <span class="comment">// ApprovalForce forces the users to view the consent dialog</span>
+    <span class="comment">// and confirm the permissions request at the URL returned</span>
+    <span class="comment">// from AuthCodeURL, even if they&#39;ve already done so.</span>
+    <span id="ApprovalForce">ApprovalForce</span> <a href="index.html#AuthCodeOption">AuthCodeOption</a> = <a href="index.html#SetAuthURLParam">SetAuthURLParam</a>(&#34;approval_prompt&#34;, &#34;force&#34;)
+)</pre>
+				
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="SetAuthURLParam">func <a href="http://localhost:6060/src/golang.org/x/oauth2/oauth2.go?s=3670:3724#L98">SetAuthURLParam</a></h3>
+				<pre>func SetAuthURLParam(key, value <a href="../../../builtin/index.html#string">string</a>) <a href="index.html#AuthCodeOption">AuthCodeOption</a></pre>
+				<p>
+SetAuthURLParam builds an AuthCodeOption which passes key/value parameters
+to a provider&#39;s authorization endpoint.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="Config">type <a href="http://localhost:6060/src/golang.org/x/oauth2/oauth2.go?s=1401:1986#L30">Config</a></h2>
+			<pre>type Config struct {
+    <span class="comment">// ClientID is the application&#39;s ID.</span>
+    ClientID <a href="../../../builtin/index.html#string">string</a>
+
+    <span class="comment">// ClientSecret is the application&#39;s secret.</span>
+    ClientSecret <a href="../../../builtin/index.html#string">string</a>
+
+    <span class="comment">// Endpoint contains the resource server&#39;s token endpoint</span>
+    <span class="comment">// URLs. These are constants specific to each server and are</span>
+    <span class="comment">// often available via site-specific packages, such as</span>
+    <span class="comment">// google.Endpoint or github.Endpoint.</span>
+    Endpoint <a href="index.html#Endpoint">Endpoint</a>
+
+    <span class="comment">// RedirectURL is the URL to redirect users going through</span>
+    <span class="comment">// the OAuth flow, after the resource owner&#39;s URLs.</span>
+    RedirectURL <a href="../../../builtin/index.html#string">string</a>
+
+    <span class="comment">// Scope specifies optional requested permissions.</span>
+    Scopes []<a href="../../../builtin/index.html#string">string</a>
+}</pre>
+			<p>
+Config describes a typical 3-legged OAuth2 flow, with both the
+client application information and the server&#39;s endpoint URLs.
+</p>
+
+
+			
+
+			
+
+			<div id="example_Config" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+conf := &amp;oauth2.Config{
+    ClientID:     &#34;YOUR_CLIENT_ID&#34;,
+    ClientSecret: &#34;YOUR_CLIENT_SECRET&#34;,
+    Scopes:       []string{&#34;SCOPE1&#34;, &#34;SCOPE2&#34;},
+    Endpoint: oauth2.Endpoint{
+        AuthURL:  &#34;https://provider.com/o/oauth2/auth&#34;,
+        TokenURL: &#34;https://provider.com/o/oauth2/token&#34;,
+    },
+}
+
+<span class="comment">// Redirect user to consent page to ask for permission</span>
+<span class="comment">// for the scopes specified above.</span>
+url := conf.AuthCodeURL(&#34;state&#34;, oauth2.AccessTypeOffline)
+fmt.Printf(&#34;Visit the URL for the auth dialog: %v&#34;, url)
+
+<span class="comment">// Use the authorization code that is pushed to the redirect</span>
+<span class="comment">// URL. Exchange will do the handshake to retrieve the</span>
+<span class="comment">// initial access token. The HTTP Client returned by</span>
+<span class="comment">// conf.Client will refresh the token as necessary.</span>
+var code string
+if _, err := fmt.Scan(&amp;code); err != nil {
+    log.Fatal(err)
+}
+tok, err := conf.Exchange(oauth2.NoContext, code)
+if err != nil {
+    log.Fatal(err)
+}
+
+client := conf.Client(oauth2.NoContext, tok)
+client.Get(&#34;...&#34;)
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+			
+
+			
+
+			
+				
+				<h3 id="Config.AuthCodeURL">func (*Config) <a href="http://localhost:6060/src/golang.org/x/oauth2/oauth2.go?s=4248:4321#L112">AuthCodeURL</a></h3>
+				<pre>func (c *<a href="index.html#Config">Config</a>) AuthCodeURL(state <a href="../../../builtin/index.html#string">string</a>, opts ...<a href="index.html#AuthCodeOption">AuthCodeOption</a>) <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+AuthCodeURL returns a URL to OAuth 2.0 provider&#39;s consent page
+that asks for permissions for the required scopes explicitly.
+</p>
+<p>
+State is a token to protect the user from CSRF attacks. You must
+always provide a non-zero string and validate that it matches the
+the state query parameter on your redirect callback.
+See <a href="http://tools.ietf.org/html/rfc6749#section-10.12">http://tools.ietf.org/html/rfc6749#section-10.12</a> for more info.
+</p>
+<p>
+Opts may include AccessTypeOnline or AccessTypeOffline, as well
+as ApprovalForce.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Config.Client">func (*Config) <a href="http://localhost:6060/src/golang.org/x/oauth2/oauth2.go?s=6710:6777#L177">Client</a></h3>
+				<pre>func (c *<a href="index.html#Config">Config</a>) Client(ctx <a href="../net/context/index.html">context</a>.<a href="../net/context/index.html#Context">Context</a>, t *<a href="index.html#Token">Token</a>) *<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Client">Client</a></pre>
+				<p>
+Client returns an HTTP client using the provided token.
+The token will auto-refresh as necessary. The underlying
+HTTP transport will be obtained using the provided context.
+The returned client and its Transport should not be modified.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Config.Exchange">func (*Config) <a href="http://localhost:6060/src/golang.org/x/oauth2/oauth2.go?s=6152:6227#L164">Exchange</a></h3>
+				<pre>func (c *<a href="index.html#Config">Config</a>) Exchange(ctx <a href="../net/context/index.html">context</a>.<a href="../net/context/index.html#Context">Context</a>, code <a href="../../../builtin/index.html#string">string</a>) (*<a href="index.html#Token">Token</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Exchange converts an authorization code into a token.
+</p>
+<p>
+It is used after a resource provider redirects the user back
+to the Redirect URI (the URL obtained from AuthCodeURL).
+</p>
+<p>
+The HTTP client to use is derived from the context.
+If a client is not provided via the context, http.DefaultClient is used.
+</p>
+<p>
+The code will be in the *http.Request.FormValue(&#34;code&#34;). Before
+calling Exchange, be sure to validate FormValue(&#34;state&#34;).
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Config.PasswordCredentialsToken">func (*Config) <a href="http://localhost:6060/src/golang.org/x/oauth2/oauth2.go?s=5397:5502#L145">PasswordCredentialsToken</a></h3>
+				<pre>func (c *<a href="index.html#Config">Config</a>) PasswordCredentialsToken(ctx <a href="../net/context/index.html">context</a>.<a href="../net/context/index.html#Context">Context</a>, username, password <a href="../../../builtin/index.html#string">string</a>) (*<a href="index.html#Token">Token</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+PasswordCredentialsToken converts a resource owner username and password
+pair into a token.
+</p>
+<p>
+Per the RFC, this grant type should only be used &#34;when there is a high
+degree of trust between the resource owner and the client (e.g., the client
+is part of the device operating system or a highly privileged application),
+and when other authorization grant types are not available.&#34;
+See <a href="https://tools.ietf.org/html/rfc6749#section-4.3">https://tools.ietf.org/html/rfc6749#section-4.3</a> for more info.
+</p>
+<p>
+The HTTP client to use is derived from the context.
+If nil, http.DefaultClient is used.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Config.TokenSource">func (*Config) <a href="http://localhost:6060/src/golang.org/x/oauth2/oauth2.go?s=7019:7090#L185">TokenSource</a></h3>
+				<pre>func (c *<a href="index.html#Config">Config</a>) TokenSource(ctx <a href="../net/context/index.html">context</a>.<a href="../net/context/index.html#Context">Context</a>, t *<a href="index.html#Token">Token</a>) <a href="index.html#TokenSource">TokenSource</a></pre>
+				<p>
+TokenSource returns a TokenSource that returns t until t expires,
+automatically refreshing it as necessary using the provided context.
+</p>
+<p>
+Most users will use Config.Client instead.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Endpoint">type <a href="http://localhost:6060/src/golang.org/x/oauth2/oauth2.go?s=2337:2395#L61">Endpoint</a></h2>
+			<pre>type Endpoint struct {
+    AuthURL  <a href="../../../builtin/index.html#string">string</a>
+    TokenURL <a href="../../../builtin/index.html#string">string</a>
+}</pre>
+			<p>
+Endpoint contains the OAuth 2.0 provider&#39;s authorization and token
+endpoint URLs.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Token">type <a href="http://localhost:6060/src/golang.org/x/oauth2/token.go?s=843:1709#L20">Token</a></h2>
+			<pre>type Token struct {
+    <span class="comment">// AccessToken is the token that authorizes and authenticates</span>
+    <span class="comment">// the requests.</span>
+    AccessToken <a href="../../../builtin/index.html#string">string</a> `json:&#34;access_token&#34;`
+
+    <span class="comment">// TokenType is the type of token.</span>
+    <span class="comment">// The Type method returns either this or &#34;Bearer&#34;, the default.</span>
+    TokenType <a href="../../../builtin/index.html#string">string</a> `json:&#34;token_type,omitempty&#34;`
+
+    <span class="comment">// RefreshToken is a token that&#39;s used by the application</span>
+    <span class="comment">// (as opposed to the user) to refresh the access token</span>
+    <span class="comment">// if it expires.</span>
+    RefreshToken <a href="../../../builtin/index.html#string">string</a> `json:&#34;refresh_token,omitempty&#34;`
+
+    <span class="comment">// Expiry is the optional expiration time of the access token.</span>
+    <span class="comment">//</span>
+    <span class="comment">// If zero, TokenSource implementations will reuse the same</span>
+    <span class="comment">// token forever and RefreshToken or equivalent</span>
+    <span class="comment">// mechanisms for that TokenSource will not be used.</span>
+    Expiry <a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Time">Time</a> `json:&#34;expiry,omitempty&#34;`
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Token represents the crendentials used to authorize
+the requests to access protected resources on the OAuth 2.0
+provider&#39;s backend.
+</p>
+<p>
+Most users of this package should not access fields of Token
+directly. They&#39;re exported mostly for use by related packages
+implementing derivative OAuth2 flows.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Token.Extra">func (*Token) <a href="http://localhost:6060/src/golang.org/x/oauth2/token.go?s=2788:2833#L85">Extra</a></h3>
+				<pre>func (t *<a href="index.html#Token">Token</a>) Extra(key <a href="../../../builtin/index.html#string">string</a>) interface{}</pre>
+				<p>
+Extra returns an extra field.
+Extra fields are key-value pairs returned by the server as a
+part of the token retrieval response.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Token.SetAuthHeader">func (*Token) <a href="http://localhost:6060/src/golang.org/x/oauth2/token.go?s=2249:2295#L68">SetAuthHeader</a></h3>
+				<pre>func (t *<a href="index.html#Token">Token</a>) SetAuthHeader(r *<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Request">Request</a>)</pre>
+				<p>
+SetAuthHeader sets the Authorization header to r using the access
+token in t.
+</p>
+<p>
+This method is unnecessary when using Transport or an HTTP Client
+returned by this package.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Token.Type">func (*Token) <a href="http://localhost:6060/src/golang.org/x/oauth2/token.go?s=1768:1797#L47">Type</a></h3>
+				<pre>func (t *<a href="index.html#Token">Token</a>) Type() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+Type returns t.TokenType if non-empty, else &#34;Bearer&#34;.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Token.Valid">func (*Token) <a href="http://localhost:6060/src/golang.org/x/oauth2/token.go?s=3597:3625#L120">Valid</a></h3>
+				<pre>func (t *<a href="index.html#Token">Token</a>) Valid() <a href="../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Valid reports whether t is non-nil, has an AccessToken, and is not expired.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Token.WithExtra">func (*Token) <a href="http://localhost:6060/src/golang.org/x/oauth2/token.go?s=2538:2589#L75">WithExtra</a></h3>
+				<pre>func (t *<a href="index.html#Token">Token</a>) WithExtra(extra interface{}) *<a href="index.html#Token">Token</a></pre>
+				<p>
+WithExtra returns a new Token that&#39;s a clone of t, but using the
+provided raw extra map. This is only intended for use by packages
+implementing derivative OAuth2 flows.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="TokenSource">type <a href="http://localhost:6060/src/golang.org/x/oauth2/oauth2.go?s=2042:2247#L52">TokenSource</a></h2>
+			<pre>type TokenSource interface {
+    <span class="comment">// Token returns a token or an error.</span>
+    <span class="comment">// Token must be safe for concurrent use by multiple goroutines.</span>
+    <span class="comment">// The returned Token must not be modified.</span>
+    Token() (*<a href="index.html#Token">Token</a>, <a href="../../../builtin/index.html#error">error</a>)
+}</pre>
+			<p>
+A TokenSource is anything that can return a token.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="ReuseTokenSource">func <a href="http://localhost:6060/src/golang.org/x/oauth2/oauth2.go?s=10841:10901#L312">ReuseTokenSource</a></h3>
+				<pre>func ReuseTokenSource(t *<a href="index.html#Token">Token</a>, src <a href="index.html#TokenSource">TokenSource</a>) <a href="index.html#TokenSource">TokenSource</a></pre>
+				<p>
+ReuseTokenSource returns a TokenSource which repeatedly returns the
+same token as long as it&#39;s valid, starting with t.
+When its cached token is invalid, a new token is obtained from src.
+</p>
+<p>
+ReuseTokenSource is typically used to reuse tokens from a cache
+(such as a file on disk) between runs of a program, rather than
+obtaining new tokens unnecessarily.
+</p>
+<p>
+The initial token t may be nil, in which case the TokenSource is
+wrapped in a caching version if it isn&#39;t one already. This also
+means it&#39;s always safe to wrap ReuseTokenSource around any other
+TokenSource without adverse effects.
+</p>
+
+				
+				
+			
+				
+				<h3 id="StaticTokenSource">func <a href="http://localhost:6060/src/golang.org/x/oauth2/oauth2.go?s=9106:9150#L261">StaticTokenSource</a></h3>
+				<pre>func StaticTokenSource(t *<a href="index.html#Token">Token</a>) <a href="index.html#TokenSource">TokenSource</a></pre>
+				<p>
+StaticTokenSource returns a TokenSource that always returns the same token.
+Because the provided token t is never refreshed, StaticTokenSource is only
+useful for tokens that never expire.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="Transport">type <a href="http://localhost:6060/src/golang.org/x/oauth2/transport.go?s=518:901#L10">Transport</a></h2>
+			<pre>type Transport struct {
+    <span class="comment">// Source supplies the token to add to outgoing requests&#39;</span>
+    <span class="comment">// Authorization headers.</span>
+    Source <a href="index.html#TokenSource">TokenSource</a>
+
+    <span class="comment">// Base is the base RoundTripper used to make HTTP requests.</span>
+    <span class="comment">// If nil, http.DefaultTransport is used.</span>
+    Base <a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#RoundTripper">RoundTripper</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Transport is an http.RoundTripper that makes OAuth 2.0 HTTP requests,
+wrapping a base RoundTripper and adding an Authorization header
+with a token from the supplied Sources.
+</p>
+<p>
+Transport is a low-level mechanism. Most code will use the
+higher-level Config.Client method instead.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Transport.CancelRequest">func (*Transport) <a href="http://localhost:6060/src/golang.org/x/oauth2/transport.go?s=1679:1731#L51">CancelRequest</a></h3>
+				<pre>func (t *<a href="index.html#Transport">Transport</a>) CancelRequest(req *<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Request">Request</a>)</pre>
+				<p>
+CancelRequest cancels an in-flight request by closing its connection.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Transport.RoundTrip">func (*Transport) <a href="http://localhost:6060/src/golang.org/x/oauth2/transport.go?s=1061:1133#L26">RoundTrip</a></h3>
+				<pre>func (t *<a href="index.html#Transport">Transport</a>) RoundTrip(req *<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Request">Request</a>) (*<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Response">Response</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+RoundTrip authorizes and authenticates the request with an
+access token. If no token exists or token is expired,
+tries to refresh/fetch a new token.
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+
+
+	<div class="pkg-dir">
+		<table>
+			<tr>
+				<th class="pkg-name">Name</th>
+				<th class="pkg-synopsis">Synopsis</th>
+			</tr>
+
+			
+			<tr>
+				<td colspan="2"><a href="../index.html">..</a></td>
+			</tr>
+			
+
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="bitbucket/index.html">bitbucket</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package bitbucket provides constants for using OAuth2 to access Bitbucket.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="clientcredentials/index.html">clientcredentials</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package clientcredentials implements the OAuth2.0 &#34;client credentials&#34; token flow, also known as the &#34;two-legged OAuth 2.0&#34;.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="facebook/index.html">facebook</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package facebook provides constants for using OAuth2 to access Facebook.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="fitbit/index.html">fitbit</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package fitbit provides constants for using OAuth2 to access the Fitbit API.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="github/index.html">github</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package github provides constants for using OAuth2 to access Github.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="google/index.html">google</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package google provides support for making OAuth2 authorized and authenticated HTTP requests to Google APIs.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="hipchat/index.html">hipchat</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package hipchat provides constants for using OAuth2 to access HipChat.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="jws/index.html">jws</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package jws provides encoding and decoding utilities for signed JWS messages.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="jwt/index.html">jwt</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package jwt implements the OAuth 2.0 JSON Web Token flow, commonly known as &#34;two-legged OAuth 2.0&#34;.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="linkedin/index.html">linkedin</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package linkedin provides constants for using OAuth2 to access LinkedIn.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="microsoft/index.html">microsoft</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package microsoft provides constants for using OAuth2 to access Windows Live ID.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="odnoklassniki/index.html">odnoklassniki</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package odnoklassniki provides constants for using OAuth2 to access Odnoklassniki.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="paypal/index.html">paypal</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package paypal provides constants for using OAuth2 to access PayPal.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="slack/index.html">slack</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package slack provides constants for using OAuth2 to access Slack.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="vk/index.html">vk</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package vk provides constants for using OAuth2 to access VK.com.
+						</td>
+					</tr>
+				
+			
+		</table>
+	</div>
+
+
+	
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

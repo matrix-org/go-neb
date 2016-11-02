@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>query - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package query</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/google/go-querystring/query"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package query implements encoding of structs into URL query parameters.
+</p>
+<p>
+As a simple example:
+</p>
+<pre>type Options struct {
+	Query   string `url:&#34;q&#34;`
+	ShowAll bool   `url:&#34;all&#34;`
+	Page    int    `url:&#34;page&#34;`
+}
+
+opt := Options{ &#34;foo&#34;, true, 2 }
+v, _ := query.Values(opt)
+fmt.Print(v.Encode()) // will output: &#34;q=foo&amp;all=true&amp;page=2&#34;
+</pre>
+<p>
+The exact mapping between Go values and url.Values is described in the
+documentation for the Values() function.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+				
+				<dd><a href="index.html#Values">func Values(v interface{}) (url.Values, error)</a></dd>
+			
+			
+				
+				<dd><a href="index.html#Encoder">type Encoder</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/google/go-querystring/query/encode.go">encode.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+			
+			
+			<h2 id="Values">func <a href="http://localhost:6060/src/github.com/google/go-querystring/query/encode.go?s=4057:4103#L103">Values</a></h2>
+			<pre>func Values(v interface{}) (<a href="../../../../net/url/index.html">url</a>.<a href="../../../../net/url/index.html#Values">Values</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+Values returns the url.Values encoding of v.
+</p>
+<p>
+Values expects to be passed a struct, and traverses it recursively using the
+following encoding rules.
+</p>
+<p>
+Each exported struct field is encoded as a URL parameter unless
+</p>
+<pre>- the field&#39;s tag is &#34;-&#34;, or
+- the field is empty and its tag specifies the &#34;omitempty&#34; option
+</pre>
+<p>
+The empty values are false, 0, any nil pointer or interface value, any array
+slice, map, or string of length zero, and any time.Time that returns true
+for IsZero().
+</p>
+<p>
+The URL parameter name defaults to the struct field name but can be
+specified in the struct field&#39;s tag value.  The &#34;url&#34; key in the struct
+field&#39;s tag value is the key name, followed by an optional comma and
+options.  For example:
+</p>
+<pre>// Field is ignored by this package.
+Field int `url:&#34;-&#34;`
+
+// Field appears as URL parameter &#34;myName&#34;.
+Field int `url:&#34;myName&#34;`
+
+// Field appears as URL parameter &#34;myName&#34; and the field is omitted if
+// its value is empty
+Field int `url:&#34;myName,omitempty&#34;`
+
+// Field appears as URL parameter &#34;Field&#34; (the default), but the field
+// is skipped if empty.  Note the leading comma.
+Field int `url:&#34;,omitempty&#34;`
+</pre>
+<p>
+For encoding individual field values, the following type-dependent rules
+apply:
+</p>
+<p>
+Boolean values default to encoding as the strings &#34;true&#34; or &#34;false&#34;.
+Including the &#34;int&#34; option signals that the field should be encoded as the
+strings &#34;1&#34; or &#34;0&#34;.
+</p>
+<p>
+time.Time values default to encoding as RFC3339 timestamps.  Including the
+&#34;unix&#34; option signals that the field should be encoded as a Unix time (see
+time.Unix())
+</p>
+<p>
+Slice and Array values default to encoding as multiple URL values of the
+same name.  Including the &#34;comma&#34; option signals that the field should be
+encoded as a single comma-delimited value.  Including the &#34;space&#34; option
+similarly encodes the value as a single space-delimited string. Including
+the &#34;semicolon&#34; option will encode the value as a semicolon-delimited string.
+Including the &#34;brackets&#34; option signals that the multiple URL values should
+have &#34;[]&#34; appended to the value name. &#34;numbered&#34; will append a number to
+the end of each incidence of the value name, example:
+name0=value0&amp;name1=value1, etc.
+</p>
+<p>
+Anonymous struct fields are usually encoded as if their inner exported
+fields were fields in the outer struct, subject to the standard Go
+visibility rules.  An anonymous struct field with a name given in its URL
+tag is treated as having that name, rather than being anonymous.
+</p>
+<p>
+Non-nil pointer values are encoded as the value pointed to.
+</p>
+<p>
+Nested structs are encoded including parent fields in value names for
+scoping. e.g:
+</p>
+<pre>&#34;user[name]=acme&amp;user[addr][postcode]=1234&amp;user[addr][city]=SFO&#34;
+</pre>
+<p>
+All other values are encoded using their default string representation.
+</p>
+<p>
+Multiple fields that encode to the same URL parameter name will be included
+as multiple URL values of the same name.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="Encoder">type <a href="http://localhost:6060/src/github.com/google/go-querystring/query/encode.go?s=965:1038#L29">Encoder</a></h2>
+			<pre>type Encoder interface {
+    EncodeValues(key <a href="../../../../builtin/index.html#string">string</a>, v *<a href="../../../../net/url/index.html">url</a>.<a href="../../../../net/url/index.html#Values">Values</a>) <a href="../../../../builtin/index.html#error">error</a>
+}</pre>
+			<p>
+Encoder is an interface implemented by any type that wishes to encode
+itself into URL values in a non-standard way.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

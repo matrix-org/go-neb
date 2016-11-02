@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>btree - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package btree</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/google/btree"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+				<dd><a href="index.html#pkg-examples" class="examplesLink">Examples</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package btree implements in-memory B-Trees of arbitrary degree.
+</p>
+<p>
+btree implements an in-memory B-Tree for use as an ordered data structure.
+It is not meant for persistent storage solutions.
+</p>
+<p>
+It has a flatter structure than an equivalent red-black or other binary tree,
+which in some cases yields better memory usage and/or performance.
+See some discussion on the matter here:
+</p>
+<pre><a href="http://google-opensource.blogspot.com/2013/01/c-containers-that-save-memory-and-time.html">http://google-opensource.blogspot.com/2013/01/c-containers-that-save-memory-and-time.html</a>
+</pre>
+<p>
+Note, though, that this project is in no way related to the C++ B-Tree
+implementation written about there.
+</p>
+<p>
+Within this tree, each node contains a slice of items and a (possibly nil)
+slice of children.  For basic numeric values or raw structs, this can cause
+efficiency differences when compared to equivalent C++ template code that
+stores values in arrays within the node:
+</p>
+<pre>* Due to the overhead of storing values as interfaces (each
+  value needs to be stored as the value itself, then 2 words for the
+  interface pointing to that value and its type), resulting in higher
+  memory use.
+* Since interfaces can point to values anywhere in memory, values are
+  most likely not stored in contiguous blocks, resulting in a higher
+  number of cache misses.
+</pre>
+<p>
+These issues don&#39;t tend to matter, though, when working with strings or other
+heap-allocated structures, since C++-equivalent structures also must store
+pointers and also distribute their values across the heap.
+</p>
+<p>
+This implementation is designed to be a drop-in replacement to gollrb.LLRB
+trees, (<a href="http://github.com/petar/gollrb">http://github.com/petar/gollrb</a>), an excellent and probably the most
+widely used ordered tree implementation in the Go ecosystem currently.
+Its functions, therefore, exactly mirror those of
+llrb.LLRB where possible.  Unlike gollrb, though, we currently don&#39;t
+support storing multiple equivalent values.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="index.html#pkg-constants">Constants</a></dd>
+			
+			
+			
+			
+				
+				<dd><a href="index.html#BTree">type BTree</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#New">func New(degree int) *BTree</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewWithFreeList">func NewWithFreeList(degree int, f *FreeList) *BTree</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BTree.Ascend">func (t *BTree) Ascend(iterator ItemIterator)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BTree.AscendGreaterOrEqual">func (t *BTree) AscendGreaterOrEqual(pivot Item, iterator ItemIterator)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BTree.AscendLessThan">func (t *BTree) AscendLessThan(pivot Item, iterator ItemIterator)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BTree.AscendRange">func (t *BTree) AscendRange(greaterOrEqual, lessThan Item, iterator ItemIterator)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BTree.Delete">func (t *BTree) Delete(item Item) Item</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BTree.DeleteMax">func (t *BTree) DeleteMax() Item</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BTree.DeleteMin">func (t *BTree) DeleteMin() Item</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BTree.Descend">func (t *BTree) Descend(iterator ItemIterator)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BTree.DescendGreaterThan">func (t *BTree) DescendGreaterThan(pivot Item, iterator ItemIterator)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BTree.DescendLessOrEqual">func (t *BTree) DescendLessOrEqual(pivot Item, iterator ItemIterator)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BTree.DescendRange">func (t *BTree) DescendRange(lessOrEqual, greaterThan Item, iterator ItemIterator)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BTree.Get">func (t *BTree) Get(key Item) Item</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BTree.Has">func (t *BTree) Has(key Item) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BTree.Len">func (t *BTree) Len() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BTree.Max">func (t *BTree) Max() Item</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BTree.Min">func (t *BTree) Min() Item</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BTree.ReplaceOrInsert">func (t *BTree) ReplaceOrInsert(item Item) Item</a></dd>
+				
+			
+				
+				<dd><a href="index.html#FreeList">type FreeList</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewFreeList">func NewFreeList(size int) *FreeList</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Int">type Int</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Int.Less">func (a Int) Less(b Item) bool</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Item">type Item</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ItemIterator">type ItemIterator</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+		<div id="pkg-examples">
+			<h4>Examples</h4>
+			<dl>
+			
+			<dd><a class="exampleLink" href="index.html#example_BTree">BTree</a></dd>
+			
+			</dl>
+		</div>
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/google/btree/btree.go">btree.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const (
+    <span id="DefaultFreeListSize">DefaultFreeListSize</span> = 32
+)</pre>
+				
+			
+		
+		
+		
+		
+			
+			
+			<h2 id="BTree">type <a href="http://localhost:6060/src/github.com/google/btree/btree.go?s=15979:16064#L527">BTree</a></h2>
+			<pre>type BTree struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+BTree is an implementation of a B-Tree.
+</p>
+<p>
+BTree stores Item instances in an ordered structure, allowing easy insertion,
+removal, and iteration.
+</p>
+<p>
+Write operations are not safe for concurrent mutation by multiple
+goroutines, but Read operations are.
+</p>
+
+
+			
+
+			
+
+			<div id="example_BTree" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">tr := New(*btreeDegree)
+for i := Int(0); i &lt; 10; i++ {
+    tr.ReplaceOrInsert(i)
+}
+fmt.Println(&#34;len:       &#34;, tr.Len())
+fmt.Println(&#34;get3:      &#34;, tr.Get(Int(3)))
+fmt.Println(&#34;get100:    &#34;, tr.Get(Int(100)))
+fmt.Println(&#34;del4:      &#34;, tr.Delete(Int(4)))
+fmt.Println(&#34;del100:    &#34;, tr.Delete(Int(100)))
+fmt.Println(&#34;replace5:  &#34;, tr.ReplaceOrInsert(Int(5)))
+fmt.Println(&#34;replace100:&#34;, tr.ReplaceOrInsert(Int(100)))
+fmt.Println(&#34;min:       &#34;, tr.Min())
+fmt.Println(&#34;delmin:    &#34;, tr.DeleteMin())
+fmt.Println(&#34;max:       &#34;, tr.Max())
+fmt.Println(&#34;delmax:    &#34;, tr.DeleteMax())
+fmt.Println(&#34;len:       &#34;, tr.Len())
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">len:        10
+get3:       3
+get100:     &lt;nil&gt;
+del4:       4
+del100:     &lt;nil&gt;
+replace5:   5
+replace100: &lt;nil&gt;
+min:        0
+delmin:     0
+max:        100
+delmax:     100
+len:        8
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+			
+
+			
+				
+				<h3 id="New">func <a href="http://localhost:6060/src/github.com/google/btree/btree.go?s=4217:4244#L106">New</a></h3>
+				<pre>func New(degree <a href="../../../builtin/index.html#int">int</a>) *<a href="index.html#BTree">BTree</a></pre>
+				<p>
+New creates a new B-Tree with the given degree.
+</p>
+<p>
+New(2), for example, will create a 2-3-4 tree (each node contains 1-3 items
+and 2-4 children).
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewWithFreeList">func <a href="http://localhost:6060/src/github.com/google/btree/btree.go?s=4392:4444#L111">NewWithFreeList</a></h3>
+				<pre>func NewWithFreeList(degree <a href="../../../builtin/index.html#int">int</a>, f *<a href="index.html#FreeList">FreeList</a>) *<a href="index.html#BTree">BTree</a></pre>
+				<p>
+NewWithFreeList creates a new B-Tree that uses the given node free list.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="BTree.Ascend">func (*BTree) <a href="http://localhost:6060/src/github.com/google/btree/btree.go?s=19353:19398#L650">Ascend</a></h3>
+				<pre>func (t *<a href="index.html#BTree">BTree</a>) Ascend(iterator <a href="index.html#ItemIterator">ItemIterator</a>)</pre>
+				<p>
+Ascend calls the iterator for every value in the tree within the range
+[first, last], until iterator returns false.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BTree.AscendGreaterOrEqual">func (*BTree) <a href="http://localhost:6060/src/github.com/google/btree/btree.go?s=19063:19134#L641">AscendGreaterOrEqual</a></h3>
+				<pre>func (t *<a href="index.html#BTree">BTree</a>) AscendGreaterOrEqual(pivot <a href="index.html#Item">Item</a>, iterator <a href="index.html#ItemIterator">ItemIterator</a>)</pre>
+				<p>
+AscendGreaterOrEqual calls the iterator for every value in the tree within
+the range [pivot, last], until iterator returns false.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BTree.AscendLessThan">func (*BTree) <a href="http://localhost:6060/src/github.com/google/btree/btree.go?s=18764:18829#L632">AscendLessThan</a></h3>
+				<pre>func (t *<a href="index.html#BTree">BTree</a>) AscendLessThan(pivot <a href="index.html#Item">Item</a>, iterator <a href="index.html#ItemIterator">ItemIterator</a>)</pre>
+				<p>
+AscendLessThan calls the iterator for every value in the tree within the range
+[first, pivot), until iterator returns false.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BTree.AscendRange">func (*BTree) <a href="http://localhost:6060/src/github.com/google/btree/btree.go?s=18441:18522#L623">AscendRange</a></h3>
+				<pre>func (t *<a href="index.html#BTree">BTree</a>) AscendRange(greaterOrEqual, lessThan <a href="index.html#Item">Item</a>, iterator <a href="index.html#ItemIterator">ItemIterator</a>)</pre>
+				<p>
+AscendRange calls the iterator for every value in the tree within the range
+[greaterOrEqual, lessThan), until iterator returns false.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BTree.Delete">func (*BTree) <a href="http://localhost:6060/src/github.com/google/btree/btree.go?s=17507:17545#L589">Delete</a></h3>
+				<pre>func (t *<a href="index.html#BTree">BTree</a>) Delete(item <a href="index.html#Item">Item</a>) <a href="index.html#Item">Item</a></pre>
+				<p>
+Delete removes an item equal to the passed in item from the tree, returning
+it.  If no such item exists, returns nil.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BTree.DeleteMax">func (*BTree) <a href="http://localhost:6060/src/github.com/google/btree/btree.go?s=17878:17910#L601">DeleteMax</a></h3>
+				<pre>func (t *<a href="index.html#BTree">BTree</a>) DeleteMax() <a href="index.html#Item">Item</a></pre>
+				<p>
+DeleteMax removes the largest item in the tree and returns it.
+If no such item exists, returns nil.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BTree.DeleteMin">func (*BTree) <a href="http://localhost:6060/src/github.com/google/btree/btree.go?s=17697:17729#L595">DeleteMin</a></h3>
+				<pre>func (t *<a href="index.html#BTree">BTree</a>) DeleteMin() <a href="index.html#Item">Item</a></pre>
+				<p>
+DeleteMin removes the smallest item in the tree and returns it.
+If no such item exists, returns nil.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BTree.Descend">func (*BTree) <a href="http://localhost:6060/src/github.com/google/btree/btree.go?s=20556:20602#L686">Descend</a></h3>
+				<pre>func (t *<a href="index.html#BTree">BTree</a>) Descend(iterator <a href="index.html#ItemIterator">ItemIterator</a>)</pre>
+				<p>
+Descend calls the iterator for every value in the tree within the range
+[last, first], until iterator returns false.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BTree.DescendGreaterThan">func (*BTree) <a href="http://localhost:6060/src/github.com/google/btree/btree.go?s=20265:20334#L677">DescendGreaterThan</a></h3>
+				<pre>func (t *<a href="index.html#BTree">BTree</a>) DescendGreaterThan(pivot <a href="index.html#Item">Item</a>, iterator <a href="index.html#ItemIterator">ItemIterator</a>)</pre>
+				<p>
+DescendGreaterThan calls the iterator for every value in the tree within
+the range (pivot, last], until iterator returns false.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BTree.DescendLessOrEqual">func (*BTree) <a href="http://localhost:6060/src/github.com/google/btree/btree.go?s=19964:20033#L668">DescendLessOrEqual</a></h3>
+				<pre>func (t *<a href="index.html#BTree">BTree</a>) DescendLessOrEqual(pivot <a href="index.html#Item">Item</a>, iterator <a href="index.html#ItemIterator">ItemIterator</a>)</pre>
+				<p>
+DescendLessOrEqual calls the iterator for every value in the tree within the range
+[pivot, first], until iterator returns false.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BTree.DescendRange">func (*BTree) <a href="http://localhost:6060/src/github.com/google/btree/btree.go?s=19635:19717#L659">DescendRange</a></h3>
+				<pre>func (t *<a href="index.html#BTree">BTree</a>) DescendRange(lessOrEqual, greaterThan <a href="index.html#Item">Item</a>, iterator <a href="index.html#ItemIterator">ItemIterator</a>)</pre>
+				<p>
+DescendRange calls the iterator for every value in the tree within the range
+[lessOrEqual, greaterThan), until iterator returns false.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BTree.Get">func (*BTree) <a href="http://localhost:6060/src/github.com/google/btree/btree.go?s=20804:20838#L695">Get</a></h3>
+				<pre>func (t *<a href="index.html#BTree">BTree</a>) Get(key <a href="index.html#Item">Item</a>) <a href="index.html#Item">Item</a></pre>
+				<p>
+Get looks for the key item in the tree, returning it.  It returns nil if
+unable to find that item.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BTree.Has">func (*BTree) <a href="http://localhost:6060/src/github.com/google/btree/btree.go?s=21210:21244#L713">Has</a></h3>
+				<pre>func (t *<a href="index.html#BTree">BTree</a>) Has(key <a href="index.html#Item">Item</a>) <a href="../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Has returns true if the given key is in the tree.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BTree.Len">func (*BTree) <a href="http://localhost:6060/src/github.com/google/btree/btree.go?s=21334:21359#L718">Len</a></h3>
+				<pre>func (t *<a href="index.html#BTree">BTree</a>) Len() <a href="../../../builtin/index.html#int">int</a></pre>
+				<p>
+Len returns the number of items currently in the tree.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BTree.Max">func (*BTree) <a href="http://localhost:6060/src/github.com/google/btree/btree.go?s=21105:21131#L708">Max</a></h3>
+				<pre>func (t *<a href="index.html#BTree">BTree</a>) Max() <a href="index.html#Item">Item</a></pre>
+				<p>
+Max returns the largest item in the tree, or nil if the tree is empty.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BTree.Min">func (*BTree) <a href="http://localhost:6060/src/github.com/google/btree/btree.go?s=20979:21005#L703">Min</a></h3>
+				<pre>func (t *<a href="index.html#BTree">BTree</a>) Min() <a href="index.html#Item">Item</a></pre>
+				<p>
+Min returns the smallest item in the tree, or nil if the tree is empty.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BTree.ReplaceOrInsert">func (*BTree) <a href="http://localhost:6060/src/github.com/google/btree/btree.go?s=16819:16866#L564">ReplaceOrInsert</a></h3>
+				<pre>func (t *<a href="index.html#BTree">BTree</a>) ReplaceOrInsert(item <a href="index.html#Item">Item</a>) <a href="index.html#Item">Item</a></pre>
+				<p>
+ReplaceOrInsert adds the given item to the tree.  If an item in the tree
+already equals the given one, it is removed from the tree and returned.
+Otherwise, nil is returned.
+</p>
+<p>
+nil cannot be added to the tree (will panic).
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="FreeList">type <a href="http://localhost:6060/src/github.com/google/btree/btree.go?s=3258:3300#L70">FreeList</a></h2>
+			<pre>type FreeList struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+FreeList represents a free list of btree nodes. By default each
+BTree has its own FreeList, but multiple BTrees can share the same
+FreeList.
+Two Btrees using the same freelist are not safe for concurrent write access.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewFreeList">func <a href="http://localhost:6060/src/github.com/google/btree/btree.go?s=3397:3433#L76">NewFreeList</a></h3>
+				<pre>func NewFreeList(size <a href="../../../builtin/index.html#int">int</a>) *<a href="index.html#FreeList">FreeList</a></pre>
+				<p>
+NewFreeList creates a new free list.
+size is the maximum size of the returned free list.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="Int">type <a href="http://localhost:6060/src/github.com/google/btree/btree.go?s=21433:21445#L723">Int</a></h2>
+			<pre>type Int <a href="../../../builtin/index.html#int">int</a></pre>
+			<p>
+Int implements the Item interface for integers.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Int.Less">func (Int) <a href="http://localhost:6060/src/github.com/google/btree/btree.go?s=21488:21518#L726">Less</a></h3>
+				<pre>func (a <a href="index.html#Int">Int</a>) Less(b <a href="index.html#Item">Item</a>) <a href="../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Less returns true if int(a) &lt; int(b).
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Item">type <a href="http://localhost:6060/src/github.com/google/btree/btree.go?s=2623:2915#L48">Item</a></h2>
+			<pre>type Item interface {
+    <span class="comment">// Less tests whether the current item is less than the given argument.</span>
+    <span class="comment">//</span>
+    <span class="comment">// This must provide a strict weak ordering.</span>
+    <span class="comment">// If !a.Less(b) &amp;&amp; !b.Less(a), we treat this to mean a == b (i.e. we can only</span>
+    <span class="comment">// hold one of either a or b in the tree).</span>
+    Less(than <a href="index.html#Item">Item</a>) <a href="../../../builtin/index.html#bool">bool</a>
+}</pre>
+			<p>
+Item represents a single object in the tree.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ItemIterator">type <a href="http://localhost:6060/src/github.com/google/btree/btree.go?s=4025:4060#L100">ItemIterator</a></h2>
+			<pre>type ItemIterator func(i <a href="index.html#Item">Item</a>) <a href="../../../builtin/index.html#bool">bool</a></pre>
+			<p>
+ItemIterator allows callers of Ascend* to iterate in-order over portions of
+the tree.  When this function returns false, iteration will stop and the
+associated Ascend* function will immediately return.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

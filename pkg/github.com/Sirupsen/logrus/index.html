@@ -1,0 +1,2160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>logrus - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package logrus</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/Sirupsen/logrus"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-subdirectories">Subdirectories</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package logrus is a structured logger for Go, completely API compatible with the standard library logger.
+</p>
+<p>
+The simplest way to use Logrus is simply the package-level exported logger:
+</p>
+<pre>package main
+
+import (
+  log &#34;github.com/Sirupsen/logrus&#34;
+)
+
+func main() {
+  log.WithFields(log.Fields{
+    &#34;animal&#34;: &#34;walrus&#34;,
+    &#34;number&#34;: 1,
+    &#34;size&#34;:   10,
+  }).Info(&#34;A walrus appears&#34;)
+}
+</pre>
+<p>
+Output:
+</p>
+<pre>time=&#34;2015-09-07T08:48:33Z&#34; level=info msg=&#34;A walrus appears&#34; animal=walrus number=1 size=10
+</pre>
+<p>
+For a full guide visit <a href="https://github.com/Sirupsen/logrus">https://github.com/Sirupsen/logrus</a>
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="index.html#pkg-constants">Constants</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+				
+				<dd><a href="index.html#AddHook">func AddHook(hook Hook)</a></dd>
+			
+				
+				<dd><a href="index.html#Debug">func Debug(args ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#Debugf">func Debugf(format string, args ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#Debugln">func Debugln(args ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#Error">func Error(args ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#Errorf">func Errorf(format string, args ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#Errorln">func Errorln(args ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#Exit">func Exit(code int)</a></dd>
+			
+				
+				<dd><a href="index.html#Fatal">func Fatal(args ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#Fatalf">func Fatalf(format string, args ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#Fatalln">func Fatalln(args ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#Info">func Info(args ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#Infof">func Infof(format string, args ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#Infoln">func Infoln(args ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#IsTerminal">func IsTerminal() bool</a></dd>
+			
+				
+				<dd><a href="index.html#Panic">func Panic(args ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#Panicf">func Panicf(format string, args ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#Panicln">func Panicln(args ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#Print">func Print(args ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#Printf">func Printf(format string, args ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#Println">func Println(args ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#RegisterExitHandler">func RegisterExitHandler(handler func())</a></dd>
+			
+				
+				<dd><a href="index.html#SetFormatter">func SetFormatter(formatter Formatter)</a></dd>
+			
+				
+				<dd><a href="index.html#SetLevel">func SetLevel(level Level)</a></dd>
+			
+				
+				<dd><a href="index.html#SetOutput">func SetOutput(out io.Writer)</a></dd>
+			
+				
+				<dd><a href="index.html#Warn">func Warn(args ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#Warnf">func Warnf(format string, args ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#Warning">func Warning(args ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#Warningf">func Warningf(format string, args ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#Warningln">func Warningln(args ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#Warnln">func Warnln(args ...interface{})</a></dd>
+			
+			
+				
+				<dd><a href="index.html#Entry">type Entry</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewEntry">func NewEntry(logger *Logger) *Entry</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#WithError">func WithError(err error) *Entry</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#WithField">func WithField(key string, value interface{}) *Entry</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#WithFields">func WithFields(fields Fields) *Entry</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Entry.Debug">func (entry *Entry) Debug(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Entry.Debugf">func (entry *Entry) Debugf(format string, args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Entry.Debugln">func (entry *Entry) Debugln(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Entry.Error">func (entry *Entry) Error(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Entry.Errorf">func (entry *Entry) Errorf(format string, args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Entry.Errorln">func (entry *Entry) Errorln(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Entry.Fatal">func (entry *Entry) Fatal(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Entry.Fatalf">func (entry *Entry) Fatalf(format string, args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Entry.Fatalln">func (entry *Entry) Fatalln(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Entry.Info">func (entry *Entry) Info(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Entry.Infof">func (entry *Entry) Infof(format string, args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Entry.Infoln">func (entry *Entry) Infoln(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Entry.Panic">func (entry *Entry) Panic(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Entry.Panicf">func (entry *Entry) Panicf(format string, args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Entry.Panicln">func (entry *Entry) Panicln(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Entry.Print">func (entry *Entry) Print(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Entry.Printf">func (entry *Entry) Printf(format string, args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Entry.Println">func (entry *Entry) Println(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Entry.Reader">func (entry *Entry) Reader() (*bytes.Buffer, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Entry.String">func (entry *Entry) String() (string, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Entry.Warn">func (entry *Entry) Warn(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Entry.Warnf">func (entry *Entry) Warnf(format string, args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Entry.Warning">func (entry *Entry) Warning(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Entry.Warningf">func (entry *Entry) Warningf(format string, args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Entry.Warningln">func (entry *Entry) Warningln(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Entry.Warnln">func (entry *Entry) Warnln(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Entry.WithError">func (entry *Entry) WithError(err error) *Entry</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Entry.WithField">func (entry *Entry) WithField(key string, value interface{}) *Entry</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Entry.WithFields">func (entry *Entry) WithFields(fields Fields) *Entry</a></dd>
+				
+			
+				
+				<dd><a href="index.html#FieldLogger">type FieldLogger</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Fields">type Fields</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Formatter">type Formatter</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Hook">type Hook</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#JSONFormatter">type JSONFormatter</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#JSONFormatter.Format">func (f *JSONFormatter) Format(entry *Entry) ([]byte, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Level">type Level</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#GetLevel">func GetLevel() Level</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ParseLevel">func ParseLevel(lvl string) (Level, error)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Level.String">func (level Level) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#LevelHooks">type LevelHooks</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LevelHooks.Add">func (hooks LevelHooks) Add(hook Hook)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LevelHooks.Fire">func (hooks LevelHooks) Fire(level Level, entry *Entry) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Logger">type Logger</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#New">func New() *Logger</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#StandardLogger">func StandardLogger() *Logger</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Debug">func (logger *Logger) Debug(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Debugf">func (logger *Logger) Debugf(format string, args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Debugln">func (logger *Logger) Debugln(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Error">func (logger *Logger) Error(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Errorf">func (logger *Logger) Errorf(format string, args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Errorln">func (logger *Logger) Errorln(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Fatal">func (logger *Logger) Fatal(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Fatalf">func (logger *Logger) Fatalf(format string, args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Fatalln">func (logger *Logger) Fatalln(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Info">func (logger *Logger) Info(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Infof">func (logger *Logger) Infof(format string, args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Infoln">func (logger *Logger) Infoln(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Panic">func (logger *Logger) Panic(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Panicf">func (logger *Logger) Panicf(format string, args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Panicln">func (logger *Logger) Panicln(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Print">func (logger *Logger) Print(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Printf">func (logger *Logger) Printf(format string, args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Println">func (logger *Logger) Println(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Warn">func (logger *Logger) Warn(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Warnf">func (logger *Logger) Warnf(format string, args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Warning">func (logger *Logger) Warning(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Warningf">func (logger *Logger) Warningf(format string, args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Warningln">func (logger *Logger) Warningln(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Warnln">func (logger *Logger) Warnln(args ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.WithError">func (logger *Logger) WithError(err error) *Entry</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.WithField">func (logger *Logger) WithField(key string, value interface{}) *Entry</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.WithFields">func (logger *Logger) WithFields(fields Fields) *Entry</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Writer">func (logger *Logger) Writer() *io.PipeWriter</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.WriterLevel">func (logger *Logger) WriterLevel(level Level) *io.PipeWriter</a></dd>
+				
+			
+				
+				<dd><a href="index.html#StdLogger">type StdLogger</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Termios">type Termios</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#TextFormatter">type TextFormatter</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#TextFormatter.Format">func (f *TextFormatter) Format(entry *Entry) ([]byte, error)</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/Sirupsen/logrus/alt_exit.go">alt_exit.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/Sirupsen/logrus/doc.go">doc.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go">entry.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go">exported.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/Sirupsen/logrus/formatter.go">formatter.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/Sirupsen/logrus/hooks.go">hooks.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/Sirupsen/logrus/json_formatter.go">json_formatter.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logger.go">logger.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logrus.go">logrus.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/Sirupsen/logrus/terminal_linux.go">terminal_linux.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/Sirupsen/logrus/terminal_notwindows.go">terminal_notwindows.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/Sirupsen/logrus/text_formatter.go">text_formatter.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/Sirupsen/logrus/writer.go">writer.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const <span id="DefaultTimestampFormat">DefaultTimestampFormat</span> = <a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#RFC3339">RFC3339</a></pre>
+				
+			
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var <span id="AllLevels">AllLevels</span> = []<a href="index.html#Level">Level</a>{
+    <a href="index.html#PanicLevel">PanicLevel</a>,
+    <a href="index.html#FatalLevel">FatalLevel</a>,
+    <a href="index.html#ErrorLevel">ErrorLevel</a>,
+    <a href="index.html#WarnLevel">WarnLevel</a>,
+    <a href="index.html#InfoLevel">InfoLevel</a>,
+    <a href="index.html#DebugLevel">DebugLevel</a>,
+}</pre>
+				<p>
+A constant exposing all logging levels
+</p>
+
+			
+				<pre>var <span id="ErrorKey">ErrorKey</span> = &#34;error&#34;</pre>
+				<p>
+Defines the key when adding errors using WithError.
+</p>
+
+			
+		
+		
+			
+			
+			<h2 id="AddHook">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=773:796#L35">AddHook</a></h2>
+			<pre>func AddHook(hook <a href="index.html#Hook">Hook</a>)</pre>
+			<p>
+AddHook adds a hook to the standard logger hooks.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Debug">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=1816:1847#L66">Debug</a></h2>
+			<pre>func Debug(args ...interface{})</pre>
+			<p>
+Debug logs a message at level Debug on the standard logger.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Debugf">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=2773:2820#L106">Debugf</a></h2>
+			<pre>func Debugf(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})</pre>
+			<p>
+Debugf logs a message at level Debug on the standard logger.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Debugln">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=3938:3971#L146">Debugln</a></h2>
+			<pre>func Debugln(args ...interface{})</pre>
+			<p>
+Debugln logs a message at level Debug on the standard logger.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Error">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=2412:2443#L91">Error</a></h2>
+			<pre>func Error(args ...interface{})</pre>
+			<p>
+Error logs a message at level Error on the standard logger.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Errorf">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=3499:3546#L131">Errorf</a></h2>
+			<pre>func Errorf(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})</pre>
+			<p>
+Errorf logs a message at level Error on the standard logger.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Errorln">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=4564:4597#L171">Errorln</a></h2>
+			<pre>func Errorln(args ...interface{})</pre>
+			<p>
+Errorln logs a message at level Error on the standard logger.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Exit">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/alt_exit.go?s=1701:1720#L39">Exit</a></h2>
+			<pre>func Exit(code <a href="../../../builtin/index.html#int">int</a>)</pre>
+			<p>
+Exit runs all the Logrus atexit handlers and then terminates the program using os.Exit(code)
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Fatal">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=2652:2683#L101">Fatal</a></h2>
+			<pre>func Fatal(args ...interface{})</pre>
+			<p>
+Fatal logs a message at level Fatal on the standard logger.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Fatalf">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=3791:3838#L141">Fatalf</a></h2>
+			<pre>func Fatalf(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})</pre>
+			<p>
+Fatalf logs a message at level Fatal on the standard logger.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Fatalln">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=4816:4849#L181">Fatalln</a></h2>
+			<pre>func Fatalln(args ...interface{})</pre>
+			<p>
+Fatalln logs a message at level Fatal on the standard logger.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Info">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=2053:2083#L76">Info</a></h2>
+			<pre>func Info(args ...interface{})</pre>
+			<p>
+Info logs a message at level Info on the standard logger.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Infof">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=3062:3108#L116">Infof</a></h2>
+			<pre>func Infof(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})</pre>
+			<p>
+Infof logs a message at level Info on the standard logger.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Infoln">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=4187:4219#L156">Infoln</a></h2>
+			<pre>func Infoln(args ...interface{})</pre>
+			<p>
+Infoln logs a message at level Info on the standard logger.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="IsTerminal">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/terminal_notwindows.go?s=362:384#L6">IsTerminal</a></h2>
+			<pre>func IsTerminal() <a href="../../../builtin/index.html#bool">bool</a></pre>
+			<p>
+IsTerminal returns true if stderr&#39;s file descriptor is a terminal.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Panic">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=2532:2563#L96">Panic</a></h2>
+			<pre>func Panic(args ...interface{})</pre>
+			<p>
+Panic logs a message at level Panic on the standard logger.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Panicf">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=3645:3692#L136">Panicf</a></h2>
+			<pre>func Panicf(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})</pre>
+			<p>
+Panicf logs a message at level Panic on the standard logger.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Panicln">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=4690:4723#L176">Panicln</a></h2>
+			<pre>func Panicln(args ...interface{})</pre>
+			<p>
+Panicln logs a message at level Panic on the standard logger.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Print">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=1935:1966#L71">Print</a></h2>
+			<pre>func Print(args ...interface{})</pre>
+			<p>
+Print logs a message at level Info on the standard logger.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Printf">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=2918:2965#L111">Printf</a></h2>
+			<pre>func Printf(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})</pre>
+			<p>
+Printf logs a message at level Info on the standard logger.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Println">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=4063:4096#L151">Println</a></h2>
+			<pre>func Println(args ...interface{})</pre>
+			<p>
+Println logs a message at level Info on the standard logger.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="RegisterExitHandler">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/alt_exit.go?s=2166:2206#L52">RegisterExitHandler</a></h2>
+			<pre>func RegisterExitHandler(handler func())</pre>
+			<p>
+RegisterExitHandler adds a Logrus Exit handler, call logrus.Exit to invoke
+all handlers. The handlers will also be invoked when any Fatal log entry is
+made.
+</p>
+<p>
+This method is useful when a caller wishes to use logrus to log a fatal
+message but also needs to gracefully shutdown. An example usecase could be
+closing database connections, or sending a alert that the application is
+closing.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SetFormatter">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=348:386#L14">SetFormatter</a></h2>
+			<pre>func SetFormatter(formatter <a href="index.html#Formatter">Formatter</a>)</pre>
+			<p>
+SetFormatter sets the standard logger formatter.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SetLevel">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=501:527#L21">SetLevel</a></h2>
+			<pre>func SetLevel(level <a href="index.html#Level">Level</a>)</pre>
+			<p>
+SetLevel sets the standard logger level.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SetOutput">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=208:237#L7">SetOutput</a></h2>
+			<pre>func SetOutput(out <a href="../../../io/index.html">io</a>.<a href="../../../io/index.html#Writer">Writer</a>)</pre>
+			<p>
+SetOutput sets the standard logger output.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Warn">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=2169:2199#L81">Warn</a></h2>
+			<pre>func Warn(args ...interface{})</pre>
+			<p>
+Warn logs a message at level Warn on the standard logger.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Warnf">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=3204:3250#L121">Warnf</a></h2>
+			<pre>func Warnf(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})</pre>
+			<p>
+Warnf logs a message at level Warn on the standard logger.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Warning">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=2288:2321#L86">Warning</a></h2>
+			<pre>func Warning(args ...interface{})</pre>
+			<p>
+Warning logs a message at level Warn on the standard logger.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Warningf">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=3349:3398#L126">Warningf</a></h2>
+			<pre>func Warningf(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})</pre>
+			<p>
+Warningf logs a message at level Warn on the standard logger.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Warningln">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=4434:4469#L166">Warningln</a></h2>
+			<pre>func Warningln(args ...interface{})</pre>
+			<p>
+Warningln logs a message at level Warn on the standard logger.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Warnln">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=4309:4341#L161">Warnln</a></h2>
+			<pre>func Warnln(args ...interface{})</pre>
+			<p>
+Warnln logs a message at level Warn on the standard logger.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="Entry">type <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go?s=446:777#L8">Entry</a></h2>
+			<pre>type Entry struct {
+    Logger *<a href="index.html#Logger">Logger</a>
+
+    <span class="comment">// Contains all the fields set by the user.</span>
+    Data <a href="index.html#Fields">Fields</a>
+
+    <span class="comment">// Time at which the log entry was created</span>
+    Time <a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Time">Time</a>
+
+    <span class="comment">// Level the log entry was logged at: Debug, Info, Warn, Error, Fatal or Panic</span>
+    Level <a href="index.html#Level">Level</a>
+
+    <span class="comment">// Message passed to Debug, Info, Warn, Error, Fatal or Panic</span>
+    Message <a href="../../../builtin/index.html#string">string</a>
+}</pre>
+			<p>
+An entry is the final or intermediate Logrus logging entry. It contains all
+the fields passed with WithField{,s}. It&#39;s finally logged when Debug, Info,
+Warn, Error, Fatal or Panic is called on it. These objects can be reused and
+passed around as much as you wish to avoid field duplication.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewEntry">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go?s=779:815#L24">NewEntry</a></h3>
+				<pre>func NewEntry(logger *<a href="index.html#Logger">Logger</a>) *<a href="index.html#Entry">Entry</a></pre>
+				
+				
+				
+			
+				
+				<h3 id="WithError">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=985:1017#L42">WithError</a></h3>
+				<pre>func WithError(err <a href="../../../builtin/index.html#error">error</a>) *<a href="index.html#Entry">Entry</a></pre>
+				<p>
+WithError creates an entry from the standard logger and adds an error to it, using the value defined in ErrorKey as key.
+</p>
+
+				
+				
+			
+				
+				<h3 id="WithField">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=1304:1356#L51">WithField</a></h3>
+				<pre>func WithField(key <a href="../../../builtin/index.html#string">string</a>, value interface{}) *<a href="index.html#Entry">Entry</a></pre>
+				<p>
+WithField creates an entry from the standard logger and adds a field to
+it. If you want multiple fields, use `WithFields`.
+</p>
+<p>
+Note that it doesn&#39;t log until you call Debug, Print, Info, Warn, Fatal
+or Panic on the Entry it returns.
+</p>
+
+				
+				
+			
+				
+				<h3 id="WithFields">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=1679:1716#L61">WithFields</a></h3>
+				<pre>func WithFields(fields <a href="index.html#Fields">Fields</a>) *<a href="index.html#Entry">Entry</a></pre>
+				<p>
+WithFields creates an entry from the standard logger and adds multiple
+fields to it. This is simply a helper for `WithField`, invoking it
+once for each field.
+</p>
+<p>
+Note that it doesn&#39;t log until you call Debug, Print, Info, Warn, Fatal
+or Panic on the Entry it returns.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Entry.Debug">func (*Entry) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go?s=3009:3055#L107">Debug</a></h3>
+				<pre>func (entry *<a href="index.html#Entry">Entry</a>) Debug(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Entry.Debugf">func (*Entry) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go?s=4056:4118#L155">Debugf</a></h3>
+				<pre>func (entry *<a href="index.html#Entry">Entry</a>) Debugf(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Entry.Debugln">func (*Entry) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go?s=5216:5264#L202">Debugln</a></h3>
+				<pre>func (entry *<a href="index.html#Entry">Entry</a>) Debugln(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Entry.Error">func (*Entry) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go?s=3568:3614#L133">Error</a></h3>
+				<pre>func (entry *<a href="index.html#Entry">Entry</a>) Error(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Entry.Errorf">func (*Entry) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go?s=4710:4772#L181">Errorf</a></h3>
+				<pre>func (entry *<a href="index.html#Entry">Entry</a>) Errorf(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Entry.Errorln">func (*Entry) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go?s=5774:5822#L228">Errorln</a></h3>
+				<pre>func (entry *<a href="index.html#Entry">Entry</a>) Errorln(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Entry.Fatal">func (*Entry) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go?s=3707:3753#L139">Fatal</a></h3>
+				<pre>func (entry *<a href="index.html#Entry">Entry</a>) Fatal(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Entry.Fatalf">func (*Entry) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go?s=4864:4926#L187">Fatalf</a></h3>
+				<pre>func (entry *<a href="index.html#Entry">Entry</a>) Fatalf(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Entry.Fatalln">func (*Entry) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go?s=5910:5958#L234">Fatalln</a></h3>
+				<pre>func (entry *<a href="index.html#Entry">Entry</a>) Fatalln(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Entry.Info">func (*Entry) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go?s=3221:3266#L117">Info</a></h3>
+				<pre>func (entry *<a href="index.html#Entry">Entry</a>) Info(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Entry.Infof">func (*Entry) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go?s=4210:4271#L161">Infof</a></h3>
+				<pre>func (entry *<a href="index.html#Entry">Entry</a>) Infof(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Entry.Infoln">func (*Entry) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go?s=5352:5399#L208">Infoln</a></h3>
+				<pre>func (entry *<a href="index.html#Entry">Entry</a>) Infoln(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Entry.Panic">func (*Entry) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go?s=3855:3901#L146">Panic</a></h3>
+				<pre>func (entry *<a href="index.html#Entry">Entry</a>) Panic(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Entry.Panicf">func (*Entry) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go?s=5027:5089#L194">Panicf</a></h3>
+				<pre>func (entry *<a href="index.html#Entry">Entry</a>) Panicf(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Entry.Panicln">func (*Entry) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go?s=6055:6103#L241">Panicln</a></h3>
+				<pre>func (entry *<a href="index.html#Entry">Entry</a>) Panicln(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Entry.Print">func (*Entry) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go?s=3148:3194#L113">Print</a></h3>
+				<pre>func (entry *<a href="index.html#Entry">Entry</a>) Print(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Entry.Printf">func (*Entry) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go?s=4361:4423#L167">Printf</a></h3>
+				<pre>func (entry *<a href="index.html#Entry">Entry</a>) Printf(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Entry.Println">func (*Entry) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go?s=5485:5533#L214">Println</a></h3>
+				<pre>func (entry *<a href="index.html#Entry">Entry</a>) Println(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Entry.Reader">func (*Entry) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go?s=1008:1059#L33">Reader</a></h3>
+				<pre>func (entry *<a href="index.html#Entry">Entry</a>) Reader() (*<a href="../../../bytes/index.html">bytes</a>.<a href="../../../bytes/index.html#Buffer">Buffer</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Returns a reader for the entry, which is a proxy to the formatter.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Entry.String">func (*Entry) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go?s=1249:1293#L40">String</a></h3>
+				<pre>func (entry *<a href="index.html#Entry">Entry</a>) String() (<a href="../../../builtin/index.html#string">string</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Returns the string representation from the reader and ultimately the
+formatter.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Entry.Warn">func (*Entry) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go?s=3357:3402#L123">Warn</a></h3>
+				<pre>func (entry *<a href="index.html#Entry">Entry</a>) Warn(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Entry.Warnf">func (*Entry) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go?s=4459:4520#L171">Warnf</a></h3>
+				<pre>func (entry *<a href="index.html#Entry">Entry</a>) Warnf(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Entry.Warning">func (*Entry) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go?s=3493:3541#L129">Warning</a></h3>
+				<pre>func (entry *<a href="index.html#Entry">Entry</a>) Warning(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Entry.Warningf">func (*Entry) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go?s=4610:4674#L177">Warningf</a></h3>
+				<pre>func (entry *<a href="index.html#Entry">Entry</a>) Warningf(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Entry.Warningln">func (*Entry) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go?s=5695:5745#L224">Warningln</a></h3>
+				<pre>func (entry *<a href="index.html#Entry">Entry</a>) Warningln(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Entry.Warnln">func (*Entry) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go?s=5562:5609#L218">Warnln</a></h3>
+				<pre>func (entry *<a href="index.html#Entry">Entry</a>) Warnln(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Entry.WithError">func (*Entry) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go?s=1479:1526#L50">WithError</a></h3>
+				<pre>func (entry *<a href="index.html#Entry">Entry</a>) WithError(err <a href="../../../builtin/index.html#error">error</a>) *<a href="index.html#Entry">Entry</a></pre>
+				<p>
+Add an error as single field (using the key defined in ErrorKey) to the Entry.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Entry.WithField">func (*Entry) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go?s=1607:1674#L55">WithField</a></h3>
+				<pre>func (entry *<a href="index.html#Entry">Entry</a>) WithField(key <a href="../../../builtin/index.html#string">string</a>, value interface{}) *<a href="index.html#Entry">Entry</a></pre>
+				<p>
+Add a single field to the Entry.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Entry.WithFields">func (*Entry) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/entry.go?s=1762:1814#L60">WithFields</a></h3>
+				<pre>func (entry *<a href="index.html#Entry">Entry</a>) WithFields(fields <a href="index.html#Fields">Fields</a>) *<a href="index.html#Entry">Entry</a></pre>
+				<p>
+Add a map of fields to the Entry.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="FieldLogger">type <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logrus.go?s=2704:3665#L102">FieldLogger</a></h2>
+			<pre>type FieldLogger interface {
+    WithField(key <a href="../../../builtin/index.html#string">string</a>, value interface{}) *<a href="index.html#Entry">Entry</a>
+    WithFields(fields <a href="index.html#Fields">Fields</a>) *<a href="index.html#Entry">Entry</a>
+    WithError(err <a href="../../../builtin/index.html#error">error</a>) *<a href="index.html#Entry">Entry</a>
+
+    Debugf(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})
+    Infof(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})
+    Printf(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})
+    Warnf(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})
+    Warningf(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})
+    Errorf(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})
+    Fatalf(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})
+    Panicf(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})
+
+    Debug(args ...interface{})
+    Info(args ...interface{})
+    Print(args ...interface{})
+    Warn(args ...interface{})
+    Warning(args ...interface{})
+    Error(args ...interface{})
+    Fatal(args ...interface{})
+    Panic(args ...interface{})
+
+    Debugln(args ...interface{})
+    Infoln(args ...interface{})
+    Println(args ...interface{})
+    Warnln(args ...interface{})
+    Warningln(args ...interface{})
+    Errorln(args ...interface{})
+    Fatalln(args ...interface{})
+    Panicln(args ...interface{})
+}</pre>
+			<p>
+The FieldLogger interface generalizes the Entry and Logger types
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Fields">type <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logrus.go?s=99:133#L1">Fields</a></h2>
+			<pre>type Fields map[<a href="../../../builtin/index.html#string">string</a>]interface{}</pre>
+			<p>
+Fields type, used to pass to `WithFields`.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Formatter">type <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/formatter.go?s=586:646#L7">Formatter</a></h2>
+			<pre>type Formatter interface {
+    Format(*<a href="index.html#Entry">Entry</a>) ([]<a href="../../../builtin/index.html#byte">byte</a>, <a href="../../../builtin/index.html#error">error</a>)
+}</pre>
+			<p>
+The Formatter interface is used to implement a custom Formatter. It takes an
+`Entry`. It exposes all the fields, including the default ones:
+</p>
+<p>
+* `entry.Data[&#34;msg&#34;]`. The message passed from Info, Warn, Error ..
+* `entry.Data[&#34;time&#34;]`. The timestamp.
+* `entry.Data[&#34;level&#34;]. The level the entry was logged at.
+</p>
+<p>
+Any additional fields added with `WithField` or `WithFields` are also in
+`entry.Data`. Format is expected to return an array of bytes which are then
+logged to `logger.Out`.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Hook">type <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/hooks.go?s=383:444#L1">Hook</a></h2>
+			<pre>type Hook interface {
+    Levels() []<a href="index.html#Level">Level</a>
+    Fire(*<a href="index.html#Entry">Entry</a>) <a href="../../../builtin/index.html#error">error</a>
+}</pre>
+			<p>
+A hook to be fired when logging on the logging levels returned from
+`Levels()` on your implementation of the interface. Note that this is not
+fired in a goroutine or a channel with workers, you should handle such
+functionality yourself if your call is non-blocking and you don&#39;t wish for
+the logging calls for levels returned from `Levels()` to block.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="JSONFormatter">type <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/json_formatter.go?s=52:173#L1">JSONFormatter</a></h2>
+			<pre>type JSONFormatter struct {
+    <span class="comment">// TimestampFormat sets the format used for marshaling timestamps.</span>
+    TimestampFormat <a href="../../../builtin/index.html#string">string</a>
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="JSONFormatter.Format">func (*JSONFormatter) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/json_formatter.go?s=175:235#L3">Format</a></h3>
+				<pre>func (f *<a href="index.html#JSONFormatter">JSONFormatter</a>) Format(entry *<a href="index.html#Entry">Entry</a>) ([]<a href="../../../builtin/index.html#byte">byte</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Level">type <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logrus.go?s=149:165#L3">Level</a></h2>
+			<pre>type Level <a href="../../../builtin/index.html#uint8">uint8</a></pre>
+			<p>
+Level type
+</p>
+
+
+			
+				<pre>const (
+    <span class="comment">// PanicLevel level, highest level of severity. Logs and then calls panic with the</span>
+    <span class="comment">// message passed to Debug, Info, ...</span>
+    <span id="PanicLevel">PanicLevel</span> <a href="index.html#Level">Level</a> = <a href="../../../builtin/index.html#iota">iota</a>
+    <span class="comment">// FatalLevel level. Logs and then calls `os.Exit(1)`. It will exit even if the</span>
+    <span class="comment">// logging level is set to Panic.</span>
+    <span id="FatalLevel">FatalLevel</span>
+    <span class="comment">// ErrorLevel level. Logs. Used for errors that should definitely be noted.</span>
+    <span class="comment">// Commonly used for hooks to send errors to an error tracking service.</span>
+    <span id="ErrorLevel">ErrorLevel</span>
+    <span class="comment">// WarnLevel level. Non-critical entries that deserve eyes.</span>
+    <span id="WarnLevel">WarnLevel</span>
+    <span class="comment">// InfoLevel level. General operational entries about what&#39;s going on inside the</span>
+    <span class="comment">// application.</span>
+    <span id="InfoLevel">InfoLevel</span>
+    <span class="comment">// DebugLevel level. Usually only enabled when debugging. Very verbose logging.</span>
+    <span id="DebugLevel">DebugLevel</span>
+)</pre>
+				<p>
+These are the different logging levels. You can set the logging level to log
+on your instance of logger, obtained with `logrus.New()`.
+</p>
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="GetLevel">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=637:658#L28">GetLevel</a></h3>
+				<pre>func GetLevel() <a href="index.html#Level">Level</a></pre>
+				<p>
+GetLevel returns the standard logger level.
+</p>
+
+				
+				
+			
+				
+				<h3 id="ParseLevel">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logrus.go?s=599:641#L26">ParseLevel</a></h3>
+				<pre>func ParseLevel(lvl <a href="../../../builtin/index.html#string">string</a>) (<a href="index.html#Level">Level</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+ParseLevel takes a string level and returns the Logrus log level constant.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Level.String">func (Level) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logrus.go?s=234:268#L6">String</a></h3>
+				<pre>func (level <a href="index.html#Level">Level</a>) String() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+Convert the Level to a string. E.g. PanicLevel becomes &#34;panic&#34;.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="LevelHooks">type <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/hooks.go?s=507:539#L4">LevelHooks</a></h2>
+			<pre>type LevelHooks map[<a href="index.html#Level">Level</a>][]<a href="index.html#Hook">Hook</a></pre>
+			<p>
+Internal type for storing the hooks on a logger instance.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="LevelHooks.Add">func (LevelHooks) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/hooks.go?s=681:719#L8">Add</a></h3>
+				<pre>func (hooks <a href="index.html#LevelHooks">LevelHooks</a>) Add(hook <a href="index.html#Hook">Hook</a>)</pre>
+				<p>
+Add a hook to an instance of logger. This is called with
+`log.Hooks.Add(new(MyHook))` where `MyHook` implements the `Hook` interface.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="LevelHooks.Fire">func (LevelHooks) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/hooks.go?s=921:982#L16">Fire</a></h3>
+				<pre>func (hooks <a href="index.html#LevelHooks">LevelHooks</a>) Fire(level <a href="index.html#Level">Level</a>, entry *<a href="index.html#Entry">Entry</a>) <a href="../../../builtin/index.html#error">error</a></pre>
+				<p>
+Fire all the hooks for the passed level. Used by `entry.log` to fire
+appropriate hooks for a log entry.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Logger">type <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logger.go?s=48:1228#L1">Logger</a></h2>
+			<pre>type Logger struct {
+    <span class="comment">// The logs are `io.Copy`&#39;d to this in a mutex. It&#39;s common to set this to a</span>
+    <span class="comment">// file, or leave it default which is `os.Stderr`. You can also set this to</span>
+    <span class="comment">// something more adventorous, such as logging to Kafka.</span>
+    Out <a href="../../../io/index.html">io</a>.<a href="../../../io/index.html#Writer">Writer</a>
+    <span class="comment">// Hooks for the logger instance. These allow firing events based on logging</span>
+    <span class="comment">// levels and log entries. For example, to send errors to an error tracking</span>
+    <span class="comment">// service, log to StatsD or dump the core on fatal errors.</span>
+    Hooks <a href="index.html#LevelHooks">LevelHooks</a>
+    <span class="comment">// All log entries pass through the formatter before logged to Out. The</span>
+    <span class="comment">// included formatters are `TextFormatter` and `JSONFormatter` for which</span>
+    <span class="comment">// TextFormatter is the default. In development (when a TTY is attached) it</span>
+    <span class="comment">// logs with colors, but to a file it wouldn&#39;t. You can easily implement your</span>
+    <span class="comment">// own that implements the `Formatter` interface, see the `README` or included</span>
+    <span class="comment">// formatters for examples.</span>
+    Formatter <a href="index.html#Formatter">Formatter</a>
+    <span class="comment">// The logging level the logger should log at. This is typically (and defaults</span>
+    <span class="comment">// to) `logrus.Info`, which allows Info(), Warn(), Error() and Fatal() to be</span>
+    <span class="comment">// logged. `logrus.Debug` is useful in</span>
+    Level <a href="index.html#Level">Level</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="New">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logger.go?s=1647:1665#L35">New</a></h3>
+				<pre>func New() *<a href="index.html#Logger">Logger</a></pre>
+				<p>
+Creates a new logger. Configuration should be set by changing `Formatter`,
+`Out` and `Hooks` directly on the default logger instance. You can also just
+instantiate your own:
+</p>
+<pre>var log = &amp;Logger{
+  Out: os.Stderr,
+  Formatter: new(JSONFormatter),
+  Hooks: make(LevelHooks),
+  Level: logrus.DebugLevel,
+}
+</pre>
+<p>
+It&#39;s recommended to make this a global instance called `log`.
+</p>
+
+				
+				
+			
+				
+				<h3 id="StandardLogger">func <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/exported.go?s=115:144#L2">StandardLogger</a></h3>
+				<pre>func StandardLogger() *<a href="index.html#Logger">Logger</a></pre>
+				
+				
+				
+			
+
+			
+				
+				<h3 id="Logger.Debug">func (*Logger) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logger.go?s=3687:3735#L110">Debug</a></h3>
+				<pre>func (logger *<a href="index.html#Logger">Logger</a>) Debug(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Logger.Debugf">func (*Logger) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logger.go?s=2529:2593#L63">Debugf</a></h3>
+				<pre>func (logger *<a href="index.html#Logger">Logger</a>) Debugf(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Logger.Debugln">func (*Logger) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logger.go?s=4644:4694#L157">Debugln</a></h3>
+				<pre>func (logger *<a href="index.html#Logger">Logger</a>) Debugln(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Logger.Error">func (*Logger) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logger.go?s=4263:4311#L138">Error</a></h3>
+				<pre>func (logger *<a href="index.html#Logger">Logger</a>) Error(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Logger.Errorf">func (*Logger) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logger.go?s=3231:3295#L91">Errorf</a></h3>
+				<pre>func (logger *<a href="index.html#Logger">Logger</a>) Errorf(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Logger.Errorln">func (*Logger) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logger.go?s=5241:5291#L185">Errorln</a></h3>
+				<pre>func (logger *<a href="index.html#Logger">Logger</a>) Errorln(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Logger.Fatal">func (*Logger) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logger.go?s=4387:4435#L144">Fatal</a></h3>
+				<pre>func (logger *<a href="index.html#Logger">Logger</a>) Fatal(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Logger.Fatalf">func (*Logger) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logger.go?s=3380:3444#L97">Fatalf</a></h3>
+				<pre>func (logger *<a href="index.html#Logger">Logger</a>) Fatalf(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Logger.Fatalln">func (*Logger) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logger.go?s=5369:5419#L191">Fatalln</a></h3>
+				<pre>func (logger *<a href="index.html#Logger">Logger</a>) Fatalln(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Logger.Info">func (*Logger) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logger.go?s=3811:3858#L116">Info</a></h3>
+				<pre>func (logger *<a href="index.html#Logger">Logger</a>) Info(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Logger.Infof">func (*Logger) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logger.go?s=2678:2741#L69">Infof</a></h3>
+				<pre>func (logger *<a href="index.html#Logger">Logger</a>) Infof(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Logger.Infoln">func (*Logger) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logger.go?s=4772:4821#L163">Infoln</a></h3>
+				<pre>func (logger *<a href="index.html#Logger">Logger</a>) Infoln(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Logger.Panic">func (*Logger) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logger.go?s=4520:4568#L151">Panic</a></h3>
+				<pre>func (logger *<a href="index.html#Logger">Logger</a>) Panic(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Logger.Panicf">func (*Logger) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logger.go?s=3538:3602#L104">Panicf</a></h3>
+				<pre>func (logger *<a href="index.html#Logger">Logger</a>) Panicf(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Logger.Panicln">func (*Logger) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logger.go?s=5506:5556#L198">Panicln</a></h3>
+				<pre>func (logger *<a href="index.html#Logger">Logger</a>) Panicln(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Logger.Print">func (*Logger) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logger.go?s=3932:3980#L122">Print</a></h3>
+				<pre>func (logger *<a href="index.html#Logger">Logger</a>) Print(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Logger.Printf">func (*Logger) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logger.go?s=2824:2888#L75">Printf</a></h3>
+				<pre>func (logger *<a href="index.html#Logger">Logger</a>) Printf(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Logger.Println">func (*Logger) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logger.go?s=4897:4947#L169">Println</a></h3>
+				<pre>func (logger *<a href="index.html#Logger">Logger</a>) Println(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Logger.Warn">func (*Logger) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logger.go?s=4018:4065#L126">Warn</a></h3>
+				<pre>func (logger *<a href="index.html#Logger">Logger</a>) Warn(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Logger.Warnf">func (*Logger) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logger.go?s=2936:2999#L79">Warnf</a></h3>
+				<pre>func (logger *<a href="index.html#Logger">Logger</a>) Warnf(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Logger.Warning">func (*Logger) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logger.go?s=4139:4189#L132">Warning</a></h3>
+				<pre>func (logger *<a href="index.html#Logger">Logger</a>) Warning(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Logger.Warningf">func (*Logger) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logger.go?s=3082:3148#L85">Warningf</a></h3>
+				<pre>func (logger *<a href="index.html#Logger">Logger</a>) Warningf(format <a href="../../../builtin/index.html#string">string</a>, args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Logger.Warningln">func (*Logger) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logger.go?s=5113:5165#L179">Warningln</a></h3>
+				<pre>func (logger *<a href="index.html#Logger">Logger</a>) Warningln(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Logger.Warnln">func (*Logger) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logger.go?s=4988:5037#L173">Warnln</a></h3>
+				<pre>func (logger *<a href="index.html#Logger">Logger</a>) Warnln(args ...interface{})</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Logger.WithError">func (*Logger) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logger.go?s=2434:2483#L59">WithError</a></h3>
+				<pre>func (logger *<a href="index.html#Logger">Logger</a>) WithError(err <a href="../../../builtin/index.html#error">error</a>) *<a href="index.html#Entry">Entry</a></pre>
+				<p>
+Add an error as single field to the log entry.  All it does is call
+`WithError` for the given `error`.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Logger.WithField">func (*Logger) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logger.go?s=2001:2070#L47">WithField</a></h3>
+				<pre>func (logger *<a href="index.html#Logger">Logger</a>) WithField(key <a href="../../../builtin/index.html#string">string</a>, value interface{}) *<a href="index.html#Entry">Entry</a></pre>
+				<p>
+Adds a field to the log entry, note that it doesn&#39;t log until you call
+Debug, Print, Info, Warn, Fatal or Panic. It only creates a log entry.
+If you want multiple fields, use `WithFields`.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Logger.WithFields">func (*Logger) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logger.go?s=2221:2275#L53">WithFields</a></h3>
+				<pre>func (logger *<a href="index.html#Logger">Logger</a>) WithFields(fields <a href="index.html#Fields">Fields</a>) *<a href="index.html#Entry">Entry</a></pre>
+				<p>
+Adds a struct of fields to the log entry. All it does is call `WithField` for
+each `Field`.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Logger.Writer">func (*Logger) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/writer.go?s=54:99#L1">Writer</a></h3>
+				<pre>func (logger *<a href="index.html#Logger">Logger</a>) Writer() *<a href="../../../io/index.html">io</a>.<a href="../../../io/index.html#PipeWriter">PipeWriter</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Logger.WriterLevel">func (*Logger) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/writer.go?s=143:204#L3">WriterLevel</a></h3>
+				<pre>func (logger *<a href="index.html#Logger">Logger</a>) WriterLevel(level <a href="index.html#Level">Level</a>) *<a href="../../../io/index.html">io</a>.<a href="../../../io/index.html#PipeWriter">PipeWriter</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="StdLogger">type <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/logrus.go?s=2364:2634#L87">StdLogger</a></h2>
+			<pre>type StdLogger interface {
+    Print(...interface{})
+    Printf(<a href="../../../builtin/index.html#string">string</a>, ...interface{})
+    Println(...interface{})
+
+    Fatal(...interface{})
+    Fatalf(<a href="../../../builtin/index.html#string">string</a>, ...interface{})
+    Fatalln(...interface{})
+
+    Panic(...interface{})
+    Panicf(<a href="../../../builtin/index.html#string">string</a>, ...interface{})
+    Panicln(...interface{})
+}</pre>
+			<p>
+StdLogger is what your logrus-enabled library should take, that way
+it&#39;ll accept a stdlib logger and a logrus logger. There&#39;s no standard
+interface, this is the closest we get, unfortunately.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Termios">type <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/terminal_linux.go?s=261:289#L2">Termios</a></h2>
+			<pre>type Termios <a href="../../../syscall/index.html">syscall</a>.<a href="../../../syscall/index.html#Termios">Termios</a></pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="TextFormatter">type <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/text_formatter.go?s=378:1127#L25">TextFormatter</a></h2>
+			<pre>type TextFormatter struct {
+    <span class="comment">// Set to true to bypass checking for a TTY before outputting colors.</span>
+    ForceColors <a href="../../../builtin/index.html#bool">bool</a>
+
+    <span class="comment">// Force disabling colors.</span>
+    DisableColors <a href="../../../builtin/index.html#bool">bool</a>
+
+    <span class="comment">// Disable timestamp logging. useful when output is redirected to logging</span>
+    <span class="comment">// system that already adds timestamps.</span>
+    DisableTimestamp <a href="../../../builtin/index.html#bool">bool</a>
+
+    <span class="comment">// Enable logging the full timestamp when a TTY is attached instead of just</span>
+    <span class="comment">// the time passed since beginning of execution.</span>
+    FullTimestamp <a href="../../../builtin/index.html#bool">bool</a>
+
+    <span class="comment">// TimestampFormat to use for display when a full timestamp is printed</span>
+    TimestampFormat <a href="../../../builtin/index.html#string">string</a>
+
+    <span class="comment">// The fields are sorted by default for a consistent output. For applications</span>
+    <span class="comment">// that log extremely frequently and don&#39;t use the JSON formatter this may not</span>
+    <span class="comment">// be desired.</span>
+    DisableSorting <a href="../../../builtin/index.html#bool">bool</a>
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="TextFormatter.Format">func (*TextFormatter) <a href="http://localhost:6060/src/github.com/Sirupsen/logrus/text_formatter.go?s=1129:1189#L49">Format</a></h3>
+				<pre>func (f *<a href="index.html#TextFormatter">TextFormatter</a>) Format(entry *<a href="index.html#Entry">Entry</a>) ([]<a href="../../../builtin/index.html#byte">byte</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+
+
+	<div class="pkg-dir">
+		<table>
+			<tr>
+				<th class="pkg-name">Name</th>
+				<th class="pkg-synopsis">Synopsis</th>
+			</tr>
+
+			
+			<tr>
+				<td colspan="2"><a href="../index.html">..</a></td>
+			</tr>
+			
+
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="examples/index.html">examples</a>
+						</td>
+						<td class="pkg-synopsis">
+							
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 20px;">
+							<a href="examples/basic/index.html">basic</a>
+						</td>
+						<td class="pkg-synopsis">
+							
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 20px;">
+							<a href="examples/hook/index.html">hook</a>
+						</td>
+						<td class="pkg-synopsis">
+							
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="hooks/index.html">hooks</a>
+						</td>
+						<td class="pkg-synopsis">
+							
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 20px;">
+							<a href="hooks/syslog/index.html">syslog</a>
+						</td>
+						<td class="pkg-synopsis">
+							
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 20px;">
+							<a href="hooks/test/index.html">test</a>
+						</td>
+						<td class="pkg-synopsis">
+							
+						</td>
+					</tr>
+				
+			
+		</table>
+	</div>
+
+
+	
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

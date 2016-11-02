@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>altsrc - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package altsrc</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/codegangsta/cli/altsrc"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+				
+				<dd><a href="index.html#ApplyInputSourceValues">func ApplyInputSourceValues(context *cli.Context, inputSourceContext InputSourceContext, flags []cli.Flag) error</a></dd>
+			
+				
+				<dd><a href="index.html#InitInputSource">func InitInputSource(flags []cli.Flag, createInputSource func() (InputSourceContext, error)) cli.BeforeFunc</a></dd>
+			
+				
+				<dd><a href="index.html#InitInputSourceWithContext">func InitInputSourceWithContext(flags []cli.Flag, createInputSource func(context *cli.Context) (InputSourceContext, error)) cli.BeforeFunc</a></dd>
+			
+				
+				<dd><a href="index.html#NewTomlSourceFromFlagFunc">func NewTomlSourceFromFlagFunc(flagFileName string) func(context *cli.Context) (InputSourceContext, error)</a></dd>
+			
+				
+				<dd><a href="index.html#NewYamlSourceFromFlagFunc">func NewYamlSourceFromFlagFunc(flagFileName string) func(context *cli.Context) (InputSourceContext, error)</a></dd>
+			
+			
+				
+				<dd><a href="index.html#BoolFlag">type BoolFlag</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewBoolFlag">func NewBoolFlag(fl cli.BoolFlag) *BoolFlag</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BoolFlag.Apply">func (f *BoolFlag) Apply(set *flag.FlagSet)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BoolFlag.ApplyInputSourceValue">func (f *BoolFlag) ApplyInputSourceValue(context *cli.Context, isc InputSourceContext) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#BoolTFlag">type BoolTFlag</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewBoolTFlag">func NewBoolTFlag(fl cli.BoolTFlag) *BoolTFlag</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BoolTFlag.Apply">func (f *BoolTFlag) Apply(set *flag.FlagSet)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BoolTFlag.ApplyInputSourceValue">func (f *BoolTFlag) ApplyInputSourceValue(context *cli.Context, isc InputSourceContext) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#DurationFlag">type DurationFlag</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewDurationFlag">func NewDurationFlag(fl cli.DurationFlag) *DurationFlag</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DurationFlag.Apply">func (f *DurationFlag) Apply(set *flag.FlagSet)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DurationFlag.ApplyInputSourceValue">func (f *DurationFlag) ApplyInputSourceValue(context *cli.Context, isc InputSourceContext) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#FlagInputSourceExtension">type FlagInputSourceExtension</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Float64Flag">type Float64Flag</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewFloat64Flag">func NewFloat64Flag(fl cli.Float64Flag) *Float64Flag</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Float64Flag.Apply">func (f *Float64Flag) Apply(set *flag.FlagSet)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Float64Flag.ApplyInputSourceValue">func (f *Float64Flag) ApplyInputSourceValue(context *cli.Context, isc InputSourceContext) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#GenericFlag">type GenericFlag</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewGenericFlag">func NewGenericFlag(fl cli.GenericFlag) *GenericFlag</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#GenericFlag.Apply">func (f *GenericFlag) Apply(set *flag.FlagSet)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#GenericFlag.ApplyInputSourceValue">func (f *GenericFlag) ApplyInputSourceValue(context *cli.Context, isc InputSourceContext) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#InputSourceContext">type InputSourceContext</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewTomlSourceFromFile">func NewTomlSourceFromFile(file string) (InputSourceContext, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewYamlSourceFromFile">func NewYamlSourceFromFile(file string) (InputSourceContext, error)</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Int64Flag">type Int64Flag</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewInt64Flag">func NewInt64Flag(fl cli.Int64Flag) *Int64Flag</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Int64Flag.Apply">func (f *Int64Flag) Apply(set *flag.FlagSet)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Int64SliceFlag">type Int64SliceFlag</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewInt64SliceFlag">func NewInt64SliceFlag(fl cli.Int64SliceFlag) *Int64SliceFlag</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Int64SliceFlag.Apply">func (f *Int64SliceFlag) Apply(set *flag.FlagSet)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#IntFlag">type IntFlag</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewIntFlag">func NewIntFlag(fl cli.IntFlag) *IntFlag</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IntFlag.Apply">func (f *IntFlag) Apply(set *flag.FlagSet)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IntFlag.ApplyInputSourceValue">func (f *IntFlag) ApplyInputSourceValue(context *cli.Context, isc InputSourceContext) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#IntSliceFlag">type IntSliceFlag</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewIntSliceFlag">func NewIntSliceFlag(fl cli.IntSliceFlag) *IntSliceFlag</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IntSliceFlag.Apply">func (f *IntSliceFlag) Apply(set *flag.FlagSet)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IntSliceFlag.ApplyInputSourceValue">func (f *IntSliceFlag) ApplyInputSourceValue(context *cli.Context, isc InputSourceContext) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#MapInputSource">type MapInputSource</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MapInputSource.Bool">func (fsm *MapInputSource) Bool(name string) (bool, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MapInputSource.BoolT">func (fsm *MapInputSource) BoolT(name string) (bool, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MapInputSource.Duration">func (fsm *MapInputSource) Duration(name string) (time.Duration, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MapInputSource.Float64">func (fsm *MapInputSource) Float64(name string) (float64, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MapInputSource.Generic">func (fsm *MapInputSource) Generic(name string) (cli.Generic, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MapInputSource.Int">func (fsm *MapInputSource) Int(name string) (int, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MapInputSource.IntSlice">func (fsm *MapInputSource) IntSlice(name string) ([]int, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MapInputSource.String">func (fsm *MapInputSource) String(name string) (string, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MapInputSource.StringSlice">func (fsm *MapInputSource) StringSlice(name string) ([]string, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#StringFlag">type StringFlag</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewStringFlag">func NewStringFlag(fl cli.StringFlag) *StringFlag</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#StringFlag.Apply">func (f *StringFlag) Apply(set *flag.FlagSet)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#StringFlag.ApplyInputSourceValue">func (f *StringFlag) ApplyInputSourceValue(context *cli.Context, isc InputSourceContext) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#StringSliceFlag">type StringSliceFlag</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewStringSliceFlag">func NewStringSliceFlag(fl cli.StringSliceFlag) *StringSliceFlag</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#StringSliceFlag.Apply">func (f *StringSliceFlag) Apply(set *flag.FlagSet)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#StringSliceFlag.ApplyInputSourceValue">func (f *StringSliceFlag) ApplyInputSourceValue(context *cli.Context, isc InputSourceContext) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Uint64Flag">type Uint64Flag</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewUint64Flag">func NewUint64Flag(fl cli.Uint64Flag) *Uint64Flag</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Uint64Flag.Apply">func (f *Uint64Flag) Apply(set *flag.FlagSet)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#UintFlag">type UintFlag</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewUintFlag">func NewUintFlag(fl cli.UintFlag) *UintFlag</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#UintFlag.Apply">func (f *UintFlag) Apply(set *flag.FlagSet)</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/altsrc.go">altsrc.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag.go">flag.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go">flag_generated.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/input_source_context.go">input_source_context.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/map_input_source.go">map_input_source.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/toml_file_loader.go">toml_file_loader.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/yaml_file_loader.go">yaml_file_loader.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+			
+			
+			<h2 id="ApplyInputSourceValues">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag.go?s=569:681#L13">ApplyInputSourceValues</a></h2>
+			<pre>func ApplyInputSourceValues(context *cli.<a href="index.html#Context">Context</a>, inputSourceContext <a href="index.html#InputSourceContext">InputSourceContext</a>, flags []cli.<a href="index.html#Flag">Flag</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+			<p>
+ApplyInputSourceValues iterates over all provided flags and
+executes ApplyInputSourceValue on flags implementing the
+FlagInputSourceExtension interface to initialize these flags
+to an alternate input source.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="InitInputSource">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag.go?s=1212:1319#L30">InitInputSource</a></h2>
+			<pre>func InitInputSource(flags []cli.<a href="index.html#Flag">Flag</a>, createInputSource func() (<a href="index.html#InputSourceContext">InputSourceContext</a>, <a href="../../../../builtin/index.html#error">error</a>)) cli.<a href="index.html#BeforeFunc">BeforeFunc</a></pre>
+			<p>
+InitInputSource is used to to setup an InputSourceContext on a cli.Command Before method. It will create a new
+input source based on the func provided. If there is no error it will then apply the new input source to any flags
+that are supported by the input source
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="InitInputSourceWithContext">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag.go?s=1942:2080#L44">InitInputSourceWithContext</a></h2>
+			<pre>func InitInputSourceWithContext(flags []cli.<a href="index.html#Flag">Flag</a>, createInputSource func(context *cli.<a href="index.html#Context">Context</a>) (<a href="index.html#InputSourceContext">InputSourceContext</a>, <a href="../../../../builtin/index.html#error">error</a>)) cli.<a href="index.html#BeforeFunc">BeforeFunc</a></pre>
+			<p>
+InitInputSourceWithContext is used to to setup an InputSourceContext on a cli.Command Before method. It will create a new
+input source based on the func provided with potentially using existing cli.Context values to initialize itself. If there is
+no error it will then apply the new input source to any flags that are supported by the input source
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="NewTomlSourceFromFlagFunc">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/toml_file_loader.go?s=2365:2471#L83">NewTomlSourceFromFlagFunc</a></h2>
+			<pre>func NewTomlSourceFromFlagFunc(flagFileName <a href="../../../../builtin/index.html#string">string</a>) func(context *cli.<a href="index.html#Context">Context</a>) (<a href="index.html#InputSourceContext">InputSourceContext</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+NewTomlSourceFromFlagFunc creates a new TOML InputSourceContext from a provided flag name and source context.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="NewYamlSourceFromFlagFunc">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/yaml_file_loader.go?s=902:1008#L27">NewYamlSourceFromFlagFunc</a></h2>
+			<pre>func NewYamlSourceFromFlagFunc(flagFileName <a href="../../../../builtin/index.html#string">string</a>) func(context *cli.<a href="index.html#Context">Context</a>) (<a href="index.html#InputSourceContext">InputSourceContext</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+NewYamlSourceFromFlagFunc creates a new Yaml InputSourceContext from a provided flag name and source context.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="BoolFlag">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=198:255#L3">BoolFlag</a></h2>
+			<pre>type BoolFlag struct {
+    cli.<a href="index.html#BoolFlag">BoolFlag</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+BoolFlag is the flag type that wraps cli.BoolFlag to allow
+for other values to be specified
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewBoolFlag">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=295:338#L9">NewBoolFlag</a></h3>
+				<pre>func NewBoolFlag(fl cli.<a href="index.html#BoolFlag">BoolFlag</a>) *<a href="index.html#BoolFlag">BoolFlag</a></pre>
+				<p>
+NewBoolFlag creates a new BoolFlag
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="BoolFlag.Apply">func (*BoolFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=477:520#L15">Apply</a></h3>
+				<pre>func (f *<a href="index.html#BoolFlag">BoolFlag</a>) Apply(set *<a href="../../../../flag/index.html">flag</a>.<a href="../../../../flag/index.html#FlagSet">FlagSet</a>)</pre>
+				<p>
+Apply saves the flagSet for later usage calls, then calls the
+wrapped BoolFlag.Apply
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BoolFlag.ApplyInputSourceValue">func (*BoolFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag.go?s=4114:4206#L119">ApplyInputSourceValue</a></h3>
+				<pre>func (f *<a href="index.html#BoolFlag">BoolFlag</a>) ApplyInputSourceValue(context *cli.<a href="index.html#Context">Context</a>, isc <a href="index.html#InputSourceContext">InputSourceContext</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+ApplyInputSourceValue applies a Bool value to the flagSet if required
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="BoolTFlag">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=662:721#L22">BoolTFlag</a></h2>
+			<pre>type BoolTFlag struct {
+    cli.<a href="index.html#BoolTFlag">BoolTFlag</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+BoolTFlag is the flag type that wraps cli.BoolTFlag to allow
+for other values to be specified
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewBoolTFlag">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=763:809#L28">NewBoolTFlag</a></h3>
+				<pre>func NewBoolTFlag(fl cli.<a href="index.html#BoolTFlag">BoolTFlag</a>) *<a href="index.html#BoolTFlag">BoolTFlag</a></pre>
+				<p>
+NewBoolTFlag creates a new BoolTFlag
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="BoolTFlag.Apply">func (*BoolTFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=951:995#L34">Apply</a></h3>
+				<pre>func (f *<a href="index.html#BoolTFlag">BoolTFlag</a>) Apply(set *<a href="../../../../flag/index.html">flag</a>.<a href="../../../../flag/index.html#FlagSet">FlagSet</a>)</pre>
+				<p>
+Apply saves the flagSet for later usage calls, then calls the
+wrapped BoolTFlag.Apply
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BoolTFlag.ApplyInputSourceValue">func (*BoolTFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag.go?s=4579:4672#L137">ApplyInputSourceValue</a></h3>
+				<pre>func (f *<a href="index.html#BoolTFlag">BoolTFlag</a>) ApplyInputSourceValue(context *cli.<a href="index.html#Context">Context</a>, isc <a href="index.html#InputSourceContext">InputSourceContext</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+ApplyInputSourceValue applies a BoolT value to the flagSet if required
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="DurationFlag">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=1144:1209#L41">DurationFlag</a></h2>
+			<pre>type DurationFlag struct {
+    cli.<a href="index.html#DurationFlag">DurationFlag</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+DurationFlag is the flag type that wraps cli.DurationFlag to allow
+for other values to be specified
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewDurationFlag">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=1257:1312#L47">NewDurationFlag</a></h3>
+				<pre>func NewDurationFlag(fl cli.<a href="index.html#DurationFlag">DurationFlag</a>) *<a href="index.html#DurationFlag">DurationFlag</a></pre>
+				<p>
+NewDurationFlag creates a new DurationFlag
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="DurationFlag.Apply">func (*DurationFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=1463:1510#L53">Apply</a></h3>
+				<pre>func (f *<a href="index.html#DurationFlag">DurationFlag</a>) Apply(set *<a href="../../../../flag/index.html">flag</a>.<a href="../../../../flag/index.html#FlagSet">FlagSet</a>)</pre>
+				<p>
+Apply saves the flagSet for later usage calls, then calls the
+wrapped DurationFlag.Apply
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DurationFlag.ApplyInputSourceValue">func (*DurationFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag.go?s=5985:6081#L191">ApplyInputSourceValue</a></h3>
+				<pre>func (f *<a href="index.html#DurationFlag">DurationFlag</a>) ApplyInputSourceValue(context *cli.<a href="index.html#Context">Context</a>, isc <a href="index.html#InputSourceContext">InputSourceContext</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+ApplyInputSourceValue applies a Duration value to the flagSet if required
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="FlagInputSourceExtension">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag.go?s=219:347#L4">FlagInputSourceExtension</a></h2>
+			<pre>type FlagInputSourceExtension interface {
+    cli.<a href="index.html#Flag">Flag</a>
+    ApplyInputSourceValue(context *cli.<a href="index.html#Context">Context</a>, isc <a href="index.html#InputSourceContext">InputSourceContext</a>) <a href="../../../../builtin/index.html#error">error</a>
+}</pre>
+			<p>
+FlagInputSourceExtension is an extension interface of cli.Flag that
+allows a value to be set on the existing parsed flags.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Float64Flag">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=1660:1723#L60">Float64Flag</a></h2>
+			<pre>type Float64Flag struct {
+    cli.<a href="index.html#Float64Flag">Float64Flag</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Float64Flag is the flag type that wraps cli.Float64Flag to allow
+for other values to be specified
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewFloat64Flag">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=1769:1821#L66">NewFloat64Flag</a></h3>
+				<pre>func NewFloat64Flag(fl cli.<a href="index.html#Float64Flag">Float64Flag</a>) *<a href="index.html#Float64Flag">Float64Flag</a></pre>
+				<p>
+NewFloat64Flag creates a new Float64Flag
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Float64Flag.Apply">func (*Float64Flag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=1969:2015#L72">Apply</a></h3>
+				<pre>func (f *<a href="index.html#Float64Flag">Float64Flag</a>) Apply(set *<a href="../../../../flag/index.html">flag</a>.<a href="../../../../flag/index.html#FlagSet">FlagSet</a>)</pre>
+				<p>
+Apply saves the flagSet for later usage calls, then calls the
+wrapped Float64Flag.Apply
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Float64Flag.ApplyInputSourceValue">func (*Float64Flag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag.go?s=6458:6553#L209">ApplyInputSourceValue</a></h3>
+				<pre>func (f *<a href="index.html#Float64Flag">Float64Flag</a>) ApplyInputSourceValue(context *cli.<a href="index.html#Context">Context</a>, isc <a href="index.html#InputSourceContext">InputSourceContext</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+ApplyInputSourceValue applies a Float64 value to the flagSet if required
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="GenericFlag">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=2164:2227#L79">GenericFlag</a></h2>
+			<pre>type GenericFlag struct {
+    cli.<a href="index.html#GenericFlag">GenericFlag</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+GenericFlag is the flag type that wraps cli.GenericFlag to allow
+for other values to be specified
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewGenericFlag">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=2273:2325#L85">NewGenericFlag</a></h3>
+				<pre>func NewGenericFlag(fl cli.<a href="index.html#GenericFlag">GenericFlag</a>) *<a href="index.html#GenericFlag">GenericFlag</a></pre>
+				<p>
+NewGenericFlag creates a new GenericFlag
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="GenericFlag.Apply">func (*GenericFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=2473:2519#L91">Apply</a></h3>
+				<pre>func (f *<a href="index.html#GenericFlag">GenericFlag</a>) Apply(set *<a href="../../../../flag/index.html">flag</a>.<a href="../../../../flag/index.html#FlagSet">FlagSet</a>)</pre>
+				<p>
+Apply saves the flagSet for later usage calls, then calls the
+wrapped GenericFlag.Apply
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="GenericFlag.ApplyInputSourceValue">func (*GenericFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag.go?s=2442:2537#L56">ApplyInputSourceValue</a></h3>
+				<pre>func (f *<a href="index.html#GenericFlag">GenericFlag</a>) ApplyInputSourceValue(context *cli.<a href="index.html#Context">Context</a>, isc <a href="index.html#InputSourceContext">InputSourceContext</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+ApplyInputSourceValue applies a generic value to the flagSet if required
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="InputSourceContext">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/input_source_context.go?s=167:549#L1">InputSourceContext</a></h2>
+			<pre>type InputSourceContext interface {
+    Int(name <a href="../../../../builtin/index.html#string">string</a>) (<a href="../../../../builtin/index.html#int">int</a>, <a href="../../../../builtin/index.html#error">error</a>)
+    Duration(name <a href="../../../../builtin/index.html#string">string</a>) (<a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Duration">Duration</a>, <a href="../../../../builtin/index.html#error">error</a>)
+    Float64(name <a href="../../../../builtin/index.html#string">string</a>) (<a href="../../../../builtin/index.html#float64">float64</a>, <a href="../../../../builtin/index.html#error">error</a>)
+    String(name <a href="../../../../builtin/index.html#string">string</a>) (<a href="../../../../builtin/index.html#string">string</a>, <a href="../../../../builtin/index.html#error">error</a>)
+    StringSlice(name <a href="../../../../builtin/index.html#string">string</a>) ([]<a href="../../../../builtin/index.html#string">string</a>, <a href="../../../../builtin/index.html#error">error</a>)
+    IntSlice(name <a href="../../../../builtin/index.html#string">string</a>) ([]<a href="../../../../builtin/index.html#int">int</a>, <a href="../../../../builtin/index.html#error">error</a>)
+    Generic(name <a href="../../../../builtin/index.html#string">string</a>) (cli.<a href="index.html#Generic">Generic</a>, <a href="../../../../builtin/index.html#error">error</a>)
+    Bool(name <a href="../../../../builtin/index.html#string">string</a>) (<a href="../../../../builtin/index.html#bool">bool</a>, <a href="../../../../builtin/index.html#error">error</a>)
+    BoolT(name <a href="../../../../builtin/index.html#string">string</a>) (<a href="../../../../builtin/index.html#bool">bool</a>, <a href="../../../../builtin/index.html#error">error</a>)
+}</pre>
+			<p>
+InputSourceContext is an interface used to allow
+other input sources to be implemented as needed.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewTomlSourceFromFile">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/toml_file_loader.go?s=1877:1944#L73">NewTomlSourceFromFile</a></h3>
+				<pre>func NewTomlSourceFromFile(file <a href="../../../../builtin/index.html#string">string</a>) (<a href="index.html#InputSourceContext">InputSourceContext</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+NewTomlSourceFromFile creates a new TOML InputSourceContext from a filepath.
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewYamlSourceFromFile">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/yaml_file_loader.go?s=409:476#L15">NewYamlSourceFromFile</a></h3>
+				<pre>func NewYamlSourceFromFile(file <a href="../../../../builtin/index.html#string">string</a>) (<a href="index.html#InputSourceContext">InputSourceContext</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+NewYamlSourceFromFile creates a new Yaml InputSourceContext from a filepath.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="Int64Flag">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=2664:2723#L98">Int64Flag</a></h2>
+			<pre>type Int64Flag struct {
+    cli.<a href="index.html#Int64Flag">Int64Flag</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Int64Flag is the flag type that wraps cli.Int64Flag to allow
+for other values to be specified
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewInt64Flag">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=2765:2811#L104">NewInt64Flag</a></h3>
+				<pre>func NewInt64Flag(fl cli.<a href="index.html#Int64Flag">Int64Flag</a>) *<a href="index.html#Int64Flag">Int64Flag</a></pre>
+				<p>
+NewInt64Flag creates a new Int64Flag
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Int64Flag.Apply">func (*Int64Flag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=2953:2997#L110">Apply</a></h3>
+				<pre>func (f *<a href="index.html#Int64Flag">Int64Flag</a>) Apply(set *<a href="../../../../flag/index.html">flag</a>.<a href="../../../../flag/index.html#FlagSet">FlagSet</a>)</pre>
+				<p>
+Apply saves the flagSet for later usage calls, then calls the
+wrapped Int64Flag.Apply
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Int64SliceFlag">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=4116:4185#L155">Int64SliceFlag</a></h2>
+			<pre>type Int64SliceFlag struct {
+    cli.<a href="index.html#Int64SliceFlag">Int64SliceFlag</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Int64SliceFlag is the flag type that wraps cli.Int64SliceFlag to allow
+for other values to be specified
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewInt64SliceFlag">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=4237:4298#L161">NewInt64SliceFlag</a></h3>
+				<pre>func NewInt64SliceFlag(fl cli.<a href="index.html#Int64SliceFlag">Int64SliceFlag</a>) *<a href="index.html#Int64SliceFlag">Int64SliceFlag</a></pre>
+				<p>
+NewInt64SliceFlag creates a new Int64SliceFlag
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Int64SliceFlag.Apply">func (*Int64SliceFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=4455:4504#L167">Apply</a></h3>
+				<pre>func (f *<a href="index.html#Int64SliceFlag">Int64SliceFlag</a>) Apply(set *<a href="../../../../flag/index.html">flag</a>.<a href="../../../../flag/index.html#FlagSet">FlagSet</a>)</pre>
+				<p>
+Apply saves the flagSet for later usage calls, then calls the
+wrapped Int64SliceFlag.Apply
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="IntFlag">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=3136:3191#L117">IntFlag</a></h2>
+			<pre>type IntFlag struct {
+    cli.<a href="index.html#IntFlag">IntFlag</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+IntFlag is the flag type that wraps cli.IntFlag to allow
+for other values to be specified
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewIntFlag">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=3229:3269#L123">NewIntFlag</a></h3>
+				<pre>func NewIntFlag(fl cli.<a href="index.html#IntFlag">IntFlag</a>) *<a href="index.html#IntFlag">IntFlag</a></pre>
+				<p>
+NewIntFlag creates a new IntFlag
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="IntFlag.Apply">func (*IntFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=3405:3447#L129">Apply</a></h3>
+				<pre>func (f *<a href="index.html#IntFlag">IntFlag</a>) Apply(set *<a href="../../../../flag/index.html">flag</a>.<a href="../../../../flag/index.html#FlagSet">FlagSet</a>)</pre>
+				<p>
+Apply saves the flagSet for later usage calls, then calls the
+wrapped IntFlag.Apply
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="IntFlag.ApplyInputSourceValue">func (*IntFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag.go?s=5505:5596#L173">ApplyInputSourceValue</a></h3>
+				<pre>func (f *<a href="index.html#IntFlag">IntFlag</a>) ApplyInputSourceValue(context *cli.<a href="index.html#Context">Context</a>, isc <a href="index.html#InputSourceContext">InputSourceContext</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+ApplyInputSourceValue applies a int value to the flagSet if required
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="IntSliceFlag">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=3594:3659#L136">IntSliceFlag</a></h2>
+			<pre>type IntSliceFlag struct {
+    cli.<a href="index.html#IntSliceFlag">IntSliceFlag</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+IntSliceFlag is the flag type that wraps cli.IntSliceFlag to allow
+for other values to be specified
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewIntSliceFlag">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=3707:3762#L142">NewIntSliceFlag</a></h3>
+				<pre>func NewIntSliceFlag(fl cli.<a href="index.html#IntSliceFlag">IntSliceFlag</a>) *<a href="index.html#IntSliceFlag">IntSliceFlag</a></pre>
+				<p>
+NewIntSliceFlag creates a new IntSliceFlag
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="IntSliceFlag.Apply">func (*IntSliceFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=3913:3960#L148">Apply</a></h3>
+				<pre>func (f *<a href="index.html#IntSliceFlag">IntSliceFlag</a>) Apply(set *<a href="../../../../flag/index.html">flag</a>.<a href="../../../../flag/index.html#FlagSet">FlagSet</a>)</pre>
+				<p>
+Apply saves the flagSet for later usage calls, then calls the
+wrapped IntSliceFlag.Apply
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="IntSliceFlag.ApplyInputSourceValue">func (*IntSliceFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag.go?s=3517:3613#L97">ApplyInputSourceValue</a></h3>
+				<pre>func (f *<a href="index.html#IntSliceFlag">IntSliceFlag</a>) ApplyInputSourceValue(context *cli.<a href="index.html#Context">Context</a>, isc <a href="index.html#InputSourceContext">InputSourceContext</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+ApplyInputSourceValue applies a IntSlice value if required
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="MapInputSource">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/map_input_source.go?s=187:255#L4">MapInputSource</a></h2>
+			<pre>type MapInputSource struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+MapInputSource implements InputSourceContext to return
+data from the map that is loaded.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="MapInputSource.Bool">func (*MapInputSource) <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/map_input_source.go?s=5590:5648#L187">Bool</a></h3>
+				<pre>func (fsm *<a href="index.html#MapInputSource">MapInputSource</a>) Bool(name <a href="../../../../builtin/index.html#string">string</a>) (<a href="../../../../builtin/index.html#bool">bool</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Bool returns an bool from the map otherwise returns false
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="MapInputSource.BoolT">func (*MapInputSource) <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/map_input_source.go?s=6217:6276#L209">BoolT</a></h3>
+				<pre>func (fsm *<a href="index.html#MapInputSource">MapInputSource</a>) BoolT(name <a href="../../../../builtin/index.html#string">string</a>) (<a href="../../../../builtin/index.html#bool">bool</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+BoolT returns an bool from the map otherwise returns true
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="MapInputSource.Duration">func (*MapInputSource) <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/map_input_source.go?s=1636:1707#L55">Duration</a></h3>
+				<pre>func (fsm *<a href="index.html#MapInputSource">MapInputSource</a>) Duration(name <a href="../../../../builtin/index.html#string">string</a>) (<a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Duration">Duration</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Duration returns a duration from the map if it exists otherwise returns 0
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="MapInputSource.Float64">func (*MapInputSource) <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/map_input_source.go?s=2305:2369#L77">Float64</a></h3>
+				<pre>func (fsm *<a href="index.html#MapInputSource">MapInputSource</a>) Float64(name <a href="../../../../builtin/index.html#string">string</a>) (<a href="../../../../builtin/index.html#float64">float64</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Float64 returns an float64 from the map if it exists otherwise returns 0
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="MapInputSource.Generic">func (*MapInputSource) <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/map_input_source.go?s=4931:4999#L165">Generic</a></h3>
+				<pre>func (fsm *<a href="index.html#MapInputSource">MapInputSource</a>) Generic(name <a href="../../../../builtin/index.html#string">string</a>) (cli.<a href="index.html#Generic">Generic</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Generic returns an cli.Generic from the map if it exists otherwise returns nil
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="MapInputSource.Int">func (*MapInputSource) <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/map_input_source.go?s=1011:1067#L33">Int</a></h3>
+				<pre>func (fsm *<a href="index.html#MapInputSource">MapInputSource</a>) Int(name <a href="../../../../builtin/index.html#string">string</a>) (<a href="../../../../builtin/index.html#int">int</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Int returns an int from the map if it exists otherwise returns 0
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="MapInputSource.IntSlice">func (*MapInputSource) <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/map_input_source.go?s=4280:4343#L143">IntSlice</a></h3>
+				<pre>func (fsm *<a href="index.html#MapInputSource">MapInputSource</a>) IntSlice(name <a href="../../../../builtin/index.html#string">string</a>) ([]<a href="../../../../builtin/index.html#int">int</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+IntSlice returns an []int from the map if it exists otherwise returns nil
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="MapInputSource.String">func (*MapInputSource) <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/map_input_source.go?s=2964:3026#L99">String</a></h3>
+				<pre>func (fsm *<a href="index.html#MapInputSource">MapInputSource</a>) String(name <a href="../../../../builtin/index.html#string">string</a>) (<a href="../../../../builtin/index.html#string">string</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+String returns a string from the map if it exists otherwise returns an empty string
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="MapInputSource.StringSlice">func (*MapInputSource) <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/map_input_source.go?s=3616:3685#L121">StringSlice</a></h3>
+				<pre>func (fsm *<a href="index.html#MapInputSource">MapInputSource</a>) StringSlice(name <a href="../../../../builtin/index.html#string">string</a>) ([]<a href="../../../../builtin/index.html#string">string</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+StringSlice returns an []string from the map if it exists otherwise returns nil
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="StringFlag">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=4654:4715#L174">StringFlag</a></h2>
+			<pre>type StringFlag struct {
+    cli.<a href="index.html#StringFlag">StringFlag</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+StringFlag is the flag type that wraps cli.StringFlag to allow
+for other values to be specified
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewStringFlag">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=4759:4808#L180">NewStringFlag</a></h3>
+				<pre>func NewStringFlag(fl cli.<a href="index.html#StringFlag">StringFlag</a>) *<a href="index.html#StringFlag">StringFlag</a></pre>
+				<p>
+NewStringFlag creates a new StringFlag
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="StringFlag.Apply">func (*StringFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=4953:4998#L186">Apply</a></h3>
+				<pre>func (f *<a href="index.html#StringFlag">StringFlag</a>) Apply(set *<a href="../../../../flag/index.html">flag</a>.<a href="../../../../flag/index.html#FlagSet">FlagSet</a>)</pre>
+				<p>
+Apply saves the flagSet for later usage calls, then calls the
+wrapped StringFlag.Apply
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="StringFlag.ApplyInputSourceValue">func (*StringFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag.go?s=5049:5143#L155">ApplyInputSourceValue</a></h3>
+				<pre>func (f *<a href="index.html#StringFlag">StringFlag</a>) ApplyInputSourceValue(context *cli.<a href="index.html#Context">Context</a>, isc <a href="index.html#InputSourceContext">InputSourceContext</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+ApplyInputSourceValue applies a String value to the flagSet if required
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="StringSliceFlag">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=5154:5225#L193">StringSliceFlag</a></h2>
+			<pre>type StringSliceFlag struct {
+    cli.<a href="index.html#StringSliceFlag">StringSliceFlag</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+StringSliceFlag is the flag type that wraps cli.StringSliceFlag to allow
+for other values to be specified
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewStringSliceFlag">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=5279:5343#L199">NewStringSliceFlag</a></h3>
+				<pre>func NewStringSliceFlag(fl cli.<a href="index.html#StringSliceFlag">StringSliceFlag</a>) *<a href="index.html#StringSliceFlag">StringSliceFlag</a></pre>
+				<p>
+NewStringSliceFlag creates a new StringSliceFlag
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="StringSliceFlag.Apply">func (*StringSliceFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=5503:5553#L205">Apply</a></h3>
+				<pre>func (f *<a href="index.html#StringSliceFlag">StringSliceFlag</a>) Apply(set *<a href="../../../../flag/index.html">flag</a>.<a href="../../../../flag/index.html#FlagSet">FlagSet</a>)</pre>
+				<p>
+Apply saves the flagSet for later usage calls, then calls the
+wrapped StringSliceFlag.Apply
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="StringSliceFlag.ApplyInputSourceValue">func (*StringSliceFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag.go?s=2919:3018#L75">ApplyInputSourceValue</a></h3>
+				<pre>func (f *<a href="index.html#StringSliceFlag">StringSliceFlag</a>) ApplyInputSourceValue(context *cli.<a href="index.html#Context">Context</a>, isc <a href="index.html#InputSourceContext">InputSourceContext</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+ApplyInputSourceValue applies a StringSlice value to the flagSet if required
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Uint64Flag">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=5704:5765#L212">Uint64Flag</a></h2>
+			<pre>type Uint64Flag struct {
+    cli.<a href="index.html#Uint64Flag">Uint64Flag</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Uint64Flag is the flag type that wraps cli.Uint64Flag to allow
+for other values to be specified
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewUint64Flag">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=5809:5858#L218">NewUint64Flag</a></h3>
+				<pre>func NewUint64Flag(fl cli.<a href="index.html#Uint64Flag">Uint64Flag</a>) *<a href="index.html#Uint64Flag">Uint64Flag</a></pre>
+				<p>
+NewUint64Flag creates a new Uint64Flag
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Uint64Flag.Apply">func (*Uint64Flag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=6003:6048#L224">Apply</a></h3>
+				<pre>func (f *<a href="index.html#Uint64Flag">Uint64Flag</a>) Apply(set *<a href="../../../../flag/index.html">flag</a>.<a href="../../../../flag/index.html#FlagSet">FlagSet</a>)</pre>
+				<p>
+Apply saves the flagSet for later usage calls, then calls the
+wrapped Uint64Flag.Apply
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="UintFlag">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=6190:6247#L231">UintFlag</a></h2>
+			<pre>type UintFlag struct {
+    cli.<a href="index.html#UintFlag">UintFlag</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+UintFlag is the flag type that wraps cli.UintFlag to allow
+for other values to be specified
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewUintFlag">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=6287:6330#L237">NewUintFlag</a></h3>
+				<pre>func NewUintFlag(fl cli.<a href="index.html#UintFlag">UintFlag</a>) *<a href="index.html#UintFlag">UintFlag</a></pre>
+				<p>
+NewUintFlag creates a new UintFlag
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="UintFlag.Apply">func (*UintFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/altsrc/flag_generated.go?s=6469:6512#L243">Apply</a></h3>
+				<pre>func (f *<a href="index.html#UintFlag">UintFlag</a>) Apply(set *<a href="../../../../flag/index.html">flag</a>.<a href="../../../../flag/index.html#FlagSet">FlagSet</a>)</pre>
+				<p>
+Apply saves the flagSet for later usage calls, then calls the
+wrapped UintFlag.Apply
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

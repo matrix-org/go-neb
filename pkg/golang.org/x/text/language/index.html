@@ -1,0 +1,2342 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>language - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package language</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "golang.org/x/text/language"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+				<dd><a href="index.html#pkg-examples" class="examplesLink">Examples</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-subdirectories">Subdirectories</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package language implements BCP 47 language tags and related functionality.
+</p>
+<p>
+The Tag type, which is used to represent languages, is agnostic to the
+meaning of its subtags. Tags are not fully canonicalized to preserve
+information that may be valuable in certain contexts. As a consequence, two
+different tags may represent identical languages.
+</p>
+<p>
+Initializing language- or locale-specific components usually consists of
+two steps. The first step is to select a display language based on the
+preferred languages of the user and the languages supported by an application.
+The second step is to create the language-specific services based on
+this selection. Each is discussed in more details below.
+</p>
+<h3 id="hdr-Matching_preferred_against_supported_languages">Matching preferred against supported languages</h3>
+<p>
+An application may support various languages. This list is typically limited
+by the languages for which there exists translations of the user interface.
+Similarly, a user may provide a list of preferred languages which is limited
+by the languages understood by this user.
+An application should use a Matcher to find the best supported language based
+on the user&#39;s preferred list.
+Matchers are aware of the intricacies of equivalence between languages.
+The default Matcher implementation takes into account things such as
+deprecated subtags, legacy tags, and mutual intelligibility between scripts
+and languages.
+</p>
+<p>
+A Matcher for English, Australian English, Danish, and standard Mandarin can
+be defined as follows:
+</p>
+<pre>var matcher = language.NewMatcher([]language.Tag{
+	language.English,   // The first language is used as fallback.
+	language.MustParse(&#34;en-AU&#34;),
+	language.Danish,
+	language.Chinese,
+})
+</pre>
+<p>
+The following code selects the best match for someone speaking Spanish and
+Norwegian:
+</p>
+<pre>preferred := []language.Tag{ language.Spanish, language.Norwegian }
+tag, _, _ := matcher.Match(preferred...)
+</pre>
+<p>
+In this case, the best match is Danish, as Danish is sufficiently a match to
+Norwegian to not have to fall back to the default.
+See ParseAcceptLanguage on how to handle the Accept-Language HTTP header.
+</p>
+<h3 id="hdr-Selecting_language_specific_services">Selecting language-specific services</h3>
+<p>
+One should always use the Tag returned by the Matcher to create an instance
+of any of the language-specific services provided by the text repository.
+This prevents the mixing of languages, such as having a different language for
+messages and display names, as well as improper casing or sorting order for
+the selected language.
+Using the returned Tag also allows user-defined settings, such as collation
+order or numbering system to be transparently passed as options.
+</p>
+<p>
+If you have language-specific data in your application, however, it will in
+most cases suffice to use the index returned by the matcher to identify
+the user language.
+The following loop provides an alternative in case this is not sufficient:
+</p>
+<pre>supported := map[language.Tag]data{
+	language.English:            enData,
+	language.MustParse(&#34;en-AU&#34;): enAUData,
+	language.Danish:             daData,
+	language.Chinese:            zhData,
+}
+tag, _, _ := matcher.Match(preferred...)
+for ; tag != language.Und; tag = tag.Parent() {
+	if v, ok := supported[tag]; ok {
+		return v
+	}
+}
+return enData // should not reach here
+</pre>
+<p>
+Repeatedly taking the Parent of the tag returned by Match will eventually
+match one of the tags used to initialize the Matcher.
+</p>
+<h3 id="hdr-Canonicalization">Canonicalization</h3>
+<p>
+By default, only legacy and deprecated tags are converted into their
+canonical equivalent. All other information is preserved. This approach makes
+the confidence scores more accurate and allows matchers to distinguish
+between variants that are otherwise lost.
+</p>
+<p>
+As a consequence, two tags that should be treated as identical according to
+BCP 47 or CLDR, like &#34;en-Latn&#34; and &#34;en&#34;, will be represented differently. The
+Matchers will handle such distinctions, though, and are aware of the
+equivalence relations. The CanonType type can be used to alter the
+canonicalization form.
+</p>
+<h3 id="hdr-References">References</h3>
+<p>
+BCP 47 - Tags for Identifying Languages
+<a href="http://tools.ietf.org/html/bcp47">http://tools.ietf.org/html/bcp47</a>
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="index.html#pkg-constants">Constants</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+				
+				<dd><a href="index.html#CompactIndex">func CompactIndex(t Tag) (index int, ok bool)</a></dd>
+			
+				
+				<dd><a href="index.html#ParseAcceptLanguage">func ParseAcceptLanguage(s string) (tag []Tag, q []float32, err error)</a></dd>
+			
+			
+				
+				<dd><a href="index.html#Base">type Base</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MustParseBase">func MustParseBase(s string) Base</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ParseBase">func ParseBase(s string) (Base, error)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Base.ISO3">func (b Base) ISO3() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Base.IsPrivateUse">func (b Base) IsPrivateUse() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Base.String">func (b Base) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#CanonType">type CanonType</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CanonType.Canonicalize">func (c CanonType) Canonicalize(t Tag) (Tag, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CanonType.Compose">func (c CanonType) Compose(part ...interface{}) (t Tag, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CanonType.Make">func (c CanonType) Make(s string) Tag</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CanonType.MustParse">func (c CanonType) MustParse(s string) Tag</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CanonType.Parse">func (c CanonType) Parse(s string) (t Tag, err error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Confidence">type Confidence</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Comprehends">func Comprehends(speaker, alternative Tag) Confidence</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Confidence.String">func (c Confidence) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Coverage">type Coverage</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewCoverage">func NewCoverage(list ...interface{}) Coverage</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Extension">type Extension</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ParseExtension">func ParseExtension(s string) (e Extension, err error)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Extension.String">func (e Extension) String() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Extension.Tokens">func (e Extension) Tokens() []string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Extension.Type">func (e Extension) Type() byte</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Matcher">type Matcher</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewMatcher">func NewMatcher(t []Tag) Matcher</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Region">type Region</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#EncodeM49">func EncodeM49(r int) (Region, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MustParseRegion">func MustParseRegion(s string) Region</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ParseRegion">func ParseRegion(s string) (Region, error)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Region.Canonicalize">func (r Region) Canonicalize() Region</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Region.Contains">func (r Region) Contains(c Region) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Region.ISO3">func (r Region) ISO3() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Region.IsCountry">func (r Region) IsCountry() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Region.IsGroup">func (r Region) IsGroup() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Region.IsPrivateUse">func (r Region) IsPrivateUse() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Region.M49">func (r Region) M49() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Region.String">func (r Region) String() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Region.TLD">func (r Region) TLD() (Region, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Script">type Script</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MustParseScript">func MustParseScript(s string) Script</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ParseScript">func ParseScript(s string) (Script, error)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Script.IsPrivateUse">func (s Script) IsPrivateUse() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Script.String">func (s Script) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Tag">type Tag</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Compose">func Compose(part ...interface{}) (t Tag, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Make">func Make(s string) Tag</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MustParse">func MustParse(s string) Tag</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Parse">func Parse(s string) (t Tag, err error)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Tag.Base">func (t Tag) Base() (Base, Confidence)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Tag.Extension">func (t Tag) Extension(x byte) (ext Extension, ok bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Tag.Extensions">func (t Tag) Extensions() []Extension</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Tag.IsRoot">func (t Tag) IsRoot() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Tag.Parent">func (t Tag) Parent() Tag</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Tag.Raw">func (t Tag) Raw() (b Base, s Script, r Region)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Tag.Region">func (t Tag) Region() (Region, Confidence)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Tag.Script">func (t Tag) Script() (Script, Confidence)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Tag.SetTypeForKey">func (t Tag) SetTypeForKey(key, value string) (Tag, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Tag.String">func (t Tag) String() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Tag.TypeForKey">func (t Tag) TypeForKey(key string) string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Tag.Variants">func (t Tag) Variants() []Variant</a></dd>
+				
+			
+				
+				<dd><a href="index.html#ValueError">type ValueError</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ValueError.Error">func (e ValueError) Error() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ValueError.Subtag">func (e ValueError) Subtag() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Variant">type Variant</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ParseVariant">func ParseVariant(s string) (Variant, error)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Variant.String">func (v Variant) String() string</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+		<div id="pkg-examples">
+			<h4>Examples</h4>
+			<dl>
+			
+			<dd><a class="exampleLink" href="index.html#example_CanonType">CanonType</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Compose">Compose</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Comprehends">Comprehends</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Matcher">Matcher</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_ParseAcceptLanguage">ParseAcceptLanguage</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Parse_errors">Parse (Errors)</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Region_TLD">Region.TLD</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Tag_Base">Tag.Base</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Tag_Region">Tag.Region</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Tag_Script">Tag.Script</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Tag_values">Tag (Values)</a></dd>
+			
+			</dl>
+		</div>
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/golang.org/x/text/language/common.go">common.go</a>
+			
+				<a href="http://localhost:6060/src/golang.org/x/text/language/coverage.go">coverage.go</a>
+			
+				<a href="http://localhost:6060/src/golang.org/x/text/language/go1_2.go">go1_2.go</a>
+			
+				<a href="http://localhost:6060/src/golang.org/x/text/language/index.go">index.go</a>
+			
+				<a href="http://localhost:6060/src/golang.org/x/text/language/language.go">language.go</a>
+			
+				<a href="http://localhost:6060/src/golang.org/x/text/language/lookup.go">lookup.go</a>
+			
+				<a href="http://localhost:6060/src/golang.org/x/text/language/match.go">match.go</a>
+			
+				<a href="http://localhost:6060/src/golang.org/x/text/language/parse.go">parse.go</a>
+			
+				<a href="http://localhost:6060/src/golang.org/x/text/language/tables.go">tables.go</a>
+			
+				<a href="http://localhost:6060/src/golang.org/x/text/language/tags.go">tags.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const <span id="CLDRVersion">CLDRVersion</span> = &#34;29&#34;</pre>
+				<p>
+CLDRVersion is the CLDR version from which the tables in this package are derived.
+</p>
+
+			
+				<pre>const <span id="NumCompactTags">NumCompactTags</span> = 747</pre>
+				<p>
+NumCompactTags is the number of common tags. The maximum tag is
+NumCompactTags-1.
+</p>
+
+			
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var <span id="ErrMissingLikelyTagsData">ErrMissingLikelyTagsData</span> = <a href="../../../../errors/index.html">errors</a>.<a href="../../../../errors/index.html#New">New</a>(&#34;missing likely tags data&#34;)</pre>
+				<p>
+ErrMissingLikelyTagsData indicates no information was available
+to compute likely values of missing tags.
+</p>
+
+			
+		
+		
+			
+			
+			<h2 id="CompactIndex">func <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=24453:24498#L768">CompactIndex</a></h2>
+			<pre>func CompactIndex(t <a href="index.html#Tag">Tag</a>) (index <a href="../../../../builtin/index.html#int">int</a>, ok <a href="../../../../builtin/index.html#bool">bool</a>)</pre>
+			<p>
+CompactIndex returns an index, where 0 &lt;= index &lt; NumCompactTags, for tags
+for which data exists in the text repository. The index will change over time
+and should not be stored in persistent storage. Extensions, except for the
+&#39;va&#39; type of the &#39;u&#39; extension, are ignored. It will return 0, false if no
+compact tag exists, where 0 is the index for the root language (Und).
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ParseAcceptLanguage">func <a href="http://localhost:6060/src/golang.org/x/text/language/parse.go?s=19953:20023#L765">ParseAcceptLanguage</a></h2>
+			<pre>func ParseAcceptLanguage(s <a href="../../../../builtin/index.html#string">string</a>) (tag []<a href="index.html#Tag">Tag</a>, q []<a href="../../../../builtin/index.html#float32">float32</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+ParseAcceptLanguage parses the contents of a Accept-Language header as
+defined in <a href="http://www.ietf.org/rfc/rfc2616.txt">http://www.ietf.org/rfc/rfc2616.txt</a> and returns a list of Tags and
+a list of corresponding quality weights. It is more permissive than RFC 2616
+and may return non-nil slices even if the input is not valid.
+The Tags will be sorted by highest weight first and then by first occurrence.
+Tags with a weight of zero will be dropped. An error will be returned if the
+input could not be parsed.
+</p>
+
+			<div id="example_ParseAcceptLanguage" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">package language_test
+
+import (
+    &#34;fmt&#34;
+    &#34;net/http&#34;
+    &#34;strings&#34;
+
+    &#34;golang.org/x/text/language&#34;
+)
+
+<span class="comment">// matcher is a language.Matcher configured for all supported languages.</span>
+var matcher = language.NewMatcher([]language.Tag{
+    language.BritishEnglish,
+    language.Norwegian,
+    language.German,
+})
+
+<span class="comment">// handler is a http.HandlerFunc.</span>
+func handler(w http.ResponseWriter, r *http.Request) {
+    t, q, err := language.ParseAcceptLanguage(r.Header.Get(&#34;Accept-Language&#34;))
+    <span class="comment">// We ignore the error: the default language will be selected for t == nil.</span>
+    tag, _, _ := matcher.Match(t...)
+    fmt.Printf(&#34;%5v (t: %6v; q: %3v; err: %v)\n&#34;, tag, t, q, err)
+}
+
+func ExampleParseAcceptLanguage() {
+    for _, al := range []string{
+        &#34;nn;q=0.3, en-us;q=0.8, en,&#34;,
+        &#34;gsw, en;q=0.7, en-US;q=0.8&#34;,
+        &#34;gsw, nl, da&#34;,
+        &#34;invalid&#34;,
+    } {
+        <span class="comment">// Create dummy request with Accept-Language set and pass it to handler.</span>
+        r, _ := http.NewRequest(&#34;GET&#34;, &#34;example.com&#34;, strings.NewReader(&#34;Hello&#34;))
+        r.Header.Set(&#34;Accept-Language&#34;, al)
+        handler(nil, r)
+    }
+
+    <span class="comment">// Output:</span>
+    <span class="comment">// en-GB (t: [    en  en-US     nn]; q: [  1 0.8 0.3]; err: &lt;nil&gt;)</span>
+    <span class="comment">// en-GB (t: [   gsw  en-US     en]; q: [  1 0.8 0.7]; err: &lt;nil&gt;)</span>
+    <span class="comment">//    de (t: [   gsw     nl     da]; q: [  1   1   1]; err: &lt;nil&gt;)</span>
+    <span class="comment">// en-GB (t: []; q: []; err: language: tag is not well-formed)</span>
+}
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+
+		
+		
+			
+			
+			<h2 id="Base">type <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=25810:25838#L812">Base</a></h2>
+			<pre>type Base struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Base is an ISO 639 language code, used for encoding the base language
+of a language tag.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="MustParseBase">func <a href="http://localhost:6060/src/golang.org/x/text/language/tags.go?s=847:880#L21">MustParseBase</a></h3>
+				<pre>func MustParseBase(s <a href="../../../../builtin/index.html#string">string</a>) <a href="index.html#Base">Base</a></pre>
+				<p>
+MustParseBase is like ParseBase, but panics if the given base cannot be parsed.
+It simplifies safe initialization of Base values.
+</p>
+
+				
+				
+			
+				
+				<h3 id="ParseBase">func <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=26019:26057#L819">ParseBase</a></h3>
+				<pre>func ParseBase(s <a href="../../../../builtin/index.html#string">string</a>) (<a href="index.html#Base">Base</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+ParseBase parses a 2- or 3-letter ISO 639 code.
+It returns a ValueError if s is a well-formed but unknown language identifier
+or another error if another error occurred.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Base.ISO3">func (Base) <a href="http://localhost:6060/src/golang.org/x/text/language/lookup.go?s=4078:4107#L150">ISO3</a></h3>
+				<pre>func (b <a href="index.html#Base">Base</a>) ISO3() <a href="../../../../builtin/index.html#string">string</a></pre>
+				<p>
+ISO3 returns the ISO 639-3 language code.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Base.IsPrivateUse">func (Base) <a href="http://localhost:6060/src/golang.org/x/text/language/lookup.go?s=4517:4552#L166">IsPrivateUse</a></h3>
+				<pre>func (b <a href="index.html#Base">Base</a>) IsPrivateUse() <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+IsPrivateUse reports whether this language code is reserved for private use.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Base.String">func (Base) <a href="http://localhost:6060/src/golang.org/x/text/language/lookup.go?s=3761:3792#L133">String</a></h3>
+				<pre>func (b <a href="index.html#Base">Base</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				<p>
+String returns the BCP 47 representation of the langID.
+Use b as variable name, instead of id, to ensure the variable
+used is consistent with that of Base in which this type is embedded.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="CanonType">type <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=6920:6938#L171">CanonType</a></h2>
+			<pre>type CanonType <a href="../../../../builtin/index.html#int">int</a></pre>
+			<p>
+CanonType can be used to enable or disable various types of canonicalization.
+</p>
+
+
+			
+				<pre>const (
+    <span class="comment">// Replace deprecated base languages with their preferred replacements.</span>
+    <span id="DeprecatedBase">DeprecatedBase</span> <a href="index.html#CanonType">CanonType</a> = 1 &lt;&lt; <a href="../../../../builtin/index.html#iota">iota</a>
+    <span class="comment">// Replace deprecated scripts with their preferred replacements.</span>
+    <span id="DeprecatedScript">DeprecatedScript</span>
+    <span class="comment">// Replace deprecated regions with their preferred replacements.</span>
+    <span id="DeprecatedRegion">DeprecatedRegion</span>
+    <span class="comment">// Remove redundant scripts.</span>
+    <span id="SuppressScript">SuppressScript</span>
+    <span class="comment">// Normalize legacy encodings. This includes legacy languages defined in</span>
+    <span class="comment">// CLDR as well as bibliographic codes defined in ISO-639.</span>
+    <span id="Legacy">Legacy</span>
+    <span class="comment">// Map the dominant language of a macro language group to the macro language</span>
+    <span class="comment">// subtag. For example cmn -&gt; zh.</span>
+    <span id="Macro">Macro</span>
+    <span class="comment">// The CLDR flag should be used if full compatibility with CLDR is required.</span>
+    <span class="comment">// There are a few cases where language.Tag may differ from CLDR. To follow all</span>
+    <span class="comment">// of CLDR&#39;s suggestions, use All|CLDR.</span>
+    <span id="CLDR">CLDR</span>
+
+    <span class="comment">// Raw can be used to Compose or Parse without Canonicalization.</span>
+    <span id="Raw">Raw</span> <a href="index.html#CanonType">CanonType</a> = 0
+
+    <span class="comment">// Replace all deprecated tags with their preferred replacements.</span>
+    <span id="Deprecated">Deprecated</span> = <a href="index.html#DeprecatedBase">DeprecatedBase</a> | <a href="index.html#DeprecatedScript">DeprecatedScript</a> | <a href="index.html#DeprecatedRegion">DeprecatedRegion</a>
+
+    <span class="comment">// All canonicalizations recommended by BCP 47.</span>
+    <span id="BCP47">BCP47</span> = <a href="index.html#Deprecated">Deprecated</a> | <a href="index.html#SuppressScript">SuppressScript</a>
+
+    <span class="comment">// All canonicalizations.</span>
+    <span id="All">All</span> = <a href="index.html#BCP47">BCP47</a> | <a href="index.html#Legacy">Legacy</a> | <a href="index.html#Macro">Macro</a>
+
+    <span class="comment">// Default is the canonicalization used by Parse, Make and Compose. To</span>
+    <span class="comment">// preserve as much information as possible, canonicalizations that remove</span>
+    <span class="comment">// potentially valuable information are not included. The Matcher is</span>
+    <span class="comment">// designed to recognize similar tags that would be the same if</span>
+    <span class="comment">// they were canonicalized using All.</span>
+    <span id="Default">Default</span> = <a href="index.html#Deprecated">Deprecated</a> | <a href="index.html#Legacy">Legacy</a>
+)</pre>
+				
+			
+
+			
+
+			<div id="example_CanonType" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">p := func(id string) {
+    fmt.Printf(&#34;Default(%s) -&gt; %s\n&#34;, id, language.Make(id))
+    fmt.Printf(&#34;BCP47(%s) -&gt; %s\n&#34;, id, language.BCP47.Make(id))
+    fmt.Printf(&#34;Macro(%s) -&gt; %s\n&#34;, id, language.Macro.Make(id))
+    fmt.Printf(&#34;All(%s) -&gt; %s\n&#34;, id, language.All.Make(id))
+}
+p(&#34;en-Latn&#34;)
+p(&#34;sh&#34;)
+p(&#34;zh-cmn&#34;)
+p(&#34;bjd&#34;)
+p(&#34;iw-Latn-fonipa-u-cu-usd&#34;)
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">Default(en-Latn) -&gt; en-Latn
+BCP47(en-Latn) -&gt; en
+Macro(en-Latn) -&gt; en-Latn
+All(en-Latn) -&gt; en
+Default(sh) -&gt; sr-Latn
+BCP47(sh) -&gt; sh
+Macro(sh) -&gt; sh
+All(sh) -&gt; sr-Latn
+Default(zh-cmn) -&gt; cmn
+BCP47(zh-cmn) -&gt; cmn
+Macro(zh-cmn) -&gt; zh
+All(zh-cmn) -&gt; zh
+Default(bjd) -&gt; drl
+BCP47(bjd) -&gt; drl
+Macro(bjd) -&gt; bjd
+All(bjd) -&gt; drl
+Default(iw-Latn-fonipa-u-cu-usd) -&gt; he-Latn-fonipa-u-cu-usd
+BCP47(iw-Latn-fonipa-u-cu-usd) -&gt; he-Latn-fonipa-u-cu-usd
+Macro(iw-Latn-fonipa-u-cu-usd) -&gt; iw-Latn-fonipa-u-cu-usd
+All(iw-Latn-fonipa-u-cu-usd) -&gt; he-Latn-fonipa-u-cu-usd
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+			
+
+			
+
+			
+				
+				<h3 id="CanonType.Canonicalize">func (CanonType) <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=10562:10613#L292">Canonicalize</a></h3>
+				<pre>func (c <a href="index.html#CanonType">CanonType</a>) Canonicalize(t <a href="index.html#Tag">Tag</a>) (<a href="index.html#Tag">Tag</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Canonicalize returns the canonicalized equivalent of the tag.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="CanonType.Compose">func (CanonType) <a href="http://localhost:6060/src/golang.org/x/text/language/parse.go?s=15645:15711#L573">Compose</a></h3>
+				<pre>func (c <a href="index.html#CanonType">CanonType</a>) Compose(part ...interface{}) (t <a href="index.html#Tag">Tag</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Compose creates a Tag from individual parts, which may be of type Tag, Base,
+Script, Region, Variant, []Variant, Extension, []Extension or error. If a
+Base, Script or Region or slice of type Variant or Extension is passed more
+than once, the latter will overwrite the former. Variants and Extensions are
+accumulated, but if two extensions of the same type are passed, the latter
+will replace the former. A Tag overwrites all former values and typically
+only makes sense as the first argument. The resulting tag is returned after
+canonicalizing using CanonType c. If one or more errors are encountered,
+one of the errors is returned.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="CanonType.Make">func (CanonType) <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=6059:6096#L141">Make</a></h3>
+				<pre>func (c <a href="index.html#CanonType">CanonType</a>) Make(s <a href="../../../../builtin/index.html#string">string</a>) <a href="index.html#Tag">Tag</a></pre>
+				<p>
+Make is a convenience wrapper for c.Parse that omits the error.
+In case of an error, a sensible default is returned.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="CanonType.MustParse">func (CanonType) <a href="http://localhost:6060/src/golang.org/x/text/language/tags.go?s=598:640#L11">MustParse</a></h3>
+				<pre>func (c <a href="index.html#CanonType">CanonType</a>) MustParse(s <a href="../../../../builtin/index.html#string">string</a>) <a href="index.html#Tag">Tag</a></pre>
+				<p>
+MustParse is like Parse, but panics if the given BCP 47 tag cannot be parsed.
+It simplifies safe initialization of Tag values.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="CanonType.Parse">func (CanonType) <a href="http://localhost:6060/src/golang.org/x/text/language/parse.go?s=6452:6505#L230">Parse</a></h3>
+				<pre>func (c <a href="index.html#CanonType">CanonType</a>) Parse(s <a href="../../../../builtin/index.html#string">string</a>) (t <a href="index.html#Tag">Tag</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Parse parses the given BCP 47 string and returns a valid Tag. If parsing
+failed it returns an error and any part of the tag that could be parsed.
+If parsing succeeded but an unknown value was found, it returns
+ValueError. The Tag returned in this case is just stripped of the unknown
+value. All other values are preserved. It accepts tags in the BCP 47 format
+and extensions to this standard defined in
+<a href="http://www.unicode.org/reports/tr35/#Unicode_Language_and_Locale_Identifiers">http://www.unicode.org/reports/tr35/#Unicode_Language_and_Locale_Identifiers</a>.
+The resulting tag is canonicalized using the the canonicalization type c.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Confidence">type <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=11009:11028#L305">Confidence</a></h2>
+			<pre>type Confidence <a href="../../../../builtin/index.html#int">int</a></pre>
+			<p>
+Confidence indicates the level of certainty for a given return value.
+For example, Serbian may be written in Cyrillic or Latin script.
+The confidence level indicates whether a value was explicitly specified,
+whether it is typically the only possible value, or whether there is
+an ambiguity.
+</p>
+
+
+			
+				<pre>const (
+    <span id="No">No</span>    <a href="index.html#Confidence">Confidence</a> = <a href="../../../../builtin/index.html#iota">iota</a> <span class="comment">// full confidence that there was no match</span>
+    <span id="Low">Low</span>                     <span class="comment">// most likely value picked out of a set of alternatives</span>
+    <span id="High">High</span>                    <span class="comment">// value is generally assumed to be the correct match</span>
+    <span id="Exact">Exact</span>                   <span class="comment">// exact match or explicitly specified value</span>
+)</pre>
+				
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="Comprehends">func <a href="http://localhost:6060/src/golang.org/x/text/language/match.go?s=637:690#L10">Comprehends</a></h3>
+				<pre>func Comprehends(speaker, alternative <a href="index.html#Tag">Tag</a>) <a href="index.html#Confidence">Confidence</a></pre>
+				<p>
+Comprehends reports the confidence score for a speaker of a given language
+to being able to comprehend the written form of an alternative language.
+</p>
+
+				<div id="example_Comprehends" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code"><span class="comment">// Various levels of comprehensibility.</span>
+fmt.Println(language.Comprehends(language.English, language.English))
+fmt.Println(language.Comprehends(language.AmericanEnglish, language.BritishEnglish))
+
+<span class="comment">// An explicit Und results in no match.</span>
+fmt.Println(language.Comprehends(language.English, language.Und))
+
+fmt.Println(&#34;----&#34;)
+
+<span class="comment">// There is usually no mutual comprehensibility between different scripts.</span>
+fmt.Println(language.Comprehends(language.Make(&#34;en-Dsrt&#34;), language.English))
+
+<span class="comment">// One exception is for Traditional versus Simplified Chinese, albeit with</span>
+<span class="comment">// a low confidence.</span>
+fmt.Println(language.Comprehends(language.TraditionalChinese, language.SimplifiedChinese))
+
+fmt.Println(&#34;----&#34;)
+
+<span class="comment">// A Swiss German speaker will often understand High German.</span>
+fmt.Println(language.Comprehends(language.Make(&#34;gsw&#34;), language.Make(&#34;de&#34;)))
+
+<span class="comment">// The converse is not generally the case.</span>
+fmt.Println(language.Comprehends(language.Make(&#34;de&#34;), language.Make(&#34;gsw&#34;)))
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">Exact
+High
+No
+----
+No
+Low
+----
+High
+No
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+
+			
+				
+				<h3 id="Confidence.String">func (Confidence) <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=11395:11430#L316">String</a></h3>
+				<pre>func (c <a href="index.html#Confidence">Confidence</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Coverage">type <a href="http://localhost:6060/src/golang.org/x/text/language/coverage.go?s=471:790#L6">Coverage</a></h2>
+			<pre>type Coverage interface {
+    <span class="comment">// Tags returns the list of supported tags.</span>
+    Tags() []<a href="index.html#Tag">Tag</a>
+
+    <span class="comment">// BaseLanguages returns the list of supported base languages.</span>
+    BaseLanguages() []<a href="index.html#Base">Base</a>
+
+    <span class="comment">// Scripts returns the list of supported scripts.</span>
+    Scripts() []<a href="index.html#Script">Script</a>
+
+    <span class="comment">// Regions returns the list of supported regions.</span>
+    Regions() []<a href="index.html#Region">Region</a>
+}</pre>
+			<p>
+The Coverage interface is used to define the level of coverage of an
+internationalization service. Note that not all types are supported by all
+services. As lists may be generated on the fly, it is recommended that users
+of a Coverage cache the results.
+</p>
+
+
+			
+
+			
+				<pre>var (
+    <span class="comment">// Supported defines a Coverage that lists all supported subtags. Tags</span>
+    <span class="comment">// always returns nil.</span>
+    <span id="Supported">Supported</span> <a href="index.html#Coverage">Coverage</a> = allSubtags{}
+)</pre>
+				
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewCoverage">func <a href="http://localhost:6060/src/golang.org/x/text/language/coverage.go?s=4490:4536#L162">NewCoverage</a></h3>
+				<pre>func NewCoverage(list ...interface{}) <a href="index.html#Coverage">Coverage</a></pre>
+				<p>
+NewCoverage returns a Coverage for the given lists. It is typically used by
+packages providing internationalization services to define their level of
+coverage. A list may be of type []T or func() []T, where T is either Tag,
+Base, Script or Region. The returned Coverage derives the value for Bases
+from Tags if no func or slice for []Base is specified. For other unspecified
+types the returned Coverage will return nil for the respective methods.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="Extension">type <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=18087:18122#L536">Extension</a></h2>
+			<pre>type Extension struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Extension is a single BCP 47 extension.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="ParseExtension">func <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=18335:18389#L547">ParseExtension</a></h3>
+				<pre>func ParseExtension(s <a href="../../../../builtin/index.html#string">string</a>) (e <a href="index.html#Extension">Extension</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+ParseExtension parses s as an extension and returns it on success.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Extension.String">func (Extension) <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=18213:18247#L542">String</a></h3>
+				<pre>func (e <a href="index.html#Extension">Extension</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				<p>
+String returns the string representation of the extension, including the
+type tag.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Extension.Tokens">func (Extension) <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=18875:18911#L571">Tokens</a></h3>
+				<pre>func (e <a href="index.html#Extension">Extension</a>) Tokens() []<a href="../../../../builtin/index.html#string">string</a></pre>
+				<p>
+Tokens returns the list of tokens of e.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Extension.Type">func (Extension) <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=18751:18781#L563">Type</a></h3>
+				<pre>func (e <a href="index.html#Extension">Extension</a>) Type() <a href="../../../../builtin/index.html#byte">byte</a></pre>
+				<p>
+Type returns the one-byte extension type of e. It returns 0 for the zero
+exception.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Matcher">type <a href="http://localhost:6060/src/golang.org/x/text/language/match.go?s=403:481#L4">Matcher</a></h2>
+			<pre>type Matcher interface {
+    Match(t ...<a href="index.html#Tag">Tag</a>) (tag <a href="index.html#Tag">Tag</a>, index <a href="../../../../builtin/index.html#int">int</a>, c <a href="index.html#Confidence">Confidence</a>)
+}</pre>
+			<p>
+Matcher is the interface that wraps the Match method.
+</p>
+<p>
+Match returns the best match for any of the given tags, along with
+a unique index associated with the returned tag and a confidence
+score.
+</p>
+
+
+			
+
+			
+
+			<div id="example_Matcher" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		<p>ExampleMatcher_bestMatch gives some examples of getting the best match of
+a set of tags to any of the tags of given set.
+</p>
+		
+		
+			<p>Code:</p>
+			<pre class="code"><span class="comment">// This is the set of tags from which we want to pick the best match. These</span>
+<span class="comment">// can be, for example, the supported languages for some package.</span>
+tags := []language.Tag{
+    language.English,
+    language.BritishEnglish,
+    language.French,
+    language.Afrikaans,
+    language.BrazilianPortuguese,
+    language.EuropeanPortuguese,
+    language.Croatian,
+    language.SimplifiedChinese,
+    language.Raw.Make(&#34;iw-IL&#34;),
+    language.Raw.Make(&#34;iw&#34;),
+    language.Raw.Make(&#34;he&#34;),
+}
+m := language.NewMatcher(tags)
+
+<span class="comment">// A simple match.</span>
+fmt.Println(m.Match(language.Make(&#34;fr&#34;)))
+
+<span class="comment">// Australian English is closer to British than American English.</span>
+fmt.Println(m.Match(language.Make(&#34;en-AU&#34;)))
+
+<span class="comment">// Default to the first tag passed to the Matcher if there is no match.</span>
+fmt.Println(m.Match(language.Make(&#34;ar&#34;)))
+
+<span class="comment">// Get the default tag.</span>
+fmt.Println(m.Match())
+
+fmt.Println(&#34;----&#34;)
+
+<span class="comment">// Croatian speakers will likely understand Serbian written in Latin script.</span>
+fmt.Println(m.Match(language.Make(&#34;sr-Latn&#34;)))
+
+<span class="comment">// We match SimplifiedChinese, but with Low confidence.</span>
+fmt.Println(m.Match(language.TraditionalChinese))
+
+<span class="comment">// Serbian in Latin script is a closer match to Croatian than Traditional</span>
+<span class="comment">// Chinese to Simplified Chinese.</span>
+fmt.Println(m.Match(language.TraditionalChinese, language.Make(&#34;sr-Latn&#34;)))
+
+fmt.Println(&#34;----&#34;)
+
+<span class="comment">// In case a multiple variants of a language are available, the most spoken</span>
+<span class="comment">// variant is typically returned.</span>
+fmt.Println(m.Match(language.Portuguese))
+
+<span class="comment">// Pick the first value passed to Match in case of a tie.</span>
+fmt.Println(m.Match(language.Dutch, language.Make(&#34;fr-BE&#34;), language.Make(&#34;af-NA&#34;)))
+fmt.Println(m.Match(language.Dutch, language.Make(&#34;af-NA&#34;), language.Make(&#34;fr-BE&#34;)))
+
+fmt.Println(&#34;----&#34;)
+
+<span class="comment">// If a Matcher is initialized with a language and it&#39;s deprecated version,</span>
+<span class="comment">// it will distinguish between them.</span>
+fmt.Println(m.Match(language.Raw.Make(&#34;iw&#34;)))
+
+<span class="comment">// However, for non-exact matches, it will treat deprecated versions as</span>
+<span class="comment">// equivalent and consider other factors first.</span>
+fmt.Println(m.Match(language.Raw.Make(&#34;he-IL&#34;)))
+
+fmt.Println(&#34;----&#34;)
+
+<span class="comment">// User settings passed to the Unicode extension are ignored for matching</span>
+<span class="comment">// and preserved in the returned tag.</span>
+fmt.Println(m.Match(language.Make(&#34;de-u-co-phonebk&#34;), language.Make(&#34;fr-u-cu-frf&#34;)))
+
+<span class="comment">// Even if the matching language is different.</span>
+fmt.Println(m.Match(language.Make(&#34;de-u-co-phonebk&#34;), language.Make(&#34;br-u-cu-frf&#34;)))
+
+<span class="comment">// If there is no matching language, the options of the first preferred tag are used.</span>
+fmt.Println(m.Match(language.Make(&#34;de-u-co-phonebk&#34;)))
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">fr 2 Exact
+en-GB 1 High
+en 0 No
+en 0 No
+----
+hr 6 High
+zh-Hans 7 Low
+hr 6 High
+----
+pt-BR 4 High
+fr 2 High
+af 3 High
+----
+iw 9 Exact
+iw-IL 8 Exact
+----
+fr-u-cu-frf 2 Exact
+fr-u-cu-frf 2 High
+en-u-co-phonebk 0 No
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+			
+
+			
+				
+				<h3 id="NewMatcher">func <a href="http://localhost:6060/src/golang.org/x/text/language/match.go?s=1588:1620#L29">NewMatcher</a></h3>
+				<pre>func NewMatcher(t []<a href="index.html#Tag">Tag</a>) <a href="index.html#Matcher">Matcher</a></pre>
+				<p>
+NewMatcher returns a Matcher that matches an ordered list of preferred tags
+against a list of supported tags based on written intelligibility, closeness
+of dialect, equivalence of subtags and various other rules. It is initialized
+with the list of supported tags. The first element is used as the default
+value in case no match is found.
+</p>
+<p>
+Its Match method matches the first of the given Tags to reach a certain
+confidence threshold. The tags passed to Match should therefore be specified
+in order of preference. Extensions are ignored for matching.
+</p>
+<p>
+The index returned by the Match method corresponds to the index of the
+matched tag in t, but is augmented with the Unicode extension (&#39;u&#39;)of the
+corresponding preferred tag. This allows user locale options to be passed
+transparently.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="Region">type <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=26810:26842#L847">Region</a></h2>
+			<pre>type Region struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Region is an ISO 3166-1 or UN M.49 code for representing countries and regions.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="EncodeM49">func <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=26953:26990#L853">EncodeM49</a></h3>
+				<pre>func EncodeM49(r <a href="../../../../builtin/index.html#int">int</a>) (<a href="index.html#Region">Region</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+EncodeM49 returns the Region for the given UN M.49 code.
+It returns an error if r is not a valid code.
+</p>
+
+				
+				
+			
+				
+				<h3 id="MustParseRegion">func <a href="http://localhost:6060/src/golang.org/x/text/language/tags.go?s=1357:1394#L41">MustParseRegion</a></h3>
+				<pre>func MustParseRegion(s <a href="../../../../builtin/index.html#string">string</a>) <a href="index.html#Region">Region</a></pre>
+				<p>
+MustParseRegion is like ParseRegion, but panics if the given region cannot be
+parsed. It simplifies safe initialization of Region values.
+</p>
+
+				
+				
+			
+				
+				<h3 id="ParseRegion">func <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=27245:27287#L861">ParseRegion</a></h3>
+				<pre>func ParseRegion(s <a href="../../../../builtin/index.html#string">string</a>) (<a href="index.html#Region">Region</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+ParseRegion parses a 2- or 3-letter ISO 3166-1 or a UN M.49 code.
+It returns a ValueError if s is a well-formed but unknown region identifier
+or another error if another error occurred.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Region.Canonicalize">func (Region) <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=29613:29650#L940">Canonicalize</a></h3>
+				<pre>func (r <a href="index.html#Region">Region</a>) Canonicalize() <a href="index.html#Region">Region</a></pre>
+				<p>
+Canonicalize returns the region or a possible replacement if the region is
+deprecated. It will not return a replacement for deprecated regions that
+are split into multiple regions.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Region.Contains">func (Region) <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=28079:28118#L890">Contains</a></h3>
+				<pre>func (r <a href="index.html#Region">Region</a>) Contains(c <a href="index.html#Region">Region</a>) <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Contains returns whether Region c is contained by Region r. It returns true
+if c == r.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Region.ISO3">func (Region) <a href="http://localhost:6060/src/golang.org/x/text/language/lookup.go?s=7464:7495#L277">ISO3</a></h3>
+				<pre>func (r <a href="index.html#Region">Region</a>) ISO3() <a href="../../../../builtin/index.html#string">string</a></pre>
+				<p>
+ISO3 returns the 3-letter ISO code of r.
+Note that not all regions have a 3-letter ISO code.
+In such cases this method returns &#34;ZZZ&#34;.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Region.IsCountry">func (Region) <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=27572:27604#L872">IsCountry</a></h3>
+				<pre>func (r <a href="index.html#Region">Region</a>) IsCountry() <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+IsCountry returns whether this region is a country or autonomous area. This
+includes non-standard definitions from CLDR.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Region.IsGroup">func (Region) <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=27844:27874#L881">IsGroup</a></h3>
+				<pre>func (r <a href="index.html#Region">Region</a>) IsGroup() <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+IsGroup returns whether this region defines a collection of regions. This
+includes non-standard definitions from CLDR.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Region.IsPrivateUse">func (Region) <a href="http://localhost:6060/src/golang.org/x/text/language/lookup.go?s=8089:8126#L301">IsPrivateUse</a></h3>
+				<pre>func (r <a href="index.html#Region">Region</a>) IsPrivateUse() <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+IsPrivateUse reports whether r has the ISO 3166 User-assigned status. This
+may include private-use tags that are assigned by CLDR and used in this
+implementation. So IsPrivateUse and IsCountry can be simultaneously true.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Region.M49">func (Region) <a href="http://localhost:6060/src/golang.org/x/text/language/lookup.go?s=7806:7833#L294">M49</a></h3>
+				<pre>func (r <a href="index.html#Region">Region</a>) M49() <a href="../../../../builtin/index.html#int">int</a></pre>
+				<p>
+M49 returns the UN M.49 encoding of r, or 0 if this encoding
+is not defined for r.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Region.String">func (Region) <a href="http://localhost:6060/src/golang.org/x/text/language/lookup.go?s=7125:7158#L263">String</a></h3>
+				<pre>func (r <a href="index.html#Region">Region</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				<p>
+String returns the BCP 47 representation for the region.
+It returns &#34;ZZ&#34; for an unspecified region.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Region.TLD">func (Region) <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=29135:29172#L925">TLD</a></h3>
+				<pre>func (r <a href="index.html#Region">Region</a>) TLD() (<a href="index.html#Region">Region</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+TLD returns the country code top-level domain (ccTLD). UK is returned for GB.
+In all other cases it returns either the region itself or an error.
+</p>
+<p>
+This method may return an error for a region for which there exists a
+canonical form with a ccTLD. To get that ccTLD canonicalize r first. The
+region will already be canonicalized it was obtained from a Tag that was
+obtained using any of the default methods.
+</p>
+
+				
+				<div id="example_Region_TLD" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">us := language.MustParseRegion(&#34;US&#34;)
+gb := language.MustParseRegion(&#34;GB&#34;)
+uk := language.MustParseRegion(&#34;UK&#34;)
+bu := language.MustParseRegion(&#34;BU&#34;)
+
+fmt.Println(us.TLD())
+fmt.Println(gb.TLD())
+fmt.Println(uk.TLD())
+fmt.Println(bu.TLD())
+
+fmt.Println(us.Canonicalize().TLD())
+fmt.Println(gb.Canonicalize().TLD())
+fmt.Println(uk.Canonicalize().TLD())
+fmt.Println(bu.Canonicalize().TLD())
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">US &lt;nil&gt;
+UK &lt;nil&gt;
+UK &lt;nil&gt;
+ZZ language: region is not a valid ccTLD
+US &lt;nil&gt;
+UK &lt;nil&gt;
+UK &lt;nil&gt;
+MM &lt;nil&gt;
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+		
+			
+			
+			<h2 id="Script">type <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=26324:26356#L830">Script</a></h2>
+			<pre>type Script struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Script is a 4-letter ISO 15924 code for representing scripts.
+It is idiomatically represented in title case.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="MustParseScript">func <a href="http://localhost:6060/src/golang.org/x/text/language/tags.go?s=1097:1134#L31">MustParseScript</a></h3>
+				<pre>func MustParseScript(s <a href="../../../../builtin/index.html#string">string</a>) <a href="index.html#Script">Script</a></pre>
+				<p>
+MustParseScript is like ParseScript, but panics if the given script cannot be
+parsed. It simplifies safe initialization of Script values.
+</p>
+
+				
+				
+			
+				
+				<h3 id="ParseScript">func <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=26533:26575#L837">ParseScript</a></h3>
+				<pre>func ParseScript(s <a href="../../../../builtin/index.html#string">string</a>) (<a href="index.html#Script">Script</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+ParseScript parses a 4-letter ISO 15924 code.
+It returns a ValueError if s is a well-formed but unknown script identifier
+or another error if another error occurred.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Script.IsPrivateUse">func (Script) <a href="http://localhost:6060/src/golang.org/x/text/language/lookup.go?s=8699:8736#L324">IsPrivateUse</a></h3>
+				<pre>func (s <a href="index.html#Script">Script</a>) IsPrivateUse() <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+IsPrivateUse reports whether this script code is reserved for private use.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Script.String">func (Script) <a href="http://localhost:6060/src/golang.org/x/text/language/lookup.go?s=8522:8555#L316">String</a></h3>
+				<pre>func (s <a href="index.html#Script">Script</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				<p>
+String returns the script code in title case.
+It returns &#34;Zzzz&#34; for an unspecified script.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Tag">type <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=5432:5760#L121">Tag</a></h2>
+			<pre>type Tag struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Tag represents a BCP 47 language tag. It is used to specify an instance of a
+specific language or locale. All language tag values are guaranteed to be
+well-formed.
+</p>
+
+
+			
+
+			
+				<pre>var (
+    <span id="Und">Und</span> <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{}
+
+    <span id="Afrikaans">Afrikaans</span>            <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _af}                <span class="comment">//  af</span>
+    <span id="Amharic">Amharic</span>              <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _am}                <span class="comment">//  am</span>
+    <span id="Arabic">Arabic</span>               <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _ar}                <span class="comment">//  ar</span>
+    <span id="ModernStandardArabic">ModernStandardArabic</span> <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _ar, region: _001}  <span class="comment">//  ar-001</span>
+    <span id="Azerbaijani">Azerbaijani</span>          <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _az}                <span class="comment">//  az</span>
+    <span id="Bulgarian">Bulgarian</span>            <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _bg}                <span class="comment">//  bg</span>
+    <span id="Bengali">Bengali</span>              <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _bn}                <span class="comment">//  bn</span>
+    <span id="Catalan">Catalan</span>              <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _ca}                <span class="comment">//  ca</span>
+    <span id="Czech">Czech</span>                <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _cs}                <span class="comment">//  cs</span>
+    <span id="Danish">Danish</span>               <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _da}                <span class="comment">//  da</span>
+    <span id="German">German</span>               <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _de}                <span class="comment">//  de</span>
+    <span id="Greek">Greek</span>                <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _el}                <span class="comment">//  el</span>
+    <span id="English">English</span>              <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _en}                <span class="comment">//  en</span>
+    <span id="AmericanEnglish">AmericanEnglish</span>      <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _en, region: _US}   <span class="comment">//  en-US</span>
+    <span id="BritishEnglish">BritishEnglish</span>       <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _en, region: _GB}   <span class="comment">//  en-GB</span>
+    <span id="Spanish">Spanish</span>              <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _es}                <span class="comment">//  es</span>
+    <span id="EuropeanSpanish">EuropeanSpanish</span>      <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _es, region: _ES}   <span class="comment">//  es-ES</span>
+    <span id="LatinAmericanSpanish">LatinAmericanSpanish</span> <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _es, region: _419}  <span class="comment">//  es-419</span>
+    <span id="Estonian">Estonian</span>             <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _et}                <span class="comment">//  et</span>
+    <span id="Persian">Persian</span>              <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _fa}                <span class="comment">//  fa</span>
+    <span id="Finnish">Finnish</span>              <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _fi}                <span class="comment">//  fi</span>
+    <span id="Filipino">Filipino</span>             <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _fil}               <span class="comment">//  fil</span>
+    <span id="French">French</span>               <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _fr}                <span class="comment">//  fr</span>
+    <span id="CanadianFrench">CanadianFrench</span>       <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _fr, region: _CA}   <span class="comment">//  fr-CA</span>
+    <span id="Gujarati">Gujarati</span>             <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _gu}                <span class="comment">//  gu</span>
+    <span id="Hebrew">Hebrew</span>               <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _he}                <span class="comment">//  he</span>
+    <span id="Hindi">Hindi</span>                <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _hi}                <span class="comment">//  hi</span>
+    <span id="Croatian">Croatian</span>             <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _hr}                <span class="comment">//  hr</span>
+    <span id="Hungarian">Hungarian</span>            <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _hu}                <span class="comment">//  hu</span>
+    <span id="Armenian">Armenian</span>             <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _hy}                <span class="comment">//  hy</span>
+    <span id="Indonesian">Indonesian</span>           <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _id}                <span class="comment">//  id</span>
+    <span id="Icelandic">Icelandic</span>            <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _is}                <span class="comment">//  is</span>
+    <span id="Italian">Italian</span>              <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _it}                <span class="comment">//  it</span>
+    <span id="Japanese">Japanese</span>             <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _ja}                <span class="comment">//  ja</span>
+    <span id="Georgian">Georgian</span>             <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _ka}                <span class="comment">//  ka</span>
+    <span id="Kazakh">Kazakh</span>               <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _kk}                <span class="comment">//  kk</span>
+    <span id="Khmer">Khmer</span>                <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _km}                <span class="comment">//  km</span>
+    <span id="Kannada">Kannada</span>              <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _kn}                <span class="comment">//  kn</span>
+    <span id="Korean">Korean</span>               <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _ko}                <span class="comment">//  ko</span>
+    <span id="Kirghiz">Kirghiz</span>              <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _ky}                <span class="comment">//  ky</span>
+    <span id="Lao">Lao</span>                  <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _lo}                <span class="comment">//  lo</span>
+    <span id="Lithuanian">Lithuanian</span>           <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _lt}                <span class="comment">//  lt</span>
+    <span id="Latvian">Latvian</span>              <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _lv}                <span class="comment">//  lv</span>
+    <span id="Macedonian">Macedonian</span>           <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _mk}                <span class="comment">//  mk</span>
+    <span id="Malayalam">Malayalam</span>            <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _ml}                <span class="comment">//  ml</span>
+    <span id="Mongolian">Mongolian</span>            <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _mn}                <span class="comment">//  mn</span>
+    <span id="Marathi">Marathi</span>              <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _mr}                <span class="comment">//  mr</span>
+    <span id="Malay">Malay</span>                <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _ms}                <span class="comment">//  ms</span>
+    <span id="Burmese">Burmese</span>              <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _my}                <span class="comment">//  my</span>
+    <span id="Nepali">Nepali</span>               <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _ne}                <span class="comment">//  ne</span>
+    <span id="Dutch">Dutch</span>                <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _nl}                <span class="comment">//  nl</span>
+    <span id="Norwegian">Norwegian</span>            <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _no}                <span class="comment">//  no</span>
+    <span id="Punjabi">Punjabi</span>              <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _pa}                <span class="comment">//  pa</span>
+    <span id="Polish">Polish</span>               <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _pl}                <span class="comment">//  pl</span>
+    <span id="Portuguese">Portuguese</span>           <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _pt}                <span class="comment">//  pt</span>
+    <span id="BrazilianPortuguese">BrazilianPortuguese</span>  <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _pt, region: _BR}   <span class="comment">//  pt-BR</span>
+    <span id="EuropeanPortuguese">EuropeanPortuguese</span>   <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _pt, region: _PT}   <span class="comment">//  pt-PT</span>
+    <span id="Romanian">Romanian</span>             <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _ro}                <span class="comment">//  ro</span>
+    <span id="Russian">Russian</span>              <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _ru}                <span class="comment">//  ru</span>
+    <span id="Sinhala">Sinhala</span>              <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _si}                <span class="comment">//  si</span>
+    <span id="Slovak">Slovak</span>               <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _sk}                <span class="comment">//  sk</span>
+    <span id="Slovenian">Slovenian</span>            <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _sl}                <span class="comment">//  sl</span>
+    <span id="Albanian">Albanian</span>             <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _sq}                <span class="comment">//  sq</span>
+    <span id="Serbian">Serbian</span>              <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _sr}                <span class="comment">//  sr</span>
+    <span id="SerbianLatin">SerbianLatin</span>         <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _sr, script: _Latn} <span class="comment">//  sr-Latn</span>
+    <span id="Swedish">Swedish</span>              <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _sv}                <span class="comment">//  sv</span>
+    <span id="Swahili">Swahili</span>              <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _sw}                <span class="comment">//  sw</span>
+    <span id="Tamil">Tamil</span>                <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _ta}                <span class="comment">//  ta</span>
+    <span id="Telugu">Telugu</span>               <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _te}                <span class="comment">//  te</span>
+    <span id="Thai">Thai</span>                 <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _th}                <span class="comment">//  th</span>
+    <span id="Turkish">Turkish</span>              <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _tr}                <span class="comment">//  tr</span>
+    <span id="Ukrainian">Ukrainian</span>            <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _uk}                <span class="comment">//  uk</span>
+    <span id="Urdu">Urdu</span>                 <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _ur}                <span class="comment">//  ur</span>
+    <span id="Uzbek">Uzbek</span>                <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _uz}                <span class="comment">//  uz</span>
+    <span id="Vietnamese">Vietnamese</span>           <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _vi}                <span class="comment">//  vi</span>
+    <span id="Chinese">Chinese</span>              <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _zh}                <span class="comment">//  zh</span>
+    <span id="SimplifiedChinese">SimplifiedChinese</span>    <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _zh, script: _Hans} <span class="comment">//  zh-Hans</span>
+    <span id="TraditionalChinese">TraditionalChinese</span>   <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _zh, script: _Hant} <span class="comment">//  zh-Hant</span>
+    <span id="Zulu">Zulu</span>                 <a href="index.html#Tag">Tag</a> = <a href="index.html#Tag">Tag</a>{lang: _zu}                <span class="comment">//  zu</span>
+)</pre>
+				
+			
+
+			<div id="example_Tag_values" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example (Values)</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example (Values)</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">us := language.MustParseRegion(&#34;US&#34;)
+en := language.MustParseBase(&#34;en&#34;)
+
+lang, _, region := language.AmericanEnglish.Raw()
+fmt.Println(lang == en, region == us)
+
+lang, _, region = language.BritishEnglish.Raw()
+fmt.Println(lang == en, region == us)
+
+<span class="comment">// Tags can be compared for exact equivalence using &#39;==&#39;.</span>
+en_us, _ := language.Compose(en, us)
+fmt.Println(en_us == language.AmericanEnglish)
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">true true
+true false
+true
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+			
+
+			
+				
+				<h3 id="Compose">func <a href="http://localhost:6060/src/golang.org/x/text/language/parse.go?s=14894:14946#L560">Compose</a></h3>
+				<pre>func Compose(part ...interface{}) (t <a href="index.html#Tag">Tag</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Compose creates a Tag from individual parts, which may be of type Tag, Base,
+Script, Region, Variant, []Variant, Extension, []Extension or error. If a
+Base, Script or Region or slice of type Variant or Extension is passed more
+than once, the latter will overwrite the former. Variants and Extensions are
+accumulated, but if two extensions of the same type are passed, the latter
+will replace the former. A Tag overwrites all former values and typically
+only makes sense as the first argument. The resulting tag is returned after
+canonicalizing using the Default CanonType. If one or more errors are
+encountered, one of the errors is returned.
+</p>
+
+				<div id="example_Compose" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">nl, _ := language.ParseBase(&#34;nl&#34;)
+us, _ := language.ParseRegion(&#34;US&#34;)
+de := language.Make(&#34;de-1901-u-co-phonebk&#34;)
+jp := language.Make(&#34;ja-JP&#34;)
+fi := language.Make(&#34;fi-x-ing&#34;)
+
+u, _ := language.ParseExtension(&#34;u-nu-arabic&#34;)
+x, _ := language.ParseExtension(&#34;x-piglatin&#34;)
+
+<span class="comment">// Combine a base language and region.</span>
+fmt.Println(language.Compose(nl, us))
+<span class="comment">// Combine a base language and extension.</span>
+fmt.Println(language.Compose(nl, x))
+<span class="comment">// Replace the region.</span>
+fmt.Println(language.Compose(jp, us))
+<span class="comment">// Combine several tags.</span>
+fmt.Println(language.Compose(us, nl, u))
+
+<span class="comment">// Replace the base language of a tag.</span>
+fmt.Println(language.Compose(de, nl))
+fmt.Println(language.Compose(de, nl, u))
+<span class="comment">// Remove the base language.</span>
+fmt.Println(language.Compose(de, language.Base{}))
+<span class="comment">// Remove all variants.</span>
+fmt.Println(language.Compose(de, []language.Variant{}))
+<span class="comment">// Remove all extensions.</span>
+fmt.Println(language.Compose(de, []language.Extension{}))
+fmt.Println(language.Compose(fi, []language.Extension{}))
+<span class="comment">// Remove all variants and extensions.</span>
+fmt.Println(language.Compose(de.Raw()))
+
+<span class="comment">// An error is gobbled or returned if non-nil.</span>
+fmt.Println(language.Compose(language.ParseRegion(&#34;ZA&#34;)))
+fmt.Println(language.Compose(language.ParseRegion(&#34;HH&#34;)))
+
+<span class="comment">// Compose uses the same Default canonicalization as Make.</span>
+fmt.Println(language.Compose(language.Raw.Parse(&#34;en-Latn-UK&#34;)))
+
+<span class="comment">// Call compose on a different CanonType for different results.</span>
+fmt.Println(language.All.Compose(language.Raw.Parse(&#34;en-Latn-UK&#34;)))
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">nl-US &lt;nil&gt;
+nl-x-piglatin &lt;nil&gt;
+ja-US &lt;nil&gt;
+nl-US-u-nu-arabic &lt;nil&gt;
+nl-1901-u-co-phonebk &lt;nil&gt;
+nl-1901-u-nu-arabic &lt;nil&gt;
+und-1901-u-co-phonebk &lt;nil&gt;
+de-u-co-phonebk &lt;nil&gt;
+de-1901 &lt;nil&gt;
+fi &lt;nil&gt;
+de &lt;nil&gt;
+und-ZA &lt;nil&gt;
+und language: subtag &#34;HH&#34; is well-formed but unknown
+en-Latn-GB &lt;nil&gt;
+en-GB &lt;nil&gt;
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+				
+				<h3 id="Make">func <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=5883:5906#L135">Make</a></h3>
+				<pre>func Make(s <a href="../../../../builtin/index.html#string">string</a>) <a href="index.html#Tag">Tag</a></pre>
+				<p>
+Make is a convenience wrapper for Parse that omits the error.
+In case of an error, a sensible default is returned.
+</p>
+
+				
+				
+			
+				
+				<h3 id="MustParse">func <a href="http://localhost:6060/src/golang.org/x/text/language/tags.go?s=368:396#L1">MustParse</a></h3>
+				<pre>func MustParse(s <a href="../../../../builtin/index.html#string">string</a>) <a href="index.html#Tag">Tag</a></pre>
+				<p>
+MustParse is like Parse, but panics if the given BCP 47 tag cannot be parsed.
+It simplifies safe initialization of Tag values.
+</p>
+
+				
+				
+			
+				
+				<h3 id="Parse">func <a href="http://localhost:6060/src/golang.org/x/text/language/parse.go?s=5803:5842#L218">Parse</a></h3>
+				<pre>func Parse(s <a href="../../../../builtin/index.html#string">string</a>) (t <a href="index.html#Tag">Tag</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Parse parses the given BCP 47 string and returns a valid Tag. If parsing
+failed it returns an error and any part of the tag that could be parsed.
+If parsing succeeded but an unknown value was found, it returns
+ValueError. The Tag returned in this case is just stripped of the unknown
+value. All other values are preserved. It accepts tags in the BCP 47 format
+and extensions to this standard defined in
+<a href="http://www.unicode.org/reports/tr35/#Unicode_Language_and_Locale_Identifiers">http://www.unicode.org/reports/tr35/#Unicode_Language_and_Locale_Identifiers</a>.
+The resulting tag is canonicalized using the default canonicalization type.
+</p>
+
+				<div id="example_Parse_errors" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example (Errors)</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example (Errors)</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">for _, s := range []string{&#34;Foo&#34;, &#34;Bar&#34;, &#34;Foobar&#34;} {
+    _, err := language.Parse(s)
+    if err != nil {
+        if inv, ok := err.(language.ValueError); ok {
+            fmt.Println(inv.Subtag())
+        } else {
+            fmt.Println(s)
+        }
+    }
+}
+for _, s := range []string{&#34;en&#34;, &#34;aa-Uuuu&#34;, &#34;AC&#34;, &#34;ac-u&#34;} {
+    _, err := language.Parse(s)
+    switch e := err.(type) {
+    case language.ValueError:
+        fmt.Printf(&#34;%s: culprit %q\n&#34;, s, e.Subtag())
+    case nil:
+        <span class="comment">// No error.</span>
+    default:
+        <span class="comment">// A syntax error.</span>
+        fmt.Printf(&#34;%s: ill-formed\n&#34;, s)
+    }
+}
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">foo
+Foobar
+aa-Uuuu: culprit &#34;Uuuu&#34;
+AC: culprit &#34;ac&#34;
+ac-u: ill-formed
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+
+			
+				
+				<h3 id="Tag.Base">func (Tag) <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=13255:13293#L383">Base</a></h3>
+				<pre>func (t <a href="index.html#Tag">Tag</a>) Base() (<a href="index.html#Base">Base</a>, <a href="index.html#Confidence">Confidence</a>)</pre>
+				<p>
+Base returns the base language of the language tag. If the base language is
+unspecified, an attempt will be made to infer it from the context.
+It uses a variant of CLDR&#39;s Add Likely Subtags algorithm. This is subject to change.
+</p>
+
+				
+				<div id="example_Tag_Base" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">fmt.Println(language.Make(&#34;und&#34;).Base())
+fmt.Println(language.Make(&#34;und-US&#34;).Base())
+fmt.Println(language.Make(&#34;und-NL&#34;).Base())
+fmt.Println(language.Make(&#34;und-419&#34;).Base()) <span class="comment">// Latin America</span>
+fmt.Println(language.Make(&#34;und-ZZ&#34;).Base())
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">en Low
+en High
+nl High
+es Low
+en Low
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+				
+				<h3 id="Tag.Extension">func (Tag) <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=19136:19191#L578">Extension</a></h3>
+				<pre>func (t <a href="index.html#Tag">Tag</a>) Extension(x <a href="../../../../builtin/index.html#byte">byte</a>) (ext <a href="index.html#Extension">Extension</a>, ok <a href="../../../../builtin/index.html#bool">bool</a>)</pre>
+				<p>
+Extension returns the extension of type x for tag t. It will return
+false for ok if t does not have the requested extension. The returned
+extension will be invalid in this case.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Tag.Extensions">func (Tag) <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=19427:19464#L590">Extensions</a></h3>
+				<pre>func (t <a href="index.html#Tag">Tag</a>) Extensions() []<a href="index.html#Extension">Extension</a></pre>
+				<p>
+Extensions returns all extensions of t.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Tag.IsRoot">func (Tag) <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=6584:6610#L158">IsRoot</a></h3>
+				<pre>func (t <a href="index.html#Tag">Tag</a>) IsRoot() <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+IsRoot returns true if t is equal to language &#34;und&#34;.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Tag.Parent">func (Tag) <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=16558:16583#L472">Parent</a></h3>
+				<pre>func (t <a href="index.html#Tag">Tag</a>) Parent() <a href="index.html#Tag">Tag</a></pre>
+				<p>
+Parent returns the CLDR parent of t. In CLDR, missing fields in data for a
+specific language are substituted with fields from the parent language.
+The parent for a language may change for newer versions of CLDR.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Tag.Raw">func (Tag) <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=6241:6288#L148">Raw</a></h3>
+				<pre>func (t <a href="index.html#Tag">Tag</a>) Raw() (b <a href="index.html#Base">Base</a>, s <a href="index.html#Script">Script</a>, r <a href="index.html#Region">Region</a>)</pre>
+				<p>
+Raw returns the raw base language, script and region, without making an
+attempt to infer their values.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Tag.Region">func (Tag) <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=15582:15624#L442">Region</a></h3>
+				<pre>func (t <a href="index.html#Tag">Tag</a>) Region() (<a href="index.html#Region">Region</a>, <a href="index.html#Confidence">Confidence</a>)</pre>
+				<p>
+Region returns the region for the language tag. If it was not explicitly given, it will
+infer a most likely candidate from the context.
+It uses a variant of CLDR&#39;s Add Likely Subtags algorithm. This is subject to change.
+</p>
+
+				
+				<div id="example_Tag_Region" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">ru := language.Make(&#34;ru&#34;)
+en := language.Make(&#34;en&#34;)
+fmt.Println(ru.Region())
+fmt.Println(en.Region())
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">RU Low
+US Low
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+				
+				<h3 id="Tag.Script">func (Tag) <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=14626:14668#L411">Script</a></h3>
+				<pre>func (t <a href="index.html#Tag">Tag</a>) Script() (<a href="index.html#Script">Script</a>, <a href="index.html#Confidence">Confidence</a>)</pre>
+				<p>
+Script infers the script for the language tag. If it was not explicitly given, it will infer
+a most likely candidate.
+If more than one script is commonly used for a language, the most likely one
+is returned with a low confidence indication. For example, it returns (Cyrl, Low)
+for Serbian.
+If a script cannot be inferred (Zzzz, No) is returned. We do not use Zyyy (undetermined)
+as one would suspect from the IANA registry for BCP 47. In a Unicode context Zyyy marks
+common characters (like 1, 2, 3, &#39;.&#39;, etc.) and is therefore more like multiple scripts.
+See <a href="http://www.unicode.org/reports/tr24/#Values">http://www.unicode.org/reports/tr24/#Values</a> for more details. Zzzz is also used for
+unknown value in CLDR.  (Zzzz, Exact) is returned if Zzzz was explicitly specified.
+Note that an inferred script is never guaranteed to be the correct one. Latin is
+almost exclusively used for Afrikaans, but Arabic has been used for some texts
+in the past.  Also, the script that is commonly used may change over time.
+It uses a variant of CLDR&#39;s Add Likely Subtags algorithm. This is subject to change.
+</p>
+
+				
+				<div id="example_Tag_Script" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">en := language.Make(&#34;en&#34;)
+sr := language.Make(&#34;sr&#34;)
+sr_Latn := language.Make(&#34;sr_Latn&#34;)
+fmt.Println(en.Script())
+fmt.Println(sr.Script())
+<span class="comment">// Was a script explicitly specified?</span>
+_, c := sr.Script()
+fmt.Println(c == language.Exact)
+_, c = sr_Latn.Script()
+fmt.Println(c == language.Exact)
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">Latn High
+Cyrl Low
+false
+true
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+				
+				<h3 id="Tag.SetTypeForKey">func (Tag) <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=20536:20594#L620">SetTypeForKey</a></h3>
+				<pre>func (t <a href="index.html#Tag">Tag</a>) SetTypeForKey(key, value <a href="../../../../builtin/index.html#string">string</a>) (<a href="index.html#Tag">Tag</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+SetTypeForKey returns a new Tag with the key set to type, where key and type
+are of the allowed values defined for the Unicode locale extension (&#39;u&#39;) in
+<a href="http://www.unicode.org/reports/tr35/#Unicode_Language_and_Locale_Identifiers">http://www.unicode.org/reports/tr35/#Unicode_Language_and_Locale_Identifiers</a>.
+An empty value removes an existing pair with the same key.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Tag.String">func (Tag) <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=12810:12838#L369">String</a></h3>
+				<pre>func (t <a href="index.html#Tag">Tag</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				<p>
+String returns the canonical string representation of the language tag.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Tag.TypeForKey">func (Tag) <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=19946:19988#L604">TypeForKey</a></h3>
+				<pre>func (t <a href="index.html#Tag">Tag</a>) TypeForKey(key <a href="../../../../builtin/index.html#string">string</a>) <a href="../../../../builtin/index.html#string">string</a></pre>
+				<p>
+TypeForKey returns the type associated with the given key, where key and type
+are of the allowed values defined for the Unicode locale extension (&#39;u&#39;) in
+<a href="http://www.unicode.org/reports/tr35/#Unicode_Language_and_Locale_Identifiers">http://www.unicode.org/reports/tr35/#Unicode_Language_and_Locale_Identifiers</a>.
+TypeForKey will traverse the inheritance chain to get the correct value.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Tag.Variants">func (Tag) <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=16112:16145#L458">Variants</a></h3>
+				<pre>func (t <a href="index.html#Tag">Tag</a>) Variants() []<a href="index.html#Variant">Variant</a></pre>
+				<p>
+Variant returns the variants specified explicitly for this language tag.
+or nil if no variant was specified.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ValueError">type <a href="http://localhost:6060/src/golang.org/x/text/language/parse.go?s=1074:1111#L32">ValueError</a></h2>
+			<pre>type ValueError struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+ValueError is returned by any of the parsing functions when the
+input is well-formed but the respective subtag is not recognized
+as a valid value.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ValueError.Error">func (ValueError) <a href="http://localhost:6060/src/golang.org/x/text/language/parse.go?s=1350:1384#L51">Error</a></h3>
+				<pre>func (e <a href="index.html#ValueError">ValueError</a>) Error() <a href="../../../../builtin/index.html#string">string</a></pre>
+				<p>
+Error implements the error interface.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ValueError.Subtag">func (ValueError) <a href="http://localhost:6060/src/golang.org/x/text/language/parse.go?s=1528:1563#L56">Subtag</a></h3>
+				<pre>func (e <a href="index.html#ValueError">ValueError</a>) Subtag() <a href="../../../../builtin/index.html#string">string</a></pre>
+				<p>
+Subtag returns the subtag for which the error occurred.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Variant">type <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=29812:29851#L948">Variant</a></h2>
+			<pre>type Variant struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Variant represents a registered variant of a language as defined by BCP 47.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="ParseVariant">func <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=29952:29996#L954">ParseVariant</a></h3>
+				<pre>func ParseVariant(s <a href="../../../../builtin/index.html#string">string</a>) (<a href="index.html#Variant">Variant</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+ParseVariant parses and returns a Variant. An error is returned if s is not
+a valid variant.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Variant.String">func (Variant) <a href="http://localhost:6060/src/golang.org/x/text/language/language.go?s=30192:30224#L963">String</a></h3>
+				<pre>func (v <a href="index.html#Variant">Variant</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				<p>
+String returns the string representation of the variant.
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+
+
+	<div class="pkg-dir">
+		<table>
+			<tr>
+				<th class="pkg-name">Name</th>
+				<th class="pkg-synopsis">Synopsis</th>
+			</tr>
+
+			
+			<tr>
+				<td colspan="2"><a href="../index.html">..</a></td>
+			</tr>
+			
+
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="display/index.html">display</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package display provides display names for languages, scripts and regions in a requested language.
+						</td>
+					</tr>
+				
+			
+		</table>
+	</div>
+
+
+	
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

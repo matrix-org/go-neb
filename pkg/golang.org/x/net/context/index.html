@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>context - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package context</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "golang.org/x/net/context"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+				<dd><a href="index.html#pkg-examples" class="examplesLink">Examples</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-subdirectories">Subdirectories</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package context defines the Context type, which carries deadlines,
+cancelation signals, and other request-scoped values across API boundaries
+and between processes.
+</p>
+<p>
+Incoming requests to a server should create a Context, and outgoing calls to
+servers should accept a Context.  The chain of function calls between must
+propagate the Context, optionally replacing it with a modified copy created
+using WithDeadline, WithTimeout, WithCancel, or WithValue.
+</p>
+<p>
+Programs that use Contexts should follow these rules to keep interfaces
+consistent across packages and enable static analysis tools to check context
+propagation:
+</p>
+<p>
+Do not store Contexts inside a struct type; instead, pass a Context
+explicitly to each function that needs it.  The Context should be the first
+parameter, typically named ctx:
+</p>
+<pre>func DoSomething(ctx context.Context, arg Arg) error {
+	// ... use ctx ...
+}
+</pre>
+<p>
+Do not pass a nil Context, even if a function permits it.  Pass context.TODO
+if you are unsure about which Context to use.
+</p>
+<p>
+Use context Values only for request-scoped data that transits processes and
+APIs, not for passing optional parameters to functions.
+</p>
+<p>
+The same Context may be passed to functions running in different goroutines;
+Contexts are safe for simultaneous use by multiple goroutines.
+</p>
+<p>
+See <a href="http://blog.golang.org/context">http://blog.golang.org/context</a> for example code for a server that uses
+Contexts.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+			
+				
+				<dd><a href="index.html#CancelFunc">type CancelFunc</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Context">type Context</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Background">func Background() Context</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#TODO">func TODO() Context</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#WithCancel">func WithCancel(parent Context) (ctx Context, cancel CancelFunc)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#WithDeadline">func WithDeadline(parent Context, deadline time.Time) (Context, CancelFunc)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#WithTimeout">func WithTimeout(parent Context, timeout time.Duration) (Context, CancelFunc)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#WithValue">func WithValue(parent Context, key interface{}, val interface{}) Context</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+		<div id="pkg-examples">
+			<h4>Examples</h4>
+			<dl>
+			
+			<dd><a class="exampleLink" href="index.html#example_WithTimeout">WithTimeout</a></dd>
+			
+			</dl>
+		</div>
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/golang.org/x/net/context/context.go">context.go</a>
+			
+				<a href="http://localhost:6060/src/golang.org/x/net/context/pre_go17.go">pre_go17.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var <span id="Canceled">Canceled</span> = <a href="../../../../errors/index.html">errors</a>.<a href="../../../../errors/index.html#New">New</a>(&#34;context canceled&#34;)</pre>
+				<p>
+Canceled is the error returned by Context.Err when the context is canceled.
+</p>
+
+			
+				<pre>var <span id="DeadlineExceeded">DeadlineExceeded</span> = <a href="../../../../errors/index.html">errors</a>.<a href="../../../../errors/index.html#New">New</a>(&#34;context deadline exceeded&#34;)</pre>
+				<p>
+DeadlineExceeded is the error returned by Context.Err when the context&#39;s
+deadline passes.
+</p>
+
+			
+		
+		
+		
+			
+			
+			<h2 id="CancelFunc">type <a href="http://localhost:6060/src/golang.org/x/net/context/context.go?s=6183:6205#L146">CancelFunc</a></h2>
+			<pre>type CancelFunc func()</pre>
+			<p>
+A CancelFunc tells an operation to abandon its work.
+A CancelFunc does not wait for the work to stop.
+After the first call, subsequent calls to a CancelFunc do nothing.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Context">type <a href="http://localhost:6060/src/golang.org/x/net/context/context.go?s=1850:5319#L35">Context</a></h2>
+			<pre>type Context interface {
+    <span class="comment">// Deadline returns the time when work done on behalf of this context</span>
+    <span class="comment">// should be canceled.  Deadline returns ok==false when no deadline is</span>
+    <span class="comment">// set.  Successive calls to Deadline return the same results.</span>
+    Deadline() (deadline <a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Time">Time</a>, ok <a href="../../../../builtin/index.html#bool">bool</a>)
+
+    <span class="comment">// Done returns a channel that&#39;s closed when work done on behalf of this</span>
+    <span class="comment">// context should be canceled.  Done may return nil if this context can</span>
+    <span class="comment">// never be canceled.  Successive calls to Done return the same value.</span>
+    <span class="comment">//</span>
+    <span class="comment">// WithCancel arranges for Done to be closed when cancel is called;</span>
+    <span class="comment">// WithDeadline arranges for Done to be closed when the deadline</span>
+    <span class="comment">// expires; WithTimeout arranges for Done to be closed when the timeout</span>
+    <span class="comment">// elapses.</span>
+    <span class="comment">//</span>
+    <span class="comment">// Done is provided for use in select statements:</span>
+    <span class="comment">//</span>
+    <span class="comment">//  // Stream generates values with DoSomething and sends them to out</span>
+    <span class="comment">//  // until DoSomething returns an error or ctx.Done is closed.</span>
+    <span class="comment">//  func Stream(ctx context.Context, out chan&lt;- Value) error {</span>
+    <span class="comment">//  	for {</span>
+    <span class="comment">//  		v, err := DoSomething(ctx)</span>
+    <span class="comment">//  		if err != nil {</span>
+    <span class="comment">//  			return err</span>
+    <span class="comment">//  		}</span>
+    <span class="comment">//  		select {</span>
+    <span class="comment">//  		case &lt;-ctx.Done():</span>
+    <span class="comment">//  			return ctx.Err()</span>
+    <span class="comment">//  		case out &lt;- v:</span>
+    <span class="comment">//  		}</span>
+    <span class="comment">//  	}</span>
+    <span class="comment">//  }</span>
+    <span class="comment">//</span>
+    <span class="comment">// See http://blog.golang.org/pipelines for more examples of how to use</span>
+    <span class="comment">// a Done channel for cancelation.</span>
+    Done() &lt;-chan struct{}
+
+    <span class="comment">// Err returns a non-nil error value after Done is closed.  Err returns</span>
+    <span class="comment">// Canceled if the context was canceled or DeadlineExceeded if the</span>
+    <span class="comment">// context&#39;s deadline passed.  No other values for Err are defined.</span>
+    <span class="comment">// After Done is closed, successive calls to Err return the same value.</span>
+    Err() <a href="../../../../builtin/index.html#error">error</a>
+
+    <span class="comment">// Value returns the value associated with this context for key, or nil</span>
+    <span class="comment">// if no value is associated with key.  Successive calls to Value with</span>
+    <span class="comment">// the same key returns the same result.</span>
+    <span class="comment">//</span>
+    <span class="comment">// Use context values only for request-scoped data that transits</span>
+    <span class="comment">// processes and API boundaries, not for passing optional parameters to</span>
+    <span class="comment">// functions.</span>
+    <span class="comment">//</span>
+    <span class="comment">// A key identifies a specific value in a Context.  Functions that wish</span>
+    <span class="comment">// to store values in Context typically allocate a key in a global</span>
+    <span class="comment">// variable then use that key as the argument to context.WithValue and</span>
+    <span class="comment">// Context.Value.  A key can be any type that supports equality;</span>
+    <span class="comment">// packages should define keys as an unexported type to avoid</span>
+    <span class="comment">// collisions.</span>
+    <span class="comment">//</span>
+    <span class="comment">// Packages that define a Context key should provide type-safe accessors</span>
+    <span class="comment">// for the values stores using that key:</span>
+    <span class="comment">//</span>
+    <span class="comment">// 	// Package user defines a User type that&#39;s stored in Contexts.</span>
+    <span class="comment">// 	package user</span>
+    <span class="comment">//</span>
+    <span class="comment">// 	import &#34;golang.org/x/net/context&#34;</span>
+    <span class="comment">//</span>
+    <span class="comment">// 	// User is the type of value stored in the Contexts.</span>
+    <span class="comment">// 	type User struct {...}</span>
+    <span class="comment">//</span>
+    <span class="comment">// 	// key is an unexported type for keys defined in this package.</span>
+    <span class="comment">// 	// This prevents collisions with keys defined in other packages.</span>
+    <span class="comment">// 	type key int</span>
+    <span class="comment">//</span>
+    <span class="comment">// 	// userKey is the key for user.User values in Contexts.  It is</span>
+    <span class="comment">// 	// unexported; clients use user.NewContext and user.FromContext</span>
+    <span class="comment">// 	// instead of using this key directly.</span>
+    <span class="comment">// 	var userKey key = 0</span>
+    <span class="comment">//</span>
+    <span class="comment">// 	// NewContext returns a new Context that carries value u.</span>
+    <span class="comment">// 	func NewContext(ctx context.Context, u *User) context.Context {</span>
+    <span class="comment">// 		return context.WithValue(ctx, userKey, u)</span>
+    <span class="comment">// 	}</span>
+    <span class="comment">//</span>
+    <span class="comment">// 	// FromContext returns the User value stored in ctx, if any.</span>
+    <span class="comment">// 	func FromContext(ctx context.Context) (*User, bool) {</span>
+    <span class="comment">// 		u, ok := ctx.Value(userKey).(*User)</span>
+    <span class="comment">// 		return u, ok</span>
+    <span class="comment">// 	}</span>
+    Value(key interface{}) interface{}
+}</pre>
+			<p>
+A Context carries a deadline, a cancelation signal, and other values across
+API boundaries.
+</p>
+<p>
+Context&#39;s methods may be called by multiple goroutines simultaneously.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="Background">func <a href="http://localhost:6060/src/golang.org/x/net/context/context.go?s=5559:5584#L130">Background</a></h3>
+				<pre>func Background() <a href="index.html#Context">Context</a></pre>
+				<p>
+Background returns a non-nil, empty Context. It is never canceled, has no
+values, and has no deadline.  It is typically used by the main function,
+initialization, and tests, and as the top-level Context for incoming
+requests.
+</p>
+
+				
+				
+			
+				
+				<h3 id="TODO">func <a href="http://localhost:6060/src/golang.org/x/net/context/context.go?s=5967:5986#L139">TODO</a></h3>
+				<pre>func TODO() <a href="index.html#Context">Context</a></pre>
+				<p>
+TODO returns a non-nil, empty Context.  Code should use context.TODO when
+it&#39;s unclear which Context to use or it is not yet available (because the
+surrounding function has not yet been extended to accept a Context
+parameter).  TODO is recognized by static analysis tools that determine
+whether Contexts are propagated correctly in a program.
+</p>
+
+				
+				
+			
+				
+				<h3 id="WithCancel">func <a href="http://localhost:6060/src/golang.org/x/net/context/pre_go17.go?s=1568:1632#L54">WithCancel</a></h3>
+				<pre>func WithCancel(parent <a href="index.html#Context">Context</a>) (ctx <a href="index.html#Context">Context</a>, cancel <a href="index.html#CancelFunc">CancelFunc</a>)</pre>
+				<p>
+WithCancel returns a copy of parent with a new Done channel. The returned
+context&#39;s Done channel is closed when the returned cancel function is called
+or when the parent context&#39;s Done channel is closed, whichever happens first.
+</p>
+<p>
+Canceling this context releases resources associated with it, so code should
+call cancel as soon as the operations running in this Context complete.
+</p>
+
+				
+				
+			
+				
+				<h3 id="WithDeadline">func <a href="http://localhost:6060/src/golang.org/x/net/context/pre_go17.go?s=5207:5282#L194">WithDeadline</a></h3>
+				<pre>func WithDeadline(parent <a href="index.html#Context">Context</a>, deadline <a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Time">Time</a>) (<a href="index.html#Context">Context</a>, <a href="index.html#CancelFunc">CancelFunc</a>)</pre>
+				<p>
+WithDeadline returns a copy of the parent context with the deadline adjusted
+to be no later than d.  If the parent&#39;s deadline is already earlier than d,
+WithDeadline(parent, d) is semantically equivalent to parent.  The returned
+context&#39;s Done channel is closed when the deadline expires, when the returned
+cancel function is called, or when the parent context&#39;s Done channel is
+closed, whichever happens first.
+</p>
+<p>
+Canceling this context releases resources associated with it, so code should
+call cancel as soon as the operations running in this Context complete.
+</p>
+
+				
+				
+			
+				
+				<h3 id="WithTimeout">func <a href="http://localhost:6060/src/golang.org/x/net/context/pre_go17.go?s=7228:7305#L261">WithTimeout</a></h3>
+				<pre>func WithTimeout(parent <a href="index.html#Context">Context</a>, timeout <a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Duration">Duration</a>) (<a href="index.html#Context">Context</a>, <a href="index.html#CancelFunc">CancelFunc</a>)</pre>
+				<p>
+WithTimeout returns WithDeadline(parent, time.Now().Add(timeout)).
+</p>
+<p>
+Canceling this context releases resources associated with it, so code should
+call cancel as soon as the operations running in this Context complete:
+</p>
+<pre>func slowOperationWithTimeout(ctx context.Context) (Result, error) {
+	ctx, cancel := context.WithTimeout(ctx, 100*time.Millisecond)
+	defer cancel()  // releases resources if slowOperation completes before timeout elapses
+	return slowOperation(ctx)
+}
+</pre>
+
+				<div id="example_WithTimeout" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code"><span class="comment">// Pass a context with a timeout to tell a blocking function that it</span>
+<span class="comment">// should abandon its work after the timeout elapses.</span>
+ctx, _ := context.WithTimeout(context.Background(), 100*time.Millisecond)
+select {
+case &lt;-time.After(200 * time.Millisecond):
+    fmt.Println(&#34;overslept&#34;)
+case &lt;-ctx.Done():
+    fmt.Println(ctx.Err()) <span class="comment">// prints &#34;context deadline exceeded&#34;</span>
+}
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">context deadline exceeded
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+				
+				<h3 id="WithValue">func <a href="http://localhost:6060/src/golang.org/x/net/context/pre_go17.go?s=7594:7666#L270">WithValue</a></h3>
+				<pre>func WithValue(parent <a href="index.html#Context">Context</a>, key interface{}, val interface{}) <a href="index.html#Context">Context</a></pre>
+				<p>
+WithValue returns a copy of parent in which the value associated with key is
+val.
+</p>
+<p>
+Use context Values only for request-scoped data that transits processes and
+APIs, not for passing optional parameters to functions.
+</p>
+
+				
+				
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+
+
+	<div class="pkg-dir">
+		<table>
+			<tr>
+				<th class="pkg-name">Name</th>
+				<th class="pkg-synopsis">Synopsis</th>
+			</tr>
+
+			
+			<tr>
+				<td colspan="2"><a href="../index.html">..</a></td>
+			</tr>
+			
+
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="ctxhttp/index.html">ctxhttp</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package ctxhttp provides helper functions for performing context-aware HTTP requests.
+						</td>
+					</tr>
+				
+			
+		</table>
+	</div>
+
+
+	
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

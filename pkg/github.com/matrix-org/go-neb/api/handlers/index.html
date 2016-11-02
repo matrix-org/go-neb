@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>handlers - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package handlers</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/matrix-org/go-neb/api/handlers"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package handlers contains the HTTP handlers for Go-NEB.
+</p>
+<p>
+This includes detail on the API paths and top-level JSON keys. For specific service JSON,
+see the service you&#39;re interested in.
+</p>
+<h3 id="hdr-See_also">See also</h3>
+<p>
+Package &#34;api&#34; for the format of the JSON request bodies.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+			
+				
+				<dd><a href="index.html#ConfigureAuthRealm">type ConfigureAuthRealm</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ConfigureAuthRealm.OnIncomingRequest">func (h *ConfigureAuthRealm) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#ConfigureClient">type ConfigureClient</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ConfigureClient.OnIncomingRequest">func (s *ConfigureClient) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#ConfigureService">type ConfigureService</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewConfigureService">func NewConfigureService(db *database.ServiceDB, clients *clients.Clients) *ConfigureService</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ConfigureService.OnIncomingRequest">func (s *ConfigureService) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#GetService">type GetService</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#GetService.OnIncomingRequest">func (h *GetService) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#GetSession">type GetSession</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#GetSession.OnIncomingRequest">func (h *GetSession) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Heartbeat">type Heartbeat</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Heartbeat.OnIncomingRequest">func (*Heartbeat) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#RealmRedirect">type RealmRedirect</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#RealmRedirect.Handle">func (rh *RealmRedirect) Handle(w http.ResponseWriter, req *http.Request)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#RemoveAuthSession">type RemoveAuthSession</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#RemoveAuthSession.OnIncomingRequest">func (h *RemoveAuthSession) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#RequestAuthSession">type RequestAuthSession</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#RequestAuthSession.OnIncomingRequest">func (h *RequestAuthSession) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Webhook">type Webhook</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewWebhook">func NewWebhook(db *database.ServiceDB, cli *clients.Clients) *Webhook</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Webhook.Handle">func (wh *Webhook) Handle(w http.ResponseWriter, req *http.Request)</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/handlers/auth.go">auth.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/handlers/client.go">client.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/handlers/heartbeat.go">heartbeat.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/handlers/service.go">service.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/handlers/webhook.go">webhook.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+		
+			
+			
+			<h2 id="ConfigureAuthRealm">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/handlers/auth.go?s=4876:4934#L151">ConfigureAuthRealm</a></h2>
+			<pre>type ConfigureAuthRealm struct {
+    Db *<a href="../../database/index.html">database</a>.<a href="../../database/index.html#ServiceDB">ServiceDB</a>
+}</pre>
+			<p>
+ConfigureAuthRealm represents an HTTP handler capable of processing /admin/configureAuthRealm requests.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ConfigureAuthRealm.OnIncomingRequest">func (*ConfigureAuthRealm) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/handlers/auth.go?s=5550:5648#L179">OnIncomingRequest</a></h3>
+				<pre>func (h *<a href="index.html#ConfigureAuthRealm">ConfigureAuthRealm</a>) OnIncomingRequest(req *<a href="../../../../../net/http/index.html">http</a>.<a href="../../../../../net/http/index.html#Request">Request</a>) (interface{}, *<a href="../../errors/index.html">errors</a>.<a href="../../errors/index.html#HTTPError">HTTPError</a>)</pre>
+				<p>
+OnIncomingRequest handles POST requests to /admin/configureAuthRealm. The JSON object
+provided is of type &#34;api.ConfigureAuthRealmRequest&#34;.
+</p>
+<p>
+Request:
+</p>
+<pre>POST /admin/configureAuthRealm
+{
+    &#34;ID&#34;: &#34;my-realm-id&#34;,
+    &#34;Type&#34;: &#34;github&#34;,
+    &#34;Config&#34;: {
+        // Realm-specific configuration information
+    }
+}
+</pre>
+<p>
+Response:
+</p>
+<pre>HTTP/1.1 200 OK
+{
+    &#34;ID&#34;: &#34;my-realm-id&#34;,
+    &#34;Type&#34;: &#34;github&#34;,
+    &#34;OldConfig&#34;: {
+        // Old auth realm config information
+    },
+    &#34;NewConfig&#34;: {
+        // New auth realm config information
+    },
+}
+</pre>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ConfigureClient">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/handlers/client.go?s=276:333#L3">ConfigureClient</a></h2>
+			<pre>type ConfigureClient struct {
+    Clients *<a href="../../clients/index.html">clients</a>.<a href="../../clients/index.html#Clients">Clients</a>
+}</pre>
+			<p>
+ConfigureClient represents an HTTP handler capable of processing /admin/configureClient requests.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ConfigureClient.OnIncomingRequest">func (*ConfigureClient) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/handlers/client.go?s=1034:1129#L32">OnIncomingRequest</a></h3>
+				<pre>func (s *<a href="index.html#ConfigureClient">ConfigureClient</a>) OnIncomingRequest(req *<a href="../../../../../net/http/index.html">http</a>.<a href="../../../../../net/http/index.html#Request">Request</a>) (interface{}, *<a href="../../errors/index.html">errors</a>.<a href="../../errors/index.html#HTTPError">HTTPError</a>)</pre>
+				<p>
+OnIncomingRequest handles POST requests to /admin/configureClient. The JSON object provided
+is of type &#34;api.ClientConfig&#34;.
+</p>
+<p>
+If a DisplayName is supplied, this request will set this client&#39;s display name
+if the old ClientConfig DisplayName differs from the new ClientConfig DisplayName.
+</p>
+<p>
+Request:
+</p>
+<pre>POST /admin/configureClient
+{
+    &#34;UserID&#34;: &#34;@my_bot:localhost&#34;,
+    &#34;HomeserverURL&#34;: &#34;<a href="http://localhost:8008">http://localhost:8008</a>&#34;,
+    &#34;Sync&#34;: true,
+    &#34;DisplayName&#34;: &#34;My Bot&#34;
+}
+</pre>
+<p>
+Response:
+</p>
+<pre>HTTP/1.1 200 OK
+{
+     &#34;OldClient&#34;: {
+       // The old api.ClientConfig
+     },
+     &#34;NewClient&#34;: {
+       // The new api.ClientConfig
+     }
+}
+</pre>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ConfigureService">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/handlers/service.go?s=491:666#L10">ConfigureService</a></h2>
+			<pre>type ConfigureService struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+ConfigureService represents an HTTP handler which can process /admin/configureService requests.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewConfigureService">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/handlers/service.go?s=730:822#L18">NewConfigureService</a></h3>
+				<pre>func NewConfigureService(db *<a href="../../database/index.html">database</a>.<a href="../../database/index.html#ServiceDB">ServiceDB</a>, clients *<a href="../../clients/index.html">clients</a>.<a href="../../clients/index.html#Clients">Clients</a>) *<a href="index.html#ConfigureService">ConfigureService</a></pre>
+				<p>
+NewConfigureService creates a new ConfigureService handler
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="ConfigureService.OnIncomingRequest">func (*ConfigureService) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/handlers/service.go?s=2327:2423#L66">OnIncomingRequest</a></h3>
+				<pre>func (s *<a href="index.html#ConfigureService">ConfigureService</a>) OnIncomingRequest(req *<a href="../../../../../net/http/index.html">http</a>.<a href="../../../../../net/http/index.html#Request">Request</a>) (interface{}, *<a href="../../errors/index.html">errors</a>.<a href="../../errors/index.html#HTTPError">HTTPError</a>)</pre>
+				<p>
+OnIncomingRequest handles POST requests to /admin/configureService.
+</p>
+<p>
+The request body MUST be of type &#34;api.ConfigureServiceRequest&#34;.
+</p>
+<p>
+Request:
+</p>
+<pre>POST /admin/configureService
+{
+    &#34;ID&#34;: &#34;my_service_id&#34;,
+    &#34;Type&#34;: &#34;service-type&#34;,
+    &#34;UserID&#34;: &#34;@my_bot:localhost&#34;,
+    &#34;Config&#34;: {
+        // service-specific config information
+    }
+}
+</pre>
+<p>
+Response:
+</p>
+<pre>HTTP/1.1 200 OK
+{
+    &#34;ID&#34;: &#34;my_service_id&#34;,
+    &#34;Type&#34;: &#34;service-type&#34;,
+    &#34;OldConfig&#34;: {
+        // old service-specific config information
+    },
+    &#34;NewConfig&#34;: {
+        // new service-specific config information
+    },
+}
+</pre>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="GetService">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/handlers/service.go?s=4884:4934#L145">GetService</a></h2>
+			<pre>type GetService struct {
+    Db *<a href="../../database/index.html">database</a>.<a href="../../database/index.html#ServiceDB">ServiceDB</a>
+}</pre>
+			<p>
+GetService represents an HTTP handler which can process /admin/getService requests.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="GetService.OnIncomingRequest">func (*GetService) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/handlers/service.go?s=5376:5466#L168">OnIncomingRequest</a></h3>
+				<pre>func (h *<a href="index.html#GetService">GetService</a>) OnIncomingRequest(req *<a href="../../../../../net/http/index.html">http</a>.<a href="../../../../../net/http/index.html#Request">Request</a>) (interface{}, *<a href="../../errors/index.html">errors</a>.<a href="../../errors/index.html#HTTPError">HTTPError</a>)</pre>
+				<p>
+OnIncomingRequest handles POST requests to /admin/getService.
+</p>
+<p>
+The request body MUST be a JSON body which has an &#34;ID&#34; key which represents
+the service ID to get.
+</p>
+<p>
+Request:
+</p>
+<pre>POST /admin/getService
+{
+    &#34;ID&#34;: &#34;my_service_id&#34;
+}
+</pre>
+<p>
+Response:
+</p>
+<pre>HTTP/1.1 200 OK
+{
+    &#34;ID&#34;: &#34;my_service_id&#34;,
+    &#34;Type&#34;: &#34;github&#34;,
+    &#34;Config&#34;: {
+        // service-specific config information
+    }
+}
+</pre>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="GetSession">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/handlers/auth.go?s=6686:6736#L215">GetSession</a></h2>
+			<pre>type GetSession struct {
+    Db *<a href="../../database/index.html">database</a>.<a href="../../database/index.html#ServiceDB">ServiceDB</a>
+}</pre>
+			<p>
+GetSession represents an HTTP handler capable of processing /admin/getSession requests.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="GetSession.OnIncomingRequest">func (*GetSession) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/handlers/auth.go?s=7437:7527#L245">OnIncomingRequest</a></h3>
+				<pre>func (h *<a href="index.html#GetSession">GetSession</a>) OnIncomingRequest(req *<a href="../../../../../net/http/index.html">http</a>.<a href="../../../../../net/http/index.html#Request">Request</a>) (interface{}, *<a href="../../errors/index.html">errors</a>.<a href="../../errors/index.html#HTTPError">HTTPError</a>)</pre>
+				<p>
+OnIncomingRequest handles POST requests to /admin/getSession.
+</p>
+<p>
+The JSON object provided MUST have a &#34;RealmID&#34; and &#34;UserID&#34; in order to fetch the
+correct AuthSession. If there is no session for this tuple of realm and user ID,
+a 200 OK is still returned with &#34;Authenticated&#34; set to false.
+</p>
+<p>
+Request:
+</p>
+<pre>POST /admin/getSession
+{
+    &#34;RealmID&#34;: &#34;my-realm&#34;,
+    &#34;UserID&#34;: &#34;@my_user:localhost&#34;
+}
+</pre>
+<p>
+Response:
+</p>
+<pre>HTTP/1.1 200 OK
+{
+    &#34;ID&#34;: &#34;session_id&#34;,
+    &#34;Authenticated&#34;: true,
+    &#34;Info&#34;: {
+        // Session-specific config info
+    }
+}
+</pre>
+<p>
+Response if session not found:
+</p>
+<pre>HTTP/1.1 200 OK
+{
+    &#34;Authenticated&#34;: false
+}
+</pre>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Heartbeat">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/handlers/heartbeat.go?s=398:421#L8">Heartbeat</a></h2>
+			<pre>type Heartbeat struct{}</pre>
+			<p>
+Heartbeat implements the heartbeat API
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Heartbeat.OnIncomingRequest">func (*Heartbeat) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/handlers/heartbeat.go?s=596:683#L19">OnIncomingRequest</a></h3>
+				<pre>func (*<a href="index.html#Heartbeat">Heartbeat</a>) OnIncomingRequest(req *<a href="../../../../../net/http/index.html">http</a>.<a href="../../../../../net/http/index.html#Request">Request</a>) (interface{}, *<a href="../../errors/index.html">errors</a>.<a href="../../errors/index.html#HTTPError">HTTPError</a>)</pre>
+				<p>
+OnIncomingRequest returns an empty JSON object which can be used to detect liveness of Go-NEB.
+</p>
+<p>
+Request:
+</p>
+<pre>GET /test
+</pre>
+<p>
+Response:
+</p>
+<pre>HTTP/1.1 200 OK
+{}
+</pre>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="RealmRedirect">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/handlers/auth.go?s=3690:3743#L116">RealmRedirect</a></h2>
+			<pre>type RealmRedirect struct {
+    Db *<a href="../../database/index.html">database</a>.<a href="../../database/index.html#ServiceDB">ServiceDB</a>
+}</pre>
+			<p>
+RealmRedirect represents an HTTP handler which can process incoming redirects for auth realms.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="RealmRedirect.Handle">func (*RealmRedirect) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/handlers/auth.go?s=3943:4016#L124">Handle</a></h3>
+				<pre>func (rh *<a href="index.html#RealmRedirect">RealmRedirect</a>) Handle(w <a href="../../../../../net/http/index.html">http</a>.<a href="../../../../../net/http/index.html#ResponseWriter">ResponseWriter</a>, req *<a href="../../../../../net/http/index.html">http</a>.<a href="../../../../../net/http/index.html#Request">Request</a>)</pre>
+				<p>
+Handle requests for an auth realm.
+</p>
+<p>
+The last path segment of the URL MUST be the base64 form of the Realm ID. What response
+this returns depends on the specific AuthRealm implementation.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="RemoveAuthSession">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/handlers/auth.go?s=2221:2278#L66">RemoveAuthSession</a></h2>
+			<pre>type RemoveAuthSession struct {
+    Db *<a href="../../database/index.html">database</a>.<a href="../../database/index.html#ServiceDB">ServiceDB</a>
+}</pre>
+			<p>
+RemoveAuthSession represents an HTTP handler capable of processing /admin/removeAuthSession requests.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="RemoveAuthSession.OnIncomingRequest">func (*RemoveAuthSession) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/handlers/auth.go?s=2628:2725#L83">OnIncomingRequest</a></h3>
+				<pre>func (h *<a href="index.html#RemoveAuthSession">RemoveAuthSession</a>) OnIncomingRequest(req *<a href="../../../../../net/http/index.html">http</a>.<a href="../../../../../net/http/index.html#Request">Request</a>) (interface{}, *<a href="../../errors/index.html">errors</a>.<a href="../../errors/index.html#HTTPError">HTTPError</a>)</pre>
+				<p>
+OnIncomingRequest handles POST requests to /admin/removeAuthSession.
+</p>
+<p>
+The JSON object MUST contain the keys &#34;RealmID&#34; and &#34;UserID&#34; to identify the session to remove.
+</p>
+<p>
+Request
+</p>
+<pre>POST /admin/removeAuthSession
+{
+    &#34;RealmID&#34;: &#34;github-realm&#34;,
+    &#34;UserID&#34;: &#34;@my_user:localhost&#34;
+}
+</pre>
+<p>
+Response:
+</p>
+<pre>HTTP/1.1 200 OK
+{}
+</pre>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="RequestAuthSession">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/handlers/auth.go?s=441:499#L9">RequestAuthSession</a></h2>
+			<pre>type RequestAuthSession struct {
+    Db *<a href="../../database/index.html">database</a>.<a href="../../database/index.html#ServiceDB">ServiceDB</a>
+}</pre>
+			<p>
+RequestAuthSession represents an HTTP handler capable of processing /admin/requestAuthSession requests.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="RequestAuthSession.OnIncomingRequest">func (*RequestAuthSession) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/handlers/auth.go?s=1151:1249#L33">OnIncomingRequest</a></h3>
+				<pre>func (h *<a href="index.html#RequestAuthSession">RequestAuthSession</a>) OnIncomingRequest(req *<a href="../../../../../net/http/index.html">http</a>.<a href="../../../../../net/http/index.html#Request">Request</a>) (interface{}, *<a href="../../errors/index.html">errors</a>.<a href="../../errors/index.html#HTTPError">HTTPError</a>)</pre>
+				<p>
+OnIncomingRequest handles POST requests to /admin/requestAuthSession. The HTTP body MUST be
+a JSON object representing type &#34;api.RequestAuthSessionRequest&#34;.
+</p>
+<p>
+This will return HTTP 400 if there are missing fields or the Realm ID is unknown.
+For the format of the response, see the specific AuthRealm that the Realm ID corresponds to.
+</p>
+<p>
+Request:
+</p>
+<pre>POST /admin/requestAuthSession
+{
+    &#34;RealmID&#34;: &#34;github_realm_id&#34;,
+    &#34;UserID&#34;: &#34;@my_user:localhost&#34;,
+    &#34;Config&#34;: {
+        // AuthRealm specific config info
+    }
+}
+</pre>
+<p>
+Response:
+</p>
+<pre>HTTP/1.1 200 OK
+{
+    // AuthRealm-specific information
+}
+</pre>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Webhook">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/handlers/webhook.go?s=327:405#L5">Webhook</a></h2>
+			<pre>type Webhook struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Webhook represents an HTTP handler capable of accepting webhook requests on behalf of services.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewWebhook">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/handlers/webhook.go?s=456:526#L11">NewWebhook</a></h3>
+				<pre>func NewWebhook(db *<a href="../../database/index.html">database</a>.<a href="../../database/index.html#ServiceDB">ServiceDB</a>, cli *<a href="../../clients/index.html">clients</a>.<a href="../../clients/index.html#Clients">Clients</a>) *<a href="index.html#Webhook">Webhook</a></pre>
+				<p>
+NewWebhook returns a new webhook HTTP handler
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Webhook.Handle">func (*Webhook) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/handlers/webhook.go?s=954:1021#L21">Handle</a></h3>
+				<pre>func (wh *<a href="index.html#Webhook">Webhook</a>) Handle(w <a href="../../../../../net/http/index.html">http</a>.<a href="../../../../../net/http/index.html#ResponseWriter">ResponseWriter</a>, req *<a href="../../../../../net/http/index.html">http</a>.<a href="../../../../../net/http/index.html#Request">Request</a>)</pre>
+				<p>
+Handle an incoming webhook HTTP request.
+</p>
+<p>
+The webhook MUST have a known base64 encoded service ID as the last path segment
+in order for this request to be passed to the correct service, or else this will return
+HTTP 400. If the base64 encoded service ID is unknown, this will return HTTP 404.
+Beyond this, the exact response is determined by the specific Service implementation.
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

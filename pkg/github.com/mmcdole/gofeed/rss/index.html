@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>rss - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package rss</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/mmcdole/gofeed/rss"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+			
+				
+				<dd><a href="index.html#Category">type Category</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Cloud">type Cloud</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Enclosure">type Enclosure</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Feed">type Feed</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Feed.String">func (f Feed) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#GUID">type GUID</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Image">type Image</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Item">type Item</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Parser">type Parser</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Parser.Parse">func (rp *Parser) Parse(feed io.Reader) (*Feed, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Source">type Source</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#TextInput">type TextInput</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/mmcdole/gofeed/rss/feed.go">feed.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/mmcdole/gofeed/rss/parser.go">parser.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+		
+			
+			
+			<h2 id="Category">type <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/rss/feed.go?s=4101:4206#L85">Category</a></h2>
+			<pre>type Category struct {
+    Domain <a href="../../../../builtin/index.html#string">string</a> `json:&#34;domain,omitempty&#34;`
+    Value  <a href="../../../../builtin/index.html#string">string</a> `json:&#34;value,omitempty&#34;`
+}</pre>
+			<p>
+Category is category metadata for Feeds and Entries
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Cloud">type <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/rss/feed.go?s=4671:4961#L103">Cloud</a></h2>
+			<pre>type Cloud struct {
+    Domain            <a href="../../../../builtin/index.html#string">string</a> `json:&#34;domain,omitempty&#34;`
+    Port              <a href="../../../../builtin/index.html#string">string</a> `json:&#34;port,omitempty&#34;`
+    Path              <a href="../../../../builtin/index.html#string">string</a> `json:&#34;path,omitempty&#34;`
+    RegisterProcedure <a href="../../../../builtin/index.html#string">string</a> `json:&#34;registerProcedure,omitempty&#34;`
+    Protocol          <a href="../../../../builtin/index.html#string">string</a> `json:&#34;protocol,omitempty&#34;`
+}</pre>
+			<p>
+Cloud allows processes to register with a
+cloud to be notified of updates to the channel,
+implementing a lightweight publish-subscribe protocol
+for RSS feeds
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Enclosure">type <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/rss/feed.go?s=3548:3691#L65">Enclosure</a></h2>
+			<pre>type Enclosure struct {
+    URL    <a href="../../../../builtin/index.html#string">string</a> `json:&#34;url,omitempty&#34;`
+    Length <a href="../../../../builtin/index.html#string">string</a> `json:&#34;length,omitempty&#34;`
+    Type   <a href="../../../../builtin/index.html#string">string</a> `json:&#34;type,omitempty&#34;`
+}</pre>
+			<p>
+Enclosure is a media object that is attached to
+the item
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Feed">type <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/rss/feed.go?s=114:2046#L1">Feed</a></h2>
+			<pre>type Feed struct {
+    Title               <a href="../../../../builtin/index.html#string">string</a>                   `json:&#34;title,omitempty&#34;`
+    Link                <a href="../../../../builtin/index.html#string">string</a>                   `json:&#34;link,omitempty&#34;`
+    Description         <a href="../../../../builtin/index.html#string">string</a>                   `json:&#34;description,omitempty&#34;`
+    Language            <a href="../../../../builtin/index.html#string">string</a>                   `json:&#34;language,omitempty&#34;`
+    Copyright           <a href="../../../../builtin/index.html#string">string</a>                   `json:&#34;copyright,omitempty&#34;`
+    ManagingEditor      <a href="../../../../builtin/index.html#string">string</a>                   `json:&#34;managingEditor,omitempty&#34;`
+    WebMaster           <a href="../../../../builtin/index.html#string">string</a>                   `json:&#34;webMaster,omitempty&#34;`
+    PubDate             <a href="../../../../builtin/index.html#string">string</a>                   `json:&#34;pubDate,omitempty&#34;`
+    PubDateParsed       *<a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Time">Time</a>               `json:&#34;pubDateParsed,omitempty&#34;`
+    LastBuildDate       <a href="../../../../builtin/index.html#string">string</a>                   `json:&#34;lastBuildDate,omitempty&#34;`
+    LastBuildDateParsed *<a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Time">Time</a>               `json:&#34;lastBuildDateParsed,omitempty&#34;`
+    Categories          []*<a href="index.html#Category">Category</a>              `json:&#34;categories,omitempty&#34;`
+    Generator           <a href="../../../../builtin/index.html#string">string</a>                   `json:&#34;generator,omitempty&#34;`
+    Docs                <a href="../../../../builtin/index.html#string">string</a>                   `json:&#34;docs,omitempty&#34;`
+    TTL                 <a href="../../../../builtin/index.html#string">string</a>                   `json:&#34;ttl,omitempty&#34;`
+    Image               *<a href="index.html#Image">Image</a>                   `json:&#34;image,omitempty&#34;`
+    Rating              <a href="../../../../builtin/index.html#string">string</a>                   `json:&#34;rating,omitempty&#34;`
+    SkipHours           []<a href="../../../../builtin/index.html#string">string</a>                 `json:&#34;skipHours,omitempty&#34;`
+    SkipDays            []<a href="../../../../builtin/index.html#string">string</a>                 `json:&#34;skipDays,omitempty&#34;`
+    Cloud               *<a href="index.html#Cloud">Cloud</a>                   `json:&#34;cloud,omitempty&#34;`
+    TextInput           *<a href="index.html#TextInput">TextInput</a>               `json:&#34;textInput,omitempty&#34;`
+    DublinCoreExt       *ext.<a href="index.html#DublinCoreExtension">DublinCoreExtension</a> `json:&#34;dcExt,omitempty&#34;`
+    ITunesExt           *ext.<a href="index.html#ITunesFeedExtension">ITunesFeedExtension</a> `json:&#34;itunesExt,omitempty&#34;`
+    Extensions          ext.<a href="index.html#Extensions">Extensions</a>           `json:&#34;extensions,omitempty&#34;`
+    Items               []*<a href="index.html#Item">Item</a>                  `json:&#34;items&#34;`
+    Version             <a href="../../../../builtin/index.html#string">string</a>                   `json:&#34;version&#34;`
+}</pre>
+			<p>
+Feed is an RSS Feed
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Feed.String">func (Feed) <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/rss/feed.go?s=2048:2077#L30">String</a></h3>
+				<pre>func (f <a href="index.html#Feed">Feed</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="GUID">type <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/rss/feed.go?s=3736:3852#L72">GUID</a></h2>
+			<pre>type GUID struct {
+    Value       <a href="../../../../builtin/index.html#string">string</a> `json:&#34;value,omitempty&#34;`
+    IsPermalink <a href="../../../../builtin/index.html#string">string</a> `json:&#34;isPermalink,omitempty&#34;`
+}</pre>
+			<p>
+GUID is a unique identifier for an item
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Image">type <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/rss/feed.go?s=3188:3483#L54">Image</a></h2>
+			<pre>type Image struct {
+    URL         <a href="../../../../builtin/index.html#string">string</a> `json:&#34;url,omitempty&#34;`
+    Link        <a href="../../../../builtin/index.html#string">string</a> `json:&#34;link,omitempty&#34;`
+    Title       <a href="../../../../builtin/index.html#string">string</a> `json:&#34;title,omitempty&#34;`
+    Width       <a href="../../../../builtin/index.html#string">string</a> `json:&#34;width,omitempty&#34;`
+    Height      <a href="../../../../builtin/index.html#string">string</a> `json:&#34;height,omitempty&#34;`
+    Description <a href="../../../../builtin/index.html#string">string</a> `json:&#34;description,omitempty&#34;`
+}</pre>
+			<p>
+Image is an image that represents the feed
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Item">type <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/rss/feed.go?s=2173:3140#L36">Item</a></h2>
+			<pre>type Item struct {
+    Title         <a href="../../../../builtin/index.html#string">string</a>                   `json:&#34;title,omitempty&#34;`
+    Link          <a href="../../../../builtin/index.html#string">string</a>                   `json:&#34;link,omitempty&#34;`
+    Description   <a href="../../../../builtin/index.html#string">string</a>                   `json:&#34;description,omitempty&#34;`
+    Author        <a href="../../../../builtin/index.html#string">string</a>                   `json:&#34;author,omitempty&#34;`
+    Categories    []*<a href="index.html#Category">Category</a>              `json:&#34;categories,omitempty&#34;`
+    Comments      <a href="../../../../builtin/index.html#string">string</a>                   `json:&#34;comments,omitempty&#34;`
+    Enclosure     *<a href="index.html#Enclosure">Enclosure</a>               `json:&#34;enclosure,omitempty&#34;`
+    GUID          *<a href="index.html#GUID">GUID</a>                    `json:&#34;guid,omitempty&#34;`
+    PubDate       <a href="../../../../builtin/index.html#string">string</a>                   `json:&#34;pubDate,omitempty&#34;`
+    PubDateParsed *<a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Time">Time</a>               `json:&#34;pubDateParsed,omitempty&#34;`
+    Source        *<a href="index.html#Source">Source</a>                  `json:&#34;source,omitempty&#34;`
+    DublinCoreExt *ext.<a href="index.html#DublinCoreExtension">DublinCoreExtension</a> `json:&#34;dcExt,omitempty&#34;`
+    ITunesExt     *ext.<a href="index.html#ITunesItemExtension">ITunesItemExtension</a> `json:&#34;itunesExt,omitempty&#34;`
+    Extensions    ext.<a href="index.html#Extensions">Extensions</a>           `json:&#34;extensions,omitempty&#34;`
+}</pre>
+			<p>
+Item is an RSS Item
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Parser">type <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/rss/parser.go?s=189:209#L4">Parser</a></h2>
+			<pre>type Parser struct{}</pre>
+			<p>
+Parser is a RSS Parser
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Parser.Parse">func (*Parser) <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/rss/parser.go?s=256:310#L7">Parse</a></h3>
+				<pre>func (rp *<a href="index.html#Parser">Parser</a>) Parse(feed <a href="../../../../io/index.html">io</a>.<a href="../../../../io/index.html#Reader">Reader</a>) (*<a href="index.html#Feed">Feed</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Parse parses an xml feed into an rss.Feed
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Source">type <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/rss/feed.go?s=3946:4044#L79">Source</a></h2>
+			<pre>type Source struct {
+    Title <a href="../../../../builtin/index.html#string">string</a> `json:&#34;title,omitempty&#34;`
+    URL   <a href="../../../../builtin/index.html#string">string</a> `json:&#34;url,omitempty&#34;`
+}</pre>
+			<p>
+Source contains feed information for another
+feed if a given item came from that feed
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="TextInput">type <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/rss/feed.go?s=4290:4499#L92">TextInput</a></h2>
+			<pre>type TextInput struct {
+    Title       <a href="../../../../builtin/index.html#string">string</a> `json:&#34;title,omitempty&#34;`
+    Description <a href="../../../../builtin/index.html#string">string</a> `json:&#34;description,omitempty&#34;`
+    Name        <a href="../../../../builtin/index.html#string">string</a> `json:&#34;name,omitempty&#34;`
+    Link        <a href="../../../../builtin/index.html#string">string</a> `json:&#34;link,omitempty&#34;`
+}</pre>
+			<p>
+TextInput specifies a text input box that
+can be displayed with the channel
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

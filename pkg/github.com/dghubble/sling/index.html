@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>sling - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package sling</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/dghubble/sling"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-subdirectories">Subdirectories</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package sling is a Go HTTP client library for creating and sending API requests.
+</p>
+<p>
+Slings store HTTP Request properties to simplify sending requests and decoding
+responses. Check the examples to learn how to compose a Sling into your API
+client.
+</p>
+<h3 id="hdr-Usage">Usage</h3>
+<p>
+Use a Sling to set path, method, header, query, or body properties and create an
+http.Request.
+</p>
+<pre>type Params struct {
+    Count int `url:&#34;count,omitempty&#34;`
+}
+params := &amp;Params{Count: 5}
+
+req, err := sling.New().Get(&#34;<a href="https://example.com">https://example.com</a>&#34;).QueryStruct(params).Request()
+client.Do(req)
+</pre>
+<h3 id="hdr-Path">Path</h3>
+<p>
+Use Path to set or extend the URL for created Requests. Extension means the
+path will be resolved relative to the existing URL.
+</p>
+<pre>// creates a GET request to <a href="https://example.com/foo/bar">https://example.com/foo/bar</a>
+req, err := sling.New().Base(&#34;<a href="https://example.com/">https://example.com/</a>&#34;).Path(&#34;foo/&#34;).Path(&#34;bar&#34;).Request()
+</pre>
+<p>
+Use Get, Post, Put, Patch, Delete, or Head which are exactly the same as Path
+except they set the HTTP method too.
+</p>
+<pre>req, err := sling.New().Post(&#34;<a href="http://upload.com/gophers">http://upload.com/gophers</a>&#34;)
+</pre>
+<h3 id="hdr-Headers">Headers</h3>
+<p>
+Add or Set headers for requests created by a Sling.
+</p>
+<pre>s := sling.New().Base(baseUrl).Set(&#34;User-Agent&#34;, &#34;Gophergram API Client&#34;)
+req, err := s.New().Get(&#34;gophergram/list&#34;).Request()
+</pre>
+<h3 id="hdr-QueryStruct">QueryStruct</h3>
+<p>
+Define url parameter structs (<a href="https://godoc.org/github.com/google/go-querystring/query">https://godoc.org/github.com/google/go-querystring/query</a>).
+Use QueryStruct to encode a struct as query parameters on requests.
+</p>
+<pre>// Github Issue Parameters
+type IssueParams struct {
+    Filter    string `url:&#34;filter,omitempty&#34;`
+    State     string `url:&#34;state,omitempty&#34;`
+    Labels    string `url:&#34;labels,omitempty&#34;`
+    Sort      string `url:&#34;sort,omitempty&#34;`
+    Direction string `url:&#34;direction,omitempty&#34;`
+    Since     string `url:&#34;since,omitempty&#34;`
+}
+
+githubBase := sling.New().Base(&#34;<a href="https://api.github.com/">https://api.github.com/</a>&#34;).Client(httpClient)
+
+path := fmt.Sprintf(&#34;repos/%s/%s/issues&#34;, owner, repo)
+params := &amp;IssueParams{Sort: &#34;updated&#34;, State: &#34;open&#34;}
+req, err := githubBase.New().Get(path).QueryStruct(params).Request()
+</pre>
+<h3 id="hdr-Json_Body">Json Body</h3>
+<p>
+Define JSON tagged structs (<a href="https://golang.org/pkg/encoding/json/">https://golang.org/pkg/encoding/json/</a>).
+Use BodyJSON to JSON encode a struct as the Body on requests.
+</p>
+<pre>type IssueRequest struct {
+    Title     string   `json:&#34;title,omitempty&#34;`
+    Body      string   `json:&#34;body,omitempty&#34;`
+    Assignee  string   `json:&#34;assignee,omitempty&#34;`
+    Milestone int      `json:&#34;milestone,omitempty&#34;`
+    Labels    []string `json:&#34;labels,omitempty&#34;`
+}
+
+githubBase := sling.New().Base(&#34;<a href="https://api.github.com/">https://api.github.com/</a>&#34;).Client(httpClient)
+path := fmt.Sprintf(&#34;repos/%s/%s/issues&#34;, owner, repo)
+
+body := &amp;IssueRequest{
+    Title: &#34;Test title&#34;,
+    Body:  &#34;Some issue&#34;,
+}
+req, err := githubBase.New().Post(path).BodyJSON(body).Request()
+</pre>
+<p>
+Requests will include an &#34;application/json&#34; Content-Type header.
+</p>
+<h3 id="hdr-Form_Body">Form Body</h3>
+<p>
+Define url tagged structs (<a href="https://godoc.org/github.com/google/go-querystring/query">https://godoc.org/github.com/google/go-querystring/query</a>).
+Use BodyForm to form url encode a struct as the Body on requests.
+</p>
+<pre>type StatusUpdateParams struct {
+    Status             string   `url:&#34;status,omitempty&#34;`
+    InReplyToStatusId  int64    `url:&#34;in_reply_to_status_id,omitempty&#34;`
+    MediaIds           []int64  `url:&#34;media_ids,omitempty,comma&#34;`
+}
+
+tweetParams := &amp;StatusUpdateParams{Status: &#34;writing some Go&#34;}
+req, err := twitterBase.New().Post(path).BodyForm(tweetParams).Request()
+</pre>
+<p>
+Requests will include an &#34;application/x-www-form-urlencoded&#34; Content-Type
+header.
+</p>
+<h3 id="hdr-Plain_Body">Plain Body</h3>
+<p>
+Use Body to set a plain io.Reader on requests created by a Sling.
+</p>
+<pre>body := strings.NewReader(&#34;raw body&#34;)
+req, err := sling.New().Base(&#34;<a href="https://example.com">https://example.com</a>&#34;).Body(body).Request()
+</pre>
+<p>
+Set a content type header, if desired (e.g. Set(&#34;Content-Type&#34;, &#34;text/plain&#34;)).
+</p>
+<h3 id="hdr-Extend_a_Sling">Extend a Sling</h3>
+<p>
+Each Sling generates an http.Request (say with some path and query params)
+each time Request() is called, based on its state. When creating
+different slings, you may wish to extend an existing Sling to minimize
+duplication (e.g. a common client).
+</p>
+<p>
+Each Sling instance provides a New() method which creates an independent copy,
+so setting properties on the child won&#39;t mutate the parent Sling.
+</p>
+<pre>const twitterApi = &#34;<a href="https://api.twitter.com/1.1/">https://api.twitter.com/1.1/</a>&#34;
+base := sling.New().Base(twitterApi).Client(authClient)
+
+// statuses/show.json Sling
+tweetShowSling := base.New().Get(&#34;statuses/show.json&#34;).QueryStruct(params)
+req, err := tweetShowSling.Request()
+
+// statuses/update.json Sling
+tweetPostSling := base.New().Post(&#34;statuses/update.json&#34;).BodyForm(params)
+req, err := tweetPostSling.Request()
+</pre>
+<p>
+Without the calls to base.New(), tweetShowSling and tweetPostSling would
+reference the base Sling and POST to
+&#34;<a href="https://api.twitter.com/1.1/statuses/show.json/statuses/update.json">https://api.twitter.com/1.1/statuses/show.json/statuses/update.json</a>&#34;, which
+is undesired.
+</p>
+<p>
+Recap: If you wish to extend a Sling, create a new child copy with New().
+</p>
+<h3 id="hdr-Receive">Receive</h3>
+<p>
+Define a JSON struct to decode a type from 2XX success responses. Use
+ReceiveSuccess(successV interface{}) to send a new Request and decode the
+response body into successV if it succeeds.
+</p>
+<pre>// Github Issue (abbreviated)
+type Issue struct {
+    Title  string `json:&#34;title&#34;`
+    Body   string `json:&#34;body&#34;`
+}
+
+issues := new([]Issue)
+resp, err := githubBase.New().Get(path).QueryStruct(params).ReceiveSuccess(issues)
+fmt.Println(issues, resp, err)
+</pre>
+<p>
+Most APIs return failure responses with JSON error details. To decode these,
+define success and failure JSON structs. Use
+Receive(successV, failureV interface{}) to send a new Request that will
+automatically decode the response into the successV for 2XX responses or into
+failureV for non-2XX responses.
+</p>
+<pre>type GithubError struct {
+    Message string `json:&#34;message&#34;`
+    Errors  []struct {
+        Resource string `json:&#34;resource&#34;`
+        Field    string `json:&#34;field&#34;`
+        Code     string `json:&#34;code&#34;`
+    } `json:&#34;errors&#34;`
+    DocumentationURL string `json:&#34;documentation_url&#34;`
+}
+
+issues := new([]Issue)
+githubError := new(GithubError)
+resp, err := githubBase.New().Get(path).QueryStruct(params).Receive(issues, githubError)
+fmt.Println(issues, githubError, resp, err)
+</pre>
+<p>
+Pass a nil successV or failureV argument to skip JSON decoding into that value.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+			
+				
+				<dd><a href="index.html#Doer">type Doer</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Sling">type Sling</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#New">func New() *Sling</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Sling.Add">func (s *Sling) Add(key, value string) *Sling</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Sling.Base">func (s *Sling) Base(rawURL string) *Sling</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Sling.Body">func (s *Sling) Body(body io.Reader) *Sling</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Sling.BodyForm">func (s *Sling) BodyForm(bodyForm interface{}) *Sling</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Sling.BodyJSON">func (s *Sling) BodyJSON(bodyJSON interface{}) *Sling</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Sling.Client">func (s *Sling) Client(httpClient *http.Client) *Sling</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Sling.Delete">func (s *Sling) Delete(pathURL string) *Sling</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Sling.Do">func (s *Sling) Do(req *http.Request, successV, failureV interface{}) (*http.Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Sling.Doer">func (s *Sling) Doer(doer Doer) *Sling</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Sling.Get">func (s *Sling) Get(pathURL string) *Sling</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Sling.Head">func (s *Sling) Head(pathURL string) *Sling</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Sling.New">func (s *Sling) New() *Sling</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Sling.Patch">func (s *Sling) Patch(pathURL string) *Sling</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Sling.Path">func (s *Sling) Path(path string) *Sling</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Sling.Post">func (s *Sling) Post(pathURL string) *Sling</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Sling.Put">func (s *Sling) Put(pathURL string) *Sling</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Sling.QueryStruct">func (s *Sling) QueryStruct(queryStruct interface{}) *Sling</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Sling.Receive">func (s *Sling) Receive(successV, failureV interface{}) (*http.Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Sling.ReceiveSuccess">func (s *Sling) ReceiveSuccess(successV interface{}) (*http.Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Sling.Request">func (s *Sling) Request() (*http.Request, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Sling.Set">func (s *Sling) Set(key, value string) *Sling</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Sling.SetBasicAuth">func (s *Sling) SetBasicAuth(username, password string) *Sling</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/dghubble/sling/doc.go">doc.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/dghubble/sling/sling.go">sling.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+		
+			
+			
+			<h2 id="Doer">type <a href="http://localhost:6060/src/github.com/dghubble/sling/sling.go?s=479:549#L15">Doer</a></h2>
+			<pre>type Doer interface {
+    Do(req *<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Request">Request</a>) (*<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Response">Response</a>, <a href="../../../builtin/index.html#error">error</a>)
+}</pre>
+			<p>
+Doer executes http requests.  It is implemented by *http.Client.  You can
+wrap *http.Client with layers of Doers to form a stack of client-side
+middleware.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Sling">type <a href="http://localhost:6060/src/github.com/dghubble/sling/sling.go?s=599:1052#L20">Sling</a></h2>
+			<pre>type Sling struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Sling is an HTTP Request builder and sender.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="New">func <a href="http://localhost:6060/src/github.com/dghubble/sling/sling.go?s=1109:1126#L40">New</a></h3>
+				<pre>func New() *<a href="index.html#Sling">Sling</a></pre>
+				<p>
+New returns a new Sling with an http DefaultClient.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Sling.Add">func (*Sling) <a href="http://localhost:6060/src/github.com/dghubble/sling/sling.go?s=3957:4002#L143">Add</a></h3>
+				<pre>func (s *<a href="index.html#Sling">Sling</a>) Add(key, value <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Sling">Sling</a></pre>
+				<p>
+Add adds the key, value pair in Headers, appending values for existing keys
+to the key&#39;s values. Header keys are canonicalized.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Sling.Base">func (*Sling) <a href="http://localhost:6060/src/github.com/dghubble/sling/sling.go?s=4979:5021#L173">Base</a></h3>
+				<pre>func (s *<a href="index.html#Sling">Sling</a>) Base(rawURL <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Sling">Sling</a></pre>
+				<p>
+Base sets the rawURL. If you intend to extend the url with Path,
+baseUrl should be specified with a trailing slash.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Sling.Body">func (*Sling) <a href="http://localhost:6060/src/github.com/dghubble/sling/sling.go?s=7058:7101#L232">Body</a></h3>
+				<pre>func (s *<a href="index.html#Sling">Sling</a>) Body(body <a href="../../../io/index.html">io</a>.<a href="../../../io/index.html#Reader">Reader</a>) *<a href="index.html#Sling">Sling</a></pre>
+				<p>
+Body sets the Sling&#39;s body. The body value will be set as the Body on new
+requests (see Request()).
+If the provided body is also an io.Closer, the request Body will be closed
+by http.Client methods.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Sling.BodyForm">func (*Sling) <a href="http://localhost:6060/src/github.com/dghubble/sling/sling.go?s=6691:6744#L220">BodyForm</a></h3>
+				<pre>func (s *<a href="index.html#Sling">Sling</a>) BodyForm(bodyForm interface{}) *<a href="index.html#Sling">Sling</a></pre>
+				<p>
+BodyForm sets the Sling&#39;s bodyForm. The value pointed to by the bodyForm
+will be url encoded as the Body on new requests (see Request()).
+The bodyStruct argument should be a pointer to a url tagged struct. See
+<a href="https://godoc.org/github.com/google/go-querystring/query">https://godoc.org/github.com/google/go-querystring/query</a> for details.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Sling.BodyJSON">func (*Sling) <a href="http://localhost:6060/src/github.com/dghubble/sling/sling.go?s=6243:6296#L208">BodyJSON</a></h3>
+				<pre>func (s *<a href="index.html#Sling">Sling</a>) BodyJSON(bodyJSON interface{}) *<a href="index.html#Sling">Sling</a></pre>
+				<p>
+BodyJSON sets the Sling&#39;s bodyJSON. The value pointed to by the bodyJSON
+will be JSON encoded as the Body on new requests (see Request()).
+The bodyJSON argument should be a pointer to a JSON tagged struct. See
+<a href="https://golang.org/pkg/encoding/json/#MarshalIndent">https://golang.org/pkg/encoding/json/#MarshalIndent</a> for details.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Sling.Client">func (*Sling) <a href="http://localhost:6060/src/github.com/dghubble/sling/sling.go?s=2425:2479#L83">Client</a></h3>
+				<pre>func (s *<a href="index.html#Sling">Sling</a>) Client(httpClient *<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Client">Client</a>) *<a href="index.html#Sling">Sling</a></pre>
+				<p>
+Client sets the http Client used to do requests. If a nil client is given,
+the http.DefaultClient will be used.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Sling.Delete">func (*Sling) <a href="http://localhost:6060/src/github.com/dghubble/sling/sling.go?s=3716:3761#L134">Delete</a></h3>
+				<pre>func (s *<a href="index.html#Sling">Sling</a>) Delete(pathURL <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Sling">Sling</a></pre>
+				<p>
+Delete sets the Sling method to DELETE and sets the given pathURL.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Sling.Do">func (*Sling) <a href="http://localhost:6060/src/github.com/dghubble/sling/sling.go?s=11412:11505#L375">Do</a></h3>
+				<pre>func (s *<a href="index.html#Sling">Sling</a>) Do(req *<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Request">Request</a>, successV, failureV interface{}) (*<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Response">Response</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Do sends an HTTP request and returns the response. Success responses (2XX)
+are JSON decoded into the value pointed to by successV and other responses
+are JSON decoded into the value pointed to by failureV.
+Any error sending the request or decoding the response is returned.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Sling.Doer">func (*Sling) <a href="http://localhost:6060/src/github.com/dghubble/sling/sling.go?s=2706:2744#L92">Doer</a></h3>
+				<pre>func (s *<a href="index.html#Sling">Sling</a>) Doer(doer <a href="index.html#Doer">Doer</a>) *<a href="index.html#Sling">Sling</a></pre>
+				<p>
+Doer sets the custom Doer implementation used to do requests.
+If a nil client is given, the http.DefaultClient will be used.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Sling.Get">func (*Sling) <a href="http://localhost:6060/src/github.com/dghubble/sling/sling.go?s=3082:3124#L110">Get</a></h3>
+				<pre>func (s *<a href="index.html#Sling">Sling</a>) Get(pathURL <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Sling">Sling</a></pre>
+				<p>
+Get sets the Sling method to GET and sets the given pathURL.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Sling.Head">func (*Sling) <a href="http://localhost:6060/src/github.com/dghubble/sling/sling.go?s=2926:2969#L104">Head</a></h3>
+				<pre>func (s *<a href="index.html#Sling">Sling</a>) Head(pathURL <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Sling">Sling</a></pre>
+				<p>
+Head sets the Sling method to HEAD and sets the given pathURL.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Sling.New">func (*Sling) <a href="http://localhost:6060/src/github.com/dghubble/sling/sling.go?s=1859:1887#L61">New</a></h3>
+				<pre>func (s *<a href="index.html#Sling">Sling</a>) New() *<a href="index.html#Sling">Sling</a></pre>
+				<p>
+New returns a copy of a Sling for creating a new Sling with properties
+from a parent Sling. For example,
+</p>
+<pre>parentSling := sling.New().Client(client).Base(&#34;<a href="https://api.io/">https://api.io/</a>&#34;)
+fooSling := parentSling.New().Get(&#34;foo/&#34;)
+barSling := parentSling.New().Get(&#34;bar/&#34;)
+</pre>
+<p>
+fooSling and barSling will both use the same client, but send requests to
+<a href="https://api.io/foo/">https://api.io/foo/</a> and <a href="https://api.io/bar/">https://api.io/bar/</a> respectively.
+</p>
+<p>
+Note that query and body values are copied so if pointer values are used,
+mutating the original value will mutate the value within the child Sling.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Sling.Patch">func (*Sling) <a href="http://localhost:6060/src/github.com/dghubble/sling/sling.go?s=3552:3596#L128">Patch</a></h3>
+				<pre>func (s *<a href="index.html#Sling">Sling</a>) Patch(pathURL <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Sling">Sling</a></pre>
+				<p>
+Patch sets the Sling method to PATCH and sets the given pathURL.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Sling.Path">func (*Sling) <a href="http://localhost:6060/src/github.com/dghubble/sling/sling.go?s=5209:5249#L180">Path</a></h3>
+				<pre>func (s *<a href="index.html#Sling">Sling</a>) Path(path <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Sling">Sling</a></pre>
+				<p>
+Path extends the rawURL with the given path by resolving the reference to
+an absolute URL. If parsing errors occur, the rawURL is left unmodified.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Sling.Post">func (*Sling) <a href="http://localhost:6060/src/github.com/dghubble/sling/sling.go?s=3238:3281#L116">Post</a></h3>
+				<pre>func (s *<a href="index.html#Sling">Sling</a>) Post(pathURL <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Sling">Sling</a></pre>
+				<p>
+Post sets the Sling method to POST and sets the given pathURL.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Sling.Put">func (*Sling) <a href="http://localhost:6060/src/github.com/dghubble/sling/sling.go?s=3394:3436#L122">Put</a></h3>
+				<pre>func (s *<a href="index.html#Sling">Sling</a>) Put(pathURL <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Sling">Sling</a></pre>
+				<p>
+Put sets the Sling method to PUT and sets the given pathURL.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Sling.QueryStruct">func (*Sling) <a href="http://localhost:6060/src/github.com/dghubble/sling/sling.go?s=5789:5848#L195">QueryStruct</a></h3>
+				<pre>func (s *<a href="index.html#Sling">Sling</a>) QueryStruct(queryStruct interface{}) *<a href="index.html#Sling">Sling</a></pre>
+				<p>
+QueryStruct appends the queryStruct to the Sling&#39;s queryStructs. The value
+pointed to by each queryStruct will be encoded as url query parameters on
+new requests (see Request()).
+The queryStruct argument should be a pointer to a url tagged struct. See
+<a href="https://godoc.org/github.com/google/go-querystring/query">https://godoc.org/github.com/google/go-querystring/query</a> for details.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Sling.Receive">func (*Sling) <a href="http://localhost:6060/src/github.com/dghubble/sling/sling.go?s=10940:11019#L363">Receive</a></h3>
+				<pre>func (s *<a href="index.html#Sling">Sling</a>) Receive(successV, failureV interface{}) (*<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Response">Response</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Receive creates a new HTTP request and returns the response. Success
+responses (2XX) are JSON decoded into the value pointed to by successV and
+other responses are JSON decoded into the value pointed to by failureV.
+Any error creating the request, sending it, or decoding the response is
+returned.
+Receive is shorthand for calling Request and Do.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Sling.ReceiveSuccess">func (*Sling) <a href="http://localhost:6060/src/github.com/dghubble/sling/sling.go?s=10460:10536#L353">ReceiveSuccess</a></h3>
+				<pre>func (s *<a href="index.html#Sling">Sling</a>) ReceiveSuccess(successV interface{}) (*<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Response">Response</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+ReceiveSuccess creates a new HTTP request and returns the response. Success
+responses (2XX) are JSON decoded into the value pointed to by successV.
+Any error creating the request, sending it, or decoding a 2XX response
+is returned.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Sling.Request">func (*Sling) <a href="http://localhost:6060/src/github.com/dghubble/sling/sling.go?s=7444:7492#L248">Request</a></h3>
+				<pre>func (s *<a href="index.html#Sling">Sling</a>) Request() (*<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Request">Request</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Request returns a new http.Request created with the Sling properties.
+Returns any errors parsing the rawURL, encoding query structs, encoding
+the body, or creating the http.Request.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Sling.Set">func (*Sling) <a href="http://localhost:6060/src/github.com/dghubble/sling/sling.go?s=4169:4214#L150">Set</a></h3>
+				<pre>func (s *<a href="index.html#Sling">Sling</a>) Set(key, value <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Sling">Sling</a></pre>
+				<p>
+Set sets the key, value pair in Headers, replacing existing values
+associated with key. Header keys are canonicalized.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Sling.SetBasicAuth">func (*Sling) <a href="http://localhost:6060/src/github.com/dghubble/sling/sling.go?s=4467:4529#L158">SetBasicAuth</a></h3>
+				<pre>func (s *<a href="index.html#Sling">Sling</a>) SetBasicAuth(username, password <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Sling">Sling</a></pre>
+				<p>
+SetBasicAuth sets the Authorization header to use HTTP Basic Authentication
+with the provided username and password. With HTTP Basic Authentication
+the provided username and password are not encrypted.
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+
+
+	<div class="pkg-dir">
+		<table>
+			<tr>
+				<th class="pkg-name">Name</th>
+				<th class="pkg-synopsis">Synopsis</th>
+			</tr>
+
+			
+			<tr>
+				<td colspan="2"><a href="../index.html">..</a></td>
+			</tr>
+			
+
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="examples/index.html">examples</a>
+						</td>
+						<td class="pkg-synopsis">
+							
+						</td>
+					</tr>
+				
+			
+		</table>
+	</div>
+
+
+	
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

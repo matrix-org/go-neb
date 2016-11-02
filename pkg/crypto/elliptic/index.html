@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>elliptic - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package elliptic</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "crypto/elliptic"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package elliptic implements several standard elliptic curves over prime
+fields.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+				
+				<dd><a href="index.html#GenerateKey">func GenerateKey(curve Curve, rand io.Reader) (priv []byte, x, y *big.Int, err error)</a></dd>
+			
+				
+				<dd><a href="index.html#Marshal">func Marshal(curve Curve, x, y *big.Int) []byte</a></dd>
+			
+				
+				<dd><a href="index.html#Unmarshal">func Unmarshal(curve Curve, data []byte) (x, y *big.Int)</a></dd>
+			
+			
+				
+				<dd><a href="index.html#Curve">type Curve</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#P224">func P224() Curve</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#P256">func P256() Curve</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#P384">func P384() Curve</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#P521">func P521() Curve</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#CurveParams">type CurveParams</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CurveParams.Add">func (curve *CurveParams) Add(x1, y1, x2, y2 *big.Int) (*big.Int, *big.Int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CurveParams.Double">func (curve *CurveParams) Double(x1, y1 *big.Int) (*big.Int, *big.Int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CurveParams.IsOnCurve">func (curve *CurveParams) IsOnCurve(x, y *big.Int) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CurveParams.Params">func (curve *CurveParams) Params() *CurveParams</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CurveParams.ScalarBaseMult">func (curve *CurveParams) ScalarBaseMult(k []byte) (*big.Int, *big.Int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CurveParams.ScalarMult">func (curve *CurveParams) ScalarMult(Bx, By *big.Int, k []byte) (*big.Int, *big.Int)</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/crypto/elliptic/elliptic.go">elliptic.go</a>
+			
+				<a href="http://localhost:6060/src/crypto/elliptic/p224.go">p224.go</a>
+			
+				<a href="http://localhost:6060/src/crypto/elliptic/p256_amd64.go">p256_amd64.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+			
+			
+			<h2 id="GenerateKey">func <a href="http://localhost:6060/src/crypto/elliptic/elliptic.go?s=7368:7453#L266">GenerateKey</a></h2>
+			<pre>func GenerateKey(curve <a href="index.html#Curve">Curve</a>, rand <a href="../../io/index.html">io</a>.<a href="../../io/index.html#Reader">Reader</a>) (priv []<a href="../../builtin/index.html#byte">byte</a>, x, y *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>, err <a href="../../builtin/index.html#error">error</a>)</pre>
+			<p>
+GenerateKey returns a public/private key pair. The private key is
+generated using the given reader, which must return random data.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Marshal">func <a href="http://localhost:6060/src/crypto/elliptic/elliptic.go?s=8216:8263#L295">Marshal</a></h2>
+			<pre>func Marshal(curve <a href="index.html#Curve">Curve</a>, x, y *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>) []<a href="../../builtin/index.html#byte">byte</a></pre>
+			<p>
+Marshal converts a point into the form specified in section 4.3.6 of ANSI X9.62.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Unmarshal">func <a href="http://localhost:6060/src/crypto/elliptic/elliptic.go?s=8671:8727#L310">Unmarshal</a></h2>
+			<pre>func Unmarshal(curve <a href="index.html#Curve">Curve</a>, data []<a href="../../builtin/index.html#byte">byte</a>) (x, y *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>)</pre>
+			<p>
+Unmarshal converts a point, serialized by Marshal, into an x, y pair.
+It is an error if the point is not on the curve. On error, x = nil.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="Curve">type <a href="http://localhost:6060/src/crypto/elliptic/elliptic.go?s=871:1509#L14">Curve</a></h2>
+			<pre>type Curve interface {
+    <span class="comment">// Params returns the parameters for the curve.</span>
+    Params() *<a href="index.html#CurveParams">CurveParams</a>
+    <span class="comment">// IsOnCurve reports whether the given (x,y) lies on the curve.</span>
+    IsOnCurve(x, y *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>) <a href="../../builtin/index.html#bool">bool</a>
+    <span class="comment">// Add returns the sum of (x1,y1) and (x2,y2)</span>
+    Add(x1, y1, x2, y2 *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>) (x, y *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>)
+    <span class="comment">// Double returns 2*(x,y)</span>
+    Double(x1, y1 *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>) (x, y *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>)
+    <span class="comment">// ScalarMult returns k*(Bx,By) where k is a number in big-endian form.</span>
+    ScalarMult(x1, y1 *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>, k []<a href="../../builtin/index.html#byte">byte</a>) (x, y *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>)
+    <span class="comment">// ScalarBaseMult returns k*G, where G is the base point of the group</span>
+    <span class="comment">// and k is an integer in big-endian form.</span>
+    ScalarBaseMult(k []<a href="../../builtin/index.html#byte">byte</a>) (x, y *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>)
+}</pre>
+			<p>
+A Curve represents a short-form Weierstrass curve with a=-3.
+See <a href="http://www.hyperelliptic.org/EFD/g1p/auto-shortw.html">http://www.hyperelliptic.org/EFD/g1p/auto-shortw.html</a>
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="P224">func <a href="http://localhost:6060/src/crypto/elliptic/p224.go?s=1291:1308#L29">P224</a></h3>
+				<pre>func P224() <a href="index.html#Curve">Curve</a></pre>
+				<p>
+P224 returns a Curve which implements P-224 (see FIPS 186-3, section D.2.2)
+</p>
+
+				
+				
+			
+				
+				<h3 id="P256">func <a href="http://localhost:6060/src/crypto/elliptic/elliptic.go?s=11132:11149#L360">P256</a></h3>
+				<pre>func P256() <a href="index.html#Curve">Curve</a></pre>
+				<p>
+P256 returns a Curve which implements P-256 (see FIPS 186-3, section D.2.3)
+</p>
+
+				
+				
+			
+				
+				<h3 id="P384">func <a href="http://localhost:6060/src/crypto/elliptic/elliptic.go?s=11269:11286#L366">P384</a></h3>
+				<pre>func P384() <a href="index.html#Curve">Curve</a></pre>
+				<p>
+P384 returns a Curve which implements P-384 (see FIPS 186-3, section D.2.4)
+</p>
+
+				
+				
+			
+				
+				<h3 id="P521">func <a href="http://localhost:6060/src/crypto/elliptic/elliptic.go?s=11406:11423#L372">P521</a></h3>
+				<pre>func P521() <a href="index.html#Curve">Curve</a></pre>
+				<p>
+P521 returns a Curve which implements P-521 (see FIPS 186-3, section D.2.5)
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="CurveParams">type <a href="http://localhost:6060/src/crypto/elliptic/elliptic.go?s=1646:1985#L32">CurveParams</a></h2>
+			<pre>type CurveParams struct {
+    P       *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a> <span class="comment">// the order of the underlying field</span>
+    N       *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a> <span class="comment">// the order of the base point</span>
+    B       *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a> <span class="comment">// the constant of the curve equation</span>
+    Gx, Gy  *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a> <span class="comment">// (x,y) of the base point</span>
+    BitSize <a href="../../builtin/index.html#int">int</a>      <span class="comment">// the size of the underlying field</span>
+    Name    <a href="../../builtin/index.html#string">string</a>   <span class="comment">// the canonical name of the curve</span>
+}</pre>
+			<p>
+CurveParams contains the parameters of an elliptic curve and also provides
+a generic, non-constant time implementation of Curve.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="CurveParams.Add">func (*CurveParams) <a href="http://localhost:6060/src/crypto/elliptic/elliptic.go?s=3249:3324#L92">Add</a></h3>
+				<pre>func (curve *<a href="index.html#CurveParams">CurveParams</a>) Add(x1, y1, x2, y2 *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>) (*<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>, *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="CurveParams.Double">func (*CurveParams) <a href="http://localhost:6060/src/crypto/elliptic/elliptic.go?s=5095:5165#L176">Double</a></h3>
+				<pre>func (curve *<a href="index.html#CurveParams">CurveParams</a>) Double(x1, y1 *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>) (*<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>, *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="CurveParams.IsOnCurve">func (*CurveParams) <a href="http://localhost:6060/src/crypto/elliptic/elliptic.go?s=2054:2109#L45">IsOnCurve</a></h3>
+				<pre>func (curve *<a href="index.html#CurveParams">CurveParams</a>) IsOnCurve(x, y *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>) <a href="../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="CurveParams.Params">func (*CurveParams) <a href="http://localhost:6060/src/crypto/elliptic/elliptic.go?s=1987:2034#L41">Params</a></h3>
+				<pre>func (curve *<a href="index.html#CurveParams">CurveParams</a>) Params() *<a href="index.html#CurveParams">CurveParams</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="CurveParams.ScalarBaseMult">func (*CurveParams) <a href="http://localhost:6060/src/crypto/elliptic/elliptic.go?s=7043:7114#L258">ScalarBaseMult</a></h3>
+				<pre>func (curve *<a href="index.html#CurveParams">CurveParams</a>) ScalarBaseMult(k []<a href="../../builtin/index.html#byte">byte</a>) (*<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>, *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="CurveParams.ScalarMult">func (*CurveParams) <a href="http://localhost:6060/src/crypto/elliptic/elliptic.go?s=6608:6692#L241">ScalarMult</a></h3>
+				<pre>func (curve *<a href="index.html#CurveParams">CurveParams</a>) ScalarMult(Bx, By *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>, k []<a href="../../builtin/index.html#byte">byte</a>) (*<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>, *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>)</pre>
+				
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>ioutil - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package ioutil</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "io/ioutil"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+				<dd><a href="index.html#pkg-examples" class="examplesLink">Examples</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package ioutil implements some I/O utility functions.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+				
+				<dd><a href="index.html#NopCloser">func NopCloser(r io.Reader) io.ReadCloser</a></dd>
+			
+				
+				<dd><a href="index.html#ReadAll">func ReadAll(r io.Reader) ([]byte, error)</a></dd>
+			
+				
+				<dd><a href="index.html#ReadDir">func ReadDir(dirname string) ([]os.FileInfo, error)</a></dd>
+			
+				
+				<dd><a href="index.html#ReadFile">func ReadFile(filename string) ([]byte, error)</a></dd>
+			
+				
+				<dd><a href="index.html#TempDir">func TempDir(dir, prefix string) (name string, err error)</a></dd>
+			
+				
+				<dd><a href="index.html#TempFile">func TempFile(dir, prefix string) (f *os.File, err error)</a></dd>
+			
+				
+				<dd><a href="index.html#WriteFile">func WriteFile(filename string, data []byte, perm os.FileMode) error</a></dd>
+			
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+		<div id="pkg-examples">
+			<h4>Examples</h4>
+			<dl>
+			
+			<dd><a class="exampleLink" href="index.html#example_ReadAll">ReadAll</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_ReadDir">ReadDir</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_TempDir">TempDir</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_TempFile">TempFile</a></dd>
+			
+			</dl>
+		</div>
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/io/ioutil/ioutil.go">ioutil.go</a>
+			
+				<a href="http://localhost:6060/src/io/ioutil/tempfile.go">tempfile.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var <span id="Discard">Discard</span> <a href="../index.html">io</a>.<a href="../index.html#Writer">Writer</a> = devNull(0)</pre>
+				<p>
+Discard is an io.Writer on which all Write calls succeed
+without doing anything.
+</p>
+
+			
+		
+		
+			
+			
+			<h2 id="NopCloser">func <a href="http://localhost:6060/src/io/ioutil/ioutil.go?s=3643:3684#L112">NopCloser</a></h2>
+			<pre>func NopCloser(r <a href="../index.html">io</a>.<a href="../index.html#Reader">Reader</a>) <a href="../index.html">io</a>.<a href="../index.html#ReadCloser">ReadCloser</a></pre>
+			<p>
+NopCloser returns a ReadCloser with a no-op Close method wrapping
+the provided Reader r.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ReadAll">func <a href="http://localhost:6060/src/io/ioutil/ioutil.go?s=1147:1188#L31">ReadAll</a></h2>
+			<pre>func ReadAll(r <a href="../index.html">io</a>.<a href="../index.html#Reader">Reader</a>) ([]<a href="../../builtin/index.html#byte">byte</a>, <a href="../../builtin/index.html#error">error</a>)</pre>
+			<p>
+ReadAll reads from r until an error or EOF and returns the data it read.
+A successful call returns err == nil, not err == EOF. Because ReadAll is
+defined to read from src until EOF, it does not treat an EOF from Read
+as an error to be reported.
+</p>
+
+			<div id="example_ReadAll" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">r := strings.NewReader(&#34;Go is a general-purpose language designed with systems programming in mind.&#34;)
+
+b, err := ioutil.ReadAll(r)
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Printf(&#34;%s&#34;, b)
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">Go is a general-purpose language designed with systems programming in mind.
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+
+		
+			
+			
+			<h2 id="ReadDir">func <a href="http://localhost:6060/src/io/ioutil/ioutil.go?s=3220:3271#L90">ReadDir</a></h2>
+			<pre>func ReadDir(dirname <a href="../../builtin/index.html#string">string</a>) ([]<a href="../../os/index.html">os</a>.<a href="../../os/index.html#FileInfo">FileInfo</a>, <a href="../../builtin/index.html#error">error</a>)</pre>
+			<p>
+ReadDir reads the directory named by dirname and returns
+a list of directory entries sorted by filename.
+</p>
+
+			<div id="example_ReadDir" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+files, err := ioutil.ReadDir(&#34;.&#34;)
+if err != nil {
+    log.Fatal(err)
+}
+
+for _, file := range files {
+    fmt.Println(file.Name())
+}
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+
+		
+			
+			
+			<h2 id="ReadFile">func <a href="http://localhost:6060/src/io/ioutil/ioutil.go?s=1464:1510#L39">ReadFile</a></h2>
+			<pre>func ReadFile(filename <a href="../../builtin/index.html#string">string</a>) ([]<a href="../../builtin/index.html#byte">byte</a>, <a href="../../builtin/index.html#error">error</a>)</pre>
+			<p>
+ReadFile reads the file named by filename and returns the contents.
+A successful call returns err == nil, not err == EOF. Because ReadFile
+reads the whole file, it does not treat an EOF from Read as an error
+to be reported.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="TempDir">func <a href="http://localhost:6060/src/io/ioutil/tempfile.go?s=2143:2200#L66">TempDir</a></h2>
+			<pre>func TempDir(dir, prefix <a href="../../builtin/index.html#string">string</a>) (name <a href="../../builtin/index.html#string">string</a>, err <a href="../../builtin/index.html#error">error</a>)</pre>
+			<p>
+TempDir creates a new temporary directory in the directory dir
+with a name beginning with prefix and returns the path of the
+new directory.  If dir is the empty string, TempDir uses the
+default directory for temporary files (see os.TempDir).
+Multiple programs calling TempDir simultaneously
+will not choose the same directory.  It is the caller&#39;s responsibility
+to remove the directory when no longer needed.
+</p>
+
+			<div id="example_TempDir" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+content := []byte(&#34;temporary file&#39;s content&#34;)
+dir, err := ioutil.TempDir(&#34;&#34;, &#34;example&#34;)
+if err != nil {
+    log.Fatal(err)
+}
+
+defer os.RemoveAll(dir) <span class="comment">// clean up</span>
+
+tmpfn := filepath.Join(dir, &#34;tmpfile&#34;)
+if err := ioutil.WriteFile(tmpfn, content, 0666); err != nil {
+    log.Fatal(err)
+}
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+
+		
+			
+			
+			<h2 id="TempFile">func <a href="http://localhost:6060/src/io/ioutil/tempfile.go?s=1288:1345#L37">TempFile</a></h2>
+			<pre>func TempFile(dir, prefix <a href="../../builtin/index.html#string">string</a>) (f *<a href="../../os/index.html">os</a>.<a href="../../os/index.html#File">File</a>, err <a href="../../builtin/index.html#error">error</a>)</pre>
+			<p>
+TempFile creates a new temporary file in the directory dir
+with a name beginning with prefix, opens the file for reading
+and writing, and returns the resulting *os.File.
+If dir is the empty string, TempFile uses the default directory
+for temporary files (see os.TempDir).
+Multiple programs calling TempFile simultaneously
+will not choose the same file.  The caller can use f.Name()
+to find the pathname of the file.  It is the caller&#39;s responsibility
+to remove the file when no longer needed.
+</p>
+
+			<div id="example_TempFile" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+content := []byte(&#34;temporary file&#39;s content&#34;)
+tmpfile, err := ioutil.TempFile(&#34;&#34;, &#34;example&#34;)
+if err != nil {
+    log.Fatal(err)
+}
+
+defer os.Remove(tmpfile.Name()) <span class="comment">// clean up</span>
+
+if _, err := tmpfile.Write(content); err != nil {
+    log.Fatal(err)
+}
+if err := tmpfile.Close(); err != nil {
+    log.Fatal(err)
+}
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+
+		
+			
+			
+			<h2 id="WriteFile">func <a href="http://localhost:6060/src/io/ioutil/ioutil.go?s=2520:2588#L66">WriteFile</a></h2>
+			<pre>func WriteFile(filename <a href="../../builtin/index.html#string">string</a>, data []<a href="../../builtin/index.html#byte">byte</a>, perm <a href="../../os/index.html">os</a>.<a href="../../os/index.html#FileMode">FileMode</a>) <a href="../../builtin/index.html#error">error</a></pre>
+			<p>
+WriteFile writes data to a file named by filename.
+If the file does not exist, WriteFile creates it with permissions perm;
+otherwise WriteFile truncates it before writing.
+</p>
+
+			
+			
+
+		
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

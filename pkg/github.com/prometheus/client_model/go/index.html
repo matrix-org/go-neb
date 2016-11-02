@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>io_prometheus_client - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package io_prometheus_client</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/prometheus/client_model/go"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package io_prometheus_client is a generated protocol buffer package.
+</p>
+<p>
+It is generated from these files:
+</p>
+<pre>metrics.proto
+</pre>
+<p>
+It has these top-level messages:
+</p>
+<pre>LabelPair
+Gauge
+Counter
+Quantile
+Summary
+Untyped
+Histogram
+Bucket
+Metric
+MetricFamily
+</pre>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+			
+				
+				<dd><a href="index.html#Bucket">type Bucket</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Bucket.GetCumulativeCount">func (m *Bucket) GetCumulativeCount() uint64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Bucket.GetUpperBound">func (m *Bucket) GetUpperBound() float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Bucket.ProtoMessage">func (*Bucket) ProtoMessage()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Bucket.Reset">func (m *Bucket) Reset()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Bucket.String">func (m *Bucket) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Counter">type Counter</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Counter.GetValue">func (m *Counter) GetValue() float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Counter.ProtoMessage">func (*Counter) ProtoMessage()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Counter.Reset">func (m *Counter) Reset()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Counter.String">func (m *Counter) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Gauge">type Gauge</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Gauge.GetValue">func (m *Gauge) GetValue() float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Gauge.ProtoMessage">func (*Gauge) ProtoMessage()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Gauge.Reset">func (m *Gauge) Reset()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Gauge.String">func (m *Gauge) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Histogram">type Histogram</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Histogram.GetBucket">func (m *Histogram) GetBucket() []*Bucket</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Histogram.GetSampleCount">func (m *Histogram) GetSampleCount() uint64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Histogram.GetSampleSum">func (m *Histogram) GetSampleSum() float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Histogram.ProtoMessage">func (*Histogram) ProtoMessage()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Histogram.Reset">func (m *Histogram) Reset()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Histogram.String">func (m *Histogram) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#LabelPair">type LabelPair</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LabelPair.GetName">func (m *LabelPair) GetName() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LabelPair.GetValue">func (m *LabelPair) GetValue() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LabelPair.ProtoMessage">func (*LabelPair) ProtoMessage()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LabelPair.Reset">func (m *LabelPair) Reset()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LabelPair.String">func (m *LabelPair) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Metric">type Metric</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Metric.GetCounter">func (m *Metric) GetCounter() *Counter</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Metric.GetGauge">func (m *Metric) GetGauge() *Gauge</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Metric.GetHistogram">func (m *Metric) GetHistogram() *Histogram</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Metric.GetLabel">func (m *Metric) GetLabel() []*LabelPair</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Metric.GetSummary">func (m *Metric) GetSummary() *Summary</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Metric.GetTimestampMs">func (m *Metric) GetTimestampMs() int64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Metric.GetUntyped">func (m *Metric) GetUntyped() *Untyped</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Metric.ProtoMessage">func (*Metric) ProtoMessage()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Metric.Reset">func (m *Metric) Reset()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Metric.String">func (m *Metric) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#MetricFamily">type MetricFamily</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MetricFamily.GetHelp">func (m *MetricFamily) GetHelp() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MetricFamily.GetMetric">func (m *MetricFamily) GetMetric() []*Metric</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MetricFamily.GetName">func (m *MetricFamily) GetName() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MetricFamily.GetType">func (m *MetricFamily) GetType() MetricType</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MetricFamily.ProtoMessage">func (*MetricFamily) ProtoMessage()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MetricFamily.Reset">func (m *MetricFamily) Reset()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MetricFamily.String">func (m *MetricFamily) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#MetricType">type MetricType</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MetricType.Enum">func (x MetricType) Enum() *MetricType</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MetricType.String">func (x MetricType) String() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MetricType.UnmarshalJSON">func (x *MetricType) UnmarshalJSON(data []byte) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Quantile">type Quantile</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Quantile.GetQuantile">func (m *Quantile) GetQuantile() float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Quantile.GetValue">func (m *Quantile) GetValue() float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Quantile.ProtoMessage">func (*Quantile) ProtoMessage()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Quantile.Reset">func (m *Quantile) Reset()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Quantile.String">func (m *Quantile) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Summary">type Summary</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Summary.GetQuantile">func (m *Summary) GetQuantile() []*Quantile</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Summary.GetSampleCount">func (m *Summary) GetSampleCount() uint64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Summary.GetSampleSum">func (m *Summary) GetSampleSum() float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Summary.ProtoMessage">func (*Summary) ProtoMessage()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Summary.Reset">func (m *Summary) Reset()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Summary.String">func (m *Summary) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Untyped">type Untyped</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Untyped.GetValue">func (m *Untyped) GetValue() float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Untyped.ProtoMessage">func (*Untyped) ProtoMessage()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Untyped.Reset">func (m *Untyped) Reset()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Untyped.String">func (m *Untyped) String() string</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go">metrics.pb.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var <span id="MetricType_name">MetricType_name</span> = map[<a href="../../../../builtin/index.html#int32">int32</a>]<a href="../../../../builtin/index.html#string">string</a>{
+    0: &#34;COUNTER&#34;,
+    1: &#34;GAUGE&#34;,
+    2: &#34;SUMMARY&#34;,
+    3: &#34;UNTYPED&#34;,
+    4: &#34;HISTOGRAM&#34;,
+}</pre>
+				
+			
+				<pre>var <span id="MetricType_value">MetricType_value</span> = map[<a href="../../../../builtin/index.html#string">string</a>]<a href="../../../../builtin/index.html#int32">int32</a>{
+    &#34;COUNTER&#34;:   0,
+    &#34;GAUGE&#34;:     1,
+    &#34;SUMMARY&#34;:   2,
+    &#34;UNTYPED&#34;:   3,
+    &#34;HISTOGRAM&#34;: 4,
+}</pre>
+				
+			
+		
+		
+		
+			
+			
+			<h2 id="Bucket">type <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=5622:5891#L224">Bucket</a></h2>
+			<pre>type Bucket struct {
+    CumulativeCount  *<a href="../../../../builtin/index.html#uint64">uint64</a>  `protobuf:&#34;varint,1,opt,name=cumulative_count&#34; json:&#34;cumulative_count,omitempty&#34;`
+    UpperBound       *<a href="../../../../builtin/index.html#float64">float64</a> `protobuf:&#34;fixed64,2,opt,name=upper_bound&#34; json:&#34;upper_bound,omitempty&#34;`
+    XXX_unrecognized []<a href="../../../../builtin/index.html#byte">byte</a>   `json:&#34;-&#34;`
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Bucket.GetCumulativeCount">func (*Bucket) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=6052:6096#L234">GetCumulativeCount</a></h3>
+				<pre>func (m *<a href="index.html#Bucket">Bucket</a>) GetCumulativeCount() <a href="../../../../builtin/index.html#uint64">uint64</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Bucket.GetUpperBound">func (*Bucket) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=6186:6226#L241">GetUpperBound</a></h3>
+				<pre>func (m *<a href="index.html#Bucket">Bucket</a>) GetUpperBound() <a href="../../../../builtin/index.html#float64">float64</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Bucket.ProtoMessage">func (*Bucket) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=6015:6044#L232">ProtoMessage</a></h3>
+				<pre>func (*<a href="index.html#Bucket">Bucket</a>) ProtoMessage()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Bucket.Reset">func (*Bucket) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=5893:5917#L230">Reset</a></h3>
+				<pre>func (m *<a href="index.html#Bucket">Bucket</a>) Reset()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Bucket.String">func (*Bucket) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=5944:5976#L231">String</a></h3>
+				<pre>func (m *<a href="index.html#Bucket">Bucket</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Counter">type <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=2410:2559#L104">Counter</a></h2>
+			<pre>type Counter struct {
+    Value            *<a href="../../../../builtin/index.html#float64">float64</a> `protobuf:&#34;fixed64,1,opt,name=value&#34; json:&#34;value,omitempty&#34;`
+    XXX_unrecognized []<a href="../../../../builtin/index.html#byte">byte</a>   `json:&#34;-&#34;`
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Counter.GetValue">func (*Counter) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=2724:2760#L113">GetValue</a></h3>
+				<pre>func (m *<a href="index.html#Counter">Counter</a>) GetValue() <a href="../../../../builtin/index.html#float64">float64</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Counter.ProtoMessage">func (*Counter) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=2686:2716#L111">ProtoMessage</a></h3>
+				<pre>func (*<a href="index.html#Counter">Counter</a>) ProtoMessage()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Counter.Reset">func (*Counter) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=2561:2586#L109">Reset</a></h3>
+				<pre>func (m *<a href="index.html#Counter">Counter</a>) Reset()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Counter.String">func (*Counter) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=2614:2647#L110">String</a></h3>
+				<pre>func (m *<a href="index.html#Counter">Counter</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Gauge">type <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=2002:2149#L88">Gauge</a></h2>
+			<pre>type Gauge struct {
+    Value            *<a href="../../../../builtin/index.html#float64">float64</a> `protobuf:&#34;fixed64,1,opt,name=value&#34; json:&#34;value,omitempty&#34;`
+    XXX_unrecognized []<a href="../../../../builtin/index.html#byte">byte</a>   `json:&#34;-&#34;`
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Gauge.GetValue">func (*Gauge) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=2306:2340#L97">GetValue</a></h3>
+				<pre>func (m *<a href="index.html#Gauge">Gauge</a>) GetValue() <a href="../../../../builtin/index.html#float64">float64</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Gauge.ProtoMessage">func (*Gauge) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=2270:2298#L95">ProtoMessage</a></h3>
+				<pre>func (*<a href="index.html#Gauge">Gauge</a>) ProtoMessage()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Gauge.Reset">func (*Gauge) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=2151:2174#L93">Reset</a></h3>
+				<pre>func (m *<a href="index.html#Gauge">Gauge</a>) Reset()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Gauge.String">func (*Gauge) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=2200:2231#L94">String</a></h3>
+				<pre>func (m *<a href="index.html#Gauge">Gauge</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Histogram">type <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=4755:5109#L192">Histogram</a></h2>
+			<pre>type Histogram struct {
+    SampleCount      *<a href="../../../../builtin/index.html#uint64">uint64</a>   `protobuf:&#34;varint,1,opt,name=sample_count&#34; json:&#34;sample_count,omitempty&#34;`
+    SampleSum        *<a href="../../../../builtin/index.html#float64">float64</a>  `protobuf:&#34;fixed64,2,opt,name=sample_sum&#34; json:&#34;sample_sum,omitempty&#34;`
+    Bucket           []*<a href="index.html#Bucket">Bucket</a> `protobuf:&#34;bytes,3,rep,name=bucket&#34; json:&#34;bucket,omitempty&#34;`
+    XXX_unrecognized []<a href="../../../../builtin/index.html#byte">byte</a>    `json:&#34;-&#34;`
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Histogram.GetBucket">func (*Histogram) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=5527:5568#L217">GetBucket</a></h3>
+				<pre>func (m *<a href="index.html#Histogram">Histogram</a>) GetBucket() []*<a href="index.html#Bucket">Bucket</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Histogram.GetSampleCount">func (*Histogram) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=5282:5325#L203">GetSampleCount</a></h3>
+				<pre>func (m *<a href="index.html#Histogram">Histogram</a>) GetSampleCount() <a href="../../../../builtin/index.html#uint64">uint64</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Histogram.GetSampleSum">func (*Histogram) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=5407:5449#L210">GetSampleSum</a></h3>
+				<pre>func (m *<a href="index.html#Histogram">Histogram</a>) GetSampleSum() <a href="../../../../builtin/index.html#float64">float64</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Histogram.ProtoMessage">func (*Histogram) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=5242:5274#L201">ProtoMessage</a></h3>
+				<pre>func (*<a href="index.html#Histogram">Histogram</a>) ProtoMessage()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Histogram.Reset">func (*Histogram) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=5111:5138#L199">Reset</a></h3>
+				<pre>func (m *<a href="index.html#Histogram">Histogram</a>) Reset()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Histogram.String">func (*Histogram) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=5168:5203#L200">String</a></h3>
+				<pre>func (m *<a href="index.html#Histogram">Histogram</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="LabelPair">type <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=1386:1616#L64">LabelPair</a></h2>
+			<pre>type LabelPair struct {
+    Name             *<a href="../../../../builtin/index.html#string">string</a> `protobuf:&#34;bytes,1,opt,name=name&#34; json:&#34;name,omitempty&#34;`
+    Value            *<a href="../../../../builtin/index.html#string">string</a> `protobuf:&#34;bytes,2,opt,name=value&#34; json:&#34;value,omitempty&#34;`
+    XXX_unrecognized []<a href="../../../../builtin/index.html#byte">byte</a>  `json:&#34;-&#34;`
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="LabelPair.GetName">func (*LabelPair) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=1789:1825#L74">GetName</a></h3>
+				<pre>func (m *<a href="index.html#LabelPair">LabelPair</a>) GetName() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="LabelPair.GetValue">func (*LabelPair) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=1894:1931#L81">GetValue</a></h3>
+				<pre>func (m *<a href="index.html#LabelPair">LabelPair</a>) GetValue() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="LabelPair.ProtoMessage">func (*LabelPair) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=1749:1781#L72">ProtoMessage</a></h3>
+				<pre>func (*<a href="index.html#LabelPair">LabelPair</a>) ProtoMessage()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="LabelPair.Reset">func (*LabelPair) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=1618:1645#L70">Reset</a></h3>
+				<pre>func (m *<a href="index.html#LabelPair">LabelPair</a>) Reset()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="LabelPair.String">func (*LabelPair) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=1675:1710#L71">String</a></h3>
+				<pre>func (m *<a href="index.html#LabelPair">LabelPair</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Metric">type <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=6306:7035#L248">Metric</a></h2>
+			<pre>type Metric struct {
+    Label            []*<a href="index.html#LabelPair">LabelPair</a> `protobuf:&#34;bytes,1,rep,name=label&#34; json:&#34;label,omitempty&#34;`
+    Gauge            *<a href="index.html#Gauge">Gauge</a>       `protobuf:&#34;bytes,2,opt,name=gauge&#34; json:&#34;gauge,omitempty&#34;`
+    Counter          *<a href="index.html#Counter">Counter</a>     `protobuf:&#34;bytes,3,opt,name=counter&#34; json:&#34;counter,omitempty&#34;`
+    Summary          *<a href="index.html#Summary">Summary</a>     `protobuf:&#34;bytes,4,opt,name=summary&#34; json:&#34;summary,omitempty&#34;`
+    Untyped          *<a href="index.html#Untyped">Untyped</a>     `protobuf:&#34;bytes,5,opt,name=untyped&#34; json:&#34;untyped,omitempty&#34;`
+    Histogram        *<a href="index.html#Histogram">Histogram</a>   `protobuf:&#34;bytes,7,opt,name=histogram&#34; json:&#34;histogram,omitempty&#34;`
+    TimestampMs      *<a href="../../../../builtin/index.html#int64">int64</a>       `protobuf:&#34;varint,6,opt,name=timestamp_ms&#34; json:&#34;timestamp_ms,omitempty&#34;`
+    XXX_unrecognized []<a href="../../../../builtin/index.html#byte">byte</a>       `json:&#34;-&#34;`
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Metric.GetCounter">func (*Metric) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=7376:7414#L277">GetCounter</a></h3>
+				<pre>func (m *<a href="index.html#Metric">Metric</a>) GetCounter() *<a href="index.html#Counter">Counter</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Metric.GetGauge">func (*Metric) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=7289:7323#L270">GetGauge</a></h3>
+				<pre>func (m *<a href="index.html#Metric">Metric</a>) GetGauge() *<a href="index.html#Gauge">Gauge</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Metric.GetHistogram">func (*Metric) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=7655:7697#L298">GetHistogram</a></h3>
+				<pre>func (m *<a href="index.html#Metric">Metric</a>) GetHistogram() *<a href="index.html#Histogram">Histogram</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Metric.GetLabel">func (*Metric) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=7196:7236#L263">GetLabel</a></h3>
+				<pre>func (m *<a href="index.html#Metric">Metric</a>) GetLabel() []*<a href="index.html#LabelPair">LabelPair</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Metric.GetSummary">func (*Metric) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=7469:7507#L284">GetSummary</a></h3>
+				<pre>func (m *<a href="index.html#Metric">Metric</a>) GetSummary() *<a href="index.html#Summary">Summary</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Metric.GetTimestampMs">func (*Metric) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=7754:7793#L305">GetTimestampMs</a></h3>
+				<pre>func (m *<a href="index.html#Metric">Metric</a>) GetTimestampMs() <a href="../../../../builtin/index.html#int64">int64</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Metric.GetUntyped">func (*Metric) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=7562:7600#L291">GetUntyped</a></h3>
+				<pre>func (m *<a href="index.html#Metric">Metric</a>) GetUntyped() *<a href="index.html#Untyped">Untyped</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Metric.ProtoMessage">func (*Metric) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=7159:7188#L261">ProtoMessage</a></h3>
+				<pre>func (*<a href="index.html#Metric">Metric</a>) ProtoMessage()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Metric.Reset">func (*Metric) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=7037:7061#L259">Reset</a></h3>
+				<pre>func (m *<a href="index.html#Metric">Metric</a>) Reset()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Metric.String">func (*Metric) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=7088:7120#L260">String</a></h3>
+				<pre>func (m *<a href="index.html#Metric">Metric</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="MetricFamily">type <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=7875:8334#L312">MetricFamily</a></h2>
+			<pre>type MetricFamily struct {
+    Name             *<a href="../../../../builtin/index.html#string">string</a>     `protobuf:&#34;bytes,1,opt,name=name&#34; json:&#34;name,omitempty&#34;`
+    Help             *<a href="../../../../builtin/index.html#string">string</a>     `protobuf:&#34;bytes,2,opt,name=help&#34; json:&#34;help,omitempty&#34;`
+    Type             *<a href="index.html#MetricType">MetricType</a> `protobuf:&#34;varint,3,opt,name=type,enum=io.prometheus.client.MetricType&#34; json:&#34;type,omitempty&#34;`
+    Metric           []*<a href="index.html#Metric">Metric</a>   `protobuf:&#34;bytes,4,rep,name=metric&#34; json:&#34;metric,omitempty&#34;`
+    XXX_unrecognized []<a href="../../../../builtin/index.html#byte">byte</a>      `json:&#34;-&#34;`
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="MetricFamily.GetHelp">func (*MetricFamily) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=8627:8666#L331">GetHelp</a></h3>
+				<pre>func (m *<a href="index.html#MetricFamily">MetricFamily</a>) GetHelp() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="MetricFamily.GetMetric">func (*MetricFamily) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=8863:8907#L345">GetMetric</a></h3>
+				<pre>func (m *<a href="index.html#MetricFamily">MetricFamily</a>) GetMetric() []*<a href="index.html#Metric">Metric</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="MetricFamily.GetName">func (*MetricFamily) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=8519:8558#L324">GetName</a></h3>
+				<pre>func (m *<a href="index.html#MetricFamily">MetricFamily</a>) GetName() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="MetricFamily.GetType">func (*MetricFamily) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=8735:8778#L338">GetType</a></h3>
+				<pre>func (m *<a href="index.html#MetricFamily">MetricFamily</a>) GetType() <a href="index.html#MetricType">MetricType</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="MetricFamily.ProtoMessage">func (*MetricFamily) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=8476:8511#L322">ProtoMessage</a></h3>
+				<pre>func (*<a href="index.html#MetricFamily">MetricFamily</a>) ProtoMessage()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="MetricFamily.Reset">func (*MetricFamily) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=8336:8366#L320">Reset</a></h3>
+				<pre>func (m *<a href="index.html#MetricFamily">MetricFamily</a>) Reset()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="MetricFamily.String">func (*MetricFamily) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=8399:8437#L321">String</a></h3>
+				<pre>func (m *<a href="index.html#MetricFamily">MetricFamily</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="MetricType">type <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=543:564#L22">MetricType</a></h2>
+			<pre>type MetricType <a href="../../../../builtin/index.html#int32">int32</a></pre>
+			
+
+			
+				<pre>const (
+    <span id="MetricType_COUNTER">MetricType_COUNTER</span>   <a href="index.html#MetricType">MetricType</a> = 0
+    <span id="MetricType_GAUGE">MetricType_GAUGE</span>     <a href="index.html#MetricType">MetricType</a> = 1
+    <span id="MetricType_SUMMARY">MetricType_SUMMARY</span>   <a href="index.html#MetricType">MetricType</a> = 2
+    <span id="MetricType_UNTYPED">MetricType_UNTYPED</span>   <a href="index.html#MetricType">MetricType</a> = 3
+    <span id="MetricType_HISTOGRAM">MetricType_HISTOGRAM</span> <a href="index.html#MetricType">MetricType</a> = 4
+)</pre>
+				
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="MetricType.Enum">func (MetricType) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=1008:1046#L47">Enum</a></h3>
+				<pre>func (x <a href="index.html#MetricType">MetricType</a>) Enum() *<a href="index.html#MetricType">MetricType</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="MetricType.String">func (MetricType) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=1091:1126#L52">String</a></h3>
+				<pre>func (x <a href="index.html#MetricType">MetricType</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="MetricType.UnmarshalJSON">func (*MetricType) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=1181:1234#L55">UnmarshalJSON</a></h3>
+				<pre>func (x *<a href="index.html#MetricType">MetricType</a>) UnmarshalJSON(data []<a href="../../../../builtin/index.html#byte">byte</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Quantile">type <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=2830:3074#L120">Quantile</a></h2>
+			<pre>type Quantile struct {
+    Quantile         *<a href="../../../../builtin/index.html#float64">float64</a> `protobuf:&#34;fixed64,1,opt,name=quantile&#34; json:&#34;quantile,omitempty&#34;`
+    Value            *<a href="../../../../builtin/index.html#float64">float64</a> `protobuf:&#34;fixed64,2,opt,name=value&#34; json:&#34;value,omitempty&#34;`
+    XXX_unrecognized []<a href="../../../../builtin/index.html#byte">byte</a>   `json:&#34;-&#34;`
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Quantile.GetQuantile">func (*Quantile) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=3243:3283#L130">GetQuantile</a></h3>
+				<pre>func (m *<a href="index.html#Quantile">Quantile</a>) GetQuantile() <a href="../../../../builtin/index.html#float64">float64</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Quantile.GetValue">func (*Quantile) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=3359:3396#L137">GetValue</a></h3>
+				<pre>func (m *<a href="index.html#Quantile">Quantile</a>) GetValue() <a href="../../../../builtin/index.html#float64">float64</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Quantile.ProtoMessage">func (*Quantile) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=3204:3235#L128">ProtoMessage</a></h3>
+				<pre>func (*<a href="index.html#Quantile">Quantile</a>) ProtoMessage()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Quantile.Reset">func (*Quantile) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=3076:3102#L126">Reset</a></h3>
+				<pre>func (m *<a href="index.html#Quantile">Quantile</a>) Reset()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Quantile.String">func (*Quantile) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=3131:3165#L127">String</a></h3>
+				<pre>func (m *<a href="index.html#Quantile">Quantile</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Summary">type <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=3466:3830#L144">Summary</a></h2>
+			<pre>type Summary struct {
+    SampleCount      *<a href="../../../../builtin/index.html#uint64">uint64</a>     `protobuf:&#34;varint,1,opt,name=sample_count&#34; json:&#34;sample_count,omitempty&#34;`
+    SampleSum        *<a href="../../../../builtin/index.html#float64">float64</a>    `protobuf:&#34;fixed64,2,opt,name=sample_sum&#34; json:&#34;sample_sum,omitempty&#34;`
+    Quantile         []*<a href="index.html#Quantile">Quantile</a> `protobuf:&#34;bytes,3,rep,name=quantile&#34; json:&#34;quantile,omitempty&#34;`
+    XXX_unrecognized []<a href="../../../../builtin/index.html#byte">byte</a>      `json:&#34;-&#34;`
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Summary.GetQuantile">func (*Summary) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=4236:4279#L169">GetQuantile</a></h3>
+				<pre>func (m *<a href="index.html#Summary">Summary</a>) GetQuantile() []*<a href="index.html#Quantile">Quantile</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Summary.GetSampleCount">func (*Summary) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=3995:4036#L155">GetSampleCount</a></h3>
+				<pre>func (m *<a href="index.html#Summary">Summary</a>) GetSampleCount() <a href="../../../../builtin/index.html#uint64">uint64</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Summary.GetSampleSum">func (*Summary) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=4118:4158#L162">GetSampleSum</a></h3>
+				<pre>func (m *<a href="index.html#Summary">Summary</a>) GetSampleSum() <a href="../../../../builtin/index.html#float64">float64</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Summary.ProtoMessage">func (*Summary) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=3957:3987#L153">ProtoMessage</a></h3>
+				<pre>func (*<a href="index.html#Summary">Summary</a>) ProtoMessage()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Summary.Reset">func (*Summary) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=3832:3857#L151">Reset</a></h3>
+				<pre>func (m *<a href="index.html#Summary">Summary</a>) Reset()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Summary.String">func (*Summary) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=3885:3918#L152">String</a></h3>
+				<pre>func (m *<a href="index.html#Summary">Summary</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Untyped">type <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=4335:4484#L176">Untyped</a></h2>
+			<pre>type Untyped struct {
+    Value            *<a href="../../../../builtin/index.html#float64">float64</a> `protobuf:&#34;fixed64,1,opt,name=value&#34; json:&#34;value,omitempty&#34;`
+    XXX_unrecognized []<a href="../../../../builtin/index.html#byte">byte</a>   `json:&#34;-&#34;`
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Untyped.GetValue">func (*Untyped) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=4649:4685#L185">GetValue</a></h3>
+				<pre>func (m *<a href="index.html#Untyped">Untyped</a>) GetValue() <a href="../../../../builtin/index.html#float64">float64</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Untyped.ProtoMessage">func (*Untyped) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=4611:4641#L183">ProtoMessage</a></h3>
+				<pre>func (*<a href="index.html#Untyped">Untyped</a>) ProtoMessage()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Untyped.Reset">func (*Untyped) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=4486:4511#L181">Reset</a></h3>
+				<pre>func (m *<a href="index.html#Untyped">Untyped</a>) Reset()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Untyped.String">func (*Untyped) <a href="http://localhost:6060/src/github.com/prometheus/client_model/go/metrics.pb.go?s=4539:4572#L182">String</a></h3>
+				<pre>func (m *<a href="index.html#Untyped">Untyped</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

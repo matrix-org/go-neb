@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>runes - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package runes</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "golang.org/x/text/runes"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+				<dd><a href="index.html#pkg-examples" class="examplesLink">Examples</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package runes provide transforms for UTF-8 encoded text.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+			
+				
+				<dd><a href="index.html#Set">type Set</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#In">func In(rt *unicode.RangeTable) Set</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NotIn">func NotIn(rt *unicode.RangeTable) Set</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Predicate">func Predicate(f func(rune) bool) Set</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Transformer">type Transformer</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#If">func If(s Set, tIn, tNotIn transform.Transformer) Transformer</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Map">func Map(mapping func(rune) rune) Transformer</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Remove">func Remove(s Set) Transformer</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ReplaceIllFormed">func ReplaceIllFormed() Transformer</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Transformer.Bytes">func (t Transformer) Bytes(b []byte) []byte</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Transformer.Reset">func (t Transformer) Reset()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Transformer.Span">func (t Transformer) Span(b []byte, atEOF bool) (n int, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Transformer.String">func (t Transformer) String(s string) string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Transformer.Transform">func (t Transformer) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error)</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+		<div id="pkg-examples">
+			<h4>Examples</h4>
+			<dl>
+			
+			<dd><a class="exampleLink" href="index.html#example_If">If</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_In">In</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Map">Map</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Remove">Remove</a></dd>
+			
+			</dl>
+		</div>
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/golang.org/x/text/runes/cond.go">cond.go</a>
+			
+				<a href="http://localhost:6060/src/golang.org/x/text/runes/runes.go">runes.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+		
+			
+			
+			<h2 id="Set">type <a href="http://localhost:6060/src/golang.org/x/text/runes/runes.go?s=377:478#L6">Set</a></h2>
+			<pre>type Set interface {
+    <span class="comment">// Contains returns true if r is contained in the set.</span>
+    Contains(r <a href="../../../../builtin/index.html#rune">rune</a>) <a href="../../../../builtin/index.html#bool">bool</a>
+}</pre>
+			<p>
+A Set is a collection of runes.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="In">func <a href="http://localhost:6060/src/golang.org/x/text/runes/runes.go?s=777:812#L22">In</a></h3>
+				<pre>func In(rt *<a href="../../../../unicode/index.html">unicode</a>.<a href="../../../../unicode/index.html#RangeTable">RangeTable</a>) <a href="index.html#Set">Set</a></pre>
+				<p>
+In creates a Set with a Contains method that returns true for all runes in
+the given RangeTable.
+</p>
+
+				<div id="example_In" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code"><span class="comment">// Convert Latin characters to their canonical form, while keeping other</span>
+<span class="comment">// width distinctions.</span>
+t := runes.If(runes.In(unicode.Latin), width.Fold, nil)
+s, _, _ := transform.String(t, &#34;ｱﾙｱﾉﾘｳ tech / アルアノリウ ｔｅｃｈ&#34;)
+fmt.Println(s)
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">ｱﾙｱﾉﾘｳ tech / アルアノリウ tech
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+				
+				<h3 id="NotIn">func <a href="http://localhost:6060/src/golang.org/x/text/runes/runes.go?s=989:1027#L28">NotIn</a></h3>
+				<pre>func NotIn(rt *<a href="../../../../unicode/index.html">unicode</a>.<a href="../../../../unicode/index.html#RangeTable">RangeTable</a>) <a href="index.html#Set">Set</a></pre>
+				<p>
+In creates a Set with a Contains method that returns true for all runes not
+in the given RangeTable.
+</p>
+
+				
+				
+			
+				
+				<h3 id="Predicate">func <a href="http://localhost:6060/src/golang.org/x/text/runes/runes.go?s=1167:1204#L33">Predicate</a></h3>
+				<pre>func Predicate(f func(<a href="../../../../builtin/index.html#rune">rune</a>) <a href="../../../../builtin/index.html#bool">bool</a>) <a href="index.html#Set">Set</a></pre>
+				<p>
+Predicate creates a Set with a Contains method that returns f(r).
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="Transformer">type <a href="http://localhost:6060/src/golang.org/x/text/runes/runes.go?s=1292:1352#L38">Transformer</a></h2>
+			<pre>type Transformer struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Transformer implements the transform.Transformer interface.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="If">func <a href="http://localhost:6060/src/golang.org/x/text/runes/cond.go?s=1583:1644#L24">If</a></h3>
+				<pre>func If(s <a href="index.html#Set">Set</a>, tIn, tNotIn <a href="../transform/index.html">transform</a>.<a href="../transform/index.html#Transformer">Transformer</a>) <a href="index.html#Transformer">Transformer</a></pre>
+				<p>
+If returns a transformer that applies tIn to consecutive runes for which
+s.Contains(r) and tNotIn to consecutive runes for which !s.Contains(r). Reset
+is called on tIn and tNotIn at the start of each run. A Nop transformer will
+substitute a nil value passed to tIn or tNotIn. Invalid UTF-8 is translated
+to RuneError to determine which transformer to apply, but is passed as is to
+the respective transformer.
+</p>
+
+				<div id="example_If" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code"><span class="comment">// Widen everything but ASCII.</span>
+isASCII := func(r rune) bool { return r &lt;= unicode.MaxASCII }
+t := runes.If(runes.Predicate(isASCII), nil, width.Widen)
+s, _, _ := transform.String(t, &#34;ｱﾙｱﾉﾘｳ tech / 中國 / 5₩&#34;)
+fmt.Println(s)
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">アルアノリウ tech / 中國 / 5￦
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+				
+				<h3 id="Map">func <a href="http://localhost:6060/src/golang.org/x/text/runes/runes.go?s=4875:4920#L170">Map</a></h3>
+				<pre>func Map(mapping func(<a href="../../../../builtin/index.html#rune">rune</a>) <a href="../../../../builtin/index.html#rune">rune</a>) <a href="index.html#Transformer">Transformer</a></pre>
+				<p>
+Map returns a Transformer that maps the runes in the input using the given
+mapping. Illegal bytes in the input are converted to utf8.RuneError before
+being passed to the mapping func.
+</p>
+
+				<div id="example_Map" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">replaceHyphens := runes.Map(func(r rune) rune {
+    if unicode.Is(unicode.Hyphen, r) {
+        return &#39;|&#39;
+    }
+    return r
+})
+s, _, _ := transform.String(replaceHyphens, &#34;a-b‐c⸗d﹣e&#34;)
+fmt.Println(s)
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">a|b|c|d|e
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+				
+				<h3 id="Remove">func <a href="http://localhost:6060/src/golang.org/x/text/runes/runes.go?s=2644:2674#L83">Remove</a></h3>
+				<pre>func Remove(s <a href="index.html#Set">Set</a>) <a href="index.html#Transformer">Transformer</a></pre>
+				<p>
+Remove returns a Transformer that removes runes r for which s.Contains(r).
+Illegal input bytes are replaced by RuneError before being passed to f.
+</p>
+
+				<div id="example_Remove" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">t := transform.Chain(norm.NFD, runes.Remove(runes.In(unicode.Mn)), norm.NFC)
+s, _, _ := transform.String(t, &#34;résumé&#34;)
+fmt.Println(s)
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">resume
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+				
+				<h3 id="ReplaceIllFormed">func <a href="http://localhost:6060/src/golang.org/x/text/runes/runes.go?s=7081:7116#L267">ReplaceIllFormed</a></h3>
+				<pre>func ReplaceIllFormed() <a href="index.html#Transformer">Transformer</a></pre>
+				<p>
+ReplaceIllFormed returns a transformer that replaces all input bytes that are
+not part of a well-formed UTF-8 code sequence with utf8.RuneError.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Transformer.Bytes">func (Transformer) <a href="http://localhost:6060/src/golang.org/x/text/runes/runes.go?s=1845:1888#L55">Bytes</a></h3>
+				<pre>func (t <a href="index.html#Transformer">Transformer</a>) Bytes(b []<a href="../../../../builtin/index.html#byte">byte</a>) []<a href="../../../../builtin/index.html#byte">byte</a></pre>
+				<p>
+Bytes returns a new byte slice with the result of converting b using t.  It
+calls Reset on t. It returns nil if any error was found. This can only happen
+if an error-producing Transformer is passed to If.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Transformer.Reset">func (Transformer) <a href="http://localhost:6060/src/golang.org/x/text/runes/runes.go?s=1585:1613#L50">Reset</a></h3>
+				<pre>func (t <a href="index.html#Transformer">Transformer</a>) Reset()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Transformer.Span">func (Transformer) <a href="http://localhost:6060/src/golang.org/x/text/runes/runes.go?s=1486:1552#L46">Span</a></h3>
+				<pre>func (t <a href="index.html#Transformer">Transformer</a>) Span(b []<a href="../../../../builtin/index.html#byte">byte</a>, atEOF <a href="../../../../builtin/index.html#bool">bool</a>) (n <a href="../../../../builtin/index.html#int">int</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Transformer.String">func (Transformer) <a href="http://localhost:6060/src/golang.org/x/text/runes/runes.go?s=2192:2236#L66">String</a></h3>
+				<pre>func (t <a href="index.html#Transformer">Transformer</a>) String(s <a href="../../../../builtin/index.html#string">string</a>) <a href="../../../../builtin/index.html#string">string</a></pre>
+				<p>
+String returns a string with the result of converting s using t. It calls
+Reset on t. It returns the empty string if any error was found. This can only
+happen if an error-producing Transformer is passed to If.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Transformer.Transform">func (Transformer) <a href="http://localhost:6060/src/golang.org/x/text/runes/runes.go?s=1354:1441#L42">Transform</a></h3>
+				<pre>func (t <a href="index.html#Transformer">Transformer</a>) Transform(dst, src []<a href="../../../../builtin/index.html#byte">byte</a>, atEOF <a href="../../../../builtin/index.html#bool">bool</a>) (nDst, nSrc <a href="../../../../builtin/index.html#int">int</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

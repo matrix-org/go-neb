@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>atom - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package atom</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "golang.org/x/net/html/atom"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package atom provides integer codes (also known as atoms) for a fixed set of
+frequently occurring HTML strings: tag names and attribute keys such as &#34;p&#34;
+and &#34;id&#34;.
+</p>
+<p>
+Sharing an atom&#39;s name between all elements with the same tag can result in
+fewer string allocations when tokenizing and parsing HTML. Integer
+comparisons are also generally faster than string comparisons.
+</p>
+<p>
+The value of an atom&#39;s particular code is not guaranteed to stay the same
+between versions of this package. Neither is any ordering guaranteed:
+whether atom.H1 &lt; atom.H2 may also change. The codes are not guaranteed to
+be dense. The only guarantees are that e.g. looking up &#34;div&#34; will yield
+atom.Div, calling atom.Div.String will return &#34;div&#34;, and atom.Div != 0.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+				
+				<dd><a href="index.html#String">func String(s []byte) string</a></dd>
+			
+			
+				
+				<dd><a href="index.html#Atom">type Atom</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Lookup">func Lookup(s []byte) Atom</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Atom.String">func (a Atom) String() string</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/golang.org/x/net/html/atom/atom.go">atom.go</a>
+			
+				<a href="http://localhost:6060/src/golang.org/x/net/html/atom/table.go">table.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+			
+			
+			<h2 id="String">func <a href="http://localhost:6060/src/golang.org/x/net/html/atom/atom.go?s=2218:2246#L63">String</a></h2>
+			<pre>func String(s []<a href="../../../../../builtin/index.html#byte">byte</a>) <a href="../../../../../builtin/index.html#string">string</a></pre>
+			<p>
+String returns a string whose contents are equal to s. In that sense, it is
+equivalent to string(s) but may be more efficient.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="Atom">type <a href="http://localhost:6060/src/golang.org/x/net/html/atom/atom.go?s=1052:1068#L11">Atom</a></h2>
+			<pre>type Atom <a href="../../../../../builtin/index.html#uint32">uint32</a></pre>
+			<p>
+Atom is an integer code for a string. The zero value maps to &#34;&#34;.
+</p>
+
+
+			
+				<pre>const (
+    <span id="A">A</span>                   <a href="index.html#Atom">Atom</a> = 0x1
+    <span id="Abbr">Abbr</span>                <a href="index.html#Atom">Atom</a> = 0x4
+    <span id="Accept">Accept</span>              <a href="index.html#Atom">Atom</a> = 0x2106
+    <span id="AcceptCharset">AcceptCharset</span>       <a href="index.html#Atom">Atom</a> = 0x210e
+    <span id="Accesskey">Accesskey</span>           <a href="index.html#Atom">Atom</a> = 0x3309
+    <span id="Action">Action</span>              <a href="index.html#Atom">Atom</a> = 0x1f606
+    <span id="Address">Address</span>             <a href="index.html#Atom">Atom</a> = 0x4f307
+    <span id="Align">Align</span>               <a href="index.html#Atom">Atom</a> = 0x1105
+    <span id="Alt">Alt</span>                 <a href="index.html#Atom">Atom</a> = 0x4503
+    <span id="Annotation">Annotation</span>          <a href="index.html#Atom">Atom</a> = 0x1670a
+    <span id="AnnotationXml">AnnotationXml</span>       <a href="index.html#Atom">Atom</a> = 0x1670e
+    <span id="Applet">Applet</span>              <a href="index.html#Atom">Atom</a> = 0x2b306
+    <span id="Area">Area</span>                <a href="index.html#Atom">Atom</a> = 0x2fa04
+    <span id="Article">Article</span>             <a href="index.html#Atom">Atom</a> = 0x38807
+    <span id="Aside">Aside</span>               <a href="index.html#Atom">Atom</a> = 0x8305
+    <span id="Async">Async</span>               <a href="index.html#Atom">Atom</a> = 0x7b05
+    <span id="Audio">Audio</span>               <a href="index.html#Atom">Atom</a> = 0xa605
+    <span id="Autocomplete">Autocomplete</span>        <a href="index.html#Atom">Atom</a> = 0x1fc0c
+    <span id="Autofocus">Autofocus</span>           <a href="index.html#Atom">Atom</a> = 0xb309
+    <span id="Autoplay">Autoplay</span>            <a href="index.html#Atom">Atom</a> = 0xce08
+    <span id="B">B</span>                   <a href="index.html#Atom">Atom</a> = 0x101
+    <span id="Base">Base</span>                <a href="index.html#Atom">Atom</a> = 0xd604
+    <span id="Basefont">Basefont</span>            <a href="index.html#Atom">Atom</a> = 0xd608
+    <span id="Bdi">Bdi</span>                 <a href="index.html#Atom">Atom</a> = 0x1a03
+    <span id="Bdo">Bdo</span>                 <a href="index.html#Atom">Atom</a> = 0xe703
+    <span id="Bgsound">Bgsound</span>             <a href="index.html#Atom">Atom</a> = 0x11807
+    <span id="Big">Big</span>                 <a href="index.html#Atom">Atom</a> = 0x12403
+    <span id="Blink">Blink</span>               <a href="index.html#Atom">Atom</a> = 0x12705
+    <span id="Blockquote">Blockquote</span>          <a href="index.html#Atom">Atom</a> = 0x12c0a
+    <span id="Body">Body</span>                <a href="index.html#Atom">Atom</a> = 0x2f04
+    <span id="Br">Br</span>                  <a href="index.html#Atom">Atom</a> = 0x202
+    <span id="Button">Button</span>              <a href="index.html#Atom">Atom</a> = 0x13606
+    <span id="Canvas">Canvas</span>              <a href="index.html#Atom">Atom</a> = 0x7f06
+    <span id="Caption">Caption</span>             <a href="index.html#Atom">Atom</a> = 0x1bb07
+    <span id="Center">Center</span>              <a href="index.html#Atom">Atom</a> = 0x5b506
+    <span id="Challenge">Challenge</span>           <a href="index.html#Atom">Atom</a> = 0x21f09
+    <span id="Charset">Charset</span>             <a href="index.html#Atom">Atom</a> = 0x2807
+    <span id="Checked">Checked</span>             <a href="index.html#Atom">Atom</a> = 0x32807
+    <span id="Cite">Cite</span>                <a href="index.html#Atom">Atom</a> = 0x3c804
+    <span id="Class">Class</span>               <a href="index.html#Atom">Atom</a> = 0x4de05
+    <span id="Code">Code</span>                <a href="index.html#Atom">Atom</a> = 0x14904
+    <span id="Col">Col</span>                 <a href="index.html#Atom">Atom</a> = 0x15003
+    <span id="Colgroup">Colgroup</span>            <a href="index.html#Atom">Atom</a> = 0x15008
+    <span id="Color">Color</span>               <a href="index.html#Atom">Atom</a> = 0x15d05
+    <span id="Cols">Cols</span>                <a href="index.html#Atom">Atom</a> = 0x16204
+    <span id="Colspan">Colspan</span>             <a href="index.html#Atom">Atom</a> = 0x16207
+    <span id="Command">Command</span>             <a href="index.html#Atom">Atom</a> = 0x17507
+    <span id="Content">Content</span>             <a href="index.html#Atom">Atom</a> = 0x42307
+    <span id="Contenteditable">Contenteditable</span>     <a href="index.html#Atom">Atom</a> = 0x4230f
+    <span id="Contextmenu">Contextmenu</span>         <a href="index.html#Atom">Atom</a> = 0x3310b
+    <span id="Controls">Controls</span>            <a href="index.html#Atom">Atom</a> = 0x18808
+    <span id="Coords">Coords</span>              <a href="index.html#Atom">Atom</a> = 0x19406
+    <span id="Crossorigin">Crossorigin</span>         <a href="index.html#Atom">Atom</a> = 0x19f0b
+    <span id="Data">Data</span>                <a href="index.html#Atom">Atom</a> = 0x44a04
+    <span id="Datalist">Datalist</span>            <a href="index.html#Atom">Atom</a> = 0x44a08
+    <span id="Datetime">Datetime</span>            <a href="index.html#Atom">Atom</a> = 0x23c08
+    <span id="Dd">Dd</span>                  <a href="index.html#Atom">Atom</a> = 0x26702
+    <span id="Default">Default</span>             <a href="index.html#Atom">Atom</a> = 0x8607
+    <span id="Defer">Defer</span>               <a href="index.html#Atom">Atom</a> = 0x14b05
+    <span id="Del">Del</span>                 <a href="index.html#Atom">Atom</a> = 0x3ef03
+    <span id="Desc">Desc</span>                <a href="index.html#Atom">Atom</a> = 0x4db04
+    <span id="Details">Details</span>             <a href="index.html#Atom">Atom</a> = 0x4807
+    <span id="Dfn">Dfn</span>                 <a href="index.html#Atom">Atom</a> = 0x6103
+    <span id="Dialog">Dialog</span>              <a href="index.html#Atom">Atom</a> = 0x1b06
+    <span id="Dir">Dir</span>                 <a href="index.html#Atom">Atom</a> = 0x6903
+    <span id="Dirname">Dirname</span>             <a href="index.html#Atom">Atom</a> = 0x6907
+    <span id="Disabled">Disabled</span>            <a href="index.html#Atom">Atom</a> = 0x10c08
+    <span id="Div">Div</span>                 <a href="index.html#Atom">Atom</a> = 0x11303
+    <span id="Dl">Dl</span>                  <a href="index.html#Atom">Atom</a> = 0x11e02
+    <span id="Download">Download</span>            <a href="index.html#Atom">Atom</a> = 0x40008
+    <span id="Draggable">Draggable</span>           <a href="index.html#Atom">Atom</a> = 0x17b09
+    <span id="Dropzone">Dropzone</span>            <a href="index.html#Atom">Atom</a> = 0x39108
+    <span id="Dt">Dt</span>                  <a href="index.html#Atom">Atom</a> = 0x50902
+    <span id="Em">Em</span>                  <a href="index.html#Atom">Atom</a> = 0x6502
+    <span id="Embed">Embed</span>               <a href="index.html#Atom">Atom</a> = 0x6505
+    <span id="Enctype">Enctype</span>             <a href="index.html#Atom">Atom</a> = 0x21107
+    <span id="Face">Face</span>                <a href="index.html#Atom">Atom</a> = 0x5b304
+    <span id="Fieldset">Fieldset</span>            <a href="index.html#Atom">Atom</a> = 0x1b008
+    <span id="Figcaption">Figcaption</span>          <a href="index.html#Atom">Atom</a> = 0x1b80a
+    <span id="Figure">Figure</span>              <a href="index.html#Atom">Atom</a> = 0x1cc06
+    <span id="Font">Font</span>                <a href="index.html#Atom">Atom</a> = 0xda04
+    <span id="Footer">Footer</span>              <a href="index.html#Atom">Atom</a> = 0x8d06
+    <span id="For">For</span>                 <a href="index.html#Atom">Atom</a> = 0x1d803
+    <span id="ForeignObject">ForeignObject</span>       <a href="index.html#Atom">Atom</a> = 0x1d80d
+    <span id="Foreignobject">Foreignobject</span>       <a href="index.html#Atom">Atom</a> = 0x1e50d
+    <span id="Form">Form</span>                <a href="index.html#Atom">Atom</a> = 0x1f204
+    <span id="Formaction">Formaction</span>          <a href="index.html#Atom">Atom</a> = 0x1f20a
+    <span id="Formenctype">Formenctype</span>         <a href="index.html#Atom">Atom</a> = 0x20d0b
+    <span id="Formmethod">Formmethod</span>          <a href="index.html#Atom">Atom</a> = 0x2280a
+    <span id="Formnovalidate">Formnovalidate</span>      <a href="index.html#Atom">Atom</a> = 0x2320e
+    <span id="Formtarget">Formtarget</span>          <a href="index.html#Atom">Atom</a> = 0x2470a
+    <span id="Frame">Frame</span>               <a href="index.html#Atom">Atom</a> = 0x9a05
+    <span id="Frameset">Frameset</span>            <a href="index.html#Atom">Atom</a> = 0x9a08
+    <span id="H1">H1</span>                  <a href="index.html#Atom">Atom</a> = 0x26e02
+    <span id="H2">H2</span>                  <a href="index.html#Atom">Atom</a> = 0x29402
+    <span id="H3">H3</span>                  <a href="index.html#Atom">Atom</a> = 0x2a702
+    <span id="H4">H4</span>                  <a href="index.html#Atom">Atom</a> = 0x2e902
+    <span id="H5">H5</span>                  <a href="index.html#Atom">Atom</a> = 0x2f302
+    <span id="H6">H6</span>                  <a href="index.html#Atom">Atom</a> = 0x50b02
+    <span id="Head">Head</span>                <a href="index.html#Atom">Atom</a> = 0x2d504
+    <span id="Header">Header</span>              <a href="index.html#Atom">Atom</a> = 0x2d506
+    <span id="Headers">Headers</span>             <a href="index.html#Atom">Atom</a> = 0x2d507
+    <span id="Height">Height</span>              <a href="index.html#Atom">Atom</a> = 0x25106
+    <span id="Hgroup">Hgroup</span>              <a href="index.html#Atom">Atom</a> = 0x25906
+    <span id="Hidden">Hidden</span>              <a href="index.html#Atom">Atom</a> = 0x26506
+    <span id="High">High</span>                <a href="index.html#Atom">Atom</a> = 0x26b04
+    <span id="Hr">Hr</span>                  <a href="index.html#Atom">Atom</a> = 0x27002
+    <span id="Href">Href</span>                <a href="index.html#Atom">Atom</a> = 0x27004
+    <span id="Hreflang">Hreflang</span>            <a href="index.html#Atom">Atom</a> = 0x27008
+    <span id="Html">Html</span>                <a href="index.html#Atom">Atom</a> = 0x25504
+    <span id="HttpEquiv">HttpEquiv</span>           <a href="index.html#Atom">Atom</a> = 0x2780a
+    <span id="I">I</span>                   <a href="index.html#Atom">Atom</a> = 0x601
+    <span id="Icon">Icon</span>                <a href="index.html#Atom">Atom</a> = 0x42204
+    <span id="Id">Id</span>                  <a href="index.html#Atom">Atom</a> = 0x8502
+    <span id="Iframe">Iframe</span>              <a href="index.html#Atom">Atom</a> = 0x29606
+    <span id="Image">Image</span>               <a href="index.html#Atom">Atom</a> = 0x29c05
+    <span id="Img">Img</span>                 <a href="index.html#Atom">Atom</a> = 0x2a103
+    <span id="Input">Input</span>               <a href="index.html#Atom">Atom</a> = 0x3e805
+    <span id="Inputmode">Inputmode</span>           <a href="index.html#Atom">Atom</a> = 0x3e809
+    <span id="Ins">Ins</span>                 <a href="index.html#Atom">Atom</a> = 0x1a803
+    <span id="Isindex">Isindex</span>             <a href="index.html#Atom">Atom</a> = 0x2a907
+    <span id="Ismap">Ismap</span>               <a href="index.html#Atom">Atom</a> = 0x2b005
+    <span id="Itemid">Itemid</span>              <a href="index.html#Atom">Atom</a> = 0x33c06
+    <span id="Itemprop">Itemprop</span>            <a href="index.html#Atom">Atom</a> = 0x3c908
+    <span id="Itemref">Itemref</span>             <a href="index.html#Atom">Atom</a> = 0x5ad07
+    <span id="Itemscope">Itemscope</span>           <a href="index.html#Atom">Atom</a> = 0x2b909
+    <span id="Itemtype">Itemtype</span>            <a href="index.html#Atom">Atom</a> = 0x2c308
+    <span id="Kbd">Kbd</span>                 <a href="index.html#Atom">Atom</a> = 0x1903
+    <span id="Keygen">Keygen</span>              <a href="index.html#Atom">Atom</a> = 0x3906
+    <span id="Keytype">Keytype</span>             <a href="index.html#Atom">Atom</a> = 0x53707
+    <span id="Kind">Kind</span>                <a href="index.html#Atom">Atom</a> = 0x10904
+    <span id="Label">Label</span>               <a href="index.html#Atom">Atom</a> = 0xf005
+    <span id="Lang">Lang</span>                <a href="index.html#Atom">Atom</a> = 0x27404
+    <span id="Legend">Legend</span>              <a href="index.html#Atom">Atom</a> = 0x18206
+    <span id="Li">Li</span>                  <a href="index.html#Atom">Atom</a> = 0x1202
+    <span id="Link">Link</span>                <a href="index.html#Atom">Atom</a> = 0x12804
+    <span id="List">List</span>                <a href="index.html#Atom">Atom</a> = 0x44e04
+    <span id="Listing">Listing</span>             <a href="index.html#Atom">Atom</a> = 0x44e07
+    <span id="Loop">Loop</span>                <a href="index.html#Atom">Atom</a> = 0xf404
+    <span id="Low">Low</span>                 <a href="index.html#Atom">Atom</a> = 0x11f03
+    <span id="Malignmark">Malignmark</span>          <a href="index.html#Atom">Atom</a> = 0x100a
+    <span id="Manifest">Manifest</span>            <a href="index.html#Atom">Atom</a> = 0x5f108
+    <span id="Map">Map</span>                 <a href="index.html#Atom">Atom</a> = 0x2b203
+    <span id="Mark">Mark</span>                <a href="index.html#Atom">Atom</a> = 0x1604
+    <span id="Marquee">Marquee</span>             <a href="index.html#Atom">Atom</a> = 0x2cb07
+    <span id="Math">Math</span>                <a href="index.html#Atom">Atom</a> = 0x2d204
+    <span id="Max">Max</span>                 <a href="index.html#Atom">Atom</a> = 0x2e103
+    <span id="Maxlength">Maxlength</span>           <a href="index.html#Atom">Atom</a> = 0x2e109
+    <span id="Media">Media</span>               <a href="index.html#Atom">Atom</a> = 0x6e05
+    <span id="Mediagroup">Mediagroup</span>          <a href="index.html#Atom">Atom</a> = 0x6e0a
+    <span id="Menu">Menu</span>                <a href="index.html#Atom">Atom</a> = 0x33804
+    <span id="Menuitem">Menuitem</span>            <a href="index.html#Atom">Atom</a> = 0x33808
+    <span id="Meta">Meta</span>                <a href="index.html#Atom">Atom</a> = 0x45d04
+    <span id="Meter">Meter</span>               <a href="index.html#Atom">Atom</a> = 0x24205
+    <span id="Method">Method</span>              <a href="index.html#Atom">Atom</a> = 0x22c06
+    <span id="Mglyph">Mglyph</span>              <a href="index.html#Atom">Atom</a> = 0x2a206
+    <span id="Mi">Mi</span>                  <a href="index.html#Atom">Atom</a> = 0x2eb02
+    <span id="Min">Min</span>                 <a href="index.html#Atom">Atom</a> = 0x2eb03
+    <span id="Minlength">Minlength</span>           <a href="index.html#Atom">Atom</a> = 0x2eb09
+    <span id="Mn">Mn</span>                  <a href="index.html#Atom">Atom</a> = 0x23502
+    <span id="Mo">Mo</span>                  <a href="index.html#Atom">Atom</a> = 0x3ed02
+    <span id="Ms">Ms</span>                  <a href="index.html#Atom">Atom</a> = 0x2bc02
+    <span id="Mtext">Mtext</span>               <a href="index.html#Atom">Atom</a> = 0x2f505
+    <span id="Multiple">Multiple</span>            <a href="index.html#Atom">Atom</a> = 0x30308
+    <span id="Muted">Muted</span>               <a href="index.html#Atom">Atom</a> = 0x30b05
+    <span id="Name">Name</span>                <a href="index.html#Atom">Atom</a> = 0x6c04
+    <span id="Nav">Nav</span>                 <a href="index.html#Atom">Atom</a> = 0x3e03
+    <span id="Nobr">Nobr</span>                <a href="index.html#Atom">Atom</a> = 0x5704
+    <span id="Noembed">Noembed</span>             <a href="index.html#Atom">Atom</a> = 0x6307
+    <span id="Noframes">Noframes</span>            <a href="index.html#Atom">Atom</a> = 0x9808
+    <span id="Noscript">Noscript</span>            <a href="index.html#Atom">Atom</a> = 0x3d208
+    <span id="Novalidate">Novalidate</span>          <a href="index.html#Atom">Atom</a> = 0x2360a
+    <span id="Object">Object</span>              <a href="index.html#Atom">Atom</a> = 0x1ec06
+    <span id="Ol">Ol</span>                  <a href="index.html#Atom">Atom</a> = 0xc902
+    <span id="Onabort">Onabort</span>             <a href="index.html#Atom">Atom</a> = 0x13a07
+    <span id="Onafterprint">Onafterprint</span>        <a href="index.html#Atom">Atom</a> = 0x1c00c
+    <span id="Onautocomplete">Onautocomplete</span>      <a href="index.html#Atom">Atom</a> = 0x1fa0e
+    <span id="Onautocompleteerror">Onautocompleteerror</span> <a href="index.html#Atom">Atom</a> = 0x1fa13
+    <span id="Onbeforeprint">Onbeforeprint</span>       <a href="index.html#Atom">Atom</a> = 0x6040d
+    <span id="Onbeforeunload">Onbeforeunload</span>      <a href="index.html#Atom">Atom</a> = 0x4e70e
+    <span id="Onblur">Onblur</span>              <a href="index.html#Atom">Atom</a> = 0xaa06
+    <span id="Oncancel">Oncancel</span>            <a href="index.html#Atom">Atom</a> = 0xe908
+    <span id="Oncanplay">Oncanplay</span>           <a href="index.html#Atom">Atom</a> = 0x28509
+    <span id="Oncanplaythrough">Oncanplaythrough</span>    <a href="index.html#Atom">Atom</a> = 0x28510
+    <span id="Onchange">Onchange</span>            <a href="index.html#Atom">Atom</a> = 0x3a708
+    <span id="Onclick">Onclick</span>             <a href="index.html#Atom">Atom</a> = 0x31007
+    <span id="Onclose">Onclose</span>             <a href="index.html#Atom">Atom</a> = 0x31707
+    <span id="Oncontextmenu">Oncontextmenu</span>       <a href="index.html#Atom">Atom</a> = 0x32f0d
+    <span id="Oncuechange">Oncuechange</span>         <a href="index.html#Atom">Atom</a> = 0x3420b
+    <span id="Ondblclick">Ondblclick</span>          <a href="index.html#Atom">Atom</a> = 0x34d0a
+    <span id="Ondrag">Ondrag</span>              <a href="index.html#Atom">Atom</a> = 0x35706
+    <span id="Ondragend">Ondragend</span>           <a href="index.html#Atom">Atom</a> = 0x35709
+    <span id="Ondragenter">Ondragenter</span>         <a href="index.html#Atom">Atom</a> = 0x3600b
+    <span id="Ondragleave">Ondragleave</span>         <a href="index.html#Atom">Atom</a> = 0x36b0b
+    <span id="Ondragover">Ondragover</span>          <a href="index.html#Atom">Atom</a> = 0x3760a
+    <span id="Ondragstart">Ondragstart</span>         <a href="index.html#Atom">Atom</a> = 0x3800b
+    <span id="Ondrop">Ondrop</span>              <a href="index.html#Atom">Atom</a> = 0x38f06
+    <span id="Ondurationchange">Ondurationchange</span>    <a href="index.html#Atom">Atom</a> = 0x39f10
+    <span id="Onemptied">Onemptied</span>           <a href="index.html#Atom">Atom</a> = 0x39609
+    <span id="Onended">Onended</span>             <a href="index.html#Atom">Atom</a> = 0x3af07
+    <span id="Onerror">Onerror</span>             <a href="index.html#Atom">Atom</a> = 0x3b607
+    <span id="Onfocus">Onfocus</span>             <a href="index.html#Atom">Atom</a> = 0x3bd07
+    <span id="Onhashchange">Onhashchange</span>        <a href="index.html#Atom">Atom</a> = 0x3da0c
+    <span id="Oninput">Oninput</span>             <a href="index.html#Atom">Atom</a> = 0x3e607
+    <span id="Oninvalid">Oninvalid</span>           <a href="index.html#Atom">Atom</a> = 0x3f209
+    <span id="Onkeydown">Onkeydown</span>           <a href="index.html#Atom">Atom</a> = 0x3fb09
+    <span id="Onkeypress">Onkeypress</span>          <a href="index.html#Atom">Atom</a> = 0x4080a
+    <span id="Onkeyup">Onkeyup</span>             <a href="index.html#Atom">Atom</a> = 0x41807
+    <span id="Onlanguagechange">Onlanguagechange</span>    <a href="index.html#Atom">Atom</a> = 0x43210
+    <span id="Onload">Onload</span>              <a href="index.html#Atom">Atom</a> = 0x44206
+    <span id="Onloadeddata">Onloadeddata</span>        <a href="index.html#Atom">Atom</a> = 0x4420c
+    <span id="Onloadedmetadata">Onloadedmetadata</span>    <a href="index.html#Atom">Atom</a> = 0x45510
+    <span id="Onloadstart">Onloadstart</span>         <a href="index.html#Atom">Atom</a> = 0x46b0b
+    <span id="Onmessage">Onmessage</span>           <a href="index.html#Atom">Atom</a> = 0x47609
+    <span id="Onmousedown">Onmousedown</span>         <a href="index.html#Atom">Atom</a> = 0x47f0b
+    <span id="Onmousemove">Onmousemove</span>         <a href="index.html#Atom">Atom</a> = 0x48a0b
+    <span id="Onmouseout">Onmouseout</span>          <a href="index.html#Atom">Atom</a> = 0x4950a
+    <span id="Onmouseover">Onmouseover</span>         <a href="index.html#Atom">Atom</a> = 0x4a20b
+    <span id="Onmouseup">Onmouseup</span>           <a href="index.html#Atom">Atom</a> = 0x4ad09
+    <span id="Onmousewheel">Onmousewheel</span>        <a href="index.html#Atom">Atom</a> = 0x4b60c
+    <span id="Onoffline">Onoffline</span>           <a href="index.html#Atom">Atom</a> = 0x4c209
+    <span id="Ononline">Ononline</span>            <a href="index.html#Atom">Atom</a> = 0x4cb08
+    <span id="Onpagehide">Onpagehide</span>          <a href="index.html#Atom">Atom</a> = 0x4d30a
+    <span id="Onpageshow">Onpageshow</span>          <a href="index.html#Atom">Atom</a> = 0x4fe0a
+    <span id="Onpause">Onpause</span>             <a href="index.html#Atom">Atom</a> = 0x50d07
+    <span id="Onplay">Onplay</span>              <a href="index.html#Atom">Atom</a> = 0x51706
+    <span id="Onplaying">Onplaying</span>           <a href="index.html#Atom">Atom</a> = 0x51709
+    <span id="Onpopstate">Onpopstate</span>          <a href="index.html#Atom">Atom</a> = 0x5200a
+    <span id="Onprogress">Onprogress</span>          <a href="index.html#Atom">Atom</a> = 0x52a0a
+    <span id="Onratechange">Onratechange</span>        <a href="index.html#Atom">Atom</a> = 0x53e0c
+    <span id="Onreset">Onreset</span>             <a href="index.html#Atom">Atom</a> = 0x54a07
+    <span id="Onresize">Onresize</span>            <a href="index.html#Atom">Atom</a> = 0x55108
+    <span id="Onscroll">Onscroll</span>            <a href="index.html#Atom">Atom</a> = 0x55f08
+    <span id="Onseeked">Onseeked</span>            <a href="index.html#Atom">Atom</a> = 0x56708
+    <span id="Onseeking">Onseeking</span>           <a href="index.html#Atom">Atom</a> = 0x56f09
+    <span id="Onselect">Onselect</span>            <a href="index.html#Atom">Atom</a> = 0x57808
+    <span id="Onshow">Onshow</span>              <a href="index.html#Atom">Atom</a> = 0x58206
+    <span id="Onsort">Onsort</span>              <a href="index.html#Atom">Atom</a> = 0x58b06
+    <span id="Onstalled">Onstalled</span>           <a href="index.html#Atom">Atom</a> = 0x59509
+    <span id="Onstorage">Onstorage</span>           <a href="index.html#Atom">Atom</a> = 0x59e09
+    <span id="Onsubmit">Onsubmit</span>            <a href="index.html#Atom">Atom</a> = 0x5a708
+    <span id="Onsuspend">Onsuspend</span>           <a href="index.html#Atom">Atom</a> = 0x5bb09
+    <span id="Ontimeupdate">Ontimeupdate</span>        <a href="index.html#Atom">Atom</a> = 0xdb0c
+    <span id="Ontoggle">Ontoggle</span>            <a href="index.html#Atom">Atom</a> = 0x5c408
+    <span id="Onunload">Onunload</span>            <a href="index.html#Atom">Atom</a> = 0x5cc08
+    <span id="Onvolumechange">Onvolumechange</span>      <a href="index.html#Atom">Atom</a> = 0x5d40e
+    <span id="Onwaiting">Onwaiting</span>           <a href="index.html#Atom">Atom</a> = 0x5e209
+    <span id="Open">Open</span>                <a href="index.html#Atom">Atom</a> = 0x3cf04
+    <span id="Optgroup">Optgroup</span>            <a href="index.html#Atom">Atom</a> = 0xf608
+    <span id="Optimum">Optimum</span>             <a href="index.html#Atom">Atom</a> = 0x5eb07
+    <span id="Option">Option</span>              <a href="index.html#Atom">Atom</a> = 0x60006
+    <span id="Output">Output</span>              <a href="index.html#Atom">Atom</a> = 0x49c06
+    <span id="P">P</span>                   <a href="index.html#Atom">Atom</a> = 0xc01
+    <span id="Param">Param</span>               <a href="index.html#Atom">Atom</a> = 0xc05
+    <span id="Pattern">Pattern</span>             <a href="index.html#Atom">Atom</a> = 0x5107
+    <span id="Ping">Ping</span>                <a href="index.html#Atom">Atom</a> = 0x7704
+    <span id="Placeholder">Placeholder</span>         <a href="index.html#Atom">Atom</a> = 0xc30b
+    <span id="Plaintext">Plaintext</span>           <a href="index.html#Atom">Atom</a> = 0xfd09
+    <span id="Poster">Poster</span>              <a href="index.html#Atom">Atom</a> = 0x15706
+    <span id="Pre">Pre</span>                 <a href="index.html#Atom">Atom</a> = 0x25e03
+    <span id="Preload">Preload</span>             <a href="index.html#Atom">Atom</a> = 0x25e07
+    <span id="Progress">Progress</span>            <a href="index.html#Atom">Atom</a> = 0x52c08
+    <span id="Prompt">Prompt</span>              <a href="index.html#Atom">Atom</a> = 0x5fa06
+    <span id="Public">Public</span>              <a href="index.html#Atom">Atom</a> = 0x41e06
+    <span id="Q">Q</span>                   <a href="index.html#Atom">Atom</a> = 0x13101
+    <span id="Radiogroup">Radiogroup</span>          <a href="index.html#Atom">Atom</a> = 0x30a
+    <span id="Readonly">Readonly</span>            <a href="index.html#Atom">Atom</a> = 0x2fb08
+    <span id="Rel">Rel</span>                 <a href="index.html#Atom">Atom</a> = 0x25f03
+    <span id="Required">Required</span>            <a href="index.html#Atom">Atom</a> = 0x1d008
+    <span id="Reversed">Reversed</span>            <a href="index.html#Atom">Atom</a> = 0x5a08
+    <span id="Rows">Rows</span>                <a href="index.html#Atom">Atom</a> = 0x9204
+    <span id="Rowspan">Rowspan</span>             <a href="index.html#Atom">Atom</a> = 0x9207
+    <span id="Rp">Rp</span>                  <a href="index.html#Atom">Atom</a> = 0x1c602
+    <span id="Rt">Rt</span>                  <a href="index.html#Atom">Atom</a> = 0x13f02
+    <span id="Ruby">Ruby</span>                <a href="index.html#Atom">Atom</a> = 0xaf04
+    <span id="S">S</span>                   <a href="index.html#Atom">Atom</a> = 0x2c01
+    <span id="Samp">Samp</span>                <a href="index.html#Atom">Atom</a> = 0x4e04
+    <span id="Sandbox">Sandbox</span>             <a href="index.html#Atom">Atom</a> = 0xbb07
+    <span id="Scope">Scope</span>               <a href="index.html#Atom">Atom</a> = 0x2bd05
+    <span id="Scoped">Scoped</span>              <a href="index.html#Atom">Atom</a> = 0x2bd06
+    <span id="Script">Script</span>              <a href="index.html#Atom">Atom</a> = 0x3d406
+    <span id="Seamless">Seamless</span>            <a href="index.html#Atom">Atom</a> = 0x31c08
+    <span id="Section">Section</span>             <a href="index.html#Atom">Atom</a> = 0x4e207
+    <span id="Select">Select</span>              <a href="index.html#Atom">Atom</a> = 0x57a06
+    <span id="Selected">Selected</span>            <a href="index.html#Atom">Atom</a> = 0x57a08
+    <span id="Shape">Shape</span>               <a href="index.html#Atom">Atom</a> = 0x4f905
+    <span id="Size">Size</span>                <a href="index.html#Atom">Atom</a> = 0x55504
+    <span id="Sizes">Sizes</span>               <a href="index.html#Atom">Atom</a> = 0x55505
+    <span id="Small">Small</span>               <a href="index.html#Atom">Atom</a> = 0x18f05
+    <span id="Sortable">Sortable</span>            <a href="index.html#Atom">Atom</a> = 0x58d08
+    <span id="Sorted">Sorted</span>              <a href="index.html#Atom">Atom</a> = 0x19906
+    <span id="Source">Source</span>              <a href="index.html#Atom">Atom</a> = 0x1aa06
+    <span id="Spacer">Spacer</span>              <a href="index.html#Atom">Atom</a> = 0x2db06
+    <span id="Span">Span</span>                <a href="index.html#Atom">Atom</a> = 0x9504
+    <span id="Spellcheck">Spellcheck</span>          <a href="index.html#Atom">Atom</a> = 0x3230a
+    <span id="Src">Src</span>                 <a href="index.html#Atom">Atom</a> = 0x3c303
+    <span id="Srcdoc">Srcdoc</span>              <a href="index.html#Atom">Atom</a> = 0x3c306
+    <span id="Srclang">Srclang</span>             <a href="index.html#Atom">Atom</a> = 0x41107
+    <span id="Start">Start</span>               <a href="index.html#Atom">Atom</a> = 0x38605
+    <span id="Step">Step</span>                <a href="index.html#Atom">Atom</a> = 0x5f704
+    <span id="Strike">Strike</span>              <a href="index.html#Atom">Atom</a> = 0x53306
+    <span id="Strong">Strong</span>              <a href="index.html#Atom">Atom</a> = 0x55906
+    <span id="Style">Style</span>               <a href="index.html#Atom">Atom</a> = 0x61105
+    <span id="Sub">Sub</span>                 <a href="index.html#Atom">Atom</a> = 0x5a903
+    <span id="Summary">Summary</span>             <a href="index.html#Atom">Atom</a> = 0x61607
+    <span id="Sup">Sup</span>                 <a href="index.html#Atom">Atom</a> = 0x61d03
+    <span id="Svg">Svg</span>                 <a href="index.html#Atom">Atom</a> = 0x62003
+    <span id="System">System</span>              <a href="index.html#Atom">Atom</a> = 0x62306
+    <span id="Tabindex">Tabindex</span>            <a href="index.html#Atom">Atom</a> = 0x46308
+    <span id="Table">Table</span>               <a href="index.html#Atom">Atom</a> = 0x42d05
+    <span id="Target">Target</span>              <a href="index.html#Atom">Atom</a> = 0x24b06
+    <span id="Tbody">Tbody</span>               <a href="index.html#Atom">Atom</a> = 0x2e05
+    <span id="Td">Td</span>                  <a href="index.html#Atom">Atom</a> = 0x4702
+    <span id="Template">Template</span>            <a href="index.html#Atom">Atom</a> = 0x62608
+    <span id="Textarea">Textarea</span>            <a href="index.html#Atom">Atom</a> = 0x2f608
+    <span id="Tfoot">Tfoot</span>               <a href="index.html#Atom">Atom</a> = 0x8c05
+    <span id="Th">Th</span>                  <a href="index.html#Atom">Atom</a> = 0x22e02
+    <span id="Thead">Thead</span>               <a href="index.html#Atom">Atom</a> = 0x2d405
+    <span id="Time">Time</span>                <a href="index.html#Atom">Atom</a> = 0xdd04
+    <span id="Title">Title</span>               <a href="index.html#Atom">Atom</a> = 0xa105
+    <span id="Tr">Tr</span>                  <a href="index.html#Atom">Atom</a> = 0x10502
+    <span id="Track">Track</span>               <a href="index.html#Atom">Atom</a> = 0x10505
+    <span id="Translate">Translate</span>           <a href="index.html#Atom">Atom</a> = 0x14009
+    <span id="Tt">Tt</span>                  <a href="index.html#Atom">Atom</a> = 0x5302
+    <span id="Type">Type</span>                <a href="index.html#Atom">Atom</a> = 0x21404
+    <span id="Typemustmatch">Typemustmatch</span>       <a href="index.html#Atom">Atom</a> = 0x2140d
+    <span id="U">U</span>                   <a href="index.html#Atom">Atom</a> = 0xb01
+    <span id="Ul">Ul</span>                  <a href="index.html#Atom">Atom</a> = 0x8a02
+    <span id="Usemap">Usemap</span>              <a href="index.html#Atom">Atom</a> = 0x51106
+    <span id="Value">Value</span>               <a href="index.html#Atom">Atom</a> = 0x4005
+    <span id="Var">Var</span>                 <a href="index.html#Atom">Atom</a> = 0x11503
+    <span id="Video">Video</span>               <a href="index.html#Atom">Atom</a> = 0x28105
+    <span id="Wbr">Wbr</span>                 <a href="index.html#Atom">Atom</a> = 0x12103
+    <span id="Width">Width</span>               <a href="index.html#Atom">Atom</a> = 0x50705
+    <span id="Wrap">Wrap</span>                <a href="index.html#Atom">Atom</a> = 0x58704
+    <span id="Xmp">Xmp</span>                 <a href="index.html#Atom">Atom</a> = 0xc103
+)</pre>
+				
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="Lookup">func <a href="http://localhost:6060/src/golang.org/x/net/html/atom/atom.go?s=1758:1784#L47">Lookup</a></h3>
+				<pre>func Lookup(s []<a href="../../../../../builtin/index.html#byte">byte</a>) <a href="index.html#Atom">Atom</a></pre>
+				<p>
+Lookup returns the atom whose name is s. It returns zero if there is no
+such atom. The lookup is case sensitive.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Atom.String">func (Atom) <a href="http://localhost:6060/src/golang.org/x/net/html/atom/atom.go?s=1105:1134#L14">String</a></h3>
+				<pre>func (a <a href="index.html#Atom">Atom</a>) String() <a href="../../../../../builtin/index.html#string">string</a></pre>
+				<p>
+String returns the atom&#39;s name.
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

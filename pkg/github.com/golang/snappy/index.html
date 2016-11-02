@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>snappy - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package snappy</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/golang/snappy"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package snappy implements the snappy block-based compression format.
+It aims for very high speeds and reasonable compression.
+</p>
+<p>
+The C++ snappy implementation is at <a href="https://github.com/google/snappy">https://github.com/google/snappy</a>
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+				
+				<dd><a href="index.html#Decode">func Decode(dst, src []byte) ([]byte, error)</a></dd>
+			
+				
+				<dd><a href="index.html#DecodedLen">func DecodedLen(src []byte) (int, error)</a></dd>
+			
+				
+				<dd><a href="index.html#Encode">func Encode(dst, src []byte) []byte</a></dd>
+			
+				
+				<dd><a href="index.html#MaxEncodedLen">func MaxEncodedLen(srcLen int) int</a></dd>
+			
+			
+				
+				<dd><a href="index.html#Reader">type Reader</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewReader">func NewReader(r io.Reader) *Reader</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Reader.Read">func (r *Reader) Read(p []byte) (int, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Reader.Reset">func (r *Reader) Reset(reader io.Reader)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Writer">type Writer</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewBufferedWriter">func NewBufferedWriter(w io.Writer) *Writer</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewWriter">func NewWriter(w io.Writer) *Writer</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Writer.Close">func (w *Writer) Close() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Writer.Flush">func (w *Writer) Flush() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Writer.Reset">func (w *Writer) Reset(writer io.Writer)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Writer.Write">func (w *Writer) Write(p []byte) (nRet int, errRet error)</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/golang/snappy/decode.go">decode.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/golang/snappy/decode_amd64.go">decode_amd64.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/golang/snappy/encode.go">encode.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/golang/snappy/encode_amd64.go">encode_amd64.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/golang/snappy/snappy.go">snappy.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var (
+    <span class="comment">// ErrCorrupt reports that the input is invalid.</span>
+    <span id="ErrCorrupt">ErrCorrupt</span> = <a href="../../../errors/index.html">errors</a>.<a href="../../../errors/index.html#New">New</a>(&#34;snappy: corrupt input&#34;)
+    <span class="comment">// ErrTooLarge reports that the uncompressed length is too large.</span>
+    <span id="ErrTooLarge">ErrTooLarge</span> = <a href="../../../errors/index.html">errors</a>.<a href="../../../errors/index.html#New">New</a>(&#34;snappy: decoded block is too large&#34;)
+    <span class="comment">// ErrUnsupported reports that the input isn&#39;t supported.</span>
+    <span id="ErrUnsupported">ErrUnsupported</span> = <a href="../../../errors/index.html">errors</a>.<a href="../../../errors/index.html#New">New</a>(&#34;snappy: unsupported input&#34;)
+)</pre>
+				
+			
+		
+		
+			
+			
+			<h2 id="Decode">func <a href="http://localhost:6060/src/github.com/golang/snappy/decode.go?s=1599:1643#L45">Decode</a></h2>
+			<pre>func Decode(dst, src []<a href="../../../builtin/index.html#byte">byte</a>) ([]<a href="../../../builtin/index.html#byte">byte</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+Decode returns the decoded form of src. The returned slice may be a sub-
+slice of dst if dst was large enough to hold the entire decoded block.
+Otherwise, a newly allocated slice will be returned.
+</p>
+<p>
+The dst and src must not overlap. It is valid to pass a nil dst.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="DecodedLen">func <a href="http://localhost:6060/src/github.com/golang/snappy/decode.go?s=723:763#L15">DecodedLen</a></h2>
+			<pre>func DecodedLen(src []<a href="../../../builtin/index.html#byte">byte</a>) (<a href="../../../builtin/index.html#int">int</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+DecodedLen returns the length of the decoded block.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Encode">func <a href="http://localhost:6060/src/github.com/golang/snappy/encode.go?s=507:542#L8">Encode</a></h2>
+			<pre>func Encode(dst, src []<a href="../../../builtin/index.html#byte">byte</a>) []<a href="../../../builtin/index.html#byte">byte</a></pre>
+			<p>
+Encode returns the encoded form of src. The returned slice may be a sub-
+slice of dst if dst was large enough to hold the entire encoded block.
+Otherwise, a newly allocated slice will be returned.
+</p>
+<p>
+The dst and src must not overlap. It is valid to pass a nil dst.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MaxEncodedLen">func <a href="http://localhost:6060/src/github.com/golang/snappy/encode.go?s=2979:3013#L66">MaxEncodedLen</a></h2>
+			<pre>func MaxEncodedLen(srcLen <a href="../../../builtin/index.html#int">int</a>) <a href="../../../builtin/index.html#int">int</a></pre>
+			<p>
+MaxEncodedLen returns the maximum length of a snappy block, given its
+uncompressed length.
+</p>
+<p>
+It will return a negative value if srcLen is too large to encode.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="Reader">type <a href="http://localhost:6060/src/github.com/golang/snappy/decode.go?s=2388:2583#L76">Reader</a></h2>
+			<pre>type Reader struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Reader is an io.Reader that can read Snappy-compressed bytes.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewReader">func <a href="http://localhost:6060/src/github.com/golang/snappy/decode.go?s=2142:2177#L67">NewReader</a></h3>
+				<pre>func NewReader(r <a href="../../../io/index.html">io</a>.<a href="../../../io/index.html#Reader">Reader</a>) *<a href="index.html#Reader">Reader</a></pre>
+				<p>
+NewReader returns a new Reader that decompresses from r, using the framing
+format described at
+<a href="https://github.com/google/snappy/blob/master/framing_format.txt">https://github.com/google/snappy/blob/master/framing_format.txt</a>
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Reader.Read">func (*Reader) <a href="http://localhost:6060/src/github.com/golang/snappy/decode.go?s=3157:3201#L108">Read</a></h3>
+				<pre>func (r *<a href="index.html#Reader">Reader</a>) Read(p []<a href="../../../builtin/index.html#byte">byte</a>) (<a href="../../../builtin/index.html#int">int</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Read satisfies the io.Reader interface.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Reader.Reset">func (*Reader) <a href="http://localhost:6060/src/github.com/golang/snappy/decode.go?s=2757:2797#L89">Reset</a></h3>
+				<pre>func (r *<a href="index.html#Reader">Reader</a>) Reset(reader <a href="../../../io/index.html">io</a>.<a href="../../../io/index.html#Reader">Reader</a>)</pre>
+				<p>
+Reset discards any buffered data, resets all state, and switches the Snappy
+reader to read from r. This permits reusing a Reader rather than allocating
+a new one.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Writer">type <a href="http://localhost:6060/src/github.com/golang/snappy/encode.go?s=5300:5796#L132">Writer</a></h2>
+			<pre>type Writer struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Writer is an io.Writer than can write Snappy-compressed bytes.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewBufferedWriter">func <a href="http://localhost:6060/src/github.com/golang/snappy/encode.go?s=5084:5127#L123">NewBufferedWriter</a></h3>
+				<pre>func NewBufferedWriter(w <a href="../../../io/index.html">io</a>.<a href="../../../io/index.html#Writer">Writer</a>) *<a href="index.html#Writer">Writer</a></pre>
+				<p>
+NewBufferedWriter returns a new Writer that compresses to w, using the
+framing format described at
+<a href="https://github.com/google/snappy/blob/master/framing_format.txt">https://github.com/google/snappy/blob/master/framing_format.txt</a>
+</p>
+<p>
+The Writer returned buffers writes. Users must call Close to guarantee all
+data has been forwarded to the underlying io.Writer. They may also call
+Flush zero or more times before calling Close.
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewWriter">func <a href="http://localhost:6060/src/github.com/golang/snappy/encode.go?s=4603:4638#L109">NewWriter</a></h3>
+				<pre>func NewWriter(w <a href="../../../io/index.html">io</a>.<a href="../../../io/index.html#Writer">Writer</a>) *<a href="index.html#Writer">Writer</a></pre>
+				<p>
+NewWriter returns a new Writer that compresses to w.
+</p>
+<p>
+The Writer returned does not buffer writes. There is no need to Flush or
+Close such a Writer.
+</p>
+<p>
+Deprecated: the Writer returned is not suitable for many small writes, only
+for few large writes. Use NewBufferedWriter instead, which is efficient
+regardless of the frequency and shape of the writes, and remember to Close
+that Writer when done.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Writer.Close">func (*Writer) <a href="http://localhost:6060/src/github.com/golang/snappy/encode.go?s=9038:9068#L268">Close</a></h3>
+				<pre>func (w *<a href="index.html#Writer">Writer</a>) Close() <a href="../../../builtin/index.html#error">error</a></pre>
+				<p>
+Close calls Flush and then closes the Writer.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Writer.Flush">func (*Writer) <a href="http://localhost:6060/src/github.com/golang/snappy/encode.go?s=8825:8855#L255">Flush</a></h3>
+				<pre>func (w *<a href="index.html#Writer">Writer</a>) Flush() <a href="../../../builtin/index.html#error">error</a></pre>
+				<p>
+Flush flushes the Writer to its underlying io.Writer.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Writer.Reset">func (*Writer) <a href="http://localhost:6060/src/github.com/golang/snappy/encode.go?s=5948:5988#L152">Reset</a></h3>
+				<pre>func (w *<a href="index.html#Writer">Writer</a>) Reset(writer <a href="../../../io/index.html">io</a>.<a href="../../../io/index.html#Writer">Writer</a>)</pre>
+				<p>
+Reset discards the writer&#39;s state and switches the Snappy writer to write to
+w. This permits reusing a Writer rather than allocating a new one.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Writer.Write">func (*Writer) <a href="http://localhost:6060/src/github.com/golang/snappy/encode.go?s=6139:6196#L162">Write</a></h3>
+				<pre>func (w *<a href="index.html#Writer">Writer</a>) Write(p []<a href="../../../builtin/index.html#byte">byte</a>) (nRet <a href="../../../builtin/index.html#int">int</a>, errRet <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Write satisfies the io.Writer interface.
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

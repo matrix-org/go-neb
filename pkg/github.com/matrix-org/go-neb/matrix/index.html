@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>matrix - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package matrix</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/matrix-org/go-neb/matrix"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package matrix provides an HTTP client that can interact with a Homeserver via r0 APIs (/sync).
+</p>
+<p>
+It is NOT safe to access the field (or any sub-fields of) &#39;Rooms&#39; concurrently. In essence, this
+structure MUST be treated as read-only. The matrix client will update this structure as new events
+arrive from the homeserver.
+</p>
+<p>
+Internally, the client has 1 goroutine for polling the server, and 1 goroutine for processing data
+returned. The polling goroutine communicates to the processing goroutine by a buffered channel
+which feedback loops if processing takes a while as it will delay more data from being pulled down
+if the buffer gets full. Modification of the &#39;Rooms&#39; field of the client is done EXCLUSIVELY on the
+processing goroutine.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+			
+				
+				<dd><a href="index.html#Client">type Client</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewClient">func NewClient(httpClient *http.Client, homeserverURL *url.URL, accessToken, userID string) *Client</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.JoinRoom">func (cli *Client) JoinRoom(roomIDorAlias, serverName, invitingUserID string) (string, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.SendMessageEvent">func (cli *Client) SendMessageEvent(roomID string, eventType string, contentJSON interface{}) (string, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.SendText">func (cli *Client) SendText(roomID, text string) (string, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.SetDisplayName">func (cli *Client) SetDisplayName(displayName string) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.StopSync">func (cli *Client) StopSync()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.Sync">func (cli *Client) Sync()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.UploadLink">func (cli *Client) UploadLink(link string) (string, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.UploadToContentRepo">func (cli *Client) UploadToContentRepo(content io.Reader, contentType string, contentLength int64) (string, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Event">type Event</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Event.Body">func (event *Event) Body() (body string, ok bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Event.MessageType">func (event *Event) MessageType() (msgtype string, ok bool)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#HTMLMessage">type HTMLMessage</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#GetHTMLMessage">func GetHTMLMessage(msgtype, htmlText string) HTMLMessage</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ImageInfo">type ImageInfo</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ImageMessage">type ImageMessage</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#NextBatchStorer">type NextBatchStorer</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#OnEventListener">type OnEventListener</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Room">type Room</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewRoom">func NewRoom(roomID string) *Room</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Room.GetMembershipState">func (room Room) GetMembershipState(userID string) string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Room.GetStateEvent">func (room Room) GetStateEvent(eventType string, stateKey string) *Event</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Room.UpdateState">func (room Room) UpdateState(event *Event)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#StarterLinkMessage">type StarterLinkMessage</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#StarterLinkMessage.MarshalJSON">func (m StarterLinkMessage) MarshalJSON() ([]byte, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#TextMessage">type TextMessage</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Worker">type Worker</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Worker.OnEventType">func (worker *Worker) OnEventType(eventType string, callback OnEventListener)</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go">matrix.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/responses.go">responses.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/types.go">types.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/worker.go">worker.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+		
+			
+			
+			<h2 id="Client">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=1645:2042#L39">Client</a></h2>
+			<pre>type Client struct {
+    HomeserverURL *<a href="../../../../net/url/index.html">url</a>.<a href="../../../../net/url/index.html#URL">URL</a>
+    Prefix        <a href="../../../../builtin/index.html#string">string</a>
+    UserID        <a href="../../../../builtin/index.html#string">string</a>
+    AccessToken   <a href="../../../../builtin/index.html#string">string</a>
+    Rooms         map[<a href="../../../../builtin/index.html#string">string</a>]*<a href="index.html#Room">Room</a>
+    Worker        *<a href="index.html#Worker">Worker</a>
+
+    NextBatchStorer <a href="index.html#NextBatchStorer">NextBatchStorer</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Client represents a Matrix client.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewClient">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=13235:13334#L414">NewClient</a></h3>
+				<pre>func NewClient(httpClient *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Client">Client</a>, homeserverURL *<a href="../../../../net/url/index.html">url</a>.<a href="../../../../net/url/index.html#URL">URL</a>, accessToken, userID <a href="../../../../builtin/index.html#string">string</a>) *<a href="index.html#Client">Client</a></pre>
+				<p>
+NewClient creates a new Matrix Client ready for syncing
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Client.JoinRoom">func (*Client) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=3187:3280#L86">JoinRoom</a></h3>
+				<pre>func (cli *<a href="index.html#Client">Client</a>) JoinRoom(roomIDorAlias, serverName, invitingUserID <a href="../../../../builtin/index.html#string">string</a>) (<a href="../../../../builtin/index.html#string">string</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+JoinRoom joins the client to a room ID or alias. If serverName is specified, this will be added as a query param
+to instruct the homeserver to join via that server. If invitingUserID is specified, the inviting user ID will be
+inserted into the content of the join request. Returns a room ID.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Client.SendMessageEvent">func (*Client) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=4377:4486#L124">SendMessageEvent</a></h3>
+				<pre>func (cli *<a href="index.html#Client">Client</a>) SendMessageEvent(roomID <a href="../../../../builtin/index.html#string">string</a>, eventType <a href="../../../../builtin/index.html#string">string</a>, contentJSON interface{}) (<a href="../../../../builtin/index.html#string">string</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+SendMessageEvent sends a message event into a room, returning the event_id on success.
+contentJSON should be a pointer to something that can be encoded as JSON using json.Marshal.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Client.SendText">func (*Client) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=4979:5043#L139">SendText</a></h3>
+				<pre>func (cli *<a href="index.html#Client">Client</a>) SendText(roomID, text <a href="../../../../builtin/index.html#string">string</a>) (<a href="../../../../builtin/index.html#string">string</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+SendText sends an m.room.message event into the given room with a msgtype of m.text
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Client.SetDisplayName">func (*Client) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=3934:3993#L113">SetDisplayName</a></h3>
+				<pre>func (cli *<a href="index.html#Client">Client</a>) SetDisplayName(displayName <a href="../../../../builtin/index.html#string">string</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+SetDisplayName sets the user&#39;s profile display name
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Client.StopSync">func (*Client) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=10684:10713#L316">StopSync</a></h3>
+				<pre>func (cli *<a href="index.html#Client">Client</a>) StopSync()</pre>
+				<p>
+StopSync stops the ongoing sync started by Sync.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Client.Sync">func (*Client) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=6578:6603#L189">Sync</a></h3>
+				<pre>func (cli *<a href="index.html#Client">Client</a>) Sync()</pre>
+				<p>
+Sync starts syncing with the provided Homeserver. This function will be invoked continually.
+If Sync is called twice then the first sync will be stopped.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Client.UploadLink">func (*Client) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=5198:5256#L145">UploadLink</a></h3>
+				<pre>func (cli *<a href="index.html#Client">Client</a>) UploadLink(link <a href="../../../../builtin/index.html#string">string</a>) (<a href="../../../../builtin/index.html#string">string</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+UploadLink uploads an HTTP URL and then returns an MXC URI.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Client.UploadToContentRepo">func (*Client) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=5562:5676#L157">UploadToContentRepo</a></h3>
+				<pre>func (cli *<a href="index.html#Client">Client</a>) UploadToContentRepo(content <a href="../../../../io/index.html">io</a>.<a href="../../../../io/index.html#Reader">Reader</a>, contentType <a href="../../../../builtin/index.html#string">string</a>, contentLength <a href="../../../../builtin/index.html#int64">int64</a>) (<a href="../../../../builtin/index.html#string">string</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+UploadToContentRepo uploads the given bytes to the content repository and returns an MXC URI.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Event">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/types.go?s=1576:2340#L50">Event</a></h2>
+			<pre>type Event struct {
+    StateKey  <a href="../../../../builtin/index.html#string">string</a>                 `json:&#34;state_key&#34;`        <span class="comment">// The state key for the event. Only present on State Events.</span>
+    Sender    <a href="../../../../builtin/index.html#string">string</a>                 `json:&#34;sender&#34;`           <span class="comment">// The user ID of the sender of the event</span>
+    Type      <a href="../../../../builtin/index.html#string">string</a>                 `json:&#34;type&#34;`             <span class="comment">// The event type</span>
+    Timestamp <a href="../../../../builtin/index.html#int">int</a>                    `json:&#34;origin_server_ts&#34;` <span class="comment">// The unix timestamp when this message was sent by the origin server</span>
+    ID        <a href="../../../../builtin/index.html#string">string</a>                 `json:&#34;event_id&#34;`         <span class="comment">// The unique ID of this event</span>
+    RoomID    <a href="../../../../builtin/index.html#string">string</a>                 `json:&#34;room_id&#34;`          <span class="comment">// The room the event was sent to. May be nil (e.g. for presence)</span>
+    Content   map[<a href="../../../../builtin/index.html#string">string</a>]interface{} `json:&#34;content&#34;`          <span class="comment">// The JSON content of the event.</span>
+}</pre>
+			<p>
+Event represents a single Matrix event.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Event.Body">func (*Event) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/types.go?s=2444:2493#L62">Body</a></h3>
+				<pre>func (event *<a href="index.html#Event">Event</a>) Body() (body <a href="../../../../builtin/index.html#string">string</a>, ok <a href="../../../../builtin/index.html#bool">bool</a>)</pre>
+				<p>
+Body returns the value of the &#34;body&#34; key in the event content if it is
+present and is a string.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Event.MessageType">func (*Event) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/types.go?s=2712:2771#L73">MessageType</a></h3>
+				<pre>func (event *<a href="index.html#Event">Event</a>) MessageType() (msgtype <a href="../../../../builtin/index.html#string">string</a>, ok <a href="../../../../builtin/index.html#bool">bool</a>)</pre>
+				<p>
+MessageType returns the value of the &#34;msgtype&#34; key in the event content if
+it is present and is a string.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="HTMLMessage">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/types.go?s=3509:3695#L105">HTMLMessage</a></h2>
+			<pre>type HTMLMessage struct {
+    Body          <a href="../../../../builtin/index.html#string">string</a> `json:&#34;body&#34;`
+    MsgType       <a href="../../../../builtin/index.html#string">string</a> `json:&#34;msgtype&#34;`
+    Format        <a href="../../../../builtin/index.html#string">string</a> `json:&#34;format&#34;`
+    FormattedBody <a href="../../../../builtin/index.html#string">string</a> `json:&#34;formatted_body&#34;`
+}</pre>
+			<p>
+An HTMLMessage is the contents of a Matrix HTML formated message event.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="GetHTMLMessage">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/types.go?s=3885:3942#L116">GetHTMLMessage</a></h3>
+				<pre>func GetHTMLMessage(msgtype, htmlText <a href="../../../../builtin/index.html#string">string</a>) <a href="index.html#HTMLMessage">HTMLMessage</a></pre>
+				<p>
+GetHTMLMessage returns an HTMLMessage with the body set to a stripped version of the provided HTML, in addition
+to the provided HTML.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="ImageInfo">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/types.go?s=3085:3232#L89">ImageInfo</a></h2>
+			<pre>type ImageInfo struct {
+    Height   <a href="../../../../builtin/index.html#uint">uint</a>   `json:&#34;h&#34;`
+    Width    <a href="../../../../builtin/index.html#uint">uint</a>   `json:&#34;w&#34;`
+    Mimetype <a href="../../../../builtin/index.html#string">string</a> `json:&#34;mimetype&#34;`
+    Size     <a href="../../../../builtin/index.html#uint">uint</a>   `json:&#34;size&#34;`
+}</pre>
+			<p>
+ImageInfo contains info about an image
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ImageMessage">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/types.go?s=3270:3432#L97">ImageMessage</a></h2>
+			<pre>type ImageMessage struct {
+    MsgType <a href="../../../../builtin/index.html#string">string</a>    `json:&#34;msgtype&#34;`
+    Body    <a href="../../../../builtin/index.html#string">string</a>    `json:&#34;body&#34;`
+    URL     <a href="../../../../builtin/index.html#string">string</a>    `json:&#34;url&#34;`
+    Info    <a href="index.html#ImageInfo">ImageInfo</a> `json:&#34;info&#34;`
+}</pre>
+			<p>
+ImageMessage is an m.image event
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="NextBatchStorer">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=1130:1372#L25">NextBatchStorer</a></h2>
+			<pre>type NextBatchStorer interface {
+    <span class="comment">// Save a next_batch token for a given user. Best effort.</span>
+    Save(userID, nextBatch <a href="../../../../builtin/index.html#string">string</a>)
+    <span class="comment">// Load a next_batch token for a given user. Return an empty string if no token exists.</span>
+    Load(userID <a href="../../../../builtin/index.html#string">string</a>) <a href="../../../../builtin/index.html#string">string</a>
+}</pre>
+			<p>
+NextBatchStorer controls loading/saving of next_batch tokens for users
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="OnEventListener">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/worker.go?s=431:464#L6">OnEventListener</a></h2>
+			<pre>type OnEventListener func(*<a href="index.html#Event">Event</a>)</pre>
+			<p>
+OnEventListener can be used with Worker.OnEventType to be informed of incoming events.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Room">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/types.go?s=104:198#L1">Room</a></h2>
+			<pre>type Room struct {
+    ID       <a href="../../../../builtin/index.html#string">string</a>
+    State    map[<a href="../../../../builtin/index.html#string">string</a>]map[<a href="../../../../builtin/index.html#string">string</a>]*<a href="index.html#Event">Event</a>
+    Timeline []<a href="index.html#Event">Event</a>
+}</pre>
+			<p>
+Room represents a single Matrix room.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewRoom">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/types.go?s=1358:1391#L41">NewRoom</a></h3>
+				<pre>func NewRoom(roomID <a href="../../../../builtin/index.html#string">string</a>) *<a href="index.html#Room">Room</a></pre>
+				<p>
+NewRoom creates a new Room with the given ID
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Room.GetMembershipState">func (Room) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/types.go?s=977:1034#L25">GetMembershipState</a></h3>
+				<pre>func (room <a href="index.html#Room">Room</a>) GetMembershipState(userID <a href="../../../../builtin/index.html#string">string</a>) <a href="../../../../builtin/index.html#string">string</a></pre>
+				<p>
+GetMembershipState returns the membership state of the given user ID in this room. If there is
+no entry for this member, &#39;leave&#39; is returned for consistency with left users.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Room.GetStateEvent">func (Room) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/types.go?s=625:697#L17">GetStateEvent</a></h3>
+				<pre>func (room <a href="index.html#Room">Room</a>) GetStateEvent(eventType <a href="../../../../builtin/index.html#string">string</a>, stateKey <a href="../../../../builtin/index.html#string">string</a>) *<a href="index.html#Event">Event</a></pre>
+				<p>
+GetStateEvent returns the state event for the given type/state_key combo, or nil.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Room.UpdateState">func (Room) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/types.go?s=339:381#L8">UpdateState</a></h3>
+				<pre>func (room <a href="index.html#Room">Room</a>) UpdateState(event *<a href="index.html#Event">Event</a>)</pre>
+				<p>
+UpdateState updates the room&#39;s current state with the given Event. This will clobber events based
+on the type/state_key combination.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="StarterLinkMessage">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/types.go?s=4231:4291#L126">StarterLinkMessage</a></h2>
+			<pre>type StarterLinkMessage struct {
+    Body <a href="../../../../builtin/index.html#string">string</a>
+    Link <a href="../../../../builtin/index.html#string">string</a>
+}</pre>
+			<p>
+StarterLinkMessage represents a message with a starter_link custom data.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="StarterLinkMessage.MarshalJSON">func (StarterLinkMessage) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/types.go?s=4362:4419#L132">MarshalJSON</a></h3>
+				<pre>func (m <a href="index.html#StarterLinkMessage">StarterLinkMessage</a>) MarshalJSON() ([]<a href="../../../../builtin/index.html#byte">byte</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+MarshalJSON converts this message into actual event content JSON.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="TextMessage">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/types.go?s=2951:3041#L83">TextMessage</a></h2>
+			<pre>type TextMessage struct {
+    MsgType <a href="../../../../builtin/index.html#string">string</a> `json:&#34;msgtype&#34;`
+    Body    <a href="../../../../builtin/index.html#string">string</a> `json:&#34;body&#34;`
+}</pre>
+			<p>
+TextMessage is the contents of a Matrix formated message event.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Worker">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/worker.go?s=225:339#L1">Worker</a></h2>
+			<pre>type Worker struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Worker processes incoming events and updates the Matrix client&#39;s data structures. It also informs
+any attached listeners of the new events.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Worker.OnEventType">func (*Worker) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/worker.go?s=709:786#L17">OnEventType</a></h3>
+				<pre>func (worker *<a href="index.html#Worker">Worker</a>) OnEventType(eventType <a href="../../../../builtin/index.html#string">string</a>, callback <a href="index.html#OnEventListener">OnEventListener</a>)</pre>
+				<p>
+OnEventType allows callers to be notified when there are new events for the given event type.
+There are no duplicate checks.
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

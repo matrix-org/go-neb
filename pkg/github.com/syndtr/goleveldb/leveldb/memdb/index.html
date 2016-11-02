@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>memdb - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package memdb</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/syndtr/goleveldb/leveldb/memdb"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package memdb provides in-memory key/value database implementation.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+			
+				
+				<dd><a href="index.html#DB">type DB</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#New">func New(cmp comparer.BasicComparer, capacity int) *DB</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DB.Capacity">func (p *DB) Capacity() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DB.Contains">func (p *DB) Contains(key []byte) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DB.Delete">func (p *DB) Delete(key []byte) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DB.Find">func (p *DB) Find(key []byte) (rkey, value []byte, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DB.Free">func (p *DB) Free() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DB.Get">func (p *DB) Get(key []byte) (value []byte, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DB.Len">func (p *DB) Len() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DB.NewIterator">func (p *DB) NewIterator(slice *util.Range) iterator.Iterator</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DB.Put">func (p *DB) Put(key []byte, value []byte) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DB.Reset">func (p *DB) Reset()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DB.Size">func (p *DB) Size() int</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/memdb/memdb.go">memdb.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var (
+    <span id="ErrNotFound">ErrNotFound</span>     = <a href="../errors/index.html">errors</a>.<a href="../errors/index.html#ErrNotFound">ErrNotFound</a>
+    <span id="ErrIterReleased">ErrIterReleased</span> = <a href="../errors/index.html">errors</a>.<a href="../errors/index.html#New">New</a>(&#34;leveldb/memdb: iterator released&#34;)
+)</pre>
+				<p>
+Common errors.
+</p>
+
+			
+		
+		
+		
+			
+			
+			<h2 id="DB">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/memdb/memdb.go?s=3362:3707#L172">DB</a></h2>
+			<pre>type DB struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+DB is an in-memory key/value database.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="New">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/memdb/memdb.go?s=10329:10383#L455">New</a></h3>
+				<pre>func New(cmp <a href="../comparer/index.html">comparer</a>.<a href="../comparer/index.html#BasicComparer">BasicComparer</a>, capacity <a href="../../../../../builtin/index.html#int">int</a>) *<a href="index.html#DB">DB</a></pre>
+				<p>
+New creates a new initialized in-memory key/value DB. The capacity
+is the initial key/value buffer capacity. The capacity is advisory,
+not enforced.
+</p>
+<p>
+This DB is append-only, deleting an entry would remove entry node but not
+reclaim KV buffer.
+</p>
+<p>
+The returned DB instance is safe for concurrent use.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="DB.Capacity">func (*DB) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/memdb/memdb.go?s=8906:8933#L398">Capacity</a></h3>
+				<pre>func (p *<a href="index.html#DB">DB</a>) Capacity() <a href="../../../../../builtin/index.html#int">int</a></pre>
+				<p>
+Capacity returns keys/values buffer capacity.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DB.Contains">func (*DB) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/memdb/memdb.go?s=6701:6739#L334">Contains</a></h3>
+				<pre>func (p *<a href="index.html#DB">DB</a>) Contains(key []<a href="../../../../../builtin/index.html#byte">byte</a>) <a href="../../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Contains returns true if the given key are in the DB.
+</p>
+<p>
+It is safe to modify the contents of the arguments after Contains returns.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DB.Delete">func (*DB) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/memdb/memdb.go?s=6193:6230#L311">Delete</a></h3>
+				<pre>func (p *<a href="index.html#DB">DB</a>) Delete(key []<a href="../../../../../builtin/index.html#byte">byte</a>) <a href="../../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Delete deletes the value for the given key. It returns ErrNotFound if
+the DB does not contain the key.
+</p>
+<p>
+It is safe to modify the contents of the arguments after Delete returns.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DB.Find">func (*DB) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/memdb/memdb.go?s=7654:7715#L364">Find</a></h3>
+				<pre>func (p *<a href="index.html#DB">DB</a>) Find(key []<a href="../../../../../builtin/index.html#byte">byte</a>) (rkey, value []<a href="../../../../../builtin/index.html#byte">byte</a>, err <a href="../../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Find finds key/value pair whose key is greater than or equal to the
+given key. It returns ErrNotFound if the table doesn&#39;t contain
+such pair.
+</p>
+<p>
+The caller should not modify the contents of the returned slice, but
+it is safe to modify the contents of the argument after Find returns.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DB.Free">func (*DB) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/memdb/memdb.go?s=9319:9342#L414">Free</a></h3>
+				<pre>func (p *<a href="index.html#DB">DB</a>) Free() <a href="../../../../../builtin/index.html#int">int</a></pre>
+				<p>
+Free returns keys/values free buffer before need to grow.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DB.Get">func (*DB) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/memdb/memdb.go?s=7079:7133#L346">Get</a></h3>
+				<pre>func (p *<a href="index.html#DB">DB</a>) Get(key []<a href="../../../../../builtin/index.html#byte">byte</a>) (value []<a href="../../../../../builtin/index.html#byte">byte</a>, err <a href="../../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Get gets the value for the given key. It returns error.ErrNotFound if the
+DB does not contain the key.
+</p>
+<p>
+The caller should not modify the contents of the returned slice, but
+it is safe to modify the contents of the argument after Get returns.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DB.Len">func (*DB) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/memdb/memdb.go?s=9470:9492#L421">Len</a></h3>
+				<pre>func (p *<a href="index.html#DB">DB</a>) Len() <a href="../../../../../builtin/index.html#int">int</a></pre>
+				<p>
+Len returns the number of entries in the DB.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DB.NewIterator">func (*DB) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/memdb/memdb.go?s=8754:8815#L393">NewIterator</a></h3>
+				<pre>func (p *<a href="index.html#DB">DB</a>) NewIterator(slice *<a href="../util/index.html">util</a>.<a href="../util/index.html#Range">Range</a>) <a href="../iterator/index.html">iterator</a>.<a href="../iterator/index.html#Iterator">Iterator</a></pre>
+				<p>
+NewIterator returns an iterator of the DB.
+The returned iterator is not safe for concurrent use, but it is safe to use
+multiple iterators concurrently, with each in a dedicated goroutine.
+It is also safe to use an iterator concurrently with modifying its
+underlying DB. However, the resultant key/value pairs are not guaranteed
+to be a consistent snapshot of the DB at a particular point in time.
+</p>
+<p>
+Slice allows slicing the iterator to only contains keys in the given
+range. A nil Range.Start is treated as a key before all keys in the
+DB. And a nil Range.Limit is treated as a key after all keys in
+the DB.
+</p>
+<p>
+The iterator must be released after use, by calling Release method.
+</p>
+<p>
+Also read Iterator documentation of the leveldb/iterator package.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DB.Put">func (*DB) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/memdb/memdb.go?s=5101:5149#L267">Put</a></h3>
+				<pre>func (p *<a href="index.html#DB">DB</a>) Put(key []<a href="../../../../../builtin/index.html#byte">byte</a>, value []<a href="../../../../../builtin/index.html#byte">byte</a>) <a href="../../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Put sets the value for the given key. It overwrites any previous value
+for that key; a DB is not a multi-map.
+</p>
+<p>
+It is safe to modify the contents of the arguments after Put returns.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DB.Reset">func (*DB) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/memdb/memdb.go?s=9618:9638#L428">Reset</a></h3>
+				<pre>func (p *<a href="index.html#DB">DB</a>) Reset()</pre>
+				<p>
+Reset resets the DB to initial empty state. Allows reuse the buffer.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DB.Size">func (*DB) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/memdb/memdb.go?s=9176:9199#L407">Size</a></h3>
+				<pre>func (p *<a href="index.html#DB">DB</a>) Size() <a href="../../../../../builtin/index.html#int">int</a></pre>
+				<p>
+Size returns sum of keys and values length. Note that deleted
+key/value will not be accounted for, but it will still consume
+the buffer, since the buffer is append only.
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,4672 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>prometheus - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package prometheus</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/prometheus/client_golang/prometheus"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+				<dd><a href="index.html#pkg-examples" class="examplesLink">Examples</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-subdirectories">Subdirectories</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package prometheus provides metrics primitives to instrument code for
+monitoring. It also offers a registry for metrics. Sub-packages allow to
+expose the registered metrics via HTTP (package promhttp) or push them to a
+Pushgateway (package push).
+</p>
+<p>
+All exported functions and methods are safe to be used concurrently unless
+specified otherwise.
+</p>
+<h3 id="hdr-A_Basic_Example">A Basic Example</h3>
+<p>
+As a starting point, a very basic usage example:
+</p>
+<pre>package main
+
+import (
+	&#34;net/http&#34;
+
+	&#34;github.com/prometheus/client_golang/prometheus&#34;
+	&#34;github.com/prometheus/client_golang/prometheus/promhttp&#34;
+)
+
+var (
+	cpuTemp = prometheus.NewGauge(prometheus.GaugeOpts{
+		Name: &#34;cpu_temperature_celsius&#34;,
+		Help: &#34;Current temperature of the CPU.&#34;,
+	})
+	hdFailures = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: &#34;hd_errors_total&#34;,
+			Help: &#34;Number of hard-disk errors.&#34;,
+		},
+		[]string{&#34;device&#34;},
+	)
+)
+
+func init() {
+	// Metrics have to be registered to be exposed:
+	prometheus.MustRegister(cpuTemp)
+	prometheus.MustRegister(hdFailures)
+}
+
+func main() {
+	cpuTemp.Set(65.3)
+	hdFailures.With(prometheus.Labels{&#34;device&#34;:&#34;/dev/sda&#34;}).Inc()
+
+	// The Handler function provides a default handler to expose metrics
+	// via an HTTP server. &#34;/metrics&#34; is the usual endpoint for that.
+	http.Handle(&#34;/metrics&#34;, promhttp.Handler())
+	http.ListenAndServe(&#34;:8080&#34;, nil)
+}
+</pre>
+<p>
+This is a complete program that exports two metrics, a Gauge and a Counter,
+the latter with a label attached to turn it into a (one-dimensional) vector.
+</p>
+<h3 id="hdr-Metrics">Metrics</h3>
+<p>
+The number of exported identifiers in this package might appear a bit
+overwhelming. Hovever, in addition to the basic plumbing shown in the example
+above, you only need to understand the different metric types and their
+vector versions for basic usage.
+</p>
+<p>
+Above, you have already touched the Counter and the Gauge. There are two more
+advanced metric types: the Summary and Histogram. A more thorough description
+of those four metric types can be found in the Prometheus docs:
+<a href="https://prometheus.io/docs/concepts/metric_types/">https://prometheus.io/docs/concepts/metric_types/</a>
+</p>
+<p>
+A fifth &#34;type&#34; of metric is Untyped. It behaves like a Gauge, but signals the
+Prometheus server not to assume anything about its type.
+</p>
+<p>
+In addition to the fundamental metric types Gauge, Counter, Summary,
+Histogram, and Untyped, a very important part of the Prometheus data model is
+the partitioning of samples along dimensions called labels, which results in
+metric vectors. The fundamental types are GaugeVec, CounterVec, SummaryVec,
+HistogramVec, and UntypedVec.
+</p>
+<p>
+While only the fundamental metric types implement the Metric interface, both
+the metrics and their vector versions implement the Collector interface. A
+Collector manages the collection of a number of Metrics, but for convenience,
+a Metric can also “collect itself”. Note that Gauge, Counter, Summary,
+Histogram, and Untyped are interfaces themselves while GaugeVec, CounterVec,
+SummaryVec, HistogramVec, and UntypedVec are not.
+</p>
+<p>
+To create instances of Metrics and their vector versions, you need a suitable
+…Opts struct, i.e. GaugeOpts, CounterOpts, SummaryOpts,
+HistogramOpts, or UntypedOpts.
+</p>
+<h3 id="hdr-Custom_Collectors_and_constant_Metrics">Custom Collectors and constant Metrics</h3>
+<p>
+While you could create your own implementations of Metric, most likely you
+will only ever implement the Collector interface on your own. At a first
+glance, a custom Collector seems handy to bundle Metrics for common
+registration (with the prime example of the different metric vectors above,
+which bundle all the metrics of the same name but with different labels).
+</p>
+<p>
+There is a more involved use case, too: If you already have metrics
+available, created outside of the Prometheus context, you don&#39;t need the
+interface of the various Metric types. You essentially want to mirror the
+existing numbers into Prometheus Metrics during collection. An own
+implementation of the Collector interface is perfect for that. You can create
+Metric instances “on the fly” using NewConstMetric, NewConstHistogram, and
+NewConstSummary (and their respective Must… versions). That will happen in
+the Collect method. The Describe method has to return separate Desc
+instances, representative of the “throw-away” metrics to be created
+later. NewDesc comes in handy to create those Desc instances.
+</p>
+<p>
+The Collector example illustrates the use case. You can also look at the
+source code of the processCollector (mirroring process metrics), the
+goCollector (mirroring Go metrics), or the expvarCollector (mirroring expvar
+metrics) as examples that are used in this package itself.
+</p>
+<p>
+If you just need to call a function to get a single float value to collect as
+a metric, GaugeFunc, CounterFunc, or UntypedFunc might be interesting
+shortcuts.
+</p>
+<h3 id="hdr-Advanced_Uses_of_the_Registry">Advanced Uses of the Registry</h3>
+<p>
+While MustRegister is the by far most common way of registering a Collector,
+sometimes you might want to handle the errors the registration might
+cause. As suggested by the name, MustRegister panics if an error occurs. With
+the Register function, the error is returned and can be handled.
+</p>
+<p>
+An error is returned if the registered Collector is incompatible or
+inconsistent with already registered metrics. The registry aims for
+consistency of the collected metrics according to the Prometheus data
+model. Inconsistencies are ideally detected at registration time, not at
+collect time. The former will usually be detected at start-up time of a
+program, while the latter will only happen at scrape time, possibly not even
+on the first scrape if the inconsistency only becomes relevant later. That is
+the main reason why a Collector and a Metric have to describe themselves to
+the registry.
+</p>
+<p>
+So far, everything we did operated on the so-called default registry, as it
+can be found in the global DefaultRegistry variable. With NewRegistry, you
+can create a custom registry, or you can even implement the Registerer or
+Gatherer interfaces yourself. The methods Register and Unregister work in
+the same way on a custom registry as the global functions Register and
+Unregister on the default registry.
+</p>
+<p>
+There are a number of uses for custom registries: You can use registries
+with special properties, see NewPedanticRegistry. You can avoid global state,
+as it is imposed by the DefaultRegistry. You can use multiple registries at
+the same time to expose different metrics in different ways. You can use
+separate registries for testing purposes.
+</p>
+<p>
+Also note that the DefaultRegistry comes registered with a Collector for Go
+runtime metrics (via NewGoCollector) and a Collector for process metrics (via
+NewProcessCollector). With a custom registry, you are in control and decide
+yourself about the Collectors to register.
+</p>
+<h3 id="hdr-HTTP_Exposition">HTTP Exposition</h3>
+<p>
+The Registry implements the Gatherer interface. The caller of the Gather
+method can then expose the gathered metrics in some way. Usually, the metrics
+are served via HTTP on the /metrics endpoint. That&#39;s happening in the example
+above. The tools to expose metrics via HTTP are in the promhttp
+sub-package. (The top-level functions in the prometheus package are
+deprecated.)
+</p>
+<h3 id="hdr-Pushing_to_the_Pushgateway">Pushing to the Pushgateway</h3>
+<p>
+Function for pushing to the Pushgateway can be found in the push sub-package.
+</p>
+<h3 id="hdr-Other_Means_of_Exposition">Other Means of Exposition</h3>
+<p>
+More ways of exposing metrics can easily be added. Sending metrics to
+Graphite would be an example that will soon be implemented.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="index.html#pkg-constants">Constants</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+				
+				<dd><a href="index.html#BuildFQName">func BuildFQName(namespace, subsystem, name string) string</a></dd>
+			
+				
+				<dd><a href="index.html#ExponentialBuckets">func ExponentialBuckets(start, factor float64, count int) []float64</a></dd>
+			
+				
+				<dd><a href="index.html#Handler">func Handler() http.Handler</a></dd>
+			
+				
+				<dd><a href="index.html#InstrumentHandler">func InstrumentHandler(handlerName string, handler http.Handler) http.HandlerFunc</a></dd>
+			
+				
+				<dd><a href="index.html#InstrumentHandlerFunc">func InstrumentHandlerFunc(handlerName string, handlerFunc func(http.ResponseWriter, *http.Request)) http.HandlerFunc</a></dd>
+			
+				
+				<dd><a href="index.html#InstrumentHandlerFuncWithOpts">func InstrumentHandlerFuncWithOpts(opts SummaryOpts, handlerFunc func(http.ResponseWriter, *http.Request)) http.HandlerFunc</a></dd>
+			
+				
+				<dd><a href="index.html#InstrumentHandlerWithOpts">func InstrumentHandlerWithOpts(opts SummaryOpts, handler http.Handler) http.HandlerFunc</a></dd>
+			
+				
+				<dd><a href="index.html#LinearBuckets">func LinearBuckets(start, width float64, count int) []float64</a></dd>
+			
+				
+				<dd><a href="index.html#MustRegister">func MustRegister(cs ...Collector)</a></dd>
+			
+				
+				<dd><a href="index.html#Register">func Register(c Collector) error</a></dd>
+			
+				
+				<dd><a href="index.html#SetMetricFamilyInjectionHook">func SetMetricFamilyInjectionHook(hook func() []*dto.MetricFamily)</a></dd>
+			
+				
+				<dd><a href="index.html#UninstrumentedHandler">func UninstrumentedHandler() http.Handler</a></dd>
+			
+				
+				<dd><a href="index.html#Unregister">func Unregister(c Collector) bool</a></dd>
+			
+			
+				
+				<dd><a href="index.html#AlreadyRegisteredError">type AlreadyRegisteredError</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#AlreadyRegisteredError.Error">func (err AlreadyRegisteredError) Error() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Collector">type Collector</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MustRegisterOrGet">func MustRegisterOrGet(c Collector) Collector</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewExpvarCollector">func NewExpvarCollector(exports map[string]*Desc) Collector</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewGoCollector">func NewGoCollector() Collector</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewProcessCollector">func NewProcessCollector(pid int, namespace string) Collector</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewProcessCollectorPIDFn">func NewProcessCollectorPIDFn(pidFn func() (int, error), namespace string) Collector</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#RegisterOrGet">func RegisterOrGet(c Collector) (Collector, error)</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Counter">type Counter</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewCounter">func NewCounter(opts CounterOpts) Counter</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#CounterFunc">type CounterFunc</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewCounterFunc">func NewCounterFunc(opts CounterOpts, function func() float64) CounterFunc</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#CounterOpts">type CounterOpts</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#CounterVec">type CounterVec</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewCounterVec">func NewCounterVec(opts CounterOpts, labelNames []string) *CounterVec</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CounterVec.GetMetricWith">func (m *CounterVec) GetMetricWith(labels Labels) (Counter, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CounterVec.GetMetricWithLabelValues">func (m *CounterVec) GetMetricWithLabelValues(lvs ...string) (Counter, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CounterVec.With">func (m *CounterVec) With(labels Labels) Counter</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CounterVec.WithLabelValues">func (m *CounterVec) WithLabelValues(lvs ...string) Counter</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Desc">type Desc</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewDesc">func NewDesc(fqName, help string, variableLabels []string, constLabels Labels) *Desc</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewInvalidDesc">func NewInvalidDesc(err error) *Desc</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Desc.String">func (d *Desc) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Gatherer">type Gatherer</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#GathererFunc">type GathererFunc</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#GathererFunc.Gather">func (gf GathererFunc) Gather() ([]*dto.MetricFamily, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Gatherers">type Gatherers</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Gatherers.Gather">func (gs Gatherers) Gather() ([]*dto.MetricFamily, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Gauge">type Gauge</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewGauge">func NewGauge(opts GaugeOpts) Gauge</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#GaugeFunc">type GaugeFunc</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewGaugeFunc">func NewGaugeFunc(opts GaugeOpts, function func() float64) GaugeFunc</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#GaugeOpts">type GaugeOpts</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#GaugeVec">type GaugeVec</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewGaugeVec">func NewGaugeVec(opts GaugeOpts, labelNames []string) *GaugeVec</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#GaugeVec.GetMetricWith">func (m *GaugeVec) GetMetricWith(labels Labels) (Gauge, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#GaugeVec.GetMetricWithLabelValues">func (m *GaugeVec) GetMetricWithLabelValues(lvs ...string) (Gauge, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#GaugeVec.With">func (m *GaugeVec) With(labels Labels) Gauge</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#GaugeVec.WithLabelValues">func (m *GaugeVec) WithLabelValues(lvs ...string) Gauge</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Histogram">type Histogram</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewHistogram">func NewHistogram(opts HistogramOpts) Histogram</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#HistogramOpts">type HistogramOpts</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#HistogramVec">type HistogramVec</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewHistogramVec">func NewHistogramVec(opts HistogramOpts, labelNames []string) *HistogramVec</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#HistogramVec.GetMetricWith">func (m *HistogramVec) GetMetricWith(labels Labels) (Histogram, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#HistogramVec.GetMetricWithLabelValues">func (m *HistogramVec) GetMetricWithLabelValues(lvs ...string) (Histogram, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#HistogramVec.With">func (m *HistogramVec) With(labels Labels) Histogram</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#HistogramVec.WithLabelValues">func (m *HistogramVec) WithLabelValues(lvs ...string) Histogram</a></dd>
+				
+			
+				
+				<dd><a href="index.html#LabelPairSorter">type LabelPairSorter</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LabelPairSorter.Len">func (s LabelPairSorter) Len() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LabelPairSorter.Less">func (s LabelPairSorter) Less(i, j int) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LabelPairSorter.Swap">func (s LabelPairSorter) Swap(i, j int)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Labels">type Labels</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Metric">type Metric</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MustNewConstHistogram">func MustNewConstHistogram(desc *Desc, count uint64, sum float64, buckets map[float64]uint64, labelValues ...string) Metric</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MustNewConstMetric">func MustNewConstMetric(desc *Desc, valueType ValueType, value float64, labelValues ...string) Metric</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MustNewConstSummary">func MustNewConstSummary(desc *Desc, count uint64, sum float64, quantiles map[float64]float64, labelValues ...string) Metric</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewConstHistogram">func NewConstHistogram(desc *Desc, count uint64, sum float64, buckets map[float64]uint64, labelValues ...string) (Metric, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewConstMetric">func NewConstMetric(desc *Desc, valueType ValueType, value float64, labelValues ...string) (Metric, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewConstSummary">func NewConstSummary(desc *Desc, count uint64, sum float64, quantiles map[float64]float64, labelValues ...string) (Metric, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewInvalidMetric">func NewInvalidMetric(desc *Desc, err error) Metric</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#MetricVec">type MetricVec</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MetricVec.Collect">func (m *MetricVec) Collect(ch chan&lt;- Metric)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MetricVec.Delete">func (m *MetricVec) Delete(labels Labels) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MetricVec.DeleteLabelValues">func (m *MetricVec) DeleteLabelValues(lvs ...string) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MetricVec.Describe">func (m *MetricVec) Describe(ch chan&lt;- *Desc)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MetricVec.GetMetricWith">func (m *MetricVec) GetMetricWith(labels Labels) (Metric, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MetricVec.GetMetricWithLabelValues">func (m *MetricVec) GetMetricWithLabelValues(lvs ...string) (Metric, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MetricVec.Reset">func (m *MetricVec) Reset()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MetricVec.With">func (m *MetricVec) With(labels Labels) Metric</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MetricVec.WithLabelValues">func (m *MetricVec) WithLabelValues(lvs ...string) Metric</a></dd>
+				
+			
+				
+				<dd><a href="index.html#MultiError">type MultiError</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MultiError.Error">func (errs MultiError) Error() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MultiError.MaybeUnwrap">func (errs MultiError) MaybeUnwrap() error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Opts">type Opts</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Registerer">type Registerer</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Registry">type Registry</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewPedanticRegistry">func NewPedanticRegistry() *Registry</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewRegistry">func NewRegistry() *Registry</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Registry.Gather">func (r *Registry) Gather() ([]*dto.MetricFamily, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Registry.MustRegister">func (r *Registry) MustRegister(cs ...Collector)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Registry.Register">func (r *Registry) Register(c Collector) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Registry.Unregister">func (r *Registry) Unregister(c Collector) bool</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Summary">type Summary</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewSummary">func NewSummary(opts SummaryOpts) Summary</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#SummaryOpts">type SummaryOpts</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#SummaryVec">type SummaryVec</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewSummaryVec">func NewSummaryVec(opts SummaryOpts, labelNames []string) *SummaryVec</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SummaryVec.GetMetricWith">func (m *SummaryVec) GetMetricWith(labels Labels) (Summary, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SummaryVec.GetMetricWithLabelValues">func (m *SummaryVec) GetMetricWithLabelValues(lvs ...string) (Summary, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SummaryVec.With">func (m *SummaryVec) With(labels Labels) Summary</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SummaryVec.WithLabelValues">func (m *SummaryVec) WithLabelValues(lvs ...string) Summary</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Untyped">type Untyped</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewUntyped">func NewUntyped(opts UntypedOpts) Untyped</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#UntypedFunc">type UntypedFunc</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewUntypedFunc">func NewUntypedFunc(opts UntypedOpts, function func() float64) UntypedFunc</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#UntypedOpts">type UntypedOpts</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#UntypedVec">type UntypedVec</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewUntypedVec">func NewUntypedVec(opts UntypedOpts, labelNames []string) *UntypedVec</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#UntypedVec.GetMetricWith">func (m *UntypedVec) GetMetricWith(labels Labels) (Untyped, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#UntypedVec.GetMetricWithLabelValues">func (m *UntypedVec) GetMetricWithLabelValues(lvs ...string) (Untyped, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#UntypedVec.With">func (m *UntypedVec) With(labels Labels) Untyped</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#UntypedVec.WithLabelValues">func (m *UntypedVec) WithLabelValues(lvs ...string) Untyped</a></dd>
+				
+			
+				
+				<dd><a href="index.html#ValueType">type ValueType</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+		<div id="pkg-examples">
+			<h4>Examples</h4>
+			<dl>
+			
+			<dd><a class="exampleLink" href="index.html#example_AlreadyRegisteredError">AlreadyRegisteredError</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Collector">Collector</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Counter">Counter</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_CounterVec">CounterVec</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Gatherers">Gatherers</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Gauge">Gauge</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_GaugeFunc">GaugeFunc</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_GaugeVec">GaugeVec</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Histogram">Histogram</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_InstrumentHandler">InstrumentHandler</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_LabelPairSorter">LabelPairSorter</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_NewConstHistogram">NewConstHistogram</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_NewConstSummary">NewConstSummary</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_NewExpvarCollector">NewExpvarCollector</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Register">Register</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Summary">Summary</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_SummaryVec">SummaryVec</a></dd>
+			
+			</dl>
+		</div>
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/collector.go">collector.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/counter.go">counter.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/desc.go">desc.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/doc.go">doc.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/expvar_collector.go">expvar_collector.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/fnv.go">fnv.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/gauge.go">gauge.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/go_collector.go">go_collector.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/histogram.go">histogram.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/http.go">http.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/metric.go">metric.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/process_collector.go">process_collector.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/registry.go">registry.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/summary.go">summary.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/untyped.go">untyped.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/value.go">value.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/vec.go">vec.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const (
+    <span class="comment">// DefMaxAge is the default duration for which observations stay</span>
+    <span class="comment">// relevant.</span>
+    <span id="DefMaxAge">DefMaxAge</span> <a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Duration">Duration</a> = 10 * <a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Minute">Minute</a>
+    <span class="comment">// DefAgeBuckets is the default number of buckets used to calculate the</span>
+    <span class="comment">// age of observations.</span>
+    <span id="DefAgeBuckets">DefAgeBuckets</span> = 5
+    <span class="comment">// DefBufCap is the standard buffer size for collecting Summary observations.</span>
+    <span id="DefBufCap">DefBufCap</span> = 500
+)</pre>
+				<p>
+Default values for SummaryOpts.
+</p>
+
+			
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var (
+    <span id="DefaultRegisterer">DefaultRegisterer</span> <a href="index.html#Registerer">Registerer</a> = defaultRegistry
+    <span id="DefaultGatherer">DefaultGatherer</span>   <a href="index.html#Gatherer">Gatherer</a>   = defaultRegistry
+)</pre>
+				<p>
+DefaultRegisterer and DefaultGatherer are the implementations of the
+Registerer and Gatherer interface a number of convenience functions in this
+package act on. Initially, both variables point to the same Registry, which
+has a process collector (see NewProcessCollector) and a Go collector (see
+NewGoCollector) already registered. This approach to keep default instances
+as global state mirrors the approach of other packages in the Go standard
+library. Note that there are caveats. Change the variables with caution and
+only if you understand the consequences. Users who want to avoid global state
+altogether should not use the convenience function and act on custom
+instances instead.
+</p>
+
+			
+				<pre>var (
+    <span id="DefBuckets">DefBuckets</span> = []<a href="../../../../builtin/index.html#float64">float64</a>{.005, .01, .025, .05, .1, .25, .5, 1, 2.5, 5, 10}
+)</pre>
+				<p>
+DefBuckets are the default Histogram buckets. The default buckets are
+tailored to broadly measure the response time (in seconds) of a network
+service. Most likely, however, you will be required to define buckets
+customized to your use case.
+</p>
+
+			
+				<pre>var (
+    <span id="DefObjectives">DefObjectives</span> = map[<a href="../../../../builtin/index.html#float64">float64</a>]<a href="../../../../builtin/index.html#float64">float64</a>{0.5: 0.05, 0.9: 0.01, 0.99: 0.001}
+)</pre>
+				<p>
+DefObjectives are the default Summary quantile values.
+</p>
+
+			
+		
+		
+			
+			
+			<h2 id="BuildFQName">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/metric.go?s=4726:4784#L96">BuildFQName</a></h2>
+			<pre>func BuildFQName(namespace, subsystem, name <a href="../../../../builtin/index.html#string">string</a>) <a href="../../../../builtin/index.html#string">string</a></pre>
+			<p>
+BuildFQName joins the given three name components by &#34;_&#34;. Empty name
+components are ignored. If the name parameter itself is empty, an empty
+string is returned, no matter what. Metric implementations included in this
+library use this function internally to generate the fully-qualified metric
+name from the name component in their Opts. Users of the library will only
+need this function if they implement their own Metric or instantiate a Desc
+(with NewDesc) directly.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ExponentialBuckets">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/histogram.go?s=3335:3402#L82">ExponentialBuckets</a></h2>
+			<pre>func ExponentialBuckets(start, factor <a href="../../../../builtin/index.html#float64">float64</a>, count <a href="../../../../builtin/index.html#int">int</a>) []<a href="../../../../builtin/index.html#float64">float64</a></pre>
+			<p>
+ExponentialBuckets creates &#39;count&#39; buckets, where the lowest bucket has an
+upper bound of &#39;start&#39; and each following bucket&#39;s upper bound is &#39;factor&#39;
+times the previous bucket&#39;s upper bound. The final +Inf bucket is not counted
+and not included in the returned slice. The returned slice is meant to be
+used for the Buckets field of HistogramOpts.
+</p>
+<p>
+The function panics if &#39;count&#39; is 0 or negative, if &#39;start&#39; is 0 or negative,
+or if &#39;factor&#39; is less than or equal 1.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Handler">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/http.go?s=1756:1783#L56">Handler</a></h2>
+			<pre>func Handler() <a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Handler">Handler</a></pre>
+			<p>
+Handler returns an HTTP handler for the DefaultGatherer. It is
+already instrumented with InstrumentHandler (using &#34;prometheus&#34; as handler
+name).
+</p>
+<p>
+Deprecated: Please note the issues described in the doc comment of
+InstrumentHandler. You might want to consider using promhttp.Handler instead
+(which is non instrumented).
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="InstrumentHandler">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/http.go?s=5512:5593#L168">InstrumentHandler</a></h2>
+			<pre>func InstrumentHandler(handlerName <a href="../../../../builtin/index.html#string">string</a>, handler <a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Handler">Handler</a>) <a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#HandlerFunc">HandlerFunc</a></pre>
+			<p>
+InstrumentHandler wraps the given HTTP handler for instrumentation. It
+registers four metric collectors (if not already done) and reports HTTP
+metrics to the (newly or already) registered collectors: http_requests_total
+(CounterVec), http_request_duration_microseconds (Summary),
+http_request_size_bytes (Summary), http_response_size_bytes (Summary). Each
+has a constant label named &#34;handler&#34; with the provided handlerName as
+value. http_requests_total is a metric vector partitioned by HTTP method
+(label name &#34;method&#34;) and HTTP status code (label name &#34;code&#34;).
+</p>
+<p>
+Deprecated: InstrumentHandler has several issues:
+</p>
+<p>
+- It uses Summaries rather than Histograms. Summaries are not useful if
+aggregation across multiple instances is required.
+</p>
+<p>
+- It uses microseconds as unit, which is deprecated and should be replaced by
+seconds.
+</p>
+<p>
+- The size of the request is calculated in a separate goroutine. Since this
+calculator requires access to the request header, it creates a race with
+any writes to the header performed during request handling.
+httputil.ReverseProxy is a prominent example for a handler
+performing such writes.
+</p>
+<p>
+Upcoming versions of this package will provide ways of instrumenting HTTP
+handlers that are more flexible and have fewer issues. Please prefer direct
+instrumentation in the meantime.
+</p>
+
+			<div id="example_InstrumentHandler" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+<span class="comment">// Handle the &#34;/doc&#34; endpoint with the standard http.FileServer handler.</span>
+<span class="comment">// By wrapping the handler with InstrumentHandler, request count,</span>
+<span class="comment">// request and response sizes, and request latency are automatically</span>
+<span class="comment">// exported to Prometheus, partitioned by HTTP status code and method</span>
+<span class="comment">// and by the handler name (here &#34;fileserver&#34;).</span>
+http.Handle(&#34;/doc&#34;, prometheus.InstrumentHandler(
+    &#34;fileserver&#34;, http.FileServer(http.Dir(&#34;/usr/share/doc&#34;)),
+))
+<span class="comment">// The Prometheus handler still has to be registered to handle the</span>
+<span class="comment">// &#34;/metrics&#34; endpoint. The handler returned by prometheus.Handler() is</span>
+<span class="comment">// already instrumented - with &#34;prometheus&#34; as the handler name. In this</span>
+<span class="comment">// example, we want the handler name to be &#34;metrics&#34;, so we instrument</span>
+<span class="comment">// the uninstrumented Prometheus handler ourselves.</span>
+http.Handle(&#34;/metrics&#34;, prometheus.InstrumentHandler(
+    &#34;metrics&#34;, prometheus.UninstrumentedHandler(),
+))
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+
+		
+			
+			
+			<h2 id="InstrumentHandlerFunc">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/http.go?s=5927:6044#L178">InstrumentHandlerFunc</a></h2>
+			<pre>func InstrumentHandlerFunc(handlerName <a href="../../../../builtin/index.html#string">string</a>, handlerFunc func(<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#ResponseWriter">ResponseWriter</a>, *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Request">Request</a>)) <a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#HandlerFunc">HandlerFunc</a></pre>
+			<p>
+InstrumentHandlerFunc wraps the given function for instrumentation. It
+otherwise works in the same way as InstrumentHandler (and shares the same
+issues).
+</p>
+<p>
+Deprecated: InstrumentHandlerFunc is deprecated for the same reasons as
+InstrumentHandler is.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="InstrumentHandlerFuncWithOpts">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/http.go?s=8132:8255#L227">InstrumentHandlerFuncWithOpts</a></h2>
+			<pre>func InstrumentHandlerFuncWithOpts(opts <a href="index.html#SummaryOpts">SummaryOpts</a>, handlerFunc func(<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#ResponseWriter">ResponseWriter</a>, *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Request">Request</a>)) <a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#HandlerFunc">HandlerFunc</a></pre>
+			<p>
+InstrumentHandlerFuncWithOpts works like InstrumentHandlerFunc (and shares
+the same issues) but provides more flexibility (at the cost of a more complex
+call syntax). See InstrumentHandlerWithOpts for details how the provided
+SummaryOpts are used.
+</p>
+<p>
+Deprecated: InstrumentHandlerFuncWithOpts is deprecated for the same reasons
+as InstrumentHandler is.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="InstrumentHandlerWithOpts">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/http.go?s=7605:7692#L216">InstrumentHandlerWithOpts</a></h2>
+			<pre>func InstrumentHandlerWithOpts(opts <a href="index.html#SummaryOpts">SummaryOpts</a>, handler <a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Handler">Handler</a>) <a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#HandlerFunc">HandlerFunc</a></pre>
+			<p>
+InstrumentHandlerWithOpts works like InstrumentHandler (and shares the same
+issues) but provides more flexibility (at the cost of a more complex call
+syntax). As InstrumentHandler, this function registers four metric
+collectors, but it uses the provided SummaryOpts to create them. However, the
+fields &#34;Name&#34; and &#34;Help&#34; in the SummaryOpts are ignored. &#34;Name&#34; is replaced
+by &#34;requests_total&#34;, &#34;request_duration_microseconds&#34;, &#34;request_size_bytes&#34;,
+and &#34;response_size_bytes&#34;, respectively. &#34;Help&#34; is replaced by an appropriate
+help string. The names of the variable labels of the http_requests_total
+CounterVec are &#34;method&#34; (get, post, etc.), and &#34;code&#34; (HTTP status code).
+</p>
+<p>
+If InstrumentHandlerWithOpts is called as follows, it mimics exactly the
+behavior of InstrumentHandler:
+</p>
+<pre>prometheus.InstrumentHandlerWithOpts(
+    prometheus.SummaryOpts{
+         Subsystem:   &#34;http&#34;,
+         ConstLabels: prometheus.Labels{&#34;handler&#34;: handlerName},
+    },
+    handler,
+)
+</pre>
+<p>
+Technical detail: &#34;requests_total&#34; is a CounterVec, not a SummaryVec, so it
+cannot use SummaryOpts. Instead, a CounterOpts struct is created internally,
+and all its fields are set to the equally named fields in the provided
+SummaryOpts.
+</p>
+<p>
+Deprecated: InstrumentHandlerWithOpts is deprecated for the same reasons as
+InstrumentHandler is.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="LinearBuckets">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/histogram.go?s=2594:2655#L62">LinearBuckets</a></h2>
+			<pre>func LinearBuckets(start, width <a href="../../../../builtin/index.html#float64">float64</a>, count <a href="../../../../builtin/index.html#int">int</a>) []<a href="../../../../builtin/index.html#float64">float64</a></pre>
+			<p>
+LinearBuckets creates &#39;count&#39; buckets, each &#39;width&#39; wide, where the lowest
+bucket has an upper bound of &#39;start&#39;. The final +Inf bucket is not counted
+and not included in the returned slice. The returned slice is meant to be
+used for the Buckets field of HistogramOpts.
+</p>
+<p>
+The function panics if &#39;count&#39; is zero or negative.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MustRegister">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/registry.go?s=6314:6348#L141">MustRegister</a></h2>
+			<pre>func MustRegister(cs ...<a href="index.html#Collector">Collector</a>)</pre>
+			<p>
+MustRegister registers the provided Collectors with the DefaultRegisterer and
+panics if any error occurs.
+</p>
+<p>
+MustRegister is a shortcut for DefaultRegisterer.MustRegister(cs...). See
+there for more details.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Register">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/registry.go?s=6019:6051#L132">Register</a></h2>
+			<pre>func Register(c <a href="index.html#Collector">Collector</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+			<p>
+Register registers the provided Collector with the DefaultRegisterer.
+</p>
+<p>
+Register is a shortcut for DefaultRegisterer.Register(c). See there for more
+details.
+</p>
+
+			<div id="example_Register" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code"><span class="comment">// Imagine you have a worker pool and want to count the tasks completed.</span>
+taskCounter := prometheus.NewCounter(prometheus.CounterOpts{
+    Subsystem: &#34;worker_pool&#34;,
+    Name:      &#34;completed_tasks_total&#34;,
+    Help:      &#34;Total number of tasks completed.&#34;,
+})
+<span class="comment">// This will register fine.</span>
+if err := prometheus.Register(taskCounter); err != nil {
+    fmt.Println(err)
+} else {
+    fmt.Println(&#34;taskCounter registered.&#34;)
+}
+<span class="comment">// Don&#39;t forget to tell the HTTP server about the Prometheus handler.</span>
+<span class="comment">// (In a real program, you still need to start the HTTP server...)</span>
+http.Handle(&#34;/metrics&#34;, prometheus.Handler())
+
+<span class="comment">// Now you can start workers and give every one of them a pointer to</span>
+<span class="comment">// taskCounter and let it increment it whenever it completes a task.</span>
+taskCounter.Inc() <span class="comment">// This has to happen somewhere in the worker code.</span>
+
+<span class="comment">// But wait, you want to see how individual workers perform. So you need</span>
+<span class="comment">// a vector of counters, with one element for each worker.</span>
+taskCounterVec := prometheus.NewCounterVec(
+    prometheus.CounterOpts{
+        Subsystem: &#34;worker_pool&#34;,
+        Name:      &#34;completed_tasks_total&#34;,
+        Help:      &#34;Total number of tasks completed.&#34;,
+    },
+    []string{&#34;worker_id&#34;},
+)
+
+<span class="comment">// Registering will fail because we already have a metric of that name.</span>
+if err := prometheus.Register(taskCounterVec); err != nil {
+    fmt.Println(&#34;taskCounterVec not registered:&#34;, err)
+} else {
+    fmt.Println(&#34;taskCounterVec registered.&#34;)
+}
+
+<span class="comment">// To fix, first unregister the old taskCounter.</span>
+if prometheus.Unregister(taskCounter) {
+    fmt.Println(&#34;taskCounter unregistered.&#34;)
+}
+
+<span class="comment">// Try registering taskCounterVec again.</span>
+if err := prometheus.Register(taskCounterVec); err != nil {
+    fmt.Println(&#34;taskCounterVec not registered:&#34;, err)
+} else {
+    fmt.Println(&#34;taskCounterVec registered.&#34;)
+}
+<span class="comment">// Bummer! Still doesn&#39;t work.</span>
+
+<span class="comment">// Prometheus will not allow you to ever export metrics with</span>
+<span class="comment">// inconsistent help strings or label names. After unregistering, the</span>
+<span class="comment">// unregistered metrics will cease to show up in the /metrics HTTP</span>
+<span class="comment">// response, but the registry still remembers that those metrics had</span>
+<span class="comment">// been exported before. For this example, we will now choose a</span>
+<span class="comment">// different name. (In a real program, you would obviously not export</span>
+<span class="comment">// the obsolete metric in the first place.)</span>
+taskCounterVec = prometheus.NewCounterVec(
+    prometheus.CounterOpts{
+        Subsystem: &#34;worker_pool&#34;,
+        Name:      &#34;completed_tasks_by_id&#34;,
+        Help:      &#34;Total number of tasks completed.&#34;,
+    },
+    []string{&#34;worker_id&#34;},
+)
+if err := prometheus.Register(taskCounterVec); err != nil {
+    fmt.Println(&#34;taskCounterVec not registered:&#34;, err)
+} else {
+    fmt.Println(&#34;taskCounterVec registered.&#34;)
+}
+<span class="comment">// Finally it worked!</span>
+
+<span class="comment">// The workers have to tell taskCounterVec their id to increment the</span>
+<span class="comment">// right element in the metric vector.</span>
+taskCounterVec.WithLabelValues(&#34;42&#34;).Inc() <span class="comment">// Code from worker 42.</span>
+
+<span class="comment">// Each worker could also keep a reference to their own counter element</span>
+<span class="comment">// around. Pick the counter at initialization time of the worker.</span>
+myCounter := taskCounterVec.WithLabelValues(&#34;42&#34;) <span class="comment">// From worker 42 initialization code.</span>
+myCounter.Inc()                                   <span class="comment">// Somewhere in the code of that worker.</span>
+
+<span class="comment">// Note that something like WithLabelValues(&#34;42&#34;, &#34;spurious arg&#34;) would</span>
+<span class="comment">// panic (because you have provided too many label values). If you want</span>
+<span class="comment">// to get an error instead, use GetMetricWithLabelValues(...) instead.</span>
+notMyCounter, err := taskCounterVec.GetMetricWithLabelValues(&#34;42&#34;, &#34;spurious arg&#34;)
+if err != nil {
+    fmt.Println(&#34;Worker initialization failed:&#34;, err)
+}
+if notMyCounter == nil {
+    fmt.Println(&#34;notMyCounter is nil.&#34;)
+}
+
+<span class="comment">// A different (and somewhat tricky) approach is to use</span>
+<span class="comment">// ConstLabels. ConstLabels are pairs of label names and label values</span>
+<span class="comment">// that never change. You might ask what those labels are good for (and</span>
+<span class="comment">// rightfully so - if they never change, they could as well be part of</span>
+<span class="comment">// the metric name). There are essentially two use-cases: The first is</span>
+<span class="comment">// if labels are constant throughout the lifetime of a binary execution,</span>
+<span class="comment">// but they vary over time or between different instances of a running</span>
+<span class="comment">// binary. The second is what we have here: Each worker creates and</span>
+<span class="comment">// registers an own Counter instance where the only difference is in the</span>
+<span class="comment">// value of the ConstLabels. Those Counters can all be registered</span>
+<span class="comment">// because the different ConstLabel values guarantee that each worker</span>
+<span class="comment">// will increment a different Counter metric.</span>
+counterOpts := prometheus.CounterOpts{
+    Subsystem:   &#34;worker_pool&#34;,
+    Name:        &#34;completed_tasks&#34;,
+    Help:        &#34;Total number of tasks completed.&#34;,
+    ConstLabels: prometheus.Labels{&#34;worker_id&#34;: &#34;42&#34;},
+}
+taskCounterForWorker42 := prometheus.NewCounter(counterOpts)
+if err := prometheus.Register(taskCounterForWorker42); err != nil {
+    fmt.Println(&#34;taskCounterVForWorker42 not registered:&#34;, err)
+} else {
+    fmt.Println(&#34;taskCounterForWorker42 registered.&#34;)
+}
+<span class="comment">// Obviously, in real code, taskCounterForWorker42 would be a member</span>
+<span class="comment">// variable of a worker struct, and the &#34;42&#34; would be retrieved with a</span>
+<span class="comment">// GetId() method or something. The Counter would be created and</span>
+<span class="comment">// registered in the initialization code of the worker.</span>
+
+<span class="comment">// For the creation of the next Counter, we can recycle</span>
+<span class="comment">// counterOpts. Just change the ConstLabels.</span>
+counterOpts.ConstLabels = prometheus.Labels{&#34;worker_id&#34;: &#34;2001&#34;}
+taskCounterForWorker2001 := prometheus.NewCounter(counterOpts)
+if err := prometheus.Register(taskCounterForWorker2001); err != nil {
+    fmt.Println(&#34;taskCounterVForWorker2001 not registered:&#34;, err)
+} else {
+    fmt.Println(&#34;taskCounterForWorker2001 registered.&#34;)
+}
+
+taskCounterForWorker2001.Inc()
+taskCounterForWorker42.Inc()
+taskCounterForWorker2001.Inc()
+
+<span class="comment">// Yet another approach would be to turn the workers themselves into</span>
+<span class="comment">// Collectors and register them. See the Collector example for details.</span>
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">taskCounter registered.
+taskCounterVec not registered: a previously registered descriptor with the same fully-qualified name as Desc{fqName: &#34;worker_pool_completed_tasks_total&#34;, help: &#34;Total number of tasks completed.&#34;, constLabels: {}, variableLabels: [worker_id]} has different label names or a different help string
+taskCounter unregistered.
+taskCounterVec not registered: a previously registered descriptor with the same fully-qualified name as Desc{fqName: &#34;worker_pool_completed_tasks_total&#34;, help: &#34;Total number of tasks completed.&#34;, constLabels: {}, variableLabels: [worker_id]} has different label names or a different help string
+taskCounterVec registered.
+Worker initialization failed: inconsistent label cardinality
+notMyCounter is nil.
+taskCounterForWorker42 registered.
+taskCounterForWorker2001 registered.
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+
+		
+			
+			
+			<h2 id="SetMetricFamilyInjectionHook">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/registry.go?s=8689:8755#L206">SetMetricFamilyInjectionHook</a></h2>
+			<pre>func SetMetricFamilyInjectionHook(hook func() []*<a href="../../client_model/go/index.html">dto</a>.<a href="../../client_model/go/index.html#MetricFamily">MetricFamily</a>)</pre>
+			<p>
+SetMetricFamilyInjectionHook replaces the DefaultGatherer with one that
+gathers from the previous DefaultGatherers but then merges the MetricFamily
+protobufs returned from the provided hook function with the MetricFamily
+protobufs returned from the original DefaultGatherer.
+</p>
+<p>
+Deprecated: This function manipulates the DefaultGatherer variable. Consider
+the implications, i.e. don&#39;t do this concurrently with any uses of the
+DefaultGatherer. In the rare cases where you need to inject MetricFamily
+protobufs directly, it is recommended to use a custom Registry and combine it
+with a custom Gatherer using the Gatherers type (see
+there). SetMetricFamilyInjectionHook only exists for compatibility reasons
+with previous versions of this package.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="UninstrumentedHandler">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/http.go?s=2013:2054#L63">UninstrumentedHandler</a></h2>
+			<pre>func UninstrumentedHandler() <a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Handler">Handler</a></pre>
+			<p>
+UninstrumentedHandler returns an HTTP handler for the DefaultGatherer.
+</p>
+<p>
+Deprecated: Use promhttp.Handler instead. See there for further documentation.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Unregister">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/registry.go?s=7617:7650#L182">Unregister</a></h2>
+			<pre>func Unregister(c <a href="index.html#Collector">Collector</a>) <a href="../../../../builtin/index.html#bool">bool</a></pre>
+			<p>
+Unregister removes the registration of the provided Collector from the
+DefaultRegisterer.
+</p>
+<p>
+Unregister is a shortcut for DefaultRegisterer.Unregister(c). See there for
+more details.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="AlreadyRegisteredError">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/registry.go?s=9483:9564#L221">AlreadyRegisteredError</a></h2>
+			<pre>type AlreadyRegisteredError struct {
+    ExistingCollector, NewCollector <a href="index.html#Collector">Collector</a>
+}</pre>
+			<p>
+AlreadyRegisteredError is returned by the Register method if the Collector to
+be registered has already been registered before, or a different Collector
+that collects the same metrics has been registered before. Registration fails
+in that case, but you can detect from the kind of error what has
+happened. The error contains fields for the existing Collector and the
+(rejected) new Collector that equals the existing one. This can be used to
+find out if an equal Collector has been registered before and switch over to
+using the old one, as demonstrated in the example.
+</p>
+
+
+			
+
+			
+
+			<div id="example_AlreadyRegisteredError" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+reqCounter := prometheus.NewCounter(prometheus.CounterOpts{
+    Name: &#34;requests_total&#34;,
+    Help: &#34;The total number of requests served.&#34;,
+})
+if err := prometheus.Register(reqCounter); err != nil {
+    if are, ok := err.(prometheus.AlreadyRegisteredError); ok {
+        <span class="comment">// A counter for that metric has been registered before.</span>
+        <span class="comment">// Use the old counter from now on.</span>
+        reqCounter = are.ExistingCollector.(prometheus.Counter)
+    } else {
+        <span class="comment">// Something else went wrong!</span>
+        panic(err)
+    }
+}
+reqCounter.Inc()
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+			
+
+			
+
+			
+				
+				<h3 id="AlreadyRegisteredError.Error">func (AlreadyRegisteredError) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/registry.go?s=9566:9614#L225">Error</a></h3>
+				<pre>func (err <a href="index.html#AlreadyRegisteredError">AlreadyRegisteredError</a>) Error() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Collector">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/collector.go?s=1338:2828#L17">Collector</a></h2>
+			<pre>type Collector interface {
+    <span class="comment">// Describe sends the super-set of all possible descriptors of metrics</span>
+    <span class="comment">// collected by this Collector to the provided channel and returns once</span>
+    <span class="comment">// the last descriptor has been sent. The sent descriptors fulfill the</span>
+    <span class="comment">// consistency and uniqueness requirements described in the Desc</span>
+    <span class="comment">// documentation. (It is valid if one and the same Collector sends</span>
+    <span class="comment">// duplicate descriptors. Those duplicates are simply ignored. However,</span>
+    <span class="comment">// two different Collectors must not send duplicate descriptors.) This</span>
+    <span class="comment">// method idempotently sends the same descriptors throughout the</span>
+    <span class="comment">// lifetime of the Collector. If a Collector encounters an error while</span>
+    <span class="comment">// executing this method, it must send an invalid descriptor (created</span>
+    <span class="comment">// with NewInvalidDesc) to signal the error to the registry.</span>
+    Describe(chan&lt;- *<a href="index.html#Desc">Desc</a>)
+    <span class="comment">// Collect is called by the Prometheus registry when collecting</span>
+    <span class="comment">// metrics. The implementation sends each collected metric via the</span>
+    <span class="comment">// provided channel and returns once the last metric has been sent. The</span>
+    <span class="comment">// descriptor of each sent metric is one of those returned by</span>
+    <span class="comment">// Describe. Returned metrics that share the same descriptor must differ</span>
+    <span class="comment">// in their variable label values. This method may be called</span>
+    <span class="comment">// concurrently and must therefore be implemented in a concurrency safe</span>
+    <span class="comment">// way. Blocking occurs at the expense of total performance of rendering</span>
+    <span class="comment">// all registered metrics. Ideally, Collector implementations support</span>
+    <span class="comment">// concurrent readers.</span>
+    Collect(chan&lt;- <a href="index.html#Metric">Metric</a>)
+}</pre>
+			<p>
+Collector is the interface implemented by anything that can be used by
+Prometheus to collect metrics. A Collector has to be registered for
+collection. See Registerer.Register.
+</p>
+<p>
+The stock metrics provided by this package (Gauge, Counter, Summary,
+Histogram, Untyped) are also Collectors (which only ever collect one metric,
+namely itself). An implementer of Collector may, however, collect multiple
+metrics in a coordinated fashion and/or create metrics on the fly. Examples
+for collectors already implemented in this library are the metric vectors
+(i.e. collection of multiple instances of the same Metric but with different
+label values) like GaugeVec or SummaryVec, and the ExpvarCollector.
+</p>
+
+
+			
+
+			
+
+			<div id="example_Collector" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">package prometheus_test
+
+import &#34;github.com/prometheus/client_golang/prometheus&#34;
+
+<span class="comment">// ClusterManager is an example for a system that might have been built without</span>
+<span class="comment">// Prometheus in mind. It models a central manager of jobs running in a</span>
+<span class="comment">// cluster. To turn it into something that collects Prometheus metrics, we</span>
+<span class="comment">// simply add the two methods required for the Collector interface.</span>
+<span class="comment">//</span>
+<span class="comment">// An additional challenge is that multiple instances of the ClusterManager are</span>
+<span class="comment">// run within the same binary, each in charge of a different zone. We need to</span>
+<span class="comment">// make use of ConstLabels to be able to register each ClusterManager instance</span>
+<span class="comment">// with Prometheus.</span>
+type ClusterManager struct {
+    Zone         string
+    OOMCountDesc *prometheus.Desc
+    RAMUsageDesc *prometheus.Desc
+    <span class="comment">// ... many more fields</span>
+}
+
+<span class="comment">// ReallyExpensiveAssessmentOfTheSystemState is a mock for the data gathering a</span>
+<span class="comment">// real cluster manager would have to do. Since it may actually be really</span>
+<span class="comment">// expensive, it must only be called once per collection. This implementation,</span>
+<span class="comment">// obviously, only returns some made-up data.</span>
+func (c *ClusterManager) ReallyExpensiveAssessmentOfTheSystemState() (
+    oomCountByHost map[string]int, ramUsageByHost map[string]float64,
+) {
+    <span class="comment">// Just example fake data.</span>
+    oomCountByHost = map[string]int{
+        &#34;foo.example.org&#34;: 42,
+        &#34;bar.example.org&#34;: 2001,
+    }
+    ramUsageByHost = map[string]float64{
+        &#34;foo.example.org&#34;: 6.023e23,
+        &#34;bar.example.org&#34;: 3.14,
+    }
+    return
+}
+
+<span class="comment">// Describe simply sends the two Descs in the struct to the channel.</span>
+func (c *ClusterManager) Describe(ch chan&lt;- *prometheus.Desc) {
+    ch &lt;- c.OOMCountDesc
+    ch &lt;- c.RAMUsageDesc
+}
+
+<span class="comment">// Collect first triggers the ReallyExpensiveAssessmentOfTheSystemState. Then it</span>
+<span class="comment">// creates constant metrics for each host on the fly based on the returned data.</span>
+<span class="comment">//</span>
+<span class="comment">// Note that Collect could be called concurrently, so we depend on</span>
+<span class="comment">// ReallyExpensiveAssessmentOfTheSystemState to be concurrency-safe.</span>
+func (c *ClusterManager) Collect(ch chan&lt;- prometheus.Metric) {
+    oomCountByHost, ramUsageByHost := c.ReallyExpensiveAssessmentOfTheSystemState()
+    for host, oomCount := range oomCountByHost {
+        ch &lt;- prometheus.MustNewConstMetric(
+            c.OOMCountDesc,
+            prometheus.CounterValue,
+            float64(oomCount),
+            host,
+        )
+    }
+    for host, ramUsage := range ramUsageByHost {
+        ch &lt;- prometheus.MustNewConstMetric(
+            c.RAMUsageDesc,
+            prometheus.GaugeValue,
+            ramUsage,
+            host,
+        )
+    }
+}
+
+<span class="comment">// NewClusterManager creates the two Descs OOMCountDesc and RAMUsageDesc. Note</span>
+<span class="comment">// that the zone is set as a ConstLabel. (It&#39;s different in each instance of the</span>
+<span class="comment">// ClusterManager, but constant over the lifetime of an instance.) Then there is</span>
+<span class="comment">// a variable label &#34;host&#34;, since we want to partition the collected metrics by</span>
+<span class="comment">// host. Since all Descs created in this way are consistent across instances,</span>
+<span class="comment">// with a guaranteed distinction by the &#34;zone&#34; label, we can register different</span>
+<span class="comment">// ClusterManager instances with the same registry.</span>
+func NewClusterManager(zone string) *ClusterManager {
+    return &amp;ClusterManager{
+        Zone: zone,
+        OOMCountDesc: prometheus.NewDesc(
+            &#34;clustermanager_oom_crashes_total&#34;,
+            &#34;Number of OOM crashes.&#34;,
+            []string{&#34;host&#34;},
+            prometheus.Labels{&#34;zone&#34;: zone},
+        ),
+        RAMUsageDesc: prometheus.NewDesc(
+            &#34;clustermanager_ram_usage_bytes&#34;,
+            &#34;RAM usage as reported to the cluster manager.&#34;,
+            []string{&#34;host&#34;},
+            prometheus.Labels{&#34;zone&#34;: zone},
+        ),
+    }
+}
+
+func ExampleCollector() {
+    workerDB := NewClusterManager(&#34;db&#34;)
+    workerCA := NewClusterManager(&#34;ca&#34;)
+
+    <span class="comment">// Since we are dealing with custom Collector implementations, it might</span>
+    <span class="comment">// be a good idea to try it out with a pedantic registry.</span>
+    reg := prometheus.NewPedanticRegistry()
+    reg.MustRegister(workerDB)
+    reg.MustRegister(workerCA)
+}
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+			
+
+			
+				
+				<h3 id="MustRegisterOrGet">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/registry.go?s=7300:7345#L169">MustRegisterOrGet</a></h3>
+				<pre>func MustRegisterOrGet(c <a href="index.html#Collector">Collector</a>) <a href="index.html#Collector">Collector</a></pre>
+				<p>
+MustRegisterOrGet behaves like RegisterOrGet but panics instead of returning
+an error.
+</p>
+<p>
+Deprecated: This is deprecated for the same reason RegisterOrGet is. See
+there for details.
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewExpvarCollector">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/expvar_collector.go?s=2766:2825#L52">NewExpvarCollector</a></h3>
+				<pre>func NewExpvarCollector(exports map[<a href="../../../../builtin/index.html#string">string</a>]*<a href="index.html#Desc">Desc</a>) <a href="index.html#Collector">Collector</a></pre>
+				<p>
+NewExpvarCollector returns a newly allocated expvar Collector that still has
+to be registered with a Prometheus registry.
+</p>
+<p>
+An expvar Collector collects metrics from the expvar interface. It provides a
+quick way to expose numeric values that are already exported via expvar as
+Prometheus metrics. Note that the data models of expvar and Prometheus are
+fundamentally different, and that the expvar Collector is inherently slower
+than native Prometheus metrics. Thus, the expvar Collector is probably great
+for experiments and prototying, but you should seriously consider a more
+direct implementation of Prometheus metrics for monitoring production
+systems.
+</p>
+<p>
+The exports map has the following meaning:
+</p>
+<p>
+The keys in the map correspond to expvar keys, i.e. for every expvar key you
+want to export as Prometheus metric, you need an entry in the exports
+map. The descriptor mapped to each key describes how to export the expvar
+value. It defines the name and the help string of the Prometheus metric
+proxying the expvar value. The type will always be Untyped.
+</p>
+<p>
+For descriptors without variable labels, the expvar value must be a number or
+a bool. The number is then directly exported as the Prometheus sample
+value. (For a bool, &#39;false&#39; translates to 0 and &#39;true&#39; to 1). Expvar values
+that are not numbers or bools are silently ignored.
+</p>
+<p>
+If the descriptor has one variable label, the expvar value must be an expvar
+map. The keys in the expvar map become the various values of the one
+Prometheus label. The values in the expvar map must be numbers or bools again
+as above.
+</p>
+<p>
+For descriptors with more than one variable label, the expvar must be a
+nested expvar map, i.e. where the values of the topmost map are maps again
+etc. until a depth is reached that corresponds to the number of labels. The
+leaves of that structure must be numbers or bools as above to serve as the
+sample values.
+</p>
+<p>
+Anything that does not fit into the scheme above is silently ignored.
+</p>
+
+				<div id="example_NewExpvarCollector" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">expvarCollector := prometheus.NewExpvarCollector(map[string]*prometheus.Desc{
+    &#34;memstats&#34;: prometheus.NewDesc(
+        &#34;expvar_memstats&#34;,
+        &#34;All numeric memstats as one metric family. Not a good role-model, actually... ;-)&#34;,
+        []string{&#34;type&#34;}, nil,
+    ),
+    &#34;lone-int&#34;: prometheus.NewDesc(
+        &#34;expvar_lone_int&#34;,
+        &#34;Just an expvar int as an example.&#34;,
+        nil, nil,
+    ),
+    &#34;http-request-map&#34;: prometheus.NewDesc(
+        &#34;expvar_http_request_total&#34;,
+        &#34;How many http requests processed, partitioned by status code and http method.&#34;,
+        []string{&#34;code&#34;, &#34;method&#34;}, nil,
+    ),
+})
+prometheus.MustRegister(expvarCollector)
+
+<span class="comment">// The Prometheus part is done here. But to show that this example is</span>
+<span class="comment">// doing anything, we have to manually export something via expvar.  In</span>
+<span class="comment">// real-life use-cases, some library would already have exported via</span>
+<span class="comment">// expvar what we want to re-export as Prometheus metrics.</span>
+expvar.NewInt(&#34;lone-int&#34;).Set(42)
+expvarMap := expvar.NewMap(&#34;http-request-map&#34;)
+var (
+    expvarMap1, expvarMap2                             expvar.Map
+    expvarInt11, expvarInt12, expvarInt21, expvarInt22 expvar.Int
+)
+expvarMap1.Init()
+expvarMap2.Init()
+expvarInt11.Set(3)
+expvarInt12.Set(13)
+expvarInt21.Set(11)
+expvarInt22.Set(212)
+expvarMap1.Set(&#34;POST&#34;, &amp;expvarInt11)
+expvarMap1.Set(&#34;GET&#34;, &amp;expvarInt12)
+expvarMap2.Set(&#34;POST&#34;, &amp;expvarInt21)
+expvarMap2.Set(&#34;GET&#34;, &amp;expvarInt22)
+expvarMap.Set(&#34;404&#34;, &amp;expvarMap1)
+expvarMap.Set(&#34;200&#34;, &amp;expvarMap2)
+<span class="comment">// Results in the following expvar map:</span>
+<span class="comment">// &#34;http-request-count&#34;: {&#34;200&#34;: {&#34;POST&#34;: 11, &#34;GET&#34;: 212}, &#34;404&#34;: {&#34;POST&#34;: 3, &#34;GET&#34;: 13}}</span>
+
+<span class="comment">// Let&#39;s see what the scrape would yield, but exclude the memstats metrics.</span>
+metricStrings := []string{}
+metric := dto.Metric{}
+metricChan := make(chan prometheus.Metric)
+go func() {
+    expvarCollector.Collect(metricChan)
+    close(metricChan)
+}()
+for m := range metricChan {
+    if strings.Index(m.Desc().String(), &#34;expvar_memstats&#34;) == -1 {
+        metric.Reset()
+        m.Write(&amp;metric)
+        metricStrings = append(metricStrings, metric.String())
+    }
+}
+sort.Strings(metricStrings)
+for _, s := range metricStrings {
+    fmt.Println(strings.TrimRight(s, &#34; &#34;))
+}
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">label:&lt;name:&#34;code&#34; value:&#34;200&#34; &gt; label:&lt;name:&#34;method&#34; value:&#34;GET&#34; &gt; untyped:&lt;value:212 &gt;
+label:&lt;name:&#34;code&#34; value:&#34;200&#34; &gt; label:&lt;name:&#34;method&#34; value:&#34;POST&#34; &gt; untyped:&lt;value:11 &gt;
+label:&lt;name:&#34;code&#34; value:&#34;404&#34; &gt; label:&lt;name:&#34;method&#34; value:&#34;GET&#34; &gt; untyped:&lt;value:13 &gt;
+label:&lt;name:&#34;code&#34; value:&#34;404&#34; &gt; label:&lt;name:&#34;method&#34; value:&#34;POST&#34; &gt; untyped:&lt;value:3 &gt;
+untyped:&lt;value:42 &gt;
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+				
+				<h3 id="NewGoCollector">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/go_collector.go?s=295:326#L10">NewGoCollector</a></h3>
+				<pre>func NewGoCollector() <a href="index.html#Collector">Collector</a></pre>
+				<p>
+NewGoCollector returns a collector which exports metrics about the current
+go process.
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewProcessCollector">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/process_collector.go?s=1109:1170#L21">NewProcessCollector</a></h3>
+				<pre>func NewProcessCollector(pid <a href="../../../../builtin/index.html#int">int</a>, namespace <a href="../../../../builtin/index.html#string">string</a>) <a href="index.html#Collector">Collector</a></pre>
+				<p>
+NewProcessCollector returns a collector which exports the current state of
+process metrics including cpu, memory and file descriptor usage as well as
+the process start time for the given process id under the given namespace.
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewProcessCollectorPIDFn">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/process_collector.go?s=1591:1680#L33">NewProcessCollectorPIDFn</a></h3>
+				<pre>func NewProcessCollectorPIDFn(
+    pidFn func() (<a href="../../../../builtin/index.html#int">int</a>, <a href="../../../../builtin/index.html#error">error</a>),
+    namespace <a href="../../../../builtin/index.html#string">string</a>,
+) <a href="index.html#Collector">Collector</a></pre>
+				<p>
+NewProcessCollectorPIDFn returns a collector which exports the current state
+of process metrics including cpu, memory and file descriptor usage as well
+as the process start time under the given namespace. The given pidFn is
+called on each collect and is used to determine the process to export
+metrics for.
+</p>
+
+				
+				
+			
+				
+				<h3 id="RegisterOrGet">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/registry.go?s=6885:6935#L154">RegisterOrGet</a></h3>
+				<pre>func RegisterOrGet(c <a href="index.html#Collector">Collector</a>) (<a href="index.html#Collector">Collector</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+RegisterOrGet registers the provided Collector with the DefaultRegisterer and
+returns the Collector, unless an equal Collector was registered before, in
+which case that Collector is returned.
+</p>
+<p>
+Deprecated: RegisterOrGet is merely a convenience function for the
+implementation as described in the documentation for
+AlreadyRegisteredError. As the use case is relatively rare, this function
+will be removed in a future version of this package to clean up the
+namespace.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="Counter">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/counter.go?s=1060:1688#L19">Counter</a></h2>
+			<pre>type Counter interface {
+    <a href="index.html#Metric">Metric</a>
+    <a href="index.html#Collector">Collector</a>
+
+    <span class="comment">// Set is used to set the Counter to an arbitrary value. It is only used</span>
+    <span class="comment">// if you have to transfer a value from an external counter into this</span>
+    <span class="comment">// Prometheus metric. Do not use it for regular handling of a</span>
+    <span class="comment">// Prometheus counter (as it can be used to break the contract of</span>
+    <span class="comment">// monotonically increasing values).</span>
+    <span class="comment">//</span>
+    <span class="comment">// Deprecated: Use NewConstMetric to create a counter for an external</span>
+    <span class="comment">// value. A Counter should never be set.</span>
+    Set(<a href="../../../../builtin/index.html#float64">float64</a>)
+    <span class="comment">// Inc increments the counter by 1.</span>
+    Inc()
+    <span class="comment">// Add adds the given value to the counter. It panics if the value is &lt;</span>
+    <span class="comment">// 0.</span>
+    Add(<a href="../../../../builtin/index.html#float64">float64</a>)
+}</pre>
+			<p>
+Counter is a Metric that represents a single numerical value that only ever
+goes up. That implies that it cannot be used to count items whose number can
+also go down, e.g. the number of currently running goroutines. Those
+&#34;counters&#34; are represented by Gauges.
+</p>
+<p>
+A Counter is typically used to count requests served, tasks completed, errors
+occurred, etc.
+</p>
+<p>
+To create Counter instances, use NewCounter.
+</p>
+
+
+			
+
+			
+
+			<div id="example_Counter" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">pushCounter := prometheus.NewCounter(prometheus.CounterOpts{
+    Name: &#34;repository_pushes&#34;, <span class="comment">// Note: No help string...</span>
+})
+err := prometheus.Register(pushCounter) <span class="comment">// ... so this will return an error.</span>
+if err != nil {
+    fmt.Println(&#34;Push counter couldn&#39;t be registered, no counting will happen:&#34;, err)
+    return
+}
+
+<span class="comment">// Try it once more, this time with a help string.</span>
+pushCounter = prometheus.NewCounter(prometheus.CounterOpts{
+    Name: &#34;repository_pushes&#34;,
+    Help: &#34;Number of pushes to external repository.&#34;,
+})
+err = prometheus.Register(pushCounter)
+if err != nil {
+    fmt.Println(&#34;Push counter couldn&#39;t be registered AGAIN, no counting will happen:&#34;, err)
+    return
+}
+
+pushComplete := make(chan struct{})
+<span class="comment">// TODO: Start a goroutine that performs repository pushes and reports</span>
+<span class="comment">// each completion via the channel.</span>
+for range pushComplete {
+    pushCounter.Inc()
+}
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">Push counter couldn&#39;t be registered, no counting will happen: descriptor Desc{fqName: &#34;repository_pushes&#34;, help: &#34;&#34;, constLabels: {}, variableLabels: []} is invalid: empty help string
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+			
+
+			
+				
+				<h3 id="NewCounter">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/counter.go?s=1849:1890#L43">NewCounter</a></h3>
+				<pre>func NewCounter(opts <a href="index.html#CounterOpts">CounterOpts</a>) <a href="index.html#Counter">Counter</a></pre>
+				<p>
+NewCounter creates a new Counter based on the provided CounterOpts.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="CounterFunc">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/counter.go?s=5125:5174#L142">CounterFunc</a></h2>
+			<pre>type CounterFunc interface {
+    <a href="index.html#Metric">Metric</a>
+    <a href="index.html#Collector">Collector</a>
+}</pre>
+			<p>
+CounterFunc is a Counter whose value is determined at collect time by calling a
+provided function.
+</p>
+<p>
+To create CounterFunc instances, use NewCounterFunc.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewCounterFunc">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/counter.go?s=5731:5805#L155">NewCounterFunc</a></h3>
+				<pre>func NewCounterFunc(opts <a href="index.html#CounterOpts">CounterOpts</a>, function func() <a href="../../../../builtin/index.html#float64">float64</a>) <a href="index.html#CounterFunc">CounterFunc</a></pre>
+				<p>
+NewCounterFunc creates a new CounterFunc based on the provided
+CounterOpts. The value reported is determined by calling the given function
+from within the Write method. Take into account that metric collection may
+happen concurrently. If that results in concurrent calls to Write, like in
+the case where a CounterFunc is directly registered with Prometheus, the
+provided function must be concurrency-safe. The function should also honor
+the contract for a Counter (values only go up, not down), but compliance will
+not be checked.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="CounterOpts">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/counter.go?s=1755:1776#L40">CounterOpts</a></h2>
+			<pre>type CounterOpts <a href="index.html#Opts">Opts</a></pre>
+			<p>
+CounterOpts is an alias for Opts. See there for doc comments.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="CounterVec">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/counter.go?s=2788:2826#L74">CounterVec</a></h2>
+			<pre>type CounterVec struct {
+    *<a href="index.html#MetricVec">MetricVec</a>
+}</pre>
+			<p>
+CounterVec is a Collector that bundles a set of Counters that all share the
+same Desc, but have different values for their variable labels. This is used
+if you want to count the same thing partitioned by various dimensions
+(e.g. number of HTTP requests, partitioned by response code and
+method). Create instances with NewCounterVec.
+</p>
+<p>
+CounterVec embeds MetricVec. See there for a full list of methods with
+detailed documentation.
+</p>
+
+
+			
+
+			
+
+			<div id="example_CounterVec" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+httpReqs := prometheus.NewCounterVec(
+    prometheus.CounterOpts{
+        Name: &#34;http_requests_total&#34;,
+        Help: &#34;How many HTTP requests processed, partitioned by status code and HTTP method.&#34;,
+    },
+    []string{&#34;code&#34;, &#34;method&#34;},
+)
+prometheus.MustRegister(httpReqs)
+
+httpReqs.WithLabelValues(&#34;404&#34;, &#34;POST&#34;).Add(42)
+
+<span class="comment">// If you have to access the same set of labels very frequently, it</span>
+<span class="comment">// might be good to retrieve the metric only once and keep a handle to</span>
+<span class="comment">// it. But beware of deletion of that metric, see below!</span>
+m := httpReqs.WithLabelValues(&#34;200&#34;, &#34;GET&#34;)
+for i := 0; i &lt; 1000000; i++ {
+    m.Inc()
+}
+<span class="comment">// Delete a metric from the vector. If you have previously kept a handle</span>
+<span class="comment">// to that metric (as above), future updates via that handle will go</span>
+<span class="comment">// unseen (even if you re-create a metric with the same label set</span>
+<span class="comment">// later).</span>
+httpReqs.DeleteLabelValues(&#34;200&#34;, &#34;GET&#34;)
+<span class="comment">// Same thing with the more verbose Labels syntax.</span>
+httpReqs.Delete(prometheus.Labels{&#34;method&#34;: &#34;GET&#34;, &#34;code&#34;: &#34;200&#34;})
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+			
+
+			
+				
+				<h3 id="NewCounterVec">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/counter.go?s=2994:3063#L81">NewCounterVec</a></h3>
+				<pre>func NewCounterVec(opts <a href="index.html#CounterOpts">CounterOpts</a>, labelNames []<a href="../../../../builtin/index.html#string">string</a>) *<a href="index.html#CounterVec">CounterVec</a></pre>
+				<p>
+NewCounterVec creates a new CounterVec based on the provided CounterOpts and
+partitioned by the given label names. At least one label name must be
+provided.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="CounterVec.GetMetricWith">func (*CounterVec) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/counter.go?s=4082:4148#L115">GetMetricWith</a></h3>
+				<pre>func (m *<a href="index.html#CounterVec">CounterVec</a>) GetMetricWith(labels <a href="index.html#Labels">Labels</a>) (<a href="index.html#Counter">Counter</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+GetMetricWith replaces the method of the same name in MetricVec. The
+difference is that this method returns a Counter and not a Metric so that no
+type conversion is required.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="CounterVec.GetMetricWithLabelValues">func (*CounterVec) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/counter.go?s=3683:3760#L104">GetMetricWithLabelValues</a></h3>
+				<pre>func (m *<a href="index.html#CounterVec">CounterVec</a>) GetMetricWithLabelValues(lvs ...<a href="../../../../builtin/index.html#string">string</a>) (<a href="index.html#Counter">Counter</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+GetMetricWithLabelValues replaces the method of the same name in
+MetricVec. The difference is that this method returns a Counter and not a
+Metric so that no type conversion is required.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="CounterVec.With">func (*CounterVec) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/counter.go?s=4864:4912#L134">With</a></h3>
+				<pre>func (m *<a href="index.html#CounterVec">CounterVec</a>) With(labels <a href="index.html#Labels">Labels</a>) <a href="index.html#Counter">Counter</a></pre>
+				<p>
+With works as GetMetricWith, but panics where GetMetricWithLabels would have
+returned an error. By not returning an error, With allows shortcuts like
+</p>
+<pre>myVec.With(Labels{&#34;code&#34;: &#34;404&#34;, &#34;method&#34;: &#34;GET&#34;}).Add(42)
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="CounterVec.WithLabelValues">func (*CounterVec) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/counter.go?s=4523:4582#L127">WithLabelValues</a></h3>
+				<pre>func (m *<a href="index.html#CounterVec">CounterVec</a>) WithLabelValues(lvs ...<a href="../../../../builtin/index.html#string">string</a>) <a href="index.html#Counter">Counter</a></pre>
+				<p>
+WithLabelValues works as GetMetricWithLabelValues, but panics where
+GetMetricWithLabelValues would have returned an error. By not returning an
+error, WithLabelValues allows shortcuts like
+</p>
+<pre>myVec.WithLabelValues(&#34;404&#34;, &#34;GET&#34;).Add(42)
+</pre>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Desc">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/desc.go?s=2272:3163#L52">Desc</a></h2>
+			<pre>type Desc struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Desc is the descriptor used by every Prometheus Metric. It is essentially
+the immutable meta-data of a Metric. The normal Metric implementations
+included in this package manage their Desc under the hood. Users only have to
+deal with Desc if they use advanced features like the ExpvarCollector or
+custom Collectors and Metrics.
+</p>
+<p>
+Descriptors registered with the same registry have to fulfill certain
+consistency and uniqueness criteria if they share the same fully-qualified
+name: They must have the same help string and the same label names (aka label
+dimensions) in each, constLabels and variableLabels, but they must differ in
+the values of the constLabels.
+</p>
+<p>
+Descriptors that share the same fully-qualified names and the same label
+values of their constLabels are considered equal.
+</p>
+<p>
+Use NewDesc to create new Desc instances.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewDesc">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/desc.go?s=3742:3826#L86">NewDesc</a></h3>
+				<pre>func NewDesc(fqName, help <a href="../../../../builtin/index.html#string">string</a>, variableLabels []<a href="../../../../builtin/index.html#string">string</a>, constLabels <a href="index.html#Labels">Labels</a>) *<a href="index.html#Desc">Desc</a></pre>
+				<p>
+NewDesc allocates and initializes a new Desc. Errors are recorded in the Desc
+and will be reported on registration time. variableLabels and constLabels can
+be nil if no such labels should be set. fqName and help must not be empty.
+</p>
+<p>
+variableLabels only contain the label names. Their label values are variable
+and therefore not part of the Desc. (They are managed within the Metric.)
+</p>
+<p>
+For constLabels, the label values are constant. Therefore, they are fully
+specified in the Desc. See the Opts documentation for the implications of
+constant labels.
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewInvalidDesc">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/desc.go?s=6603:6639#L169">NewInvalidDesc</a></h3>
+				<pre>func NewInvalidDesc(err <a href="../../../../builtin/index.html#error">error</a>) *<a href="index.html#Desc">Desc</a></pre>
+				<p>
+NewInvalidDesc returns an invalid descriptor, i.e. a descriptor with the
+provided error set. If a collector returning such a descriptor is registered,
+registration will fail with the provided error. NewInvalidDesc can be used by
+a Collector to signal inability to describe itself.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Desc.String">func (*Desc) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/desc.go?s=6675:6705#L175">String</a></h3>
+				<pre>func (d *<a href="index.html#Desc">Desc</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Gatherer">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/registry.go?s=5000:5849#L113">Gatherer</a></h2>
+			<pre>type Gatherer interface {
+    <span class="comment">// Gather calls the Collect method of the registered Collectors and then</span>
+    <span class="comment">// gathers the collected metrics into a lexicographically sorted slice</span>
+    <span class="comment">// of MetricFamily protobufs. Even if an error occurs, Gather attempts</span>
+    <span class="comment">// to gather as many metrics as possible. Hence, if a non-nil error is</span>
+    <span class="comment">// returned, the returned MetricFamily slice could be nil (in case of a</span>
+    <span class="comment">// fatal error that prevented any meaningful metric collection) or</span>
+    <span class="comment">// contain a number of MetricFamily protobufs, some of which might be</span>
+    <span class="comment">// incomplete, and some might be missing altogether. The returned error</span>
+    <span class="comment">// (which might be a MultiError) explains the details. In scenarios</span>
+    <span class="comment">// where complete collection is critical, the returned MetricFamily</span>
+    <span class="comment">// protobufs should be disregarded if the returned error is non-nil.</span>
+    Gather() ([]*<a href="../../client_model/go/index.html">dto</a>.<a href="../../client_model/go/index.html#MetricFamily">MetricFamily</a>, <a href="../../../../builtin/index.html#error">error</a>)
+}</pre>
+			<p>
+Gatherer is the interface for the part of a registry in charge of gathering
+the collected metrics into a number of MetricFamilies. The Gatherer interface
+comes with the same general implication as described for the Registerer
+interface.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="GathererFunc">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/registry.go?s=7746:7799#L187">GathererFunc</a></h2>
+			<pre>type GathererFunc func() ([]*<a href="../../client_model/go/index.html">dto</a>.<a href="../../client_model/go/index.html#MetricFamily">MetricFamily</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+GathererFunc turns a function into a Gatherer.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="GathererFunc.Gather">func (GathererFunc) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/registry.go?s=7832:7892#L190">Gather</a></h3>
+				<pre>func (gf <a href="index.html#GathererFunc">GathererFunc</a>) Gather() ([]*<a href="../../client_model/go/index.html">dto</a>.<a href="../../client_model/go/index.html#MetricFamily">MetricFamily</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Gather implements Gatherer.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Gatherers">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/registry.go?s=20559:20584#L574">Gatherers</a></h2>
+			<pre>type Gatherers []<a href="index.html#Gatherer">Gatherer</a></pre>
+			<p>
+Gatherers is a slice of Gatherer instances that implements the Gatherer
+interface itself. Its Gather method calls Gather on all Gatherers in the
+slice in order and returns the merged results. Errors returned from the
+Gather calles are all returned in a flattened MultiError. Duplicate and
+inconsistent Metrics are skipped (first occurrence in slice order wins) and
+reported in the returned error.
+</p>
+<p>
+Gatherers can be used to merge the Gather results from multiple
+Registries. It also provides a way to directly inject existing MetricFamily
+protobufs into the gathering by creating a custom Gatherer with a Gather
+method that simply returns the existing MetricFamily protobufs. Note that no
+registration is involved (in contrast to Collector registration), so
+obviously registration-time checks cannot happen. Any inconsistencies between
+the gathered MetricFamilies are reported as errors by the Gather method, and
+inconsistent Metrics are dropped. Invalid parts of the MetricFamilies
+(e.g. syntactically invalid metric or label names) will go undetected.
+</p>
+
+
+			
+
+			
+
+			<div id="example_Gatherers" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">reg := prometheus.NewRegistry()
+temp := prometheus.NewGaugeVec(
+    prometheus.GaugeOpts{
+        Name: &#34;temperature_kelvin&#34;,
+        Help: &#34;Temperature in Kelvin.&#34;,
+    },
+    []string{&#34;location&#34;},
+)
+reg.MustRegister(temp)
+temp.WithLabelValues(&#34;outside&#34;).Set(273.14)
+temp.WithLabelValues(&#34;inside&#34;).Set(298.44)
+
+var parser expfmt.TextParser
+
+text := `
+# TYPE humidity_percent gauge
+# HELP humidity_percent Humidity in %.
+humidity_percent{location=&#34;outside&#34;} 45.4
+humidity_percent{location=&#34;inside&#34;} 33.2
+# TYPE temperature_kelvin gauge
+# HELP temperature_kelvin Temperature in Kelvin.
+temperature_kelvin{location=&#34;somewhere else&#34;} 4.5
+`
+
+parseText := func() ([]*dto.MetricFamily, error) {
+    parsed, err := parser.TextToMetricFamilies(strings.NewReader(text))
+    if err != nil {
+        return nil, err
+    }
+    var result []*dto.MetricFamily
+    for _, mf := range parsed {
+        result = append(result, mf)
+    }
+    return result, nil
+}
+
+gatherers := prometheus.Gatherers{
+    reg,
+    prometheus.GathererFunc(parseText),
+}
+
+gathering, err := gatherers.Gather()
+if err != nil {
+    fmt.Println(err)
+}
+
+out := &amp;bytes.Buffer{}
+for _, mf := range gathering {
+    if _, err := expfmt.MetricFamilyToText(out, mf); err != nil {
+        panic(err)
+    }
+}
+fmt.Print(out.String())
+fmt.Println(&#34;----------&#34;)
+
+<span class="comment">// Note how the temperature_kelvin metric family has been merged from</span>
+<span class="comment">// different sources. Now try</span>
+text = `
+# TYPE humidity_percent gauge
+# HELP humidity_percent Humidity in %.
+humidity_percent{location=&#34;outside&#34;} 45.4
+humidity_percent{location=&#34;inside&#34;} 33.2
+# TYPE temperature_kelvin gauge
+# HELP temperature_kelvin Temperature in Kelvin.
+# Duplicate metric:
+temperature_kelvin{location=&#34;outside&#34;} 265.3
+ # Wrong labels:
+temperature_kelvin 4.5
+`
+
+gathering, err = gatherers.Gather()
+if err != nil {
+    fmt.Println(err)
+}
+<span class="comment">// Note that still as many metrics as possible are returned:</span>
+out.Reset()
+for _, mf := range gathering {
+    if _, err := expfmt.MetricFamilyToText(out, mf); err != nil {
+        panic(err)
+    }
+}
+fmt.Print(out.String())
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output"># HELP humidity_percent Humidity in %.
+# TYPE humidity_percent gauge
+humidity_percent{location=&#34;inside&#34;} 33.2
+humidity_percent{location=&#34;outside&#34;} 45.4
+# HELP temperature_kelvin Temperature in Kelvin.
+# TYPE temperature_kelvin gauge
+temperature_kelvin{location=&#34;inside&#34;} 298.44
+temperature_kelvin{location=&#34;outside&#34;} 273.14
+temperature_kelvin{location=&#34;somewhere else&#34;} 4.5
+----------
+2 error(s) occurred:
+* collected metric temperature_kelvin label:&lt;name:&#34;location&#34; value:&#34;outside&#34; &gt; gauge:&lt;value:265.3 &gt;  was collected before with the same name and label values
+* collected metric temperature_kelvin gauge:&lt;value:4.5 &gt;  has label dimensions inconsistent with previously collected metrics in the same metric family
+# HELP humidity_percent Humidity in %.
+# TYPE humidity_percent gauge
+humidity_percent{location=&#34;inside&#34;} 33.2
+humidity_percent{location=&#34;outside&#34;} 45.4
+# HELP temperature_kelvin Temperature in Kelvin.
+# TYPE temperature_kelvin gauge
+temperature_kelvin{location=&#34;inside&#34;} 298.44
+temperature_kelvin{location=&#34;outside&#34;} 273.14
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+			
+
+			
+
+			
+				
+				<h3 id="Gatherers.Gather">func (Gatherers) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/registry.go?s=20617:20674#L577">Gather</a></h3>
+				<pre>func (gs <a href="index.html#Gatherers">Gatherers</a>) Gather() ([]*<a href="../../client_model/go/index.html">dto</a>.<a href="../../client_model/go/index.html#MetricFamily">MetricFamily</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Gather implements Gatherer.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Gauge">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/gauge.go?s=945:1397#L14">Gauge</a></h2>
+			<pre>type Gauge interface {
+    <a href="index.html#Metric">Metric</a>
+    <a href="index.html#Collector">Collector</a>
+
+    <span class="comment">// Set sets the Gauge to an arbitrary value.</span>
+    Set(<a href="../../../../builtin/index.html#float64">float64</a>)
+    <span class="comment">// Inc increments the Gauge by 1.</span>
+    Inc()
+    <span class="comment">// Dec decrements the Gauge by 1.</span>
+    Dec()
+    <span class="comment">// Add adds the given value to the Gauge. (The value can be</span>
+    <span class="comment">// negative, resulting in a decrease of the Gauge.)</span>
+    Add(<a href="../../../../builtin/index.html#float64">float64</a>)
+    <span class="comment">// Sub subtracts the given value from the Gauge. (The value can be</span>
+    <span class="comment">// negative, resulting in an increase of the Gauge.)</span>
+    Sub(<a href="../../../../builtin/index.html#float64">float64</a>)
+}</pre>
+			<p>
+Gauge is a Metric that represents a single numerical value that can
+arbitrarily go up and down.
+</p>
+<p>
+A Gauge is typically used for measured values like temperatures or current
+memory usage, but also &#34;counts&#34; that can go up and down, like the number of
+running goroutines.
+</p>
+<p>
+To create Gauge instances, use NewGauge.
+</p>
+
+
+			
+
+			
+
+			<div id="example_Gauge" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+opsQueued := prometheus.NewGauge(prometheus.GaugeOpts{
+    Namespace: &#34;our_company&#34;,
+    Subsystem: &#34;blob_storage&#34;,
+    Name:      &#34;ops_queued&#34;,
+    Help:      &#34;Number of blob storage operations waiting to be processed.&#34;,
+})
+prometheus.MustRegister(opsQueued)
+
+<span class="comment">// 10 operations queued by the goroutine managing incoming requests.</span>
+opsQueued.Add(10)
+<span class="comment">// A worker goroutine has picked up a waiting operation.</span>
+opsQueued.Dec()
+<span class="comment">// And once more...</span>
+opsQueued.Dec()
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+			
+
+			
+				
+				<h3 id="NewGauge">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/gauge.go?s=1548:1583#L36">NewGauge</a></h3>
+				<pre>func NewGauge(opts <a href="index.html#GaugeOpts">GaugeOpts</a>) <a href="index.html#Gauge">Gauge</a></pre>
+				<p>
+NewGauge creates a new Gauge based on the provided GaugeOpts.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="GaugeFunc">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/gauge.go?s=4208:4255#L112">GaugeFunc</a></h2>
+			<pre>type GaugeFunc interface {
+    <a href="index.html#Metric">Metric</a>
+    <a href="index.html#Collector">Collector</a>
+}</pre>
+			<p>
+GaugeFunc is a Gauge whose value is determined at collect time by calling a
+provided function.
+</p>
+<p>
+To create GaugeFunc instances, use NewGaugeFunc.
+</p>
+
+
+			
+
+			
+
+			<div id="example_GaugeFunc" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">if err := prometheus.Register(prometheus.NewGaugeFunc(
+    prometheus.GaugeOpts{
+        Subsystem: &#34;runtime&#34;,
+        Name:      &#34;goroutines_count&#34;,
+        Help:      &#34;Number of goroutines that currently exist.&#34;,
+    },
+    func() float64 { return float64(runtime.NumGoroutine()) },
+)); err == nil {
+    fmt.Println(&#34;GaugeFunc &#39;goroutines_count&#39; registered.&#34;)
+}
+<span class="comment">// Note that the count of goroutines is a gauge (and not a counter) as</span>
+<span class="comment">// it can go up and down.</span>
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">GaugeFunc &#39;goroutines_count&#39; registered.
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+			
+
+			
+				
+				<h3 id="NewGaugeFunc">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/gauge.go?s=4673:4741#L123">NewGaugeFunc</a></h3>
+				<pre>func NewGaugeFunc(opts <a href="index.html#GaugeOpts">GaugeOpts</a>, function func() <a href="../../../../builtin/index.html#float64">float64</a>) <a href="index.html#GaugeFunc">GaugeFunc</a></pre>
+				<p>
+NewGaugeFunc creates a new GaugeFunc based on the provided GaugeOpts. The
+value reported is determined by calling the given function from within the
+Write method. Take into account that metric collection may happen
+concurrently. If that results in concurrent calls to Write, like in the case
+where a GaugeFunc is directly registered with Prometheus, the provided
+function must be concurrency-safe.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="GaugeOpts">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/gauge.go?s=1462:1481#L33">GaugeOpts</a></h2>
+			<pre>type GaugeOpts <a href="index.html#Opts">Opts</a></pre>
+			<p>
+GaugeOpts is an alias for Opts. See there for doc comments.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="GaugeVec">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/gauge.go?s=2077:2113#L50">GaugeVec</a></h2>
+			<pre>type GaugeVec struct {
+    *<a href="index.html#MetricVec">MetricVec</a>
+}</pre>
+			<p>
+GaugeVec is a Collector that bundles a set of Gauges that all share the same
+Desc, but have different values for their variable labels. This is used if
+you want to count the same thing partitioned by various dimensions
+(e.g. number of operations queued, partitioned by user and operation
+type). Create instances with NewGaugeVec.
+</p>
+
+
+			
+
+			
+
+			<div id="example_GaugeVec" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+opsQueued := prometheus.NewGaugeVec(
+    prometheus.GaugeOpts{
+        Namespace: &#34;our_company&#34;,
+        Subsystem: &#34;blob_storage&#34;,
+        Name:      &#34;ops_queued&#34;,
+        Help:      &#34;Number of blob storage operations waiting to be processed, partitioned by user and type.&#34;,
+    },
+    []string{
+        <span class="comment">// Which user has requested the operation?</span>
+        &#34;user&#34;,
+        <span class="comment">// Of what type is the operation?</span>
+        &#34;type&#34;,
+    },
+)
+prometheus.MustRegister(opsQueued)
+
+<span class="comment">// Increase a value using compact (but order-sensitive!) WithLabelValues().</span>
+opsQueued.WithLabelValues(&#34;bob&#34;, &#34;put&#34;).Add(4)
+<span class="comment">// Increase a value with a map using WithLabels. More verbose, but order</span>
+<span class="comment">// doesn&#39;t matter anymore.</span>
+opsQueued.With(prometheus.Labels{&#34;type&#34;: &#34;delete&#34;, &#34;user&#34;: &#34;alice&#34;}).Inc()
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+			
+
+			
+				
+				<h3 id="NewGaugeVec">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/gauge.go?s=2275:2338#L57">NewGaugeVec</a></h3>
+				<pre>func NewGaugeVec(opts <a href="index.html#GaugeOpts">GaugeOpts</a>, labelNames []<a href="../../../../builtin/index.html#string">string</a>) *<a href="index.html#GaugeVec">GaugeVec</a></pre>
+				<p>
+NewGaugeVec creates a new GaugeVec based on the provided GaugeOpts and
+partitioned by the given label names. At least one label name must be
+provided.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="GaugeVec.GetMetricWith">func (*GaugeVec) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/gauge.go?s=3191:3253#L85">GetMetricWith</a></h3>
+				<pre>func (m *<a href="index.html#GaugeVec">GaugeVec</a>) GetMetricWith(labels <a href="index.html#Labels">Labels</a>) (<a href="index.html#Gauge">Gauge</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+GetMetricWith replaces the method of the same name in MetricVec. The
+difference is that this method returns a Gauge and not a Metric so that no
+type conversion is required.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="GaugeVec.GetMetricWithLabelValues">func (*GaugeVec) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/gauge.go?s=2800:2873#L74">GetMetricWithLabelValues</a></h3>
+				<pre>func (m *<a href="index.html#GaugeVec">GaugeVec</a>) GetMetricWithLabelValues(lvs ...<a href="../../../../builtin/index.html#string">string</a>) (<a href="index.html#Gauge">Gauge</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+GetMetricWithLabelValues replaces the method of the same name in
+MetricVec. The difference is that this method returns a Gauge and not a
+Metric so that no type conversion is required.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="GaugeVec.With">func (*GaugeVec) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/gauge.go?s=3961:4005#L104">With</a></h3>
+				<pre>func (m *<a href="index.html#GaugeVec">GaugeVec</a>) With(labels <a href="index.html#Labels">Labels</a>) <a href="index.html#Gauge">Gauge</a></pre>
+				<p>
+With works as GetMetricWith, but panics where GetMetricWithLabels would have
+returned an error. By not returning an error, With allows shortcuts like
+</p>
+<pre>myVec.With(Labels{&#34;code&#34;: &#34;404&#34;, &#34;method&#34;: &#34;GET&#34;}).Add(42)
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="GaugeVec.WithLabelValues">func (*GaugeVec) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/gauge.go?s=3626:3681#L97">WithLabelValues</a></h3>
+				<pre>func (m *<a href="index.html#GaugeVec">GaugeVec</a>) WithLabelValues(lvs ...<a href="../../../../builtin/index.html#string">string</a>) <a href="index.html#Gauge">Gauge</a></pre>
+				<p>
+WithLabelValues works as GetMetricWithLabelValues, but panics where
+GetMetricWithLabelValues would have returned an error. By not returning an
+error, WithLabelValues allows shortcuts like
+</p>
+<pre>myVec.WithLabelValues(&#34;404&#34;, &#34;GET&#34;).Add(42)
+</pre>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Histogram">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/histogram.go?s=1538:1660#L32">Histogram</a></h2>
+			<pre>type Histogram interface {
+    <a href="index.html#Metric">Metric</a>
+    <a href="index.html#Collector">Collector</a>
+
+    <span class="comment">// Observe adds a single observation to the histogram.</span>
+    Observe(<a href="../../../../builtin/index.html#float64">float64</a>)
+}</pre>
+			<p>
+A Histogram counts individual observations from an event or sample stream in
+configurable buckets. Similar to a summary, it also provides a sum of
+observations and an observation count.
+</p>
+<p>
+On the Prometheus server, quantiles can be calculated from a Histogram using
+the histogram_quantile function in the query language.
+</p>
+<p>
+Note that Histograms, in contrast to Summaries, can be aggregated with the
+Prometheus query language (see the documentation for detailed
+procedures). However, Histograms require the user to pre-define suitable
+buckets, and they are in general less accurate. The Observe method of a
+Histogram has a very low performance overhead in comparison with the Observe
+method of a Summary.
+</p>
+<p>
+To create Histogram instances, use NewHistogram.
+</p>
+
+
+			
+
+			
+
+			<div id="example_Histogram" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">temps := prometheus.NewHistogram(prometheus.HistogramOpts{
+    Name:    &#34;pond_temperature_celsius&#34;,
+    Help:    &#34;The temperature of the frog pond.&#34;, <span class="comment">// Sorry, we can&#39;t measure how badly it smells.</span>
+    Buckets: prometheus.LinearBuckets(20, 5, 5),  <span class="comment">// 5 buckets, each 5 centigrade wide.</span>
+})
+
+<span class="comment">// Simulate some observations.</span>
+for i := 0; i &lt; 1000; i++ {
+    temps.Observe(30 + math.Floor(120*math.Sin(float64(i)*0.1))/10)
+}
+
+<span class="comment">// Just for demonstration, let&#39;s check the state of the histogram by</span>
+<span class="comment">// (ab)using its Write method (which is usually only used by Prometheus</span>
+<span class="comment">// internally).</span>
+metric := &amp;dto.Metric{}
+temps.Write(metric)
+fmt.Println(proto.MarshalTextString(metric))
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">histogram: &lt;
+  sample_count: 1000
+  sample_sum: 29969.50000000001
+  bucket: &lt;
+    cumulative_count: 192
+    upper_bound: 20
+  &gt;
+  bucket: &lt;
+    cumulative_count: 366
+    upper_bound: 25
+  &gt;
+  bucket: &lt;
+    cumulative_count: 501
+    upper_bound: 30
+  &gt;
+  bucket: &lt;
+    cumulative_count: 638
+    upper_bound: 35
+  &gt;
+  bucket: &lt;
+    cumulative_count: 816
+    upper_bound: 40
+  &gt;
+&gt;
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+			
+
+			
+				
+				<h3 id="NewHistogram">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/histogram.go?s=6034:6081#L148">NewHistogram</a></h3>
+				<pre>func NewHistogram(opts <a href="index.html#HistogramOpts">HistogramOpts</a>) <a href="index.html#Histogram">Histogram</a></pre>
+				<p>
+NewHistogram creates a new Histogram based on the provided HistogramOpts. It
+panics if the buckets in HistogramOpts are not in strictly increasing order.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="HistogramOpts">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/histogram.go?s=3969:5872#L103">HistogramOpts</a></h2>
+			<pre>type HistogramOpts struct {
+    <span class="comment">// Namespace, Subsystem, and Name are components of the fully-qualified</span>
+    <span class="comment">// name of the Histogram (created by joining these components with</span>
+    <span class="comment">// &#34;_&#34;). Only Name is mandatory, the others merely help structuring the</span>
+    <span class="comment">// name. Note that the fully-qualified name of the Histogram must be a</span>
+    <span class="comment">// valid Prometheus metric name.</span>
+    Namespace <a href="../../../../builtin/index.html#string">string</a>
+    Subsystem <a href="../../../../builtin/index.html#string">string</a>
+    Name      <a href="../../../../builtin/index.html#string">string</a>
+
+    <span class="comment">// Help provides information about this Histogram. Mandatory!</span>
+    <span class="comment">//</span>
+    <span class="comment">// Metrics with the same fully-qualified name must have the same Help</span>
+    <span class="comment">// string.</span>
+    Help <a href="../../../../builtin/index.html#string">string</a>
+
+    <span class="comment">// ConstLabels are used to attach fixed labels to this</span>
+    <span class="comment">// Histogram. Histograms with the same fully-qualified name must have the</span>
+    <span class="comment">// same label names in their ConstLabels.</span>
+    <span class="comment">//</span>
+    <span class="comment">// Note that in most cases, labels have a value that varies during the</span>
+    <span class="comment">// lifetime of a process. Those labels are usually managed with a</span>
+    <span class="comment">// HistogramVec. ConstLabels serve only special purposes. One is for the</span>
+    <span class="comment">// special case where the value of a label does not change during the</span>
+    <span class="comment">// lifetime of a process, e.g. if the revision of the running binary is</span>
+    <span class="comment">// put into a label. Another, more advanced purpose is if more than one</span>
+    <span class="comment">// Collector needs to collect Histograms with the same fully-qualified</span>
+    <span class="comment">// name. In that case, those Summaries must differ in the values of</span>
+    <span class="comment">// their ConstLabels. See the Collector examples.</span>
+    <span class="comment">//</span>
+    <span class="comment">// If the value of a label never changes (not even between binaries),</span>
+    <span class="comment">// that label most likely should not be a label at all (but part of the</span>
+    <span class="comment">// metric name).</span>
+    ConstLabels <a href="index.html#Labels">Labels</a>
+
+    <span class="comment">// Buckets defines the buckets into which observations are counted. Each</span>
+    <span class="comment">// element in the slice is the upper inclusive bound of a bucket. The</span>
+    <span class="comment">// values must be sorted in strictly increasing order. There is no need</span>
+    <span class="comment">// to add a highest bucket with +Inf bound, it will be added</span>
+    <span class="comment">// implicitly. The default value is DefBuckets.</span>
+    Buckets []<a href="../../../../builtin/index.html#float64">float64</a>
+}</pre>
+			<p>
+HistogramOpts bundles the options for creating a Histogram metric. It is
+mandatory to set Name and Help to a non-empty string. All other fields are
+optional and can safely be left at their zero value.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="HistogramVec">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/histogram.go?s=9663:9703#L279">HistogramVec</a></h2>
+			<pre>type HistogramVec struct {
+    *<a href="index.html#MetricVec">MetricVec</a>
+}</pre>
+			<p>
+HistogramVec is a Collector that bundles a set of Histograms that all share the
+same Desc, but have different values for their variable labels. This is used
+if you want to count the same thing partitioned by various dimensions
+(e.g. HTTP request latencies, partitioned by status code and method). Create
+instances with NewHistogramVec.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewHistogramVec">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/histogram.go?s=9877:9952#L286">NewHistogramVec</a></h3>
+				<pre>func NewHistogramVec(opts <a href="index.html#HistogramOpts">HistogramOpts</a>, labelNames []<a href="../../../../builtin/index.html#string">string</a>) *<a href="index.html#HistogramVec">HistogramVec</a></pre>
+				<p>
+NewHistogramVec creates a new HistogramVec based on the provided HistogramOpts and
+partitioned by the given label names. At least one label name must be
+provided.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="HistogramVec.GetMetricWith">func (*HistogramVec) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/histogram.go?s=10824:10894#L314">GetMetricWith</a></h3>
+				<pre>func (m *<a href="index.html#HistogramVec">HistogramVec</a>) GetMetricWith(labels <a href="index.html#Labels">Labels</a>) (<a href="index.html#Histogram">Histogram</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+GetMetricWith replaces the method of the same name in MetricVec. The
+difference is that this method returns a Histogram and not a Metric so that no
+type conversion is required.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="HistogramVec.GetMetricWithLabelValues">func (*HistogramVec) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/histogram.go?s=10417:10498#L303">GetMetricWithLabelValues</a></h3>
+				<pre>func (m *<a href="index.html#HistogramVec">HistogramVec</a>) GetMetricWithLabelValues(lvs ...<a href="../../../../builtin/index.html#string">string</a>) (<a href="index.html#Histogram">Histogram</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+GetMetricWithLabelValues replaces the method of the same name in
+MetricVec. The difference is that this method returns a Histogram and not a
+Metric so that no type conversion is required.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="HistogramVec.With">func (*HistogramVec) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/histogram.go?s=11632:11684#L333">With</a></h3>
+				<pre>func (m *<a href="index.html#HistogramVec">HistogramVec</a>) With(labels <a href="index.html#Labels">Labels</a>) <a href="index.html#Histogram">Histogram</a></pre>
+				<p>
+With works as GetMetricWith, but panics where GetMetricWithLabels would have
+returned an error. By not returning an error, With allows shortcuts like
+</p>
+<pre>myVec.With(Labels{&#34;code&#34;: &#34;404&#34;, &#34;method&#34;: &#34;GET&#34;}).Observe(42.21)
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="HistogramVec.WithLabelValues">func (*HistogramVec) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/histogram.go?s=11278:11341#L326">WithLabelValues</a></h3>
+				<pre>func (m *<a href="index.html#HistogramVec">HistogramVec</a>) WithLabelValues(lvs ...<a href="../../../../builtin/index.html#string">string</a>) <a href="index.html#Histogram">Histogram</a></pre>
+				<p>
+WithLabelValues works as GetMetricWithLabelValues, but panics where
+GetMetricWithLabelValues would have returned an error. By not returning an
+error, WithLabelValues allows shortcuts like
+</p>
+<pre>myVec.WithLabelValues(&#34;404&#34;, &#34;GET&#34;).Observe(42.21)
+</pre>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="LabelPairSorter">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/metric.go?s=5283:5320#L114">LabelPairSorter</a></h2>
+			<pre>type LabelPairSorter []*<a href="../../client_model/go/index.html">dto</a>.<a href="../../client_model/go/index.html#LabelPair">LabelPair</a></pre>
+			<p>
+LabelPairSorter implements sort.Interface. It is used to sort a slice of
+dto.LabelPair pointers. This is useful for implementing the Write method of
+custom metrics.
+</p>
+
+
+			
+
+			
+
+			<div id="example_LabelPairSorter" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">labelPairs := []*dto.LabelPair{
+    {Name: proto.String(&#34;status&#34;), Value: proto.String(&#34;404&#34;)},
+    {Name: proto.String(&#34;method&#34;), Value: proto.String(&#34;get&#34;)},
+}
+
+sort.Sort(prometheus.LabelPairSorter(labelPairs))
+
+fmt.Println(labelPairs)
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">[name:&#34;method&#34; value:&#34;get&#34;  name:&#34;status&#34; value:&#34;404&#34; ]
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+			
+
+			
+
+			
+				
+				<h3 id="LabelPairSorter.Len">func (LabelPairSorter) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/metric.go?s=5322:5356#L116">Len</a></h3>
+				<pre>func (s <a href="index.html#LabelPairSorter">LabelPairSorter</a>) Len() <a href="../../../../builtin/index.html#int">int</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="LabelPairSorter.Less">func (LabelPairSorter) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/metric.go?s=5447:5491#L124">Less</a></h3>
+				<pre>func (s <a href="index.html#LabelPairSorter">LabelPairSorter</a>) Less(i, j <a href="../../../../builtin/index.html#int">int</a>) <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="LabelPairSorter.Swap">func (LabelPairSorter) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/metric.go?s=5377:5416#L120">Swap</a></h3>
+				<pre>func (s <a href="index.html#LabelPairSorter">LabelPairSorter</a>) Swap(i, j <a href="../../../../builtin/index.html#int">int</a>)</pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Labels">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/desc.go?s=1370:1399#L34">Labels</a></h2>
+			<pre>type Labels map[<a href="../../../../builtin/index.html#string">string</a>]<a href="../../../../builtin/index.html#string">string</a></pre>
+			<p>
+Labels represents a collection of label name -&gt; value mappings. This type is
+commonly used with the With(Labels) and GetMetricWith(Labels) methods of
+metric vector Collectors, e.g.:
+</p>
+<pre>myVec.With(Labels{&#34;code&#34;: &#34;404&#34;, &#34;method&#34;: &#34;GET&#34;}).Add(42)
+</pre>
+<p>
+The other use-case is the specification of constant label pairs in Opts or to
+create a Desc.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Metric">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/metric.go?s=905:2281#L17">Metric</a></h2>
+			<pre>type Metric interface {
+    <span class="comment">// Desc returns the descriptor for the Metric. This method idempotently</span>
+    <span class="comment">// returns the same descriptor throughout the lifetime of the</span>
+    <span class="comment">// Metric. The returned descriptor is immutable by contract. A Metric</span>
+    <span class="comment">// unable to describe itself must return an invalid descriptor (created</span>
+    <span class="comment">// with NewInvalidDesc).</span>
+    Desc() *<a href="index.html#Desc">Desc</a>
+    <span class="comment">// Write encodes the Metric into a &#34;Metric&#34; Protocol Buffer data</span>
+    <span class="comment">// transmission object.</span>
+    <span class="comment">//</span>
+    <span class="comment">// Metric implementations must observe concurrency safety as reads of</span>
+    <span class="comment">// this metric may occur at any time, and any blocking occurs at the</span>
+    <span class="comment">// expense of total performance of rendering all registered</span>
+    <span class="comment">// metrics. Ideally, Metric implementations should support concurrent</span>
+    <span class="comment">// readers.</span>
+    <span class="comment">//</span>
+    <span class="comment">// While populating dto.Metric, it is the responsibility of the</span>
+    <span class="comment">// implementation to ensure validity of the Metric protobuf (like valid</span>
+    <span class="comment">// UTF-8 strings or syntactically valid metric and label names). It is</span>
+    <span class="comment">// recommended to sort labels lexicographically. (Implementers may find</span>
+    <span class="comment">// LabelPairSorter useful for that.) Callers of Write should still make</span>
+    <span class="comment">// sure of sorting if they depend on it.</span>
+    Write(*<a href="../../client_model/go/index.html">dto</a>.<a href="../../client_model/go/index.html#Metric">Metric</a>) <a href="../../../../builtin/index.html#error">error</a>
+}</pre>
+			<p>
+A Metric models a single sample value with its meta data being exported to
+Prometheus. Implementations of Metric in this package are Gauge, Counter,
+Histogram, Summary, and Untyped.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="MustNewConstHistogram">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/histogram.go?s=13740:13871#L408">MustNewConstHistogram</a></h3>
+				<pre>func MustNewConstHistogram(
+    desc *<a href="index.html#Desc">Desc</a>,
+    count <a href="../../../../builtin/index.html#uint64">uint64</a>,
+    sum <a href="../../../../builtin/index.html#float64">float64</a>,
+    buckets map[<a href="../../../../builtin/index.html#float64">float64</a>]<a href="../../../../builtin/index.html#uint64">uint64</a>,
+    labelValues ...<a href="../../../../builtin/index.html#string">string</a>,
+) <a href="index.html#Metric">Metric</a></pre>
+				<p>
+MustNewConstHistogram is a version of NewConstHistogram that panics where
+NewConstMetric would have returned an error.
+</p>
+
+				
+				
+			
+				
+				<h3 id="MustNewConstMetric">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/value.go?s=5151:5252#L159">MustNewConstMetric</a></h3>
+				<pre>func MustNewConstMetric(desc *<a href="index.html#Desc">Desc</a>, valueType <a href="index.html#ValueType">ValueType</a>, value <a href="../../../../builtin/index.html#float64">float64</a>, labelValues ...<a href="../../../../builtin/index.html#string">string</a>) <a href="index.html#Metric">Metric</a></pre>
+				<p>
+MustNewConstMetric is a version of NewConstMetric that panics where
+NewConstMetric would have returned an error.
+</p>
+
+				
+				
+			
+				
+				<h3 id="MustNewConstSummary">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/summary.go?s=15982:16114#L512">MustNewConstSummary</a></h3>
+				<pre>func MustNewConstSummary(
+    desc *<a href="index.html#Desc">Desc</a>,
+    count <a href="../../../../builtin/index.html#uint64">uint64</a>,
+    sum <a href="../../../../builtin/index.html#float64">float64</a>,
+    quantiles map[<a href="../../../../builtin/index.html#float64">float64</a>]<a href="../../../../builtin/index.html#float64">float64</a>,
+    labelValues ...<a href="../../../../builtin/index.html#string">string</a>,
+) <a href="index.html#Metric">Metric</a></pre>
+				<p>
+MustNewConstSummary is a version of NewConstSummary that panics where
+NewConstMetric would have returned an error.
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewConstHistogram">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/histogram.go?s=13213:13349#L387">NewConstHistogram</a></h3>
+				<pre>func NewConstHistogram(
+    desc *<a href="index.html#Desc">Desc</a>,
+    count <a href="../../../../builtin/index.html#uint64">uint64</a>,
+    sum <a href="../../../../builtin/index.html#float64">float64</a>,
+    buckets map[<a href="../../../../builtin/index.html#float64">float64</a>]<a href="../../../../builtin/index.html#uint64">uint64</a>,
+    labelValues ...<a href="../../../../builtin/index.html#string">string</a>,
+) (<a href="index.html#Metric">Metric</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+NewConstHistogram returns a metric representing a Prometheus histogram with
+fixed values for the count, sum, and bucket counts. As those parameters
+cannot be changed, the returned value does not implement the Histogram
+interface (but only the Metric interface). Users of this package will not
+have much use for it in regular operations. However, when implementing custom
+Collectors, it is useful as a throw-away metric that is generated on the fly
+to send it to Prometheus in the Collect method.
+</p>
+<p>
+buckets is a map of upper bounds to cumulative counts, excluding the +Inf
+bucket.
+</p>
+<p>
+NewConstHistogram returns an error if the length of labelValues is not
+consistent with the variable labels in Desc.
+</p>
+
+				<div id="example_NewConstHistogram" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">desc := prometheus.NewDesc(
+    &#34;http_request_duration_seconds&#34;,
+    &#34;A histogram of the HTTP request durations.&#34;,
+    []string{&#34;code&#34;, &#34;method&#34;},
+    prometheus.Labels{&#34;owner&#34;: &#34;example&#34;},
+)
+
+<span class="comment">// Create a constant histogram from values we got from a 3rd party telemetry system.</span>
+h := prometheus.MustNewConstHistogram(
+    desc,
+    4711, 403.34,
+    map[float64]uint64{25: 121, 50: 2403, 100: 3221, 200: 4233},
+    &#34;200&#34;, &#34;get&#34;,
+)
+
+<span class="comment">// Just for demonstration, let&#39;s check the state of the histogram by</span>
+<span class="comment">// (ab)using its Write method (which is usually only used by Prometheus</span>
+<span class="comment">// internally).</span>
+metric := &amp;dto.Metric{}
+h.Write(metric)
+fmt.Println(proto.MarshalTextString(metric))
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">label: &lt;
+  name: &#34;code&#34;
+  value: &#34;200&#34;
+&gt;
+label: &lt;
+  name: &#34;method&#34;
+  value: &#34;get&#34;
+&gt;
+label: &lt;
+  name: &#34;owner&#34;
+  value: &#34;example&#34;
+&gt;
+histogram: &lt;
+  sample_count: 4711
+  sample_sum: 403.34
+  bucket: &lt;
+    cumulative_count: 121
+    upper_bound: 25
+  &gt;
+  bucket: &lt;
+    cumulative_count: 2403
+    upper_bound: 50
+  &gt;
+  bucket: &lt;
+    cumulative_count: 3221
+    upper_bound: 100
+  &gt;
+  bucket: &lt;
+    cumulative_count: 4233
+    upper_bound: 200
+  &gt;
+&gt;
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+				
+				<h3 id="NewConstMetric">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/value.go?s=4680:4786#L145">NewConstMetric</a></h3>
+				<pre>func NewConstMetric(desc *<a href="index.html#Desc">Desc</a>, valueType <a href="index.html#ValueType">ValueType</a>, value <a href="../../../../builtin/index.html#float64">float64</a>, labelValues ...<a href="../../../../builtin/index.html#string">string</a>) (<a href="index.html#Metric">Metric</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+NewConstMetric returns a metric with one fixed value that cannot be
+changed. Users of this package will not have much use for it in regular
+operations. However, when implementing custom Collectors, it is useful as a
+throw-away metric that is generated on the fly to send it to Prometheus in
+the Collect method. NewConstMetric returns an error if the length of
+labelValues is not consistent with the variable labels in Desc.
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewConstSummary">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/summary.go?s=15458:15595#L491">NewConstSummary</a></h3>
+				<pre>func NewConstSummary(
+    desc *<a href="index.html#Desc">Desc</a>,
+    count <a href="../../../../builtin/index.html#uint64">uint64</a>,
+    sum <a href="../../../../builtin/index.html#float64">float64</a>,
+    quantiles map[<a href="../../../../builtin/index.html#float64">float64</a>]<a href="../../../../builtin/index.html#float64">float64</a>,
+    labelValues ...<a href="../../../../builtin/index.html#string">string</a>,
+) (<a href="index.html#Metric">Metric</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+NewConstSummary returns a metric representing a Prometheus summary with fixed
+values for the count, sum, and quantiles. As those parameters cannot be
+changed, the returned value does not implement the Summary interface (but
+only the Metric interface). Users of this package will not have much use for
+it in regular operations. However, when implementing custom Collectors, it is
+useful as a throw-away metric that is generated on the fly to send it to
+Prometheus in the Collect method.
+</p>
+<p>
+quantiles maps ranks to quantile values. For example, a median latency of
+0.23s and a 99th percentile latency of 0.56s would be expressed as:
+</p>
+<pre>map[float64]float64{0.5: 0.23, 0.99: 0.56}
+</pre>
+<p>
+NewConstSummary returns an error if the length of labelValues is not
+consistent with the variable labels in Desc.
+</p>
+
+				<div id="example_NewConstSummary" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">desc := prometheus.NewDesc(
+    &#34;http_request_duration_seconds&#34;,
+    &#34;A summary of the HTTP request durations.&#34;,
+    []string{&#34;code&#34;, &#34;method&#34;},
+    prometheus.Labels{&#34;owner&#34;: &#34;example&#34;},
+)
+
+<span class="comment">// Create a constant summary from values we got from a 3rd party telemetry system.</span>
+s := prometheus.MustNewConstSummary(
+    desc,
+    4711, 403.34,
+    map[float64]float64{0.5: 42.3, 0.9: 323.3},
+    &#34;200&#34;, &#34;get&#34;,
+)
+
+<span class="comment">// Just for demonstration, let&#39;s check the state of the summary by</span>
+<span class="comment">// (ab)using its Write method (which is usually only used by Prometheus</span>
+<span class="comment">// internally).</span>
+metric := &amp;dto.Metric{}
+s.Write(metric)
+fmt.Println(proto.MarshalTextString(metric))
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">label: &lt;
+  name: &#34;code&#34;
+  value: &#34;200&#34;
+&gt;
+label: &lt;
+  name: &#34;method&#34;
+  value: &#34;get&#34;
+&gt;
+label: &lt;
+  name: &#34;owner&#34;
+  value: &#34;example&#34;
+&gt;
+summary: &lt;
+  sample_count: 4711
+  sample_sum: 403.34
+  quantile: &lt;
+    quantile: 0.5
+    value: 42.3
+  &gt;
+  quantile: &lt;
+    quantile: 0.9
+    value: 323.3
+  &gt;
+&gt;
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+				
+				<h3 id="NewInvalidMetric">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/metric.go?s=6010:6061#L150">NewInvalidMetric</a></h3>
+				<pre>func NewInvalidMetric(desc *<a href="index.html#Desc">Desc</a>, err <a href="../../../../builtin/index.html#error">error</a>) <a href="index.html#Metric">Metric</a></pre>
+				<p>
+NewInvalidMetric returns a metric whose Write method always returns the
+provided error. It is useful if a Collector finds itself unable to collect
+a metric and wishes to report an error to the registry.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="MetricVec">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/vec.go?s=1003:1331#L18">MetricVec</a></h2>
+			<pre>type MetricVec struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+MetricVec is a Collector to bundle metrics of the same name that
+differ in their label values. MetricVec is usually not used directly but as a
+building block for implementations of vectors of a given metric
+type. GaugeVec, CounterVec, SummaryVec, and UntypedVec are examples already
+provided in this package.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="MetricVec.Collect">func (*MetricVec) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/vec.go?s=2072:2117#L54">Collect</a></h3>
+				<pre>func (m *<a href="index.html#MetricVec">MetricVec</a>) Collect(ch chan&lt;- <a href="index.html#Metric">Metric</a>)</pre>
+				<p>
+Collect implements Collector.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="MetricVec.Delete">func (*MetricVec) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/vec.go?s=6976:7022#L177">Delete</a></h3>
+				<pre>func (m *<a href="index.html#MetricVec">MetricVec</a>) Delete(labels <a href="index.html#Labels">Labels</a>) <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Delete deletes the metric where the variable labels are the same as those
+passed in as labels. It returns true if a metric was deleted.
+</p>
+<p>
+It is not an error if the number and names of the Labels are inconsistent
+with those of the VariableLabels in the Desc of the MetricVec. However, such
+inconsistent Labels can never match an actual Metric, so the method will
+always return false in that case.
+</p>
+<p>
+This method is used for the same purpose as DeleteLabelValues(...string). See
+there for pros and cons of the two methods.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="MetricVec.DeleteLabelValues">func (*MetricVec) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/vec.go?s=6215:6272#L156">DeleteLabelValues</a></h3>
+				<pre>func (m *<a href="index.html#MetricVec">MetricVec</a>) DeleteLabelValues(lvs ...<a href="../../../../builtin/index.html#string">string</a>) <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+DeleteLabelValues removes the metric where the variable labels are the same
+as those passed in as labels (same order as the VariableLabels in Desc). It
+returns true if a metric was deleted.
+</p>
+<p>
+It is not an error if the number of label values is not the same as the
+number of VariableLabels in Desc.  However, such inconsistent label count can
+never match an actual Metric, so the method will always return false in that
+case.
+</p>
+<p>
+Note that for more than one label value, this method is prone to mistakes
+caused by an incorrect order of arguments. Consider Delete(Labels) as an
+alternative to avoid that type of mistake. For higher label numbers, the
+latter has a much more readable (albeit more verbose) syntax, but it comes
+with a performance overhead (for creating and processing the Labels map).
+See also the CounterVec example.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="MetricVec.Describe">func (*MetricVec) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/vec.go?s=1974:2019#L49">Describe</a></h3>
+				<pre>func (m *<a href="index.html#MetricVec">MetricVec</a>) Describe(ch chan&lt;- *<a href="index.html#Desc">Desc</a>)</pre>
+				<p>
+Describe implements Collector. The length of the returned slice
+is always one.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="MetricVec.GetMetricWith">func (*MetricVec) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/vec.go?s=4501:4565#L110">GetMetricWith</a></h3>
+				<pre>func (m *<a href="index.html#MetricVec">MetricVec</a>) GetMetricWith(labels <a href="index.html#Labels">Labels</a>) (<a href="index.html#Metric">Metric</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+GetMetricWith returns the Metric for the given Labels map (the label names
+must match those of the VariableLabels in Desc). If that label map is
+accessed for the first time, a new Metric is created. Implications of
+creating a Metric without using it and keeping the Metric for later use are
+the same as for GetMetricWithLabelValues.
+</p>
+<p>
+An error is returned if the number and names of the Labels are inconsistent
+with those of the VariableLabels in Desc.
+</p>
+<p>
+This method is used for the same purpose as
+GetMetricWithLabelValues(...string). See there for pros and cons of the two
+methods.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="MetricVec.GetMetricWithLabelValues">func (*MetricVec) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/vec.go?s=3675:3750#L89">GetMetricWithLabelValues</a></h3>
+				<pre>func (m *<a href="index.html#MetricVec">MetricVec</a>) GetMetricWithLabelValues(lvs ...<a href="../../../../builtin/index.html#string">string</a>) (<a href="index.html#Metric">Metric</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+GetMetricWithLabelValues returns the Metric for the given slice of label
+values (same order as the VariableLabels in Desc). If that combination of
+label values is accessed for the first time, a new Metric is created.
+</p>
+<p>
+It is possible to call this method without using the returned Metric to only
+create the new Metric but leave it at its start value (e.g. a Summary or
+Histogram without any observations). See also the SummaryVec example.
+</p>
+<p>
+Keeping the Metric for later use is possible (and should be considered if
+performance is critical), but keep in mind that Reset, DeleteLabelValues and
+Delete can be used to delete the Metric from the MetricVec. In that case, the
+Metric will still exist, but it will not be exported anymore, even if a
+Metric with the same label values is created later. See also the CounterVec
+example.
+</p>
+<p>
+An error is returned if the number of label values is not the same as the
+number of VariableLabels in Desc.
+</p>
+<p>
+Note that for more than one label value, this method is prone to mistakes
+caused by an incorrect order of arguments. Consider GetMetricWith(Labels) as
+an alternative to avoid that type of mistake. For higher label numbers, the
+latter has a much more readable (albeit more verbose) syntax, but it comes
+with a performance overhead (for creating and processing the Labels map).
+See also the GaugeVec example.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="MetricVec.Reset">func (*MetricVec) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/vec.go?s=8294:8321#L233">Reset</a></h3>
+				<pre>func (m *<a href="index.html#MetricVec">MetricVec</a>) Reset()</pre>
+				<p>
+Reset deletes all metrics in this vector.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="MetricVec.With">func (*MetricVec) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/vec.go?s=5205:5251#L133">With</a></h3>
+				<pre>func (m *<a href="index.html#MetricVec">MetricVec</a>) With(labels <a href="index.html#Labels">Labels</a>) <a href="index.html#Metric">Metric</a></pre>
+				<p>
+With works as GetMetricWith, but panics if an error occurs. The method allows
+neat syntax like:
+</p>
+<pre>httpReqs.With(Labels{&#34;status&#34;:&#34;404&#34;, &#34;method&#34;:&#34;POST&#34;}).Inc()
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="MetricVec.WithLabelValues">func (*MetricVec) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/vec.go?s=4873:4930#L122">WithLabelValues</a></h3>
+				<pre>func (m *<a href="index.html#MetricVec">MetricVec</a>) WithLabelValues(lvs ...<a href="../../../../builtin/index.html#string">string</a>) <a href="index.html#Metric">Metric</a></pre>
+				<p>
+WithLabelValues works as GetMetricWithLabelValues, but panics if an error
+occurs. The method allows neat syntax like:
+</p>
+<pre>httpReqs.WithLabelValues(&#34;404&#34;, &#34;POST&#34;).Inc()
+</pre>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="MultiError">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/registry.go?s=9835:9858#L231">MultiError</a></h2>
+			<pre>type MultiError []<a href="../../../../builtin/index.html#error">error</a></pre>
+			<p>
+MultiError is a slice of errors implementing the error interface. It is used
+by a Gatherer to report multiple errors during MetricFamily gathering.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="MultiError.Error">func (MultiError) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/registry.go?s=9860:9897#L233">Error</a></h3>
+				<pre>func (errs <a href="index.html#MultiError">MultiError</a>) Error() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="MultiError.MaybeUnwrap">func (MultiError) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/registry.go?s=10381:10423#L249">MaybeUnwrap</a></h3>
+				<pre>func (errs <a href="index.html#MultiError">MultiError</a>) MaybeUnwrap() <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+MaybeUnwrap returns nil if len(errs) is 0. It returns the first and only
+contained error as error if len(errs is 1). In all other cases, it returns
+the MultiError directly. This is helpful for returning a MultiError in a way
+that only uses the MultiError if needed.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Opts">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/metric.go?s=2654:4234#L52">Opts</a></h2>
+			<pre>type Opts struct {
+    <span class="comment">// Namespace, Subsystem, and Name are components of the fully-qualified</span>
+    <span class="comment">// name of the Metric (created by joining these components with</span>
+    <span class="comment">// &#34;_&#34;). Only Name is mandatory, the others merely help structuring the</span>
+    <span class="comment">// name. Note that the fully-qualified name of the metric must be a</span>
+    <span class="comment">// valid Prometheus metric name.</span>
+    Namespace <a href="../../../../builtin/index.html#string">string</a>
+    Subsystem <a href="../../../../builtin/index.html#string">string</a>
+    Name      <a href="../../../../builtin/index.html#string">string</a>
+
+    <span class="comment">// Help provides information about this metric. Mandatory!</span>
+    <span class="comment">//</span>
+    <span class="comment">// Metrics with the same fully-qualified name must have the same Help</span>
+    <span class="comment">// string.</span>
+    Help <a href="../../../../builtin/index.html#string">string</a>
+
+    <span class="comment">// ConstLabels are used to attach fixed labels to this metric. Metrics</span>
+    <span class="comment">// with the same fully-qualified name must have the same label names in</span>
+    <span class="comment">// their ConstLabels.</span>
+    <span class="comment">//</span>
+    <span class="comment">// Note that in most cases, labels have a value that varies during the</span>
+    <span class="comment">// lifetime of a process. Those labels are usually managed with a metric</span>
+    <span class="comment">// vector collector (like CounterVec, GaugeVec, UntypedVec). ConstLabels</span>
+    <span class="comment">// serve only special purposes. One is for the special case where the</span>
+    <span class="comment">// value of a label does not change during the lifetime of a process,</span>
+    <span class="comment">// e.g. if the revision of the running binary is put into a</span>
+    <span class="comment">// label. Another, more advanced purpose is if more than one Collector</span>
+    <span class="comment">// needs to collect Metrics with the same fully-qualified name. In that</span>
+    <span class="comment">// case, those Metrics must differ in the values of their</span>
+    <span class="comment">// ConstLabels. See the Collector examples.</span>
+    <span class="comment">//</span>
+    <span class="comment">// If the value of a label never changes (not even between binaries),</span>
+    <span class="comment">// that label most likely should not be a label at all (but part of the</span>
+    <span class="comment">// metric name).</span>
+    ConstLabels <a href="index.html#Labels">Labels</a>
+}</pre>
+			<p>
+Opts bundles the options for creating most Metric types. Each metric
+implementation XXX has its own XXXOpts type, but in most cases, it is just be
+an alias of this type (which might change when the requirement arises.)
+</p>
+<p>
+It is mandatory to set Name and Help to a non-empty string. All other fields
+are optional and can safely be left at their zero value.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Registerer">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/registry.go?s=3138:4749#L76">Registerer</a></h2>
+			<pre>type Registerer interface {
+    <span class="comment">// Register registers a new Collector to be included in metrics</span>
+    <span class="comment">// collection. It returns an error if the descriptors provided by the</span>
+    <span class="comment">// Collector are invalid or if they — in combination with descriptors of</span>
+    <span class="comment">// already registered Collectors — do not fulfill the consistency and</span>
+    <span class="comment">// uniqueness criteria described in the documentation of metric.Desc.</span>
+    <span class="comment">//</span>
+    <span class="comment">// If the provided Collector is equal to a Collector already registered</span>
+    <span class="comment">// (which includes the case of re-registering the same Collector), the</span>
+    <span class="comment">// returned error is an instance of AlreadyRegisteredError, which</span>
+    <span class="comment">// contains the previously registered Collector.</span>
+    <span class="comment">//</span>
+    <span class="comment">// It is in general not safe to register the same Collector multiple</span>
+    <span class="comment">// times concurrently.</span>
+    Register(<a href="index.html#Collector">Collector</a>) <a href="../../../../builtin/index.html#error">error</a>
+    <span class="comment">// MustRegister works like Register but registers any number of</span>
+    <span class="comment">// Collectors and panics upon the first registration that causes an</span>
+    <span class="comment">// error.</span>
+    MustRegister(...<a href="index.html#Collector">Collector</a>)
+    <span class="comment">// Unregister unregisters the Collector that equals the Collector passed</span>
+    <span class="comment">// in as an argument.  (Two Collectors are considered equal if their</span>
+    <span class="comment">// Describe method yields the same set of descriptors.) The function</span>
+    <span class="comment">// returns whether a Collector was unregistered.</span>
+    <span class="comment">//</span>
+    <span class="comment">// Note that even after unregistering, it will not be possible to</span>
+    <span class="comment">// register a new Collector that is inconsistent with the unregistered</span>
+    <span class="comment">// Collector, e.g. a Collector collecting metrics with the same name but</span>
+    <span class="comment">// a different help string. The rationale here is that the same registry</span>
+    <span class="comment">// instance must only collect consistent metrics throughout its</span>
+    <span class="comment">// lifetime.</span>
+    Unregister(<a href="index.html#Collector">Collector</a>) <a href="../../../../builtin/index.html#bool">bool</a>
+}</pre>
+			<p>
+Registerer is the interface for the part of a registry in charge of
+registering and unregistering. Users of custom registries should use
+Registerer as type for registration purposes (rather then the Registry type
+directly). In that way, they are free to use custom Registerer implementation
+(e.g. for testing purposes).
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Registry">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/registry.go?s=10787:11035#L264">Registry</a></h2>
+			<pre>type Registry struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Registry registers Prometheus collectors, collects their metrics, and gathers
+them into MetricFamilies for exposition. It implements both Registerer and
+Gatherer. The zero value is not usable. Create instances with NewRegistry or
+NewPedanticRegistry.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewPedanticRegistry">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/registry.go?s=2699:2735#L65">NewPedanticRegistry</a></h3>
+				<pre>func NewPedanticRegistry() *<a href="index.html#Registry">Registry</a></pre>
+				<p>
+NewPedanticRegistry returns a registry that checks during collection if each
+collected Metric is consistent with its reported Desc, and if the Desc has
+actually been registered with the registry.
+</p>
+<p>
+Usually, a Registry will be happy as long as the union of all collected
+Metrics is consistent and valid even if some metrics are not consistent with
+their own Desc or a Desc provided by their registered Collector. Well-behaved
+Collectors and Metrics will only provide consistent Descs. This Registry is
+useful to test the implementation of Collectors and Metrics.
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewRegistry">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/registry.go?s=1931:1959#L48">NewRegistry</a></h3>
+				<pre>func NewRegistry() *<a href="index.html#Registry">Registry</a></pre>
+				<p>
+NewRegistry creates a new vanilla Registry without any Collectors
+pre-registered.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Registry.Gather">func (*Registry) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/registry.go?s=14763:14819#L400">Gather</a></h3>
+				<pre>func (r *<a href="index.html#Registry">Registry</a>) Gather() ([]*<a href="../../client_model/go/index.html">dto</a>.<a href="../../client_model/go/index.html#MetricFamily">MetricFamily</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Gather implements Gatherer.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Registry.MustRegister">func (*Registry) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/registry.go?s=14593:14641#L391">MustRegister</a></h3>
+				<pre>func (r *<a href="index.html#Registry">Registry</a>) MustRegister(cs ...<a href="index.html#Collector">Collector</a>)</pre>
+				<p>
+MustRegister implements Registerer.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Registry.Register">func (*Registry) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/registry.go?s=11072:11118#L273">Register</a></h3>
+				<pre>func (r *<a href="index.html#Registry">Registry</a>) Register(c <a href="index.html#Collector">Collector</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Register implements Registerer.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Registry.Unregister">func (*Registry) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/registry.go?s=13775:13822#L354">Unregister</a></h3>
+				<pre>func (r *<a href="index.html#Registry">Registry</a>) Unregister(c <a href="index.html#Collector">Collector</a>) <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Unregister implements Registerer.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Summary">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/summary.go?s=1746:1864#L38">Summary</a></h2>
+			<pre>type Summary interface {
+    <a href="index.html#Metric">Metric</a>
+    <a href="index.html#Collector">Collector</a>
+
+    <span class="comment">// Observe adds a single observation to the summary.</span>
+    Observe(<a href="../../../../builtin/index.html#float64">float64</a>)
+}</pre>
+			<p>
+A Summary captures individual observations from an event or sample stream and
+summarizes them in a manner similar to traditional summary statistics: 1. sum
+of observations, 2. observation count, 3. rank estimations.
+</p>
+<p>
+A typical use-case is the observation of request latencies. By default, a
+Summary provides the median, the 90th and the 99th percentile of the latency
+as rank estimations.
+</p>
+<p>
+Note that the rank estimations cannot be aggregated in a meaningful way with
+the Prometheus query language (i.e. you cannot average or add them). If you
+need aggregatable quantiles (e.g. you want the 99th percentile latency of all
+queries served across all instances of a service), consider the Histogram
+metric type. See the Prometheus documentation for more details.
+</p>
+<p>
+To create Summary instances, use NewSummary.
+</p>
+
+
+			
+
+			
+
+			<div id="example_Summary" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">temps := prometheus.NewSummary(prometheus.SummaryOpts{
+    Name: &#34;pond_temperature_celsius&#34;,
+    Help: &#34;The temperature of the frog pond.&#34;, <span class="comment">// Sorry, we can&#39;t measure how badly it smells.</span>
+})
+
+<span class="comment">// Simulate some observations.</span>
+for i := 0; i &lt; 1000; i++ {
+    temps.Observe(30 + math.Floor(120*math.Sin(float64(i)*0.1))/10)
+}
+
+<span class="comment">// Just for demonstration, let&#39;s check the state of the summary by</span>
+<span class="comment">// (ab)using its Write method (which is usually only used by Prometheus</span>
+<span class="comment">// internally).</span>
+metric := &amp;dto.Metric{}
+temps.Write(metric)
+fmt.Println(proto.MarshalTextString(metric))
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">summary: &lt;
+  sample_count: 1000
+  sample_sum: 29969.50000000001
+  quantile: &lt;
+    quantile: 0.5
+    value: 31.1
+  &gt;
+  quantile: &lt;
+    quantile: 0.9
+    value: 41.3
+  &gt;
+  quantile: &lt;
+    quantile: 0.99
+    value: 41.9
+  &gt;
+&gt;
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+			
+
+			
+				
+				<h3 id="NewSummary">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/summary.go?s=6559:6600#L148">NewSummary</a></h3>
+				<pre>func NewSummary(opts <a href="index.html#SummaryOpts">SummaryOpts</a>) <a href="index.html#Summary">Summary</a></pre>
+				<p>
+NewSummary creates a new Summary based on the provided SummaryOpts.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="SummaryOpts">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/summary.go?s=2705:5527#L70">SummaryOpts</a></h2>
+			<pre>type SummaryOpts struct {
+    <span class="comment">// Namespace, Subsystem, and Name are components of the fully-qualified</span>
+    <span class="comment">// name of the Summary (created by joining these components with</span>
+    <span class="comment">// &#34;_&#34;). Only Name is mandatory, the others merely help structuring the</span>
+    <span class="comment">// name. Note that the fully-qualified name of the Summary must be a</span>
+    <span class="comment">// valid Prometheus metric name.</span>
+    Namespace <a href="../../../../builtin/index.html#string">string</a>
+    Subsystem <a href="../../../../builtin/index.html#string">string</a>
+    Name      <a href="../../../../builtin/index.html#string">string</a>
+
+    <span class="comment">// Help provides information about this Summary. Mandatory!</span>
+    <span class="comment">//</span>
+    <span class="comment">// Metrics with the same fully-qualified name must have the same Help</span>
+    <span class="comment">// string.</span>
+    Help <a href="../../../../builtin/index.html#string">string</a>
+
+    <span class="comment">// ConstLabels are used to attach fixed labels to this</span>
+    <span class="comment">// Summary. Summaries with the same fully-qualified name must have the</span>
+    <span class="comment">// same label names in their ConstLabels.</span>
+    <span class="comment">//</span>
+    <span class="comment">// Note that in most cases, labels have a value that varies during the</span>
+    <span class="comment">// lifetime of a process. Those labels are usually managed with a</span>
+    <span class="comment">// SummaryVec. ConstLabels serve only special purposes. One is for the</span>
+    <span class="comment">// special case where the value of a label does not change during the</span>
+    <span class="comment">// lifetime of a process, e.g. if the revision of the running binary is</span>
+    <span class="comment">// put into a label. Another, more advanced purpose is if more than one</span>
+    <span class="comment">// Collector needs to collect Summaries with the same fully-qualified</span>
+    <span class="comment">// name. In that case, those Summaries must differ in the values of</span>
+    <span class="comment">// their ConstLabels. See the Collector examples.</span>
+    <span class="comment">//</span>
+    <span class="comment">// If the value of a label never changes (not even between binaries),</span>
+    <span class="comment">// that label most likely should not be a label at all (but part of the</span>
+    <span class="comment">// metric name).</span>
+    ConstLabels <a href="index.html#Labels">Labels</a>
+
+    <span class="comment">// Objectives defines the quantile rank estimates with their respective</span>
+    <span class="comment">// absolute error. If Objectives[q] = e, then the value reported</span>
+    <span class="comment">// for q will be the φ-quantile value for some φ between q-e and q+e.</span>
+    <span class="comment">// The default value is DefObjectives.</span>
+    Objectives map[<a href="../../../../builtin/index.html#float64">float64</a>]<a href="../../../../builtin/index.html#float64">float64</a>
+
+    <span class="comment">// MaxAge defines the duration for which an observation stays relevant</span>
+    <span class="comment">// for the summary. Must be positive. The default value is DefMaxAge.</span>
+    MaxAge <a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Duration">Duration</a>
+
+    <span class="comment">// AgeBuckets is the number of buckets used to exclude observations that</span>
+    <span class="comment">// are older than MaxAge from the summary. A higher number has a</span>
+    <span class="comment">// resource penalty, so only increase it if the higher resolution is</span>
+    <span class="comment">// really required. For very high observation rates, you might want to</span>
+    <span class="comment">// reduce the number of age buckets. With only one age bucket, you will</span>
+    <span class="comment">// effectively see a complete reset of the summary each time MaxAge has</span>
+    <span class="comment">// passed. The default value is DefAgeBuckets.</span>
+    AgeBuckets <a href="../../../../builtin/index.html#uint32">uint32</a>
+
+    <span class="comment">// BufCap defines the default sample stream buffer size.  The default</span>
+    <span class="comment">// value of DefBufCap should suffice for most uses. If there is a need</span>
+    <span class="comment">// to increase the value, a multiple of 500 is recommended (because that</span>
+    <span class="comment">// is the internal buffer size of the underlying package</span>
+    <span class="comment">// &#34;github.com/bmizerany/perks/quantile&#34;).</span>
+    BufCap <a href="../../../../builtin/index.html#uint32">uint32</a>
+}</pre>
+			<p>
+SummaryOpts bundles the options for creating a Summary metric. It is
+mandatory to set Name and Help to a non-empty string. All other fields are
+optional and can safely be left at their zero value.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="SummaryVec">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/summary.go?s=11917:11955#L382">SummaryVec</a></h2>
+			<pre>type SummaryVec struct {
+    *<a href="index.html#MetricVec">MetricVec</a>
+}</pre>
+			<p>
+SummaryVec is a Collector that bundles a set of Summaries that all share the
+same Desc, but have different values for their variable labels. This is used
+if you want to count the same thing partitioned by various dimensions
+(e.g. HTTP request latencies, partitioned by status code and method). Create
+instances with NewSummaryVec.
+</p>
+
+
+			
+
+			
+
+			<div id="example_SummaryVec" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">temps := prometheus.NewSummaryVec(
+    prometheus.SummaryOpts{
+        Name: &#34;pond_temperature_celsius&#34;,
+        Help: &#34;The temperature of the frog pond.&#34;, <span class="comment">// Sorry, we can&#39;t measure how badly it smells.</span>
+    },
+    []string{&#34;species&#34;},
+)
+
+<span class="comment">// Simulate some observations.</span>
+for i := 0; i &lt; 1000; i++ {
+    temps.WithLabelValues(&#34;litoria-caerulea&#34;).Observe(30 + math.Floor(120*math.Sin(float64(i)*0.1))/10)
+    temps.WithLabelValues(&#34;lithobates-catesbeianus&#34;).Observe(32 + math.Floor(100*math.Cos(float64(i)*0.11))/10)
+}
+
+<span class="comment">// Create a Summary without any observations.</span>
+temps.WithLabelValues(&#34;leiopelma-hochstetteri&#34;)
+
+<span class="comment">// Just for demonstration, let&#39;s check the state of the summary vector</span>
+<span class="comment">// by registering it with a custom registry and then let it collect the</span>
+<span class="comment">// metrics.</span>
+reg := prometheus.NewRegistry()
+reg.MustRegister(temps)
+
+metricFamilies, err := reg.Gather()
+if err != nil || len(metricFamilies) != 1 {
+    panic(&#34;unexpected behavior of custom test registry&#34;)
+}
+fmt.Println(proto.MarshalTextString(metricFamilies[0]))
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">name: &#34;pond_temperature_celsius&#34;
+help: &#34;The temperature of the frog pond.&#34;
+type: SUMMARY
+metric: &lt;
+  label: &lt;
+    name: &#34;species&#34;
+    value: &#34;leiopelma-hochstetteri&#34;
+  &gt;
+  summary: &lt;
+    sample_count: 0
+    sample_sum: 0
+    quantile: &lt;
+      quantile: 0.5
+      value: nan
+    &gt;
+    quantile: &lt;
+      quantile: 0.9
+      value: nan
+    &gt;
+    quantile: &lt;
+      quantile: 0.99
+      value: nan
+    &gt;
+  &gt;
+&gt;
+metric: &lt;
+  label: &lt;
+    name: &#34;species&#34;
+    value: &#34;lithobates-catesbeianus&#34;
+  &gt;
+  summary: &lt;
+    sample_count: 1000
+    sample_sum: 31956.100000000017
+    quantile: &lt;
+      quantile: 0.5
+      value: 32.4
+    &gt;
+    quantile: &lt;
+      quantile: 0.9
+      value: 41.4
+    &gt;
+    quantile: &lt;
+      quantile: 0.99
+      value: 41.9
+    &gt;
+  &gt;
+&gt;
+metric: &lt;
+  label: &lt;
+    name: &#34;species&#34;
+    value: &#34;litoria-caerulea&#34;
+  &gt;
+  summary: &lt;
+    sample_count: 1000
+    sample_sum: 29969.50000000001
+    quantile: &lt;
+      quantile: 0.5
+      value: 31.1
+    &gt;
+    quantile: &lt;
+      quantile: 0.9
+      value: 41.3
+    &gt;
+    quantile: &lt;
+      quantile: 0.99
+      value: 41.9
+    &gt;
+  &gt;
+&gt;
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+			
+
+			
+				
+				<h3 id="NewSummaryVec">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/summary.go?s=12123:12192#L389">NewSummaryVec</a></h3>
+				<pre>func NewSummaryVec(opts <a href="index.html#SummaryOpts">SummaryOpts</a>, labelNames []<a href="../../../../builtin/index.html#string">string</a>) *<a href="index.html#SummaryVec">SummaryVec</a></pre>
+				<p>
+NewSummaryVec creates a new SummaryVec based on the provided SummaryOpts and
+partitioned by the given label names. At least one label name must be
+provided.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="SummaryVec.GetMetricWith">func (*SummaryVec) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/summary.go?s=13050:13116#L417">GetMetricWith</a></h3>
+				<pre>func (m *<a href="index.html#SummaryVec">SummaryVec</a>) GetMetricWith(labels <a href="index.html#Labels">Labels</a>) (<a href="index.html#Summary">Summary</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+GetMetricWith replaces the method of the same name in MetricVec. The
+difference is that this method returns a Summary and not a Metric so that no
+type conversion is required.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="SummaryVec.GetMetricWithLabelValues">func (*SummaryVec) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/summary.go?s=12651:12728#L406">GetMetricWithLabelValues</a></h3>
+				<pre>func (m *<a href="index.html#SummaryVec">SummaryVec</a>) GetMetricWithLabelValues(lvs ...<a href="../../../../builtin/index.html#string">string</a>) (<a href="index.html#Summary">Summary</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+GetMetricWithLabelValues replaces the method of the same name in
+MetricVec. The difference is that this method returns a Summary and not a
+Metric so that no type conversion is required.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="SummaryVec.With">func (*SummaryVec) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/summary.go?s=13846:13894#L436">With</a></h3>
+				<pre>func (m *<a href="index.html#SummaryVec">SummaryVec</a>) With(labels <a href="index.html#Labels">Labels</a>) <a href="index.html#Summary">Summary</a></pre>
+				<p>
+With works as GetMetricWith, but panics where GetMetricWithLabels would have
+returned an error. By not returning an error, With allows shortcuts like
+</p>
+<pre>myVec.With(Labels{&#34;code&#34;: &#34;404&#34;, &#34;method&#34;: &#34;GET&#34;}).Observe(42.21)
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="SummaryVec.WithLabelValues">func (*SummaryVec) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/summary.go?s=13498:13557#L429">WithLabelValues</a></h3>
+				<pre>func (m *<a href="index.html#SummaryVec">SummaryVec</a>) WithLabelValues(lvs ...<a href="../../../../builtin/index.html#string">string</a>) <a href="index.html#Summary">Summary</a></pre>
+				<p>
+WithLabelValues works as GetMetricWithLabelValues, but panics where
+GetMetricWithLabelValues would have returned an error. By not returning an
+error, WithLabelValues allows shortcuts like
+</p>
+<pre>myVec.WithLabelValues(&#34;404&#34;, &#34;GET&#34;).Observe(42.21)
+</pre>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Untyped">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/untyped.go?s=885:1358#L13">Untyped</a></h2>
+			<pre>type Untyped interface {
+    <a href="index.html#Metric">Metric</a>
+    <a href="index.html#Collector">Collector</a>
+
+    <span class="comment">// Set sets the Untyped metric to an arbitrary value.</span>
+    Set(<a href="../../../../builtin/index.html#float64">float64</a>)
+    <span class="comment">// Inc increments the Untyped metric by 1.</span>
+    Inc()
+    <span class="comment">// Dec decrements the Untyped metric by 1.</span>
+    Dec()
+    <span class="comment">// Add adds the given value to the Untyped metric. (The value can be</span>
+    <span class="comment">// negative, resulting in a decrease.)</span>
+    Add(<a href="../../../../builtin/index.html#float64">float64</a>)
+    <span class="comment">// Sub subtracts the given value from the Untyped metric. (The value can</span>
+    <span class="comment">// be negative, resulting in an increase.)</span>
+    Sub(<a href="../../../../builtin/index.html#float64">float64</a>)
+}</pre>
+			<p>
+Untyped is a Metric that represents a single numerical value that can
+arbitrarily go up and down.
+</p>
+<p>
+An Untyped metric works the same as a Gauge. The only difference is that to
+no type information is implied.
+</p>
+<p>
+To create Untyped instances, use NewUntyped.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewUntyped">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/untyped.go?s=1522:1563#L35">NewUntyped</a></h3>
+				<pre>func NewUntyped(opts <a href="index.html#UntypedOpts">UntypedOpts</a>) <a href="index.html#Untyped">Untyped</a></pre>
+				<p>
+NewUntyped creates a new Untyped metric from the provided UntypedOpts.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="UntypedFunc">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/untyped.go?s=4182:4231#L110">UntypedFunc</a></h2>
+			<pre>type UntypedFunc interface {
+    <a href="index.html#Metric">Metric</a>
+    <a href="index.html#Collector">Collector</a>
+}</pre>
+			<p>
+UntypedFunc is an Untyped whose value is determined at collect time by
+calling a provided function.
+</p>
+<p>
+To create UntypedFunc instances, use NewUntypedFunc.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewUntypedFunc">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/untyped.go?s=4658:4732#L121">NewUntypedFunc</a></h3>
+				<pre>func NewUntypedFunc(opts <a href="index.html#UntypedOpts">UntypedOpts</a>, function func() <a href="../../../../builtin/index.html#float64">float64</a>) <a href="index.html#UntypedFunc">UntypedFunc</a></pre>
+				<p>
+NewUntypedFunc creates a new UntypedFunc based on the provided
+UntypedOpts. The value reported is determined by calling the given function
+from within the Write method. Take into account that metric collection may
+happen concurrently. If that results in concurrent calls to Write, like in
+the case where an UntypedFunc is directly registered with Prometheus, the
+provided function must be concurrency-safe.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="UntypedOpts">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/untyped.go?s=1425:1446#L32">UntypedOpts</a></h2>
+			<pre>type UntypedOpts <a href="index.html#Opts">Opts</a></pre>
+			<p>
+UntypedOpts is an alias for Opts. See there for doc comments.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="UntypedVec">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/untyped.go?s=1994:2032#L48">UntypedVec</a></h2>
+			<pre>type UntypedVec struct {
+    *<a href="index.html#MetricVec">MetricVec</a>
+}</pre>
+			<p>
+UntypedVec is a Collector that bundles a set of Untyped metrics that all
+share the same Desc, but have different values for their variable
+labels. This is used if you want to count the same thing partitioned by
+various dimensions. Create instances with NewUntypedVec.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewUntypedVec">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/untyped.go?s=2200:2269#L55">NewUntypedVec</a></h3>
+				<pre>func NewUntypedVec(opts <a href="index.html#UntypedOpts">UntypedOpts</a>, labelNames []<a href="../../../../builtin/index.html#string">string</a>) *<a href="index.html#UntypedVec">UntypedVec</a></pre>
+				<p>
+NewUntypedVec creates a new UntypedVec based on the provided UntypedOpts and
+partitioned by the given label names. At least one label name must be
+provided.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="UntypedVec.GetMetricWith">func (*UntypedVec) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/untyped.go?s=3138:3204#L83">GetMetricWith</a></h3>
+				<pre>func (m *<a href="index.html#UntypedVec">UntypedVec</a>) GetMetricWith(labels <a href="index.html#Labels">Labels</a>) (<a href="index.html#Untyped">Untyped</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+GetMetricWith replaces the method of the same name in MetricVec. The
+difference is that this method returns an Untyped and not a Metric so that no
+type conversion is required.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="UntypedVec.GetMetricWithLabelValues">func (*UntypedVec) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/untyped.go?s=2738:2815#L72">GetMetricWithLabelValues</a></h3>
+				<pre>func (m *<a href="index.html#UntypedVec">UntypedVec</a>) GetMetricWithLabelValues(lvs ...<a href="../../../../builtin/index.html#string">string</a>) (<a href="index.html#Untyped">Untyped</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+GetMetricWithLabelValues replaces the method of the same name in
+MetricVec. The difference is that this method returns an Untyped and not a
+Metric so that no type conversion is required.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="UntypedVec.With">func (*UntypedVec) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/untyped.go?s=3920:3968#L102">With</a></h3>
+				<pre>func (m *<a href="index.html#UntypedVec">UntypedVec</a>) With(labels <a href="index.html#Labels">Labels</a>) <a href="index.html#Untyped">Untyped</a></pre>
+				<p>
+With works as GetMetricWith, but panics where GetMetricWithLabels would have
+returned an error. By not returning an error, With allows shortcuts like
+</p>
+<pre>myVec.With(Labels{&#34;code&#34;: &#34;404&#34;, &#34;method&#34;: &#34;GET&#34;}).Add(42)
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="UntypedVec.WithLabelValues">func (*UntypedVec) <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/untyped.go?s=3579:3638#L95">WithLabelValues</a></h3>
+				<pre>func (m *<a href="index.html#UntypedVec">UntypedVec</a>) WithLabelValues(lvs ...<a href="../../../../builtin/index.html#string">string</a>) <a href="index.html#Untyped">Untyped</a></pre>
+				<p>
+WithLabelValues works as GetMetricWithLabelValues, but panics where
+GetMetricWithLabelValues would have returned an error. By not returning an
+error, WithLabelValues allows shortcuts like
+</p>
+<pre>myVec.WithLabelValues(&#34;404&#34;, &#34;GET&#34;).Add(42)
+</pre>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ValueType">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/value.go?s=834:852#L19">ValueType</a></h2>
+			<pre>type ValueType <a href="../../../../builtin/index.html#int">int</a></pre>
+			<p>
+ValueType is an enumeration of metric types that represent a simple value.
+</p>
+
+
+			
+				<pre>const (
+    <span id="CounterValue">CounterValue</span> <a href="index.html#ValueType">ValueType</a>
+    <span id="GaugeValue">GaugeValue</span>
+    <span id="UntypedValue">UntypedValue</span>
+)</pre>
+				<p>
+Possible values for the ValueType enum.
+</p>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+
+
+	<div class="pkg-dir">
+		<table>
+			<tr>
+				<th class="pkg-name">Name</th>
+				<th class="pkg-synopsis">Synopsis</th>
+			</tr>
+
+			
+			<tr>
+				<td colspan="2"><a href="../index.html">..</a></td>
+			</tr>
+			
+
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="promhttp/index.html">promhttp</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package promhttp contains functions to create http.Handler instances to expose Prometheus metrics via HTTP.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="push/index.html">push</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package push provides functions to push metrics to a Pushgateway.
+						</td>
+					</tr>
+				
+			
+		</table>
+	</div>
+
+
+	
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

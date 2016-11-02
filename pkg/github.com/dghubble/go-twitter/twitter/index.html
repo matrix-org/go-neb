@@ -1,0 +1,3028 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>twitter - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package twitter</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/dghubble/go-twitter/twitter"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package twitter provides a Client for the Twitter API.
+</p>
+<p>
+The twitter package provides a Client for accessing the Twitter API. Here are
+some example requests.
+</p>
+<pre>// Twitter client
+client := twitter.NewClient(httpClient)
+// Home Timeline
+tweets, resp, err := client.Timelines.HomeTimeline(&amp;HomeTimelineParams{})
+// Send a Tweet
+tweet, resp, err := client.Statuses.Update(&#34;just setting up my twttr&#34;, nil)
+// Status Show
+tweet, resp, err := client.Statuses.Show(585613041028431872, nil)
+// User Show
+params := &amp;twitter.UserShowParams{ScreenName: &#34;dghubble&#34;}
+user, resp, err := client.Users.Show(params)
+// Followers
+followers, resp, err := client.Followers.List(&amp;FollowerListParams{})
+</pre>
+<p>
+Required parameters are passed as positional arguments. Optional parameters
+are passed in a typed params struct (or pass nil).
+</p>
+<h3 id="hdr-Authentication">Authentication</h3>
+<p>
+By design, the Twitter Client accepts any http.Client so user auth (OAuth1) or
+application auth (OAuth2) requests can be made by using the appropriate
+authenticated client. Use the <a href="https://github.com/dghubble/oauth1">https://github.com/dghubble/oauth1</a> and
+<a href="https://github.com/golang/oauth2">https://github.com/golang/oauth2</a> packages to obtain an http.Client which
+transparently authorizes requests.
+</p>
+<p>
+For example, make requests as a consumer application on behalf of a user who
+has granted access, with OAuth1.
+</p>
+<pre>// OAuth1
+import (
+	&#34;github.com/dghubble/go-twitter/twitter&#34;
+	&#34;github.com/dghubble/oauth1&#34;
+)
+
+config := oauth1.NewConfig(&#34;consumerKey&#34;, &#34;consumerSecret&#34;)
+token := oauth1.NewToken(&#34;accessToken&#34;, &#34;accessSecret&#34;)
+// http.Client will automatically authorize Requests
+httpClient := config.Client(oauth1.NoContext, token)
+
+// twitter client
+client := twitter.NewClient(httpClient)
+</pre>
+<p>
+If no user auth context is needed, make requests as your application with
+application auth.
+</p>
+<pre>// OAuth2
+import (
+	&#34;github.com/dghubble/go-twitter/twitter&#34;
+	&#34;golang.org/x/oauth2&#34;
+)
+
+config := &amp;oauth2.Config{}
+token := &amp;oauth2.Token{AccessToken: accessToken}
+// http.Client will automatically authorize Requests
+httpClient := config.Client(oauth2.NoContext, token)
+
+// twitter client
+client := twitter.NewClient(httpClient)
+</pre>
+<p>
+To implement Login with Twitter, see <a href="https://github.com/dghubble/gologin">https://github.com/dghubble/gologin</a>.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+				
+				<dd><a href="index.html#Bool">func Bool(v bool) *bool</a></dd>
+			
+				
+				<dd><a href="index.html#Float">func Float(v float64) *float64</a></dd>
+			
+			
+				
+				<dd><a href="index.html#APIError">type APIError</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#APIError.Empty">func (e APIError) Empty() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#APIError.Error">func (e APIError) Error() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#AccountService">type AccountService</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#AccountService.VerifyCredentials">func (s *AccountService) VerifyCredentials(params *AccountVerifyParams) (*User, *http.Response, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#AccountVerifyParams">type AccountVerifyParams</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#BoundingBox">type BoundingBox</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Client">type Client</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewClient">func NewClient(httpClient *http.Client) *Client</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Contributor">type Contributor</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Coordinates">type Coordinates</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Demux">type Demux</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#DirectMessage">type DirectMessage</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#DirectMessageDestroyParams">type DirectMessageDestroyParams</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#DirectMessageGetParams">type DirectMessageGetParams</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#DirectMessageNewParams">type DirectMessageNewParams</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#DirectMessageSentParams">type DirectMessageSentParams</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#DirectMessageService">type DirectMessageService</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DirectMessageService.Destroy">func (s *DirectMessageService) Destroy(id int64, params *DirectMessageDestroyParams) (*DirectMessage, *http.Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DirectMessageService.Get">func (s *DirectMessageService) Get(params *DirectMessageGetParams) ([]DirectMessage, *http.Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DirectMessageService.New">func (s *DirectMessageService) New(params *DirectMessageNewParams) (*DirectMessage, *http.Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DirectMessageService.Sent">func (s *DirectMessageService) Sent(params *DirectMessageSentParams) ([]DirectMessage, *http.Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DirectMessageService.Show">func (s *DirectMessageService) Show(id int64) (*DirectMessage, *http.Response, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Entities">type Entities</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ErrorDetail">type ErrorDetail</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Event">type Event</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ExtendedEntity">type ExtendedEntity</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#FollowerIDParams">type FollowerIDParams</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#FollowerIDs">type FollowerIDs</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#FollowerListParams">type FollowerListParams</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#FollowerService">type FollowerService</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#FollowerService.IDs">func (s *FollowerService) IDs(params *FollowerIDParams) (*FollowerIDs, *http.Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#FollowerService.List">func (s *FollowerService) List(params *FollowerListParams) (*Followers, *http.Response, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Followers">type Followers</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#FriendsList">type FriendsList</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#HashtagEntity">type HashtagEntity</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#HomeTimelineParams">type HomeTimelineParams</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Indices">type Indices</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Indices.End">func (i Indices) End() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Indices.Start">func (i Indices) Start() int</a></dd>
+				
+			
+				
+				<dd><a href="index.html#LocationDeletion">type LocationDeletion</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#MediaEntity">type MediaEntity</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#MentionEntity">type MentionEntity</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#MentionTimelineParams">type MentionTimelineParams</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#OEmbedTweet">type OEmbedTweet</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Place">type Place</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#RetweetsOfMeTimelineParams">type RetweetsOfMeTimelineParams</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#StallWarning">type StallWarning</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#StatusDeletion">type StatusDeletion</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#StatusDestroyParams">type StatusDestroyParams</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#StatusLookupParams">type StatusLookupParams</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#StatusOEmbedParams">type StatusOEmbedParams</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#StatusRetweetParams">type StatusRetweetParams</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#StatusService">type StatusService</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#StatusService.Destroy">func (s *StatusService) Destroy(id int64, params *StatusDestroyParams) (*Tweet, *http.Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#StatusService.Lookup">func (s *StatusService) Lookup(ids []int64, params *StatusLookupParams) ([]Tweet, *http.Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#StatusService.OEmbed">func (s *StatusService) OEmbed(params *StatusOEmbedParams) (*OEmbedTweet, *http.Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#StatusService.Retweet">func (s *StatusService) Retweet(id int64, params *StatusRetweetParams) (*Tweet, *http.Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#StatusService.Show">func (s *StatusService) Show(id int64, params *StatusShowParams) (*Tweet, *http.Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#StatusService.Update">func (s *StatusService) Update(status string, params *StatusUpdateParams) (*Tweet, *http.Response, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#StatusShowParams">type StatusShowParams</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#StatusUpdateParams">type StatusUpdateParams</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#StatusWithheld">type StatusWithheld</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Stream">type Stream</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Stream.Stop">func (s *Stream) Stop()</a></dd>
+				
+			
+				
+				<dd><a href="index.html#StreamDisconnect">type StreamDisconnect</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#StreamFilterParams">type StreamFilterParams</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#StreamFirehoseParams">type StreamFirehoseParams</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#StreamLimit">type StreamLimit</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#StreamSampleParams">type StreamSampleParams</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#StreamService">type StreamService</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#StreamService.Filter">func (srv *StreamService) Filter(params *StreamFilterParams) (*Stream, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#StreamService.Firehose">func (srv *StreamService) Firehose(params *StreamFirehoseParams) (*Stream, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#StreamService.Sample">func (srv *StreamService) Sample(params *StreamSampleParams) (*Stream, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#StreamService.Site">func (srv *StreamService) Site(params *StreamSiteParams) (*Stream, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#StreamService.User">func (srv *StreamService) User(params *StreamUserParams) (*Stream, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#StreamSiteParams">type StreamSiteParams</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#StreamUserParams">type StreamUserParams</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#SwitchDemux">type SwitchDemux</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewSwitchDemux">func NewSwitchDemux() SwitchDemux</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SwitchDemux.Handle">func (d SwitchDemux) Handle(message interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SwitchDemux.HandleChan">func (d SwitchDemux) HandleChan(messages &lt;-chan interface{})</a></dd>
+				
+			
+				
+				<dd><a href="index.html#TimelineService">type TimelineService</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#TimelineService.HomeTimeline">func (s *TimelineService) HomeTimeline(params *HomeTimelineParams) ([]Tweet, *http.Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#TimelineService.MentionTimeline">func (s *TimelineService) MentionTimeline(params *MentionTimelineParams) ([]Tweet, *http.Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#TimelineService.RetweetsOfMeTimeline">func (s *TimelineService) RetweetsOfMeTimeline(params *RetweetsOfMeTimelineParams) ([]Tweet, *http.Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#TimelineService.UserTimeline">func (s *TimelineService) UserTimeline(params *UserTimelineParams) ([]Tweet, *http.Response, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Tweet">type Tweet</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#TweetIdentifier">type TweetIdentifier</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#URLEntity">type URLEntity</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#User">type User</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#UserEntities">type UserEntities</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#UserLookupParams">type UserLookupParams</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#UserSearchParams">type UserSearchParams</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#UserService">type UserService</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#UserService.Lookup">func (s *UserService) Lookup(params *UserLookupParams) ([]User, *http.Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#UserService.Search">func (s *UserService) Search(query string, params *UserSearchParams) ([]User, *http.Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#UserService.Show">func (s *UserService) Show(params *UserShowParams) (*User, *http.Response, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#UserShowParams">type UserShowParams</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#UserTimelineParams">type UserTimelineParams</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#UserWithheld">type UserWithheld</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/accounts.go">accounts.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/backoffs.go">backoffs.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/demux.go">demux.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/direct_messages.go">direct_messages.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/doc.go">doc.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/entities.go">entities.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/errors.go">errors.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/followers.go">followers.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/statuses.go">statuses.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/stream_messages.go">stream_messages.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/stream_utils.go">stream_utils.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/streams.go">streams.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/timelines.go">timelines.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/twitter.go">twitter.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/users.go">users.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+			
+			
+			<h2 id="Bool">func <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/twitter.go?s=1083:1106#L30">Bool</a></h2>
+			<pre>func Bool(v <a href="../../../../builtin/index.html#bool">bool</a>) *<a href="../../../../builtin/index.html#bool">bool</a></pre>
+			<p>
+Bool returns a new pointer to the given bool value.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Float">func <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/twitter.go?s=1211:1241#L37">Float</a></h2>
+			<pre>func Float(v <a href="../../../../builtin/index.html#float64">float64</a>) *<a href="../../../../builtin/index.html#float64">float64</a></pre>
+			<p>
+Float returns a new pointer to the given float64 value.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="APIError">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/errors.go?s=143:205#L1">APIError</a></h2>
+			<pre>type APIError struct {
+    Errors []<a href="index.html#ErrorDetail">ErrorDetail</a> `json:&#34;errors&#34;`
+}</pre>
+			<p>
+APIError represents a Twitter API Error response
+<a href="https://dev.twitter.com/overview/api/response-codes">https://dev.twitter.com/overview/api/response-codes</a>
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="APIError.Empty">func (APIError) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/errors.go?s=629:659#L19">Empty</a></h3>
+				<pre>func (e <a href="index.html#APIError">APIError</a>) Empty() <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Empty returns true if empty. Otherwise, at least 1 error message/code is
+present and false is returned.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="APIError.Error">func (APIError) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/errors.go?s=360:392#L9">Error</a></h3>
+				<pre>func (e <a href="index.html#APIError">APIError</a>) Error() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="AccountService">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/accounts.go?s=144:194#L1">AccountService</a></h2>
+			<pre>type AccountService struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+AccountService provides a method for account credential verification.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="AccountService.VerifyCredentials">func (*AccountService) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/accounts.go?s=866:968#L22">VerifyCredentials</a></h3>
+				<pre>func (s *<a href="index.html#AccountService">AccountService</a>) VerifyCredentials(params *<a href="index.html#AccountVerifyParams">AccountVerifyParams</a>) (*<a href="index.html#User">User</a>, *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Response">Response</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+VerifyCredentials returns the authorized user if credentials are valid and
+returns an error otherwise.
+Requires a user auth context.
+<a href="https://dev.twitter.com/rest/reference/get/account/verify_credentials">https://dev.twitter.com/rest/reference/get/account/verify_credentials</a>
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="AccountVerifyParams">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/accounts.go?s=448:649#L12">AccountVerifyParams</a></h2>
+			<pre>type AccountVerifyParams struct {
+    IncludeEntities *<a href="../../../../builtin/index.html#bool">bool</a> `url:&#34;include_entities,omitempty&#34;`
+    SkipStatus      *<a href="../../../../builtin/index.html#bool">bool</a> `url:&#34;skip_status,omitempty&#34;`
+    IncludeEmail    *<a href="../../../../builtin/index.html#bool">bool</a> `url:&#34;include_email,omitempty&#34;`
+}</pre>
+			<p>
+AccountVerifyParams are the params for AccountService.VerifyCredentials.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="BoundingBox">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/statuses.go?s=3305:3423#L57">BoundingBox</a></h2>
+			<pre>type BoundingBox struct {
+    Coordinates [][][2]<a href="../../../../builtin/index.html#float64">float64</a> `json:&#34;coordinates&#34;`
+    Type        <a href="../../../../builtin/index.html#string">string</a>         `json:&#34;type&#34;`
+}</pre>
+			<p>
+BoundingBox represents the bounding coordinates (longitude, latitutde)
+defining the bounds of a box containing a Place entity.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Client">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/twitter.go?s=185:479#L2">Client</a></h2>
+			<pre>type Client struct {
+
+    <span class="comment">// Twitter API Services</span>
+    Accounts       *<a href="index.html#AccountService">AccountService</a>
+    Statuses       *<a href="index.html#StatusService">StatusService</a>
+    Timelines      *<a href="index.html#TimelineService">TimelineService</a>
+    Users          *<a href="index.html#UserService">UserService</a>
+    Followers      *<a href="index.html#FollowerService">FollowerService</a>
+    DirectMessages *<a href="index.html#DirectMessageService">DirectMessageService</a>
+    Streams        *<a href="index.html#StreamService">StreamService</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Client is a Twitter client for making Twitter API requests.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewClient">func <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/twitter.go?s=516:563#L15">NewClient</a></h3>
+				<pre>func NewClient(httpClient *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Client">Client</a>) *<a href="index.html#Client">Client</a></pre>
+				<p>
+NewClient returns a new Client.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="Contributor">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/statuses.go?s=3490:3623#L63">Contributor</a></h2>
+			<pre>type Contributor struct {
+    ID         <a href="../../../../builtin/index.html#int64">int64</a>  `json:&#34;id&#34;`
+    IDStr      <a href="../../../../builtin/index.html#string">string</a> `json:&#34;id_str&#34;`
+    ScreenName <a href="../../../../builtin/index.html#string">string</a> `json:&#34;screen_name&#34;`
+}</pre>
+			<p>
+Contributor represents a brief summary of a User identifiers.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Coordinates">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/statuses.go?s=3687:3797#L70">Coordinates</a></h2>
+			<pre>type Coordinates struct {
+    Coordinates [2]<a href="../../../../builtin/index.html#float64">float64</a> `json:&#34;coordinates&#34;`
+    Type        <a href="../../../../builtin/index.html#string">string</a>     `json:&#34;type&#34;`
+}</pre>
+			<p>
+Coordinates are pairs of longitude and latitude locations.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Demux">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/demux.go?s=177:271#L1">Demux</a></h2>
+			<pre>type Demux interface {
+    Handle(message interface{})
+    HandleChan(messages &lt;-chan interface{})
+}</pre>
+			<p>
+A Demux receives interface{} messages individually or from a channel and
+sends those messages to one or more outputs determined by the
+implementation.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="DirectMessage">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/direct_messages.go?s=131:716#L1">DirectMessage</a></h2>
+			<pre>type DirectMessage struct {
+    CreatedAt           <a href="../../../../builtin/index.html#string">string</a>    `json:&#34;created_at&#34;`
+    Entities            *<a href="index.html#Entities">Entities</a> `json:&#34;entities&#34;`
+    ID                  <a href="../../../../builtin/index.html#int64">int64</a>     `json:&#34;id&#34;`
+    IDStr               <a href="../../../../builtin/index.html#string">string</a>    `json:&#34;id_str&#34;`
+    Recipient           *<a href="index.html#User">User</a>     `json:&#34;recipient&#34;`
+    RecipientID         <a href="../../../../builtin/index.html#int64">int64</a>     `json:&#34;recipient_id&#34;`
+    RecipientScreenName <a href="../../../../builtin/index.html#string">string</a>    `json:&#34;recipient_screen_name&#34;`
+    Sender              *<a href="index.html#User">User</a>     `json:&#34;sender&#34;`
+    SenderID            <a href="../../../../builtin/index.html#int64">int64</a>     `json:&#34;sender_id&#34;`
+    SenderScreenName    <a href="../../../../builtin/index.html#string">string</a>    `json:&#34;sender_screen_name&#34;`
+    Text                <a href="../../../../builtin/index.html#string">string</a>    `json:&#34;text&#34;`
+}</pre>
+			<p>
+DirectMessage is a direct message to a single recipient.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="DirectMessageDestroyParams">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/direct_messages.go?s=4327:4471#L102">DirectMessageDestroyParams</a></h2>
+			<pre>type DirectMessageDestroyParams struct {
+    ID              <a href="../../../../builtin/index.html#int64">int64</a> `url:&#34;id,omitempty&#34;`
+    IncludeEntities *<a href="../../../../builtin/index.html#bool">bool</a> `url:&#34;include_entities,omitempty&#34;`
+}</pre>
+			<p>
+DirectMessageDestroyParams are the parameters for DirectMessageService.Destroy
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="DirectMessageGetParams">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/direct_messages.go?s=1849:2143#L46">DirectMessageGetParams</a></h2>
+			<pre>type DirectMessageGetParams struct {
+    SinceID         <a href="../../../../builtin/index.html#int64">int64</a> `url:&#34;since_id,omitempty&#34;`
+    MaxID           <a href="../../../../builtin/index.html#int64">int64</a> `url:&#34;max_id,omitempty&#34;`
+    Count           <a href="../../../../builtin/index.html#int">int</a>   `url:&#34;count,omitempty&#34;`
+    IncludeEntities *<a href="../../../../builtin/index.html#bool">bool</a> `url:&#34;include_entities,omitempty&#34;`
+    SkipStatus      *<a href="../../../../builtin/index.html#bool">bool</a> `url:&#34;skip_status,omitempty&#34;`
+}</pre>
+			<p>
+DirectMessageGetParams are the parameters for DirectMessageService.Get
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="DirectMessageNewParams">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/direct_messages.go?s=3584:3748#L84">DirectMessageNewParams</a></h2>
+			<pre>type DirectMessageNewParams struct {
+    UserID     <a href="../../../../builtin/index.html#int64">int64</a>  `url:&#34;user_id,omitempty&#34;`
+    ScreenName <a href="../../../../builtin/index.html#string">string</a> `url:&#34;screen_name,omitempty&#34;`
+    Text       <a href="../../../../builtin/index.html#string">string</a> `url:&#34;text&#34;`
+}</pre>
+			<p>
+DirectMessageNewParams are the parameters for DirectMessageService.New
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="DirectMessageSentParams">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/direct_messages.go?s=2726:3014#L65">DirectMessageSentParams</a></h2>
+			<pre>type DirectMessageSentParams struct {
+    SinceID         <a href="../../../../builtin/index.html#int64">int64</a> `url:&#34;since_id,omitempty&#34;`
+    MaxID           <a href="../../../../builtin/index.html#int64">int64</a> `url:&#34;max_id,omitempty&#34;`
+    Count           <a href="../../../../builtin/index.html#int">int</a>   `url:&#34;count,omitempty&#34;`
+    Page            <a href="../../../../builtin/index.html#int">int</a>   `url:&#34;page,omitempty&#34;`
+    IncludeEntities *<a href="../../../../builtin/index.html#bool">bool</a> `url:&#34;include_entities,omitempty&#34;`
+}</pre>
+			<p>
+DirectMessageSentParams are the parameters for DirectMessageService.Sent
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="DirectMessageService">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/direct_messages.go?s=814:898#L16">DirectMessageService</a></h2>
+			<pre>type DirectMessageService struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+DirectMessageService provides methods for accessing Twitter direct message
+API endpoints.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="DirectMessageService.Destroy">func (*DirectMessageService) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/direct_messages.go?s=4680:4804#L111">Destroy</a></h3>
+				<pre>func (s *<a href="index.html#DirectMessageService">DirectMessageService</a>) Destroy(id <a href="../../../../builtin/index.html#int64">int64</a>, params *<a href="index.html#DirectMessageDestroyParams">DirectMessageDestroyParams</a>) (*<a href="index.html#DirectMessage">DirectMessage</a>, *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Response">Response</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Destroy deletes the Direct Message with the given id and returns it if
+successful.
+Requires a user auth context with DM scope.
+<a href="https://dev.twitter.com/rest/reference/post/direct_messages/destroy">https://dev.twitter.com/rest/reference/post/direct_messages/destroy</a>
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DirectMessageService.Get">func (*DirectMessageService) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/direct_messages.go?s=2328:2435#L57">Get</a></h3>
+				<pre>func (s *<a href="index.html#DirectMessageService">DirectMessageService</a>) Get(params *<a href="index.html#DirectMessageGetParams">DirectMessageGetParams</a>) ([]<a href="index.html#DirectMessage">DirectMessage</a>, *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Response">Response</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Get returns recent Direct Messages received by the authenticated user.
+Requires a user auth context with DM scope.
+<a href="https://dev.twitter.com/rest/reference/get/direct_messages">https://dev.twitter.com/rest/reference/get/direct_messages</a>
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DirectMessageService.New">func (*DirectMessageService) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/direct_messages.go?s=3948:4054#L94">New</a></h3>
+				<pre>func (s *<a href="index.html#DirectMessageService">DirectMessageService</a>) New(params *<a href="index.html#DirectMessageNewParams">DirectMessageNewParams</a>) (*<a href="index.html#DirectMessage">DirectMessage</a>, *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Response">Response</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+New sends a new Direct Message to a specified user as the authenticated
+user.
+Requires a user auth context with DM scope.
+<a href="https://dev.twitter.com/rest/reference/post/direct_messages/new">https://dev.twitter.com/rest/reference/post/direct_messages/new</a>
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DirectMessageService.Sent">func (*DirectMessageService) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/direct_messages.go?s=3201:3310#L76">Sent</a></h3>
+				<pre>func (s *<a href="index.html#DirectMessageService">DirectMessageService</a>) Sent(params *<a href="index.html#DirectMessageSentParams">DirectMessageSentParams</a>) ([]<a href="index.html#DirectMessage">DirectMessage</a>, *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Response">Response</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Sent returns recent Direct Messages sent by the authenticated user.
+Requires a user auth context with DM scope.
+<a href="https://dev.twitter.com/rest/reference/get/direct_messages/sent">https://dev.twitter.com/rest/reference/get/direct_messages/sent</a>
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DirectMessageService.Show">func (*DirectMessageService) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/direct_messages.go?s=1452:1537#L37">Show</a></h3>
+				<pre>func (s *<a href="index.html#DirectMessageService">DirectMessageService</a>) Show(id <a href="../../../../builtin/index.html#int64">int64</a>) (*<a href="index.html#DirectMessage">DirectMessage</a>, *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Response">Response</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Show returns the requested Direct Message.
+Requires a user auth context with DM scope.
+<a href="https://dev.twitter.com/rest/reference/get/direct_messages/show">https://dev.twitter.com/rest/reference/get/direct_messages/show</a>
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Entities">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/entities.go?s=163:377#L1">Entities</a></h2>
+			<pre>type Entities struct {
+    Hashtags     []<a href="index.html#HashtagEntity">HashtagEntity</a> `json:&#34;hashtags&#34;`
+    Media        []<a href="index.html#MediaEntity">MediaEntity</a>   `json:&#34;media&#34;`
+    Urls         []<a href="index.html#URLEntity">URLEntity</a>     `json:&#34;urls&#34;`
+    UserMentions []<a href="index.html#MentionEntity">MentionEntity</a> `json:&#34;user_mentions&#34;`
+}</pre>
+			<p>
+Entities represent metadata and context info parsed from Twitter components.
+<a href="https://dev.twitter.com/overview/api/entities">https://dev.twitter.com/overview/api/entities</a>
+TODO: symbols
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ErrorDetail">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/errors.go?s=268:358#L4">ErrorDetail</a></h2>
+			<pre>type ErrorDetail struct {
+    Message <a href="../../../../builtin/index.html#string">string</a> `json:&#34;message&#34;`
+    Code    <a href="../../../../builtin/index.html#int">int</a>    `json:&#34;code&#34;`
+}</pre>
+			<p>
+ErrorDetail represents an individual item in an APIError.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Event">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/stream_messages.go?s=3394:3633#L93">Event</a></h2>
+			<pre>type Event struct {
+    Event     <a href="../../../../builtin/index.html#string">string</a> `json:&#34;event&#34;`
+    CreatedAt <a href="../../../../builtin/index.html#string">string</a> `json:&#34;created_at&#34;`
+    Target    *<a href="index.html#User">User</a>  `json:&#34;target&#34;`
+    Source    *<a href="index.html#User">User</a>  `json:&#34;source&#34;`
+    <span class="comment">// TODO: add List or deprecate it</span>
+    TargetObject *<a href="index.html#Tweet">Tweet</a> `json:&#34;target_object&#34;`
+}</pre>
+			<p>
+Event is a non-Tweet notification message (e.g. like, retweet, follow).
+<a href="https://dev.twitter.com/streaming/overview/messages-types#Events_event">https://dev.twitter.com/streaming/overview/messages-types#Events_event</a>
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ExtendedEntity">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/entities.go?s=1913:1979#L48">ExtendedEntity</a></h2>
+			<pre>type ExtendedEntity struct {
+    Media []<a href="index.html#MediaEntity">MediaEntity</a> `json:&#34;media&#34;`
+}</pre>
+			<p>
+ExtendedEntity contains media information.
+<a href="https://dev.twitter.com/overview/api/entities-in-twitter-objects#extended_entities">https://dev.twitter.com/overview/api/entities-in-twitter-objects#extended_entities</a>
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="FollowerIDParams">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/followers.go?s=1107:1320#L30">FollowerIDParams</a></h2>
+			<pre>type FollowerIDParams struct {
+    UserID     <a href="../../../../builtin/index.html#int64">int64</a>  `url:&#34;user_id,omitempty&#34;`
+    ScreenName <a href="../../../../builtin/index.html#string">string</a> `url:&#34;screen_name,omitempty&#34;`
+    Cursor     <a href="../../../../builtin/index.html#int64">int64</a>  `url:&#34;cursor,omitempty&#34;`
+    Count      <a href="../../../../builtin/index.html#int">int</a>    `url:&#34;count,omitempty&#34;`
+}</pre>
+			<p>
+FollowerIDParams are the parameters for FollowerService.Ids
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="FollowerIDs">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/followers.go?s=128:403#L1">FollowerIDs</a></h2>
+			<pre>type FollowerIDs struct {
+    IDs               []<a href="../../../../builtin/index.html#int64">int64</a> `json:&#34;ids&#34;`
+    NextCursor        <a href="../../../../builtin/index.html#int64">int64</a>   `json:&#34;next_cursor&#34;`
+    NextCursorStr     <a href="../../../../builtin/index.html#string">string</a>  `json:&#34;next_cursor_str&#34;`
+    PreviousCursor    <a href="../../../../builtin/index.html#int64">int64</a>   `json:&#34;previous_cursor&#34;`
+    PreviousCursorStr <a href="../../../../builtin/index.html#string">string</a>  `json:&#34;previous_cursor_str&#34;`
+}</pre>
+			<p>
+FollowerIDs is a cursored collection of follower ids.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="FollowerListParams">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/followers.go?s=1814:2191#L47">FollowerListParams</a></h2>
+			<pre>type FollowerListParams struct {
+    UserID              <a href="../../../../builtin/index.html#int64">int64</a>  `url:&#34;user_id,omitempty&#34;`
+    ScreenName          <a href="../../../../builtin/index.html#string">string</a> `url:&#34;screen_name,omitempty&#34;`
+    Cursor              <a href="../../../../builtin/index.html#int">int</a>    `url:&#34;cursor,omitempty&#34;`
+    Count               <a href="../../../../builtin/index.html#int">int</a>    `url:&#34;count,omitempty&#34;`
+    SkipStatus          *<a href="../../../../builtin/index.html#bool">bool</a>  `url:&#34;skip_status,omitempty&#34;`
+    IncludeUserEntities *<a href="../../../../builtin/index.html#bool">bool</a>  `url:&#34;include_user_entities,omitempty&#34;`
+}</pre>
+			<p>
+FollowerListParams are the parameters for FollowerService.List
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="FollowerService">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/followers.go?s=808:859#L18">FollowerService</a></h2>
+			<pre>type FollowerService struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+FollowerService provides methods for accessing Twitter followers endpoints.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="FollowerService.IDs">func (*FollowerService) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/followers.go?s=1461:1554#L39">IDs</a></h3>
+				<pre>func (s *<a href="index.html#FollowerService">FollowerService</a>) IDs(params *<a href="index.html#FollowerIDParams">FollowerIDParams</a>) (*<a href="index.html#FollowerIDs">FollowerIDs</a>, *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Response">Response</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+IDs returns a cursored collection of user ids following the specified user.
+<a href="https://dev.twitter.com/rest/reference/get/followers/ids">https://dev.twitter.com/rest/reference/get/followers/ids</a>
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="FollowerService.List">func (*FollowerService) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/followers.go?s=2331:2425#L58">List</a></h3>
+				<pre>func (s *<a href="index.html#FollowerService">FollowerService</a>) List(params *<a href="index.html#FollowerListParams">FollowerListParams</a>) (*<a href="index.html#Followers">Followers</a>, *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Response">Response</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+List returns a cursored collection of Users following the specified user.
+<a href="https://dev.twitter.com/rest/reference/get/followers/list">https://dev.twitter.com/rest/reference/get/followers/list</a>
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Followers">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/followers.go?s=457:727#L9">Followers</a></h2>
+			<pre>type Followers struct {
+    Users             []<a href="index.html#User">User</a> `json:&#34;users&#34;`
+    NextCursor        <a href="../../../../builtin/index.html#int64">int64</a>  `json:&#34;next_cursor&#34;`
+    NextCursorStr     <a href="../../../../builtin/index.html#string">string</a> `json:&#34;next_cursor_str&#34;`
+    PreviousCursor    <a href="../../../../builtin/index.html#int64">int64</a>  `json:&#34;previous_cursor&#34;`
+    PreviousCursorStr <a href="../../../../builtin/index.html#string">string</a> `json:&#34;previous_cursor_str&#34;`
+}</pre>
+			<p>
+Followers is a cursored collection of followers.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="FriendsList">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/stream_messages.go?s=3091:3152#L83">FriendsList</a></h2>
+			<pre>type FriendsList struct {
+    Friends []<a href="../../../../builtin/index.html#int64">int64</a> `json:&#34;friends&#34;`
+}</pre>
+			<p>
+FriendsList is a list of some of a user&#39;s friends.
+<a href="https://dev.twitter.com/streaming/overview/messages-types#friends_list_friends">https://dev.twitter.com/streaming/overview/messages-types#friends_list_friends</a>
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="HashtagEntity">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/entities.go?s=450:544#L4">HashtagEntity</a></h2>
+			<pre>type HashtagEntity struct {
+    Indices <a href="index.html#Indices">Indices</a> `json:&#34;indices&#34;`
+    Text    <a href="../../../../builtin/index.html#string">string</a>  `json:&#34;text&#34;`
+}</pre>
+			<p>
+HashtagEntity represents a hashtag which has been parsed from text.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="HomeTimelineParams">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/timelines.go?s=1530:1957#L35">HomeTimelineParams</a></h2>
+			<pre>type HomeTimelineParams struct {
+    Count              <a href="../../../../builtin/index.html#int">int</a>   `url:&#34;count,omitempty&#34;`
+    SinceID            <a href="../../../../builtin/index.html#int64">int64</a> `url:&#34;since_id,omitempty&#34;`
+    MaxID              <a href="../../../../builtin/index.html#int64">int64</a> `url:&#34;max_id,omitempty&#34;`
+    TrimUser           *<a href="../../../../builtin/index.html#bool">bool</a> `url:&#34;trim_user,omitempty&#34;`
+    ExcludeReplies     *<a href="../../../../builtin/index.html#bool">bool</a> `url:&#34;exclude_replies,omitempty&#34;`
+    ContributorDetails *<a href="../../../../builtin/index.html#bool">bool</a> `url:&#34;contributor_details,omitempty&#34;`
+    IncludeEntities    *<a href="../../../../builtin/index.html#bool">bool</a> `url:&#34;include_entities,omitempty&#34;`
+}</pre>
+			<p>
+HomeTimelineParams are the parameters for TimelineService.HomeTimeline.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Indices">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/entities.go?s=2041:2060#L53">Indices</a></h2>
+			<pre>type Indices [2]<a href="../../../../builtin/index.html#int">int</a></pre>
+			<p>
+Indices represent the start and end offsets within text.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Indices.End">func (Indices) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/entities.go?s=2235:2261#L61">End</a></h3>
+				<pre>func (i <a href="index.html#Indices">Indices</a>) End() <a href="../../../../builtin/index.html#int">int</a></pre>
+				<p>
+End returns the index at which an entity ends, exclusive.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Indices.Start">func (Indices) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/entities.go?s=2127:2155#L56">Start</a></h3>
+				<pre>func (i <a href="index.html#Indices">Indices</a>) Start() <a href="../../../../builtin/index.html#int">int</a></pre>
+				<p>
+Start returns the index at which an entity starts, inclusive.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="LocationDeletion">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/stream_messages.go?s=655:875#L11">LocationDeletion</a></h2>
+			<pre>type LocationDeletion struct {
+    UserID          <a href="../../../../builtin/index.html#int64">int64</a>  `json:&#34;user_id&#34;`
+    UserIDStr       <a href="../../../../builtin/index.html#string">string</a> `json:&#34;user_id_str&#34;`
+    UpToStatusID    <a href="../../../../builtin/index.html#int64">int64</a>  `json:&#34;up_to_status_id&#34;`
+    UpToStatusIDStr <a href="../../../../builtin/index.html#string">string</a> `json:&#34;up_to_status_id_str&#34;`
+}</pre>
+			<p>
+LocationDeletion indicates geolocation data must be stripped from a range
+of Tweets.
+<a href="https://dev.twitter.com/streaming/overview/messages-types#Location_deletion_notices_scrub_geo">https://dev.twitter.com/streaming/overview/messages-types#Location_deletion_notices_scrub_geo</a>
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="MediaEntity">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/entities.go?s=878:1240#L19">MediaEntity</a></h2>
+			<pre>type MediaEntity struct {
+    <a href="index.html#URLEntity">URLEntity</a>
+    ID                <a href="../../../../builtin/index.html#int64">int64</a>  `json:&#34;id&#34;`
+    IDStr             <a href="../../../../builtin/index.html#string">string</a> `json:&#34;id_str&#34;`
+    MediaURL          <a href="../../../../builtin/index.html#string">string</a> `json:&#34;media_url&#34;`
+    MediaURLHttps     <a href="../../../../builtin/index.html#string">string</a> `json:&#34;media_url_https&#34;`
+    SourceStatusID    <a href="../../../../builtin/index.html#int64">int64</a>  `json:&#34;source_status_id&#34;`
+    SourceStatusIDStr <a href="../../../../builtin/index.html#string">string</a> `json:&#34;source_status_id_str&#34;`
+    Type              <a href="../../../../builtin/index.html#string">string</a> `json:&#34;type&#34;`
+}</pre>
+			<p>
+MediaEntity represents media elements associated with a Tweet.
+TODO: add Sizes
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="MentionEntity">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/entities.go?s=1310:1519#L31">MentionEntity</a></h2>
+			<pre>type MentionEntity struct {
+    Indices    <a href="index.html#Indices">Indices</a> `json:&#34;indices&#34;`
+    ID         <a href="../../../../builtin/index.html#int64">int64</a>   `json:&#34;id&#34;`
+    IDStr      <a href="../../../../builtin/index.html#string">string</a>  `json:&#34;id_str&#34;`
+    Name       <a href="../../../../builtin/index.html#string">string</a>  `json:&#34;name&#34;`
+    ScreenName <a href="../../../../builtin/index.html#string">string</a>  `json:&#34;screen_name&#34;`
+}</pre>
+			<p>
+MentionEntity represents Twitter user mentions parsed from text.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="MentionTimelineParams">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/timelines.go?s=2548:2918#L57">MentionTimelineParams</a></h2>
+			<pre>type MentionTimelineParams struct {
+    Count              <a href="../../../../builtin/index.html#int">int</a>   `url:&#34;count,omitempty&#34;`
+    SinceID            <a href="../../../../builtin/index.html#int64">int64</a> `url:&#34;since_id,omitempty&#34;`
+    MaxID              <a href="../../../../builtin/index.html#int64">int64</a> `url:&#34;max_id,omitempty&#34;`
+    TrimUser           *<a href="../../../../builtin/index.html#bool">bool</a> `url:&#34;trim_user,omitempty&#34;`
+    ContributorDetails *<a href="../../../../builtin/index.html#bool">bool</a> `url:&#34;contributor_details,omitempty&#34;`
+    IncludeEntities    *<a href="../../../../builtin/index.html#bool">bool</a> `url:&#34;include_entities,omitempty&#34;`
+}</pre>
+			<p>
+MentionTimelineParams are the parameters for TimelineService.MentionTimeline.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="OEmbedTweet">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/statuses.go?s=8753:9205#L207">OEmbedTweet</a></h2>
+			<pre>type OEmbedTweet struct {
+    URL          <a href="../../../../builtin/index.html#string">string</a> `json:&#34;url&#34;`
+    ProviderURL  <a href="../../../../builtin/index.html#string">string</a> `json:&#34;provider_url&#34;`
+    ProviderName <a href="../../../../builtin/index.html#string">string</a> `json:&#34;provider_name&#34;`
+    AuthorName   <a href="../../../../builtin/index.html#string">string</a> `json:&#34;author_name&#34;`
+    Version      <a href="../../../../builtin/index.html#string">string</a> `json:&#34;version&#34;`
+    AuthorURL    <a href="../../../../builtin/index.html#string">string</a> `json:&#34;author_url&#34;`
+    Type         <a href="../../../../builtin/index.html#string">string</a> `json:&#34;type&#34;`
+    HTML         <a href="../../../../builtin/index.html#string">string</a> `json:&#34;html&#34;`
+    Height       <a href="../../../../builtin/index.html#int64">int64</a>  `json:&#34;height&#34;`
+    Width        <a href="../../../../builtin/index.html#int64">int64</a>  `json:&#34;width&#34;`
+    CacheAge     <a href="../../../../builtin/index.html#string">string</a> `json:&#34;cache_age&#34;`
+}</pre>
+			<p>
+OEmbedTweet represents a Tweet in oEmbed format.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Place">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/statuses.go?s=2612:3170#L41">Place</a></h2>
+			<pre>type Place struct {
+    Attributes  map[<a href="../../../../builtin/index.html#string">string</a>]<a href="../../../../builtin/index.html#string">string</a> `json:&#34;attributes&#34;`
+    BoundingBox *<a href="index.html#BoundingBox">BoundingBox</a>      `json:&#34;bounding_box&#34;`
+    Country     <a href="../../../../builtin/index.html#string">string</a>            `json:&#34;country&#34;`
+    CountryCode <a href="../../../../builtin/index.html#string">string</a>            `json:&#34;country_code&#34;`
+    FullName    <a href="../../../../builtin/index.html#string">string</a>            `json:&#34;full_name&#34;`
+    Geometry    *<a href="index.html#BoundingBox">BoundingBox</a>      `json:&#34;geometry&#34;`
+    ID          <a href="../../../../builtin/index.html#string">string</a>            `json:&#34;id&#34;`
+    Name        <a href="../../../../builtin/index.html#string">string</a>            `json:&#34;name&#34;`
+    PlaceType   <a href="../../../../builtin/index.html#string">string</a>            `json:&#34;place_type&#34;`
+    Polylines   []<a href="../../../../builtin/index.html#string">string</a>          `json:&#34;polylines&#34;`
+    URL         <a href="../../../../builtin/index.html#string">string</a>            `json:&#34;url&#34;`
+}</pre>
+			<p>
+Place represents a Twitter Place / Location
+<a href="https://dev.twitter.com/overview/api/places">https://dev.twitter.com/overview/api/places</a>
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="RetweetsOfMeTimelineParams">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/timelines.go?s=3515:3888#L78">RetweetsOfMeTimelineParams</a></h2>
+			<pre>type RetweetsOfMeTimelineParams struct {
+    Count               <a href="../../../../builtin/index.html#int">int</a>   `url:&#34;count,omitempty&#34;`
+    SinceID             <a href="../../../../builtin/index.html#int64">int64</a> `url:&#34;since_id,omitempty&#34;`
+    MaxID               <a href="../../../../builtin/index.html#int64">int64</a> `url:&#34;max_id,omitempty&#34;`
+    TrimUser            *<a href="../../../../builtin/index.html#bool">bool</a> `url:&#34;trim_user,omitempty&#34;`
+    IncludeEntities     *<a href="../../../../builtin/index.html#bool">bool</a> `url:&#34;include_entities,omitempty&#34;`
+    IncludeUserEntities *<a href="../../../../builtin/index.html#bool">bool</a> `url:&#34;include_user_entities&#34;`
+}</pre>
+			<p>
+RetweetsOfMeTimelineParams are the parameters for
+TimelineService.RetweetsOfMeTimeline.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="StallWarning">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/stream_messages.go?s=2731:2872#L71">StallWarning</a></h2>
+			<pre>type StallWarning struct {
+    Code        <a href="../../../../builtin/index.html#string">string</a> `json:&#34;code&#34;`
+    Message     <a href="../../../../builtin/index.html#string">string</a> `json:&#34;message&#34;`
+    PercentFull <a href="../../../../builtin/index.html#int">int</a>    `json:&#34;percent_full&#34;`
+}</pre>
+			<p>
+StallWarning indicates the client is falling behind in the stream.
+<a href="https://dev.twitter.com/streaming/overview/messages-types#stall_warnings">https://dev.twitter.com/streaming/overview/messages-types#stall_warnings</a>
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="StatusDeletion">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/stream_messages.go?s=174:342#L1">StatusDeletion</a></h2>
+			<pre>type StatusDeletion struct {
+    ID        <a href="../../../../builtin/index.html#int64">int64</a>  `json:&#34;id&#34;`
+    IDStr     <a href="../../../../builtin/index.html#string">string</a> `json:&#34;id_str&#34;`
+    UserID    <a href="../../../../builtin/index.html#int64">int64</a>  `json:&#34;user_id&#34;`
+    UserIDStr <a href="../../../../builtin/index.html#string">string</a> `json:&#34;user_id_str&#34;`
+}</pre>
+			<p>
+StatusDeletion indicates that a given Tweet has been deleted.
+<a href="https://dev.twitter.com/streaming/overview/messages-types#status_deletion_notices_delete">https://dev.twitter.com/streaming/overview/messages-types#status_deletion_notices_delete</a>
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="StatusDestroyParams">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/statuses.go?s=7991:8107#L186">StatusDestroyParams</a></h2>
+			<pre>type StatusDestroyParams struct {
+    ID       <a href="../../../../builtin/index.html#int64">int64</a> `url:&#34;id,omitempty&#34;`
+    TrimUser *<a href="../../../../builtin/index.html#bool">bool</a> `url:&#34;trim_user,omitempty&#34;`
+}</pre>
+			<p>
+StatusDestroyParams are the parameters for StatusService.Destroy
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="StatusLookupParams">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/statuses.go?s=5105:5351#L115">StatusLookupParams</a></h2>
+			<pre>type StatusLookupParams struct {
+    ID              []<a href="../../../../builtin/index.html#int64">int64</a> `url:&#34;id,omitempty,comma&#34;`
+    TrimUser        *<a href="../../../../builtin/index.html#bool">bool</a>   `url:&#34;trim_user,omitempty&#34;`
+    IncludeEntities *<a href="../../../../builtin/index.html#bool">bool</a>   `url:&#34;include_entities,omitempty&#34;`
+    Map             *<a href="../../../../builtin/index.html#bool">bool</a>   `url:&#34;map,omitempty&#34;`
+}</pre>
+			<p>
+StatusLookupParams are the parameters for StatusService.Lookup
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="StatusOEmbedParams">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/statuses.go?s=9273:9718#L222">StatusOEmbedParams</a></h2>
+			<pre>type StatusOEmbedParams struct {
+    ID         <a href="../../../../builtin/index.html#int64">int64</a>  `url:&#34;id,omitempty&#34;`
+    URL        <a href="../../../../builtin/index.html#string">string</a> `url:&#34;url,omitempty&#34;`
+    Align      <a href="../../../../builtin/index.html#string">string</a> `url:&#34;align,omitempty&#34;`
+    MaxWidth   <a href="../../../../builtin/index.html#int64">int64</a>  `url:&#34;maxwidth,omitempty&#34;`
+    HideMedia  *<a href="../../../../builtin/index.html#bool">bool</a>  `url:&#34;hide_media,omitempty&#34;`
+    HideThread *<a href="../../../../builtin/index.html#bool">bool</a>  `url:&#34;hide_media,omitempty&#34;`
+    OmitScript *<a href="../../../../builtin/index.html#bool">bool</a>  `url:&#34;hide_media,omitempty&#34;`
+    WidgetType <a href="../../../../builtin/index.html#string">string</a> `url:&#34;widget_type,omitempty&#34;`
+    HideTweet  *<a href="../../../../builtin/index.html#bool">bool</a>  `url:&#34;hide_tweet,omitempty&#34;`
+}</pre>
+			<p>
+StatusOEmbedParams are the parameters for StatusService.OEmbed
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="StatusRetweetParams">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/statuses.go?s=7177:7293#L164">StatusRetweetParams</a></h2>
+			<pre>type StatusRetweetParams struct {
+    ID       <a href="../../../../builtin/index.html#int64">int64</a> `url:&#34;id,omitempty&#34;`
+    TrimUser *<a href="../../../../builtin/index.html#bool">bool</a> `url:&#34;trim_user,omitempty&#34;`
+}</pre>
+			<p>
+StatusRetweetParams are the parameters for StatusService.Retweet
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="StatusService">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/statuses.go?s=4039:4088#L82">StatusService</a></h2>
+			<pre>type StatusService struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+StatusService provides methods for accessing Twitter status API endpoints.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="StatusService.Destroy">func (*StatusService) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/statuses.go?s=8289:8391#L194">Destroy</a></h3>
+				<pre>func (s *<a href="index.html#StatusService">StatusService</a>) Destroy(id <a href="../../../../builtin/index.html#int64">int64</a>, params *<a href="index.html#StatusDestroyParams">StatusDestroyParams</a>) (*<a href="index.html#Tweet">Tweet</a>, *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Response">Response</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Destroy deletes the Tweet with the given id and returns it if successful.
+Requires a user auth context.
+<a href="https://dev.twitter.com/rest/reference/post/statuses/destroy/%3Aid">https://dev.twitter.com/rest/reference/post/statuses/destroy/%3Aid</a>
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="StatusService.Lookup">func (*StatusService) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/statuses.go?s=5533:5637#L125">Lookup</a></h3>
+				<pre>func (s *<a href="index.html#StatusService">StatusService</a>) Lookup(ids []<a href="../../../../builtin/index.html#int64">int64</a>, params *<a href="index.html#StatusLookupParams">StatusLookupParams</a>) ([]<a href="index.html#Tweet">Tweet</a>, *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Response">Response</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Lookup returns the requested Tweets as a slice. Combines ids from the
+required ids argument and from params.Id.
+<a href="https://dev.twitter.com/rest/reference/get/statuses/lookup">https://dev.twitter.com/rest/reference/get/statuses/lookup</a>
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="StatusService.OEmbed">func (*StatusService) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/statuses.go?s=9838:9934#L236">OEmbed</a></h3>
+				<pre>func (s *<a href="index.html#StatusService">StatusService</a>) OEmbed(params *<a href="index.html#StatusOEmbedParams">StatusOEmbedParams</a>) (*<a href="index.html#OEmbedTweet">OEmbedTweet</a>, *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Response">Response</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+OEmbed returns the requested Tweet in oEmbed format.
+<a href="https://dev.twitter.com/rest/reference/get/statuses/oembed">https://dev.twitter.com/rest/reference/get/statuses/oembed</a>
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="StatusService.Retweet">func (*StatusService) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/statuses.go?s=7511:7613#L173">Retweet</a></h3>
+				<pre>func (s *<a href="index.html#StatusService">StatusService</a>) Retweet(id <a href="../../../../builtin/index.html#int64">int64</a>, params *<a href="index.html#StatusRetweetParams">StatusRetweetParams</a>) (*<a href="index.html#Tweet">Tweet</a>, *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Response">Response</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Retweet retweets the Tweet with the given id and returns the original Tweet
+with embedded retweet details.
+Requires a user auth context.
+<a href="https://dev.twitter.com/rest/reference/post/statuses/retweet/%3Aid">https://dev.twitter.com/rest/reference/post/statuses/retweet/%3Aid</a>
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="StatusService.Show">func (*StatusService) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/statuses.go?s=4678:4774#L103">Show</a></h3>
+				<pre>func (s *<a href="index.html#StatusService">StatusService</a>) Show(id <a href="../../../../builtin/index.html#int64">int64</a>, params *<a href="index.html#StatusShowParams">StatusShowParams</a>) (*<a href="index.html#Tweet">Tweet</a>, *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Response">Response</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Show returns the requested Tweet.
+<a href="https://dev.twitter.com/rest/reference/get/statuses/show/%3Aid">https://dev.twitter.com/rest/reference/get/statuses/show/%3Aid</a>
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="StatusService.Update">func (*StatusService) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/statuses.go?s=6729:6834#L152">Update</a></h3>
+				<pre>func (s *<a href="index.html#StatusService">StatusService</a>) Update(status <a href="../../../../builtin/index.html#string">string</a>, params *<a href="index.html#StatusUpdateParams">StatusUpdateParams</a>) (*<a href="index.html#Tweet">Tweet</a>, *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Response">Response</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Update updates the user&#39;s status, also known as Tweeting.
+Requires a user auth context.
+<a href="https://dev.twitter.com/rest/reference/post/statuses/update">https://dev.twitter.com/rest/reference/post/statuses/update</a>
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="StatusShowParams">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/statuses.go?s=4324:4573#L94">StatusShowParams</a></h2>
+			<pre>type StatusShowParams struct {
+    ID               <a href="../../../../builtin/index.html#int64">int64</a> `url:&#34;id,omitempty&#34;`
+    TrimUser         *<a href="../../../../builtin/index.html#bool">bool</a> `url:&#34;trim_user,omitempty&#34;`
+    IncludeMyRetweet *<a href="../../../../builtin/index.html#bool">bool</a> `url:&#34;include_my_retweet,omitempty&#34;`
+    IncludeEntities  *<a href="../../../../builtin/index.html#bool">bool</a> `url:&#34;include_entities,omitempty&#34;`
+}</pre>
+			<p>
+StatusShowParams are the parameters for StatusService.Show
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="StatusUpdateParams">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/statuses.go?s=6001:6570#L137">StatusUpdateParams</a></h2>
+			<pre>type StatusUpdateParams struct {
+    Status             <a href="../../../../builtin/index.html#string">string</a>   `url:&#34;status,omitempty&#34;`
+    InReplyToStatusID  <a href="../../../../builtin/index.html#int64">int64</a>    `url:&#34;in_reply_to_status_id,omitempty&#34;`
+    PossiblySensitive  *<a href="../../../../builtin/index.html#bool">bool</a>    `url:&#34;possibly_sensitive,omitempty&#34;`
+    Lat                *<a href="../../../../builtin/index.html#float64">float64</a> `url:&#34;lat,omitempty&#34;`
+    Long               *<a href="../../../../builtin/index.html#float64">float64</a> `url:&#34;long,omitempty&#34;`
+    PlaceID            <a href="../../../../builtin/index.html#string">string</a>   `url:&#34;place_id,omitempty&#34;`
+    DisplayCoordinates *<a href="../../../../builtin/index.html#bool">bool</a>    `url:&#34;display_coordinates,omitempty&#34;`
+    TrimUser           *<a href="../../../../builtin/index.html#bool">bool</a>    `url:&#34;trim_user,omitempty&#34;`
+    MediaIds           []<a href="../../../../builtin/index.html#int64">int64</a>  `url:&#34;media_ids,omitempty,comma&#34;`
+}</pre>
+			<p>
+StatusUpdateParams are the parameters for StatusService.Update
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="StatusWithheld">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/stream_messages.go?s=1514:1694#L36">StatusWithheld</a></h2>
+			<pre>type StatusWithheld struct {
+    ID                  <a href="../../../../builtin/index.html#int64">int64</a>    `json:&#34;id&#34;`
+    UserID              <a href="../../../../builtin/index.html#int64">int64</a>    `json:&#34;user_id&#34;`
+    WithheldInCountries []<a href="../../../../builtin/index.html#string">string</a> `json:&#34;withheld_in_countries&#34;`
+}</pre>
+			<p>
+StatusWithheld indicates a Tweet with the given ID, belonging to UserId,
+has been withheld in certain countries.
+<a href="https://dev.twitter.com/streaming/overview/messages-types#withheld_content_notices">https://dev.twitter.com/streaming/overview/messages-types#withheld_content_notices</a>
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Stream">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/streams.go?s=5010:5152#L134">Stream</a></h2>
+			<pre>type Stream struct {
+    Messages chan interface{}
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Stream maintains a connection to the Twitter Streaming API, receives
+messages from the streaming response, and sends them on the Messages
+channel from a goroutine. The stream goroutine stops itself if an EOF is
+reached or retry errors occur, also closing the Messages channel.
+</p>
+<p>
+The client must Stop() the stream when finished receiving, which will
+wait until the stream is properly stopped.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Stream.Stop">func (*Stream) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/streams.go?s=5767:5790#L159">Stop</a></h3>
+				<pre>func (s *<a href="index.html#Stream">Stream</a>) Stop()</pre>
+				<p>
+Stop signals retry and receiver to stop, closes the Messages channel, and
+blocks until done.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="StreamDisconnect">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/stream_messages.go?s=2347:2487#L59">StreamDisconnect</a></h2>
+			<pre>type StreamDisconnect struct {
+    Code       <a href="../../../../builtin/index.html#int64">int64</a>  `json:&#34;code&#34;`
+    StreamName <a href="../../../../builtin/index.html#string">string</a> `json:&#34;stream_name&#34;`
+    Reason     <a href="../../../../builtin/index.html#string">string</a> `json:&#34;reason&#34;`
+}</pre>
+			<p>
+StreamDisconnect indicates the stream has been shutdown for some reason.
+<a href="https://dev.twitter.com/streaming/overview/messages-types#disconnect_messages">https://dev.twitter.com/streaming/overview/messages-types#disconnect_messages</a>
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="StreamFilterParams">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/streams.go?s=959:1329#L32">StreamFilterParams</a></h2>
+			<pre>type StreamFilterParams struct {
+    FilterLevel   <a href="../../../../builtin/index.html#string">string</a>   `url:&#34;filter_level,omitempty&#34;`
+    Follow        []<a href="../../../../builtin/index.html#string">string</a> `url:&#34;follow,omitempty,comma&#34;`
+    Language      []<a href="../../../../builtin/index.html#string">string</a> `url:&#34;language,omitempty,comma&#34;`
+    Locations     []<a href="../../../../builtin/index.html#string">string</a> `url:&#34;locations,omitempty,comma&#34;`
+    StallWarnings *<a href="../../../../builtin/index.html#bool">bool</a>    `url:&#34;stall_warnings,omitempty&#34;`
+    Track         []<a href="../../../../builtin/index.html#string">string</a> `url:&#34;track,omitempty,comma&#34;`
+}</pre>
+			<p>
+StreamFilterParams are parameters for StreamService.Filter.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="StreamFirehoseParams">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/streams.go?s=3933:4186#L109">StreamFirehoseParams</a></h2>
+			<pre>type StreamFirehoseParams struct {
+    Count         <a href="../../../../builtin/index.html#int">int</a>      `url:&#34;count,omitempty&#34;`
+    FilterLevel   <a href="../../../../builtin/index.html#string">string</a>   `url:&#34;filter_level,omitempty&#34;`
+    Language      []<a href="../../../../builtin/index.html#string">string</a> `url:&#34;language,omitempty,comma&#34;`
+    StallWarnings *<a href="../../../../builtin/index.html#bool">bool</a>    `url:&#34;stall_warnings,omitempty&#34;`
+}</pre>
+			<p>
+StreamFirehoseParams are the parameters for StreamService.Firehose.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="StreamLimit">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/stream_messages.go?s=1182:1237#L25">StreamLimit</a></h2>
+			<pre>type StreamLimit struct {
+    Track <a href="../../../../builtin/index.html#int64">int64</a> `json:&#34;track&#34;`
+}</pre>
+			<p>
+StreamLimit indicates a stream matched more statuses than its rate limit
+allowed. The track number is the number of undelivered matches.
+<a href="https://dev.twitter.com/streaming/overview/messages-types#limit_notices">https://dev.twitter.com/streaming/overview/messages-types#limit_notices</a>
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="StreamSampleParams">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/streams.go?s=1776:1864#L52">StreamSampleParams</a></h2>
+			<pre>type StreamSampleParams struct {
+    StallWarnings *<a href="../../../../builtin/index.html#bool">bool</a> `url:&#34;stall_warnings,omitempty&#34;`
+}</pre>
+			<p>
+StreamSampleParams are the parameters for StreamService.Sample.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="StreamService">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/streams.go?s=428:541#L13">StreamService</a></h2>
+			<pre>type StreamService struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+StreamService provides methods for accessing the Twitter Streaming API.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="StreamService.Filter">func (*StreamService) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/streams.go?s=1468:1545#L43">Filter</a></h3>
+				<pre>func (srv *<a href="index.html#StreamService">StreamService</a>) Filter(params *<a href="index.html#StreamFilterParams">StreamFilterParams</a>) (*<a href="index.html#Stream">Stream</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Filter returns messages that match one or more filter predicates.
+<a href="https://dev.twitter.com/streaming/reference/post/statuses/filter">https://dev.twitter.com/streaming/reference/post/statuses/filter</a>
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="StreamService.Firehose">func (*StreamService) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/streams.go?s=4353:4434#L119">Firehose</a></h3>
+				<pre>func (srv *<a href="index.html#StreamService">StreamService</a>) Firehose(params *<a href="index.html#StreamFirehoseParams">StreamFirehoseParams</a>) (*<a href="index.html#Stream">Stream</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Firehose returns all public messages and statuses.
+Requires special permission to access.
+<a href="https://dev.twitter.com/streaming/reference/get/statuses/firehose">https://dev.twitter.com/streaming/reference/get/statuses/firehose</a>
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="StreamService.Sample">func (*StreamService) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/streams.go?s=1993:2070#L58">Sample</a></h3>
+				<pre>func (srv *<a href="index.html#StreamService">StreamService</a>) Sample(params *<a href="index.html#StreamSampleParams">StreamSampleParams</a>) (*<a href="index.html#Stream">Stream</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Sample returns a small sample of public stream messages.
+<a href="https://dev.twitter.com/streaming/reference/get/statuses/sample">https://dev.twitter.com/streaming/reference/get/statuses/sample</a>
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="StreamService.Site">func (*StreamService) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/streams.go?s=3630:3703#L100">Site</a></h3>
+				<pre>func (srv *<a href="index.html#StreamService">StreamService</a>) Site(params *<a href="index.html#StreamSiteParams">StreamSiteParams</a>) (*<a href="index.html#Stream">Stream</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Site returns messages for a set of users.
+Requires special permission to access.
+<a href="https://dev.twitter.com/streaming/reference/get/site">https://dev.twitter.com/streaming/reference/get/site</a>
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="StreamService.User">func (*StreamService) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/streams.go?s=2837:2910#L79">User</a></h3>
+				<pre>func (srv *<a href="index.html#StreamService">StreamService</a>) User(params *<a href="index.html#StreamUserParams">StreamUserParams</a>) (*<a href="index.html#Stream">Stream</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+User returns a stream of messages specific to the authenticated User.
+<a href="https://dev.twitter.com/streaming/reference/get/user">https://dev.twitter.com/streaming/reference/get/user</a>
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="StreamSiteParams">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/streams.go?s=3132:3485#L88">StreamSiteParams</a></h2>
+			<pre>type StreamSiteParams struct {
+    FilterLevel   <a href="../../../../builtin/index.html#string">string</a>   `url:&#34;filter_level,omitempty&#34;`
+    Follow        []<a href="../../../../builtin/index.html#string">string</a> `url:&#34;follow,omitempty,comma&#34;`
+    Language      []<a href="../../../../builtin/index.html#string">string</a> `url:&#34;language,omitempty,comma&#34;`
+    Replies       <a href="../../../../builtin/index.html#string">string</a>   `url:&#34;replies,omitempty&#34;`
+    StallWarnings *<a href="../../../../builtin/index.html#bool">bool</a>    `url:&#34;stall_warnings,omitempty&#34;`
+    With          <a href="../../../../builtin/index.html#string">string</a>   `url:&#34;with,omitempty&#34;`
+}</pre>
+			<p>
+StreamSiteParams are the parameters for StreamService.Site.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="StreamUserParams">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/streams.go?s=2296:2706#L67">StreamUserParams</a></h2>
+			<pre>type StreamUserParams struct {
+    FilterLevel   <a href="../../../../builtin/index.html#string">string</a>   `url:&#34;filter_level,omitempty&#34;`
+    Language      []<a href="../../../../builtin/index.html#string">string</a> `url:&#34;language,omitempty,comma&#34;`
+    Locations     []<a href="../../../../builtin/index.html#string">string</a> `url:&#34;locations,omitempty,comma&#34;`
+    Replies       <a href="../../../../builtin/index.html#string">string</a>   `url:&#34;replies,omitempty&#34;`
+    StallWarnings *<a href="../../../../builtin/index.html#bool">bool</a>    `url:&#34;stall_warnings,omitempty&#34;`
+    Track         []<a href="../../../../builtin/index.html#string">string</a> `url:&#34;track,omitempty,comma&#34;`
+    With          <a href="../../../../builtin/index.html#string">string</a>   `url:&#34;with,omitempty&#34;`
+}</pre>
+			<p>
+StreamUserParams are the parameters for StreamService.User.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="SwitchDemux">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/demux.go?s=382:1018#L3">SwitchDemux</a></h2>
+			<pre>type SwitchDemux struct {
+    All              func(message interface{})
+    Tweet            func(tweet *<a href="index.html#Tweet">Tweet</a>)
+    DM               func(dm *<a href="index.html#DirectMessage">DirectMessage</a>)
+    StatusDeletion   func(deletion *<a href="index.html#StatusDeletion">StatusDeletion</a>)
+    LocationDeletion func(LocationDeletion *<a href="index.html#LocationDeletion">LocationDeletion</a>)
+    StreamLimit      func(limit *<a href="index.html#StreamLimit">StreamLimit</a>)
+    StatusWithheld   func(statusWithheld *<a href="index.html#StatusWithheld">StatusWithheld</a>)
+    UserWithheld     func(userWithheld *<a href="index.html#UserWithheld">UserWithheld</a>)
+    StreamDisconnect func(disconnect *<a href="index.html#StreamDisconnect">StreamDisconnect</a>)
+    Warning          func(warning *<a href="index.html#StallWarning">StallWarning</a>)
+    FriendsList      func(friendsList *<a href="index.html#FriendsList">FriendsList</a>)
+    Event            func(event *<a href="index.html#Event">Event</a>)
+    Other            func(message interface{})
+}</pre>
+			<p>
+SwitchDemux receives messages and uses a type switch to send each typed
+message to a handler function.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewSwitchDemux">func <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/demux.go?s=1096:1129#L20">NewSwitchDemux</a></h3>
+				<pre>func NewSwitchDemux() <a href="index.html#SwitchDemux">SwitchDemux</a></pre>
+				<p>
+NewSwitchDemux returns a new SwitchMux which has NoOp handler functions.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="SwitchDemux.Handle">func (SwitchDemux) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/demux.go?s=2066:2114#L41">Handle</a></h3>
+				<pre>func (d <a href="index.html#SwitchDemux">SwitchDemux</a>) Handle(message interface{})</pre>
+				<p>
+Handle determines the type of a message and calls the corresponding receiver
+function with the typed message. All messages are passed to the All func.
+Messages with unmatched types are passed to the Other func.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="SwitchDemux.HandleChan">func (SwitchDemux) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/demux.go?s=2855:2915#L74">HandleChan</a></h3>
+				<pre>func (d <a href="index.html#SwitchDemux">SwitchDemux</a>) HandleChan(messages &lt;-chan interface{})</pre>
+				<p>
+HandleChan receives messages and calls the corresponding receiver function
+with the typed message. All messages are passed to the All func. Messages
+with unmatched type are passed to the Other func.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="TimelineService">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/timelines.go?s=163:214#L1">TimelineService</a></h2>
+			<pre>type TimelineService struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+TimelineService provides methods for accessing Twitter status timeline
+API endpoints.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="TimelineService.HomeTimeline">func (*TimelineService) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/timelines.go?s=2158:2257#L49">HomeTimeline</a></h3>
+				<pre>func (s *<a href="index.html#TimelineService">TimelineService</a>) HomeTimeline(params *<a href="index.html#HomeTimelineParams">HomeTimelineParams</a>) ([]<a href="index.html#Tweet">Tweet</a>, *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Response">Response</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+HomeTimeline returns recent Tweets and retweets from the user and those
+users they follow.
+Requires a user auth context.
+<a href="https://dev.twitter.com/rest/reference/get/statuses/home_timeline">https://dev.twitter.com/rest/reference/get/statuses/home_timeline</a>
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="TimelineService.MentionTimeline">func (*TimelineService) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/timelines.go?s=3102:3207#L69">MentionTimeline</a></h3>
+				<pre>func (s *<a href="index.html#TimelineService">TimelineService</a>) MentionTimeline(params *<a href="index.html#MentionTimelineParams">MentionTimelineParams</a>) ([]<a href="index.html#Tweet">Tweet</a>, *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Response">Response</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+MentionTimeline returns recent Tweet mentions of the authenticated user.
+Requires a user auth context.
+<a href="https://dev.twitter.com/rest/reference/get/statuses/mentions_timeline">https://dev.twitter.com/rest/reference/get/statuses/mentions_timeline</a>
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="TimelineService.RetweetsOfMeTimeline">func (*TimelineService) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/timelines.go?s=4113:4228#L91">RetweetsOfMeTimeline</a></h3>
+				<pre>func (s *<a href="index.html#TimelineService">TimelineService</a>) RetweetsOfMeTimeline(params *<a href="index.html#RetweetsOfMeTimelineParams">RetweetsOfMeTimelineParams</a>) ([]<a href="index.html#Tweet">Tweet</a>, *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Response">Response</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+RetweetsOfMeTimeline returns the most recent Tweets by the authenticated
+user that have been retweeted by others.
+Requires a user auth context.
+<a href="https://dev.twitter.com/rest/reference/get/statuses/retweets_of_me">https://dev.twitter.com/rest/reference/get/statuses/retweets_of_me</a>
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="TimelineService.UserTimeline">func (*TimelineService) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/timelines.go?s=1146:1245#L27">UserTimeline</a></h3>
+				<pre>func (s *<a href="index.html#TimelineService">TimelineService</a>) UserTimeline(params *<a href="index.html#UserTimelineParams">UserTimelineParams</a>) ([]<a href="index.html#Tweet">Tweet</a>, *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Response">Response</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+UserTimeline returns recent Tweets from the specified user.
+<a href="https://dev.twitter.com/rest/reference/get/statuses/user_timeline">https://dev.twitter.com/rest/reference/get/statuses/user_timeline</a>
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Tweet">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/statuses.go?s=252:2516#L3">Tweet</a></h2>
+			<pre>type Tweet struct {
+    Contributors         []<a href="index.html#Contributor">Contributor</a>          `json:&#34;contributors&#34;`
+    Coordinates          *<a href="index.html#Coordinates">Coordinates</a>           `json:&#34;coordinates&#34;`
+    CreatedAt            <a href="../../../../builtin/index.html#string">string</a>                 `json:&#34;created_at&#34;`
+    CurrentUserRetweet   *<a href="index.html#TweetIdentifier">TweetIdentifier</a>       `json:&#34;current_user_retweet&#34;`
+    Entities             *<a href="index.html#Entities">Entities</a>              `json:&#34;entities&#34;`
+    FavoriteCount        <a href="../../../../builtin/index.html#int">int</a>                    `json:&#34;favorite_count&#34;`
+    Favorited            <a href="../../../../builtin/index.html#bool">bool</a>                   `json:&#34;favorited&#34;`
+    FilterLevel          <a href="../../../../builtin/index.html#string">string</a>                 `json:&#34;filter_level&#34;`
+    ID                   <a href="../../../../builtin/index.html#int64">int64</a>                  `json:&#34;id&#34;`
+    IDStr                <a href="../../../../builtin/index.html#string">string</a>                 `json:&#34;id_str&#34;`
+    InReplyToScreenName  <a href="../../../../builtin/index.html#string">string</a>                 `json:&#34;in_reply_to_screen_name&#34;`
+    InReplyToStatusID    <a href="../../../../builtin/index.html#int64">int64</a>                  `json:&#34;in_reply_to_status_id&#34;`
+    InReplyToStatusIDStr <a href="../../../../builtin/index.html#string">string</a>                 `json:&#34;in_reply_to_status_id_str&#34;`
+    InReplyToUserID      <a href="../../../../builtin/index.html#int64">int64</a>                  `json:&#34;in_reply_to_user_id&#34;`
+    InReplyToUserIDStr   <a href="../../../../builtin/index.html#string">string</a>                 `json:&#34;in_reply_to_user_id_str&#34;`
+    Lang                 <a href="../../../../builtin/index.html#string">string</a>                 `json:&#34;lang&#34;`
+    PossiblySensitive    <a href="../../../../builtin/index.html#bool">bool</a>                   `json:&#34;possibly_sensitive&#34;`
+    RetweetCount         <a href="../../../../builtin/index.html#int">int</a>                    `json:&#34;retweet_count&#34;`
+    Retweeted            <a href="../../../../builtin/index.html#bool">bool</a>                   `json:&#34;retweeted&#34;`
+    RetweetedStatus      *<a href="index.html#Tweet">Tweet</a>                 `json:&#34;retweeted_status&#34;`
+    Source               <a href="../../../../builtin/index.html#string">string</a>                 `json:&#34;source&#34;`
+    Scopes               map[<a href="../../../../builtin/index.html#string">string</a>]interface{} `json:&#34;scopes&#34;`
+    Text                 <a href="../../../../builtin/index.html#string">string</a>                 `json:&#34;text&#34;`
+    Place                *<a href="index.html#Place">Place</a>                 `json:&#34;place&#34;`
+    Truncated            <a href="../../../../builtin/index.html#bool">bool</a>                   `json:&#34;truncated&#34;`
+    User                 *<a href="index.html#User">User</a>                  `json:&#34;user&#34;`
+    WithheldCopyright    <a href="../../../../builtin/index.html#bool">bool</a>                   `json:&#34;withheld_copyright&#34;`
+    WithheldInCountries  []<a href="../../../../builtin/index.html#string">string</a>               `json:&#34;withheld_in_countries&#34;`
+    WithheldScope        <a href="../../../../builtin/index.html#string">string</a>                 `json:&#34;withheld_scope&#34;`
+    ExtendedEntities     *<a href="index.html#ExtendedEntity">ExtendedEntity</a>        `json:&#34;extended_entities&#34;`
+    QuotedStatusID       <a href="../../../../builtin/index.html#int64">int64</a>                  `json:&#34;quoted_status_id&#34;`
+    QuotedStatusIDStr    <a href="../../../../builtin/index.html#string">string</a>                 `json:&#34;quoted_status_id_str&#34;`
+    QuotedStatus         *<a href="index.html#Tweet">Tweet</a>                 `json:&#34;quoted_status&#34;`
+}</pre>
+			<p>
+Tweet represents a Twitter Tweet, previously called a status.
+<a href="https://dev.twitter.com/overview/api/tweets">https://dev.twitter.com/overview/api/tweets</a>
+Unused or deprecated fields not provided: Geo, Annotations
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="TweetIdentifier">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/statuses.go?s=3872:3959#L76">TweetIdentifier</a></h2>
+			<pre>type TweetIdentifier struct {
+    ID    <a href="../../../../builtin/index.html#int64">int64</a>  `json:&#34;id&#34;`
+    IDStr <a href="../../../../builtin/index.html#string">string</a> `json:&#34;id_str&#34;`
+}</pre>
+			<p>
+TweetIdentifier represents the id by which a Tweet can be identified.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="URLEntity">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/entities.go?s=609:791#L10">URLEntity</a></h2>
+			<pre>type URLEntity struct {
+    Indices     <a href="index.html#Indices">Indices</a> `json:&#34;indices&#34;`
+    DisplayURL  <a href="../../../../builtin/index.html#string">string</a>  `json:&#34;display_url&#34;`
+    ExpandedURL <a href="../../../../builtin/index.html#string">string</a>  `json:&#34;expanded_url&#34;`
+    URL         <a href="../../../../builtin/index.html#string">string</a>  `json:&#34;url&#34;`
+}</pre>
+			<p>
+URLEntity represents a URL which has been parsed from text.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="User">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/users.go?s=152:3282#L1">User</a></h2>
+			<pre>type User struct {
+    ContributorsEnabled            <a href="../../../../builtin/index.html#bool">bool</a>          `json:&#34;contributors_enabled&#34;`
+    CreatedAt                      <a href="../../../../builtin/index.html#string">string</a>        `json:&#34;created_at&#34;`
+    DefaultProfile                 <a href="../../../../builtin/index.html#bool">bool</a>          `json:&#34;default_profile&#34;`
+    DefaultProfileImage            <a href="../../../../builtin/index.html#bool">bool</a>          `json:&#34;default_profile_image&#34;`
+    Description                    <a href="../../../../builtin/index.html#string">string</a>        `json:&#34;description&#34;`
+    Email                          <a href="../../../../builtin/index.html#string">string</a>        `json:&#34;email&#34;`
+    Entities                       *<a href="index.html#UserEntities">UserEntities</a> `json:&#34;entities&#34;`
+    FavouritesCount                <a href="../../../../builtin/index.html#int">int</a>           `json:&#34;favourites_count&#34;`
+    FollowRequestSent              <a href="../../../../builtin/index.html#bool">bool</a>          `json:&#34;follow_request_sent&#34;`
+    Following                      <a href="../../../../builtin/index.html#bool">bool</a>          `json:&#34;following&#34;`
+    FollowersCount                 <a href="../../../../builtin/index.html#int">int</a>           `json:&#34;followers_count&#34;`
+    FriendsCount                   <a href="../../../../builtin/index.html#int">int</a>           `json:&#34;friends_count&#34;`
+    GeoEnabled                     <a href="../../../../builtin/index.html#bool">bool</a>          `json:&#34;geo_enabled&#34;`
+    ID                             <a href="../../../../builtin/index.html#int64">int64</a>         `json:&#34;id&#34;`
+    IDStr                          <a href="../../../../builtin/index.html#string">string</a>        `json:&#34;id_str&#34;`
+    IsTranslator                   <a href="../../../../builtin/index.html#bool">bool</a>          `json:&#34;id_translator&#34;`
+    Lang                           <a href="../../../../builtin/index.html#string">string</a>        `json:&#34;lang&#34;`
+    ListedCount                    <a href="../../../../builtin/index.html#int">int</a>           `json:&#34;listed_count&#34;`
+    Location                       <a href="../../../../builtin/index.html#string">string</a>        `json:&#34;location&#34;`
+    Name                           <a href="../../../../builtin/index.html#string">string</a>        `json:&#34;name&#34;`
+    Notifications                  <a href="../../../../builtin/index.html#bool">bool</a>          `json:&#34;notifications&#34;`
+    ProfileBackgroundColor         <a href="../../../../builtin/index.html#string">string</a>        `json:&#34;profile_background_color&#34;`
+    ProfileBackgroundImageURL      <a href="../../../../builtin/index.html#string">string</a>        `json:&#34;profile_background_image_url&#34;`
+    ProfileBackgroundImageURLHttps <a href="../../../../builtin/index.html#string">string</a>        `json:&#34;profile_background_image_url_https&#34;`
+    ProfileBackgroundTile          <a href="../../../../builtin/index.html#bool">bool</a>          `json:&#34;profile_background_tile&#34;`
+    ProfileBannerURL               <a href="../../../../builtin/index.html#string">string</a>        `json:&#34;profile_banner_url&#34;`
+    ProfileImageURL                <a href="../../../../builtin/index.html#string">string</a>        `json:&#34;profile_image_url&#34;`
+    ProfileImageURLHttps           <a href="../../../../builtin/index.html#string">string</a>        `json:&#34;profile_image_url_https&#34;`
+    ProfileLinkColor               <a href="../../../../builtin/index.html#string">string</a>        `json:&#34;profile_link_color&#34;`
+    ProfileSidebarBorderColor      <a href="../../../../builtin/index.html#string">string</a>        `json:&#34;profile_sidebar_border_color&#34;`
+    ProfileSidebarFillColor        <a href="../../../../builtin/index.html#string">string</a>        `json:&#34;profile_sidebar_fill_color&#34;`
+    ProfileTextColor               <a href="../../../../builtin/index.html#string">string</a>        `json:&#34;profile_text_color&#34;`
+    ProfileUseBackgroundImage      <a href="../../../../builtin/index.html#bool">bool</a>          `json:&#34;profile_use_background_image&#34;`
+    Protected                      <a href="../../../../builtin/index.html#bool">bool</a>          `json:&#34;protected&#34;`
+    ScreenName                     <a href="../../../../builtin/index.html#string">string</a>        `json:&#34;screen_name&#34;`
+    ShowAllInlineMedia             <a href="../../../../builtin/index.html#bool">bool</a>          `json:&#34;show_all_inline_media&#34;`
+    Status                         *<a href="index.html#Tweet">Tweet</a>        `json:&#34;status&#34;`
+    StatusesCount                  <a href="../../../../builtin/index.html#int">int</a>           `json:&#34;statuses_count&#34;`
+    Timezone                       <a href="../../../../builtin/index.html#string">string</a>        `json:&#34;time_zone&#34;`
+    URL                            <a href="../../../../builtin/index.html#string">string</a>        `json:&#34;url&#34;`
+    UtcOffset                      <a href="../../../../builtin/index.html#int">int</a>           `json:&#34;utc_offset&#34;`
+    Verified                       <a href="../../../../builtin/index.html#bool">bool</a>          `json:&#34;verified&#34;`
+    WithheldInCountries            <a href="../../../../builtin/index.html#string">string</a>        `json:&#34;withheld_in_countries&#34;`
+    WithholdScope                  <a href="../../../../builtin/index.html#string">string</a>        `json:&#34;withheld_scope&#34;`
+}</pre>
+			<p>
+User represents a Twitter User.
+<a href="https://dev.twitter.com/overview/api/users">https://dev.twitter.com/overview/api/users</a>
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="UserEntities">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/entities.go?s=1673:1779#L41">UserEntities</a></h2>
+			<pre>type UserEntities struct {
+    URL         <a href="index.html#Entities">Entities</a> `json:&#34;url&#34;`
+    Description <a href="index.html#Entities">Entities</a> `json:&#34;description&#34;`
+}</pre>
+			<p>
+UserEntities contain Entities parsed from User url and description fields.
+<a href="https://dev.twitter.com/overview/api/entities-in-twitter-objects#users">https://dev.twitter.com/overview/api/entities-in-twitter-objects#users</a>
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="UserLookupParams">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/users.go?s=4292:4549#L77">UserLookupParams</a></h2>
+			<pre>type UserLookupParams struct {
+    UserID          []<a href="../../../../builtin/index.html#int64">int64</a>  `url:&#34;user_id,omitempty,comma&#34;`
+    ScreenName      []<a href="../../../../builtin/index.html#string">string</a> `url:&#34;screen_name,omitempty,comma&#34;`
+    IncludeEntities *<a href="../../../../builtin/index.html#bool">bool</a>    `url:&#34;include_entities,omitempty&#34;` <span class="comment">// whether &#39;status&#39; should include entities</span>
+}</pre>
+			<p>
+UserLookupParams are the parameters for UserService.Lookup.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="UserSearchParams">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/users.go?s=5008:5305#L93">UserSearchParams</a></h2>
+			<pre>type UserSearchParams struct {
+    Query           <a href="../../../../builtin/index.html#string">string</a> `url:&#34;q,omitempty&#34;`
+    Page            <a href="../../../../builtin/index.html#int">int</a>    `url:&#34;page,omitempty&#34;` <span class="comment">// 1-based page number</span>
+    Count           <a href="../../../../builtin/index.html#int">int</a>    `url:&#34;count,omitempty&#34;`
+    IncludeEntities *<a href="../../../../builtin/index.html#bool">bool</a>  `url:&#34;include_entities,omitempty&#34;` <span class="comment">// whether &#39;status&#39; should include entities</span>
+}</pre>
+			<p>
+UserSearchParams are the parameters for UserService.Search.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="UserService">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/users.go?s=3358:3405#L49">UserService</a></h2>
+			<pre>type UserService struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+UserService provides methods for accessing Twitter user API endpoints.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="UserService.Lookup">func (*UserService) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/users.go?s=4660:4746#L85">Lookup</a></h3>
+				<pre>func (s *<a href="index.html#UserService">UserService</a>) Lookup(params *<a href="index.html#UserLookupParams">UserLookupParams</a>) ([]<a href="index.html#User">User</a>, *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Response">Response</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Lookup returns the requested Users as a slice.
+<a href="https://dev.twitter.com/rest/reference/get/users/lookup">https://dev.twitter.com/rest/reference/get/users/lookup</a>
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="UserService.Search">func (*UserService) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/users.go?s=5439:5539#L103">Search</a></h3>
+				<pre>func (s *<a href="index.html#UserService">UserService</a>) Search(query <a href="../../../../builtin/index.html#string">string</a>, params *<a href="index.html#UserSearchParams">UserSearchParams</a>) ([]<a href="index.html#User">User</a>, *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Response">Response</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Search queries public user accounts.
+Requires a user auth context.
+<a href="https://dev.twitter.com/rest/reference/get/users/search">https://dev.twitter.com/rest/reference/get/users/search</a>
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="UserService.Show">func (*UserService) <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/users.go?s=3957:4038#L69">Show</a></h3>
+				<pre>func (s *<a href="index.html#UserService">UserService</a>) Show(params *<a href="index.html#UserShowParams">UserShowParams</a>) (*<a href="index.html#User">User</a>, *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Response">Response</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Show returns the requested User.
+<a href="https://dev.twitter.com/rest/reference/get/users/show">https://dev.twitter.com/rest/reference/get/users/show</a>
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="UserShowParams">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/users.go?s=3625:3862#L61">UserShowParams</a></h2>
+			<pre>type UserShowParams struct {
+    UserID          <a href="../../../../builtin/index.html#int64">int64</a>  `url:&#34;user_id,omitempty&#34;`
+    ScreenName      <a href="../../../../builtin/index.html#string">string</a> `url:&#34;screen_name,omitempty&#34;`
+    IncludeEntities *<a href="../../../../builtin/index.html#bool">bool</a>  `url:&#34;include_entities,omitempty&#34;` <span class="comment">// whether &#39;status&#39; should include entities</span>
+}</pre>
+			<p>
+UserShowParams are the parameters for UserService.Show.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="UserTimelineParams">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/timelines.go?s=473:1012#L13">UserTimelineParams</a></h2>
+			<pre>type UserTimelineParams struct {
+    UserID             <a href="../../../../builtin/index.html#int64">int64</a>  `url:&#34;user_id,omitempty&#34;`
+    ScreenName         <a href="../../../../builtin/index.html#string">string</a> `url:&#34;screen_name,omitempty&#34;`
+    Count              <a href="../../../../builtin/index.html#int">int</a>    `url:&#34;count,omitempty&#34;`
+    SinceID            <a href="../../../../builtin/index.html#int64">int64</a>  `url:&#34;since_id,omitempty&#34;`
+    MaxID              <a href="../../../../builtin/index.html#int64">int64</a>  `url:&#34;max_id,omitempty&#34;`
+    TrimUser           *<a href="../../../../builtin/index.html#bool">bool</a>  `url:&#34;trim_user,omitempty&#34;`
+    ExcludeReplies     *<a href="../../../../builtin/index.html#bool">bool</a>  `url:&#34;exclude_replies,omitempty&#34;`
+    ContributorDetails *<a href="../../../../builtin/index.html#bool">bool</a>  `url:&#34;contributor_details,omitempty&#34;`
+    IncludeRetweets    *<a href="../../../../builtin/index.html#bool">bool</a>  `url:&#34;include_rts,omitempty&#34;`
+}</pre>
+			<p>
+UserTimelineParams are the parameters for TimelineService.UserTimeline.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="UserWithheld">type <a href="http://localhost:6060/src/github.com/dghubble/go-twitter/twitter/stream_messages.go?s=1971:2102#L49">UserWithheld</a></h2>
+			<pre>type UserWithheld struct {
+    ID                  <a href="../../../../builtin/index.html#int64">int64</a>    `json:&#34;id&#34;`
+    WithheldInCountries []<a href="../../../../builtin/index.html#string">string</a> `json:&#34;withheld_in_countries&#34;`
+}</pre>
+			<p>
+UserWithheld indicates a User with the given ID has been withheld in
+certain countries.
+<a href="https://dev.twitter.com/streaming/overview/messages-types#withheld_content_notices">https://dev.twitter.com/streaming/overview/messages-types#withheld_content_notices</a>
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

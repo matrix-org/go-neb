@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>charmap - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package charmap</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "golang.org/x/text/encoding/charmap"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package charmap provides simple character encodings such as IBM Code Page 437
+and Windows 1252.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/golang.org/x/text/encoding/charmap/charmap.go">charmap.go</a>
+			
+				<a href="http://localhost:6060/src/golang.org/x/text/encoding/charmap/tables.go">tables.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var (
+    <span class="comment">// ISO8859_6E is the ISO 8859-6E encoding.</span>
+    <span id="ISO8859_6E">ISO8859_6E</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;iso8859_6E
+
+    <span class="comment">// ISO8859_6I is the ISO 8859-6I encoding.</span>
+    <span id="ISO8859_6I">ISO8859_6I</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;iso8859_6I
+
+    <span class="comment">// ISO8859_8E is the ISO 8859-8E encoding.</span>
+    <span id="ISO8859_8E">ISO8859_8E</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;iso8859_8E
+
+    <span class="comment">// ISO8859_8I is the ISO 8859-8I encoding.</span>
+    <span id="ISO8859_8I">ISO8859_8I</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;iso8859_8I
+)</pre>
+				<p>
+These encodings vary only in the way clients should interpret them. Their
+coded character set is identical and a single implementation can be shared.
+</p>
+
+			
+				<pre>var <span id="All">All</span> = listAll</pre>
+				<p>
+All is a list of all defined encodings in this package.
+</p>
+
+			
+				<pre>var <span id="CodePage437">CodePage437</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;codePage437</pre>
+				<p>
+CodePage437 is the IBM Code Page 437 encoding.
+</p>
+
+			
+				<pre>var <span id="CodePage850">CodePage850</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;codePage850</pre>
+				<p>
+CodePage850 is the IBM Code Page 850 encoding.
+</p>
+
+			
+				<pre>var <span id="CodePage852">CodePage852</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;codePage852</pre>
+				<p>
+CodePage852 is the IBM Code Page 852 encoding.
+</p>
+
+			
+				<pre>var <span id="CodePage855">CodePage855</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;codePage855</pre>
+				<p>
+CodePage855 is the IBM Code Page 855 encoding.
+</p>
+
+			
+				<pre>var <span id="CodePage858">CodePage858</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;codePage858</pre>
+				<p>
+CodePage858 is the Windows Code Page 858 encoding.
+</p>
+
+			
+				<pre>var <span id="CodePage860">CodePage860</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;codePage860</pre>
+				<p>
+CodePage860 is the IBM Code Page 860 encoding.
+</p>
+
+			
+				<pre>var <span id="CodePage862">CodePage862</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;codePage862</pre>
+				<p>
+CodePage862 is the IBM Code Page 862 encoding.
+</p>
+
+			
+				<pre>var <span id="CodePage863">CodePage863</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;codePage863</pre>
+				<p>
+CodePage863 is the IBM Code Page 863 encoding.
+</p>
+
+			
+				<pre>var <span id="CodePage865">CodePage865</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;codePage865</pre>
+				<p>
+CodePage865 is the IBM Code Page 865 encoding.
+</p>
+
+			
+				<pre>var <span id="CodePage866">CodePage866</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;codePage866</pre>
+				<p>
+CodePage866 is the IBM Code Page 866 encoding.
+</p>
+
+			
+				<pre>var <span id="ISO8859_1">ISO8859_1</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;iso8859_1</pre>
+				<p>
+ISO8859_1 is the ISO 8859-1 encoding.
+</p>
+
+			
+				<pre>var <span id="ISO8859_10">ISO8859_10</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;iso8859_10</pre>
+				<p>
+ISO8859_10 is the ISO 8859-10 encoding.
+</p>
+
+			
+				<pre>var <span id="ISO8859_13">ISO8859_13</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;iso8859_13</pre>
+				<p>
+ISO8859_13 is the ISO 8859-13 encoding.
+</p>
+
+			
+				<pre>var <span id="ISO8859_14">ISO8859_14</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;iso8859_14</pre>
+				<p>
+ISO8859_14 is the ISO 8859-14 encoding.
+</p>
+
+			
+				<pre>var <span id="ISO8859_15">ISO8859_15</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;iso8859_15</pre>
+				<p>
+ISO8859_15 is the ISO 8859-15 encoding.
+</p>
+
+			
+				<pre>var <span id="ISO8859_16">ISO8859_16</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;iso8859_16</pre>
+				<p>
+ISO8859_16 is the ISO 8859-16 encoding.
+</p>
+
+			
+				<pre>var <span id="ISO8859_2">ISO8859_2</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;iso8859_2</pre>
+				<p>
+ISO8859_2 is the ISO 8859-2 encoding.
+</p>
+
+			
+				<pre>var <span id="ISO8859_3">ISO8859_3</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;iso8859_3</pre>
+				<p>
+ISO8859_3 is the ISO 8859-3 encoding.
+</p>
+
+			
+				<pre>var <span id="ISO8859_4">ISO8859_4</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;iso8859_4</pre>
+				<p>
+ISO8859_4 is the ISO 8859-4 encoding.
+</p>
+
+			
+				<pre>var <span id="ISO8859_5">ISO8859_5</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;iso8859_5</pre>
+				<p>
+ISO8859_5 is the ISO 8859-5 encoding.
+</p>
+
+			
+				<pre>var <span id="ISO8859_6">ISO8859_6</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;iso8859_6</pre>
+				<p>
+ISO8859_6 is the ISO 8859-6 encoding.
+</p>
+
+			
+				<pre>var <span id="ISO8859_7">ISO8859_7</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;iso8859_7</pre>
+				<p>
+ISO8859_7 is the ISO 8859-7 encoding.
+</p>
+
+			
+				<pre>var <span id="ISO8859_8">ISO8859_8</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;iso8859_8</pre>
+				<p>
+ISO8859_8 is the ISO 8859-8 encoding.
+</p>
+
+			
+				<pre>var <span id="KOI8R">KOI8R</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;koi8R</pre>
+				<p>
+KOI8R is the KOI8-R encoding.
+</p>
+
+			
+				<pre>var <span id="KOI8U">KOI8U</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;koi8U</pre>
+				<p>
+KOI8U is the KOI8-U encoding.
+</p>
+
+			
+				<pre>var <span id="Macintosh">Macintosh</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;macintosh</pre>
+				<p>
+Macintosh is the Macintosh encoding.
+</p>
+
+			
+				<pre>var <span id="MacintoshCyrillic">MacintoshCyrillic</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;macintoshCyrillic</pre>
+				<p>
+MacintoshCyrillic is the Macintosh Cyrillic encoding.
+</p>
+
+			
+				<pre>var <span id="Windows1250">Windows1250</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;windows1250</pre>
+				<p>
+Windows1250 is the Windows 1250 encoding.
+</p>
+
+			
+				<pre>var <span id="Windows1251">Windows1251</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;windows1251</pre>
+				<p>
+Windows1251 is the Windows 1251 encoding.
+</p>
+
+			
+				<pre>var <span id="Windows1252">Windows1252</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;windows1252</pre>
+				<p>
+Windows1252 is the Windows 1252 encoding.
+</p>
+
+			
+				<pre>var <span id="Windows1253">Windows1253</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;windows1253</pre>
+				<p>
+Windows1253 is the Windows 1253 encoding.
+</p>
+
+			
+				<pre>var <span id="Windows1254">Windows1254</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;windows1254</pre>
+				<p>
+Windows1254 is the Windows 1254 encoding.
+</p>
+
+			
+				<pre>var <span id="Windows1255">Windows1255</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;windows1255</pre>
+				<p>
+Windows1255 is the Windows 1255 encoding.
+</p>
+
+			
+				<pre>var <span id="Windows1256">Windows1256</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;windows1256</pre>
+				<p>
+Windows1256 is the Windows 1256 encoding.
+</p>
+
+			
+				<pre>var <span id="Windows1257">Windows1257</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;windows1257</pre>
+				<p>
+Windows1257 is the Windows 1257 encoding.
+</p>
+
+			
+				<pre>var <span id="Windows1258">Windows1258</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;windows1258</pre>
+				<p>
+Windows1258 is the Windows 1258 encoding.
+</p>
+
+			
+				<pre>var <span id="Windows874">Windows874</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;windows874</pre>
+				<p>
+Windows874 is the Windows 874 encoding.
+</p>
+
+			
+				<pre>var <span id="XUserDefined">XUserDefined</span> <a href="../index.html">encoding</a>.<a href="../index.html#Encoding">Encoding</a> = &amp;xUserDefined</pre>
+				<p>
+XUserDefined is the X-User-Defined encoding.
+</p>
+<p>
+It is defined at <a href="http://encoding.spec.whatwg.org/#x-user-defined">http://encoding.spec.whatwg.org/#x-user-defined</a>
+</p>
+
+			
+		
+		
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>html - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package html</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "golang.org/x/net/html"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+				<dd><a href="index.html#pkg-examples" class="examplesLink">Examples</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-subdirectories">Subdirectories</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package html implements an HTML5-compliant tokenizer and parser.
+</p>
+<p>
+Tokenization is done by creating a Tokenizer for an io.Reader r. It is the
+caller&#39;s responsibility to ensure that r provides UTF-8 encoded HTML.
+</p>
+<pre>z := html.NewTokenizer(r)
+</pre>
+<p>
+Given a Tokenizer z, the HTML is tokenized by repeatedly calling z.Next(),
+which parses the next token and returns its type, or an error:
+</p>
+<pre>for {
+	tt := z.Next()
+	if tt == html.ErrorToken {
+		// ...
+		return ...
+	}
+	// Process the current token.
+}
+</pre>
+<p>
+There are two APIs for retrieving the current token. The high-level API is to
+call Token; the low-level API is to call Text or TagName / TagAttr. Both APIs
+allow optionally calling Raw after Next but before Token, Text, TagName, or
+TagAttr. In EBNF notation, the valid call sequence per token is:
+</p>
+<pre>Next {Raw} [ Token | Text | TagName {TagAttr} ]
+</pre>
+<p>
+Token returns an independent data structure that completely describes a token.
+Entities (such as &#34;&amp;lt;&#34;) are unescaped, tag names and attribute keys are
+lower-cased, and attributes are collected into a []Attribute. For example:
+</p>
+<pre>for {
+	if z.Next() == html.ErrorToken {
+		// Returning io.EOF indicates success.
+		return z.Err()
+	}
+	emitToken(z.Token())
+}
+</pre>
+<p>
+The low-level API performs fewer allocations and copies, but the contents of
+the []byte values returned by Text, TagName and TagAttr may change on the next
+call to Next. For example, to extract an HTML page&#39;s anchor text:
+</p>
+<pre>depth := 0
+for {
+	tt := z.Next()
+	switch tt {
+	case ErrorToken:
+		return z.Err()
+	case TextToken:
+		if depth &gt; 0 {
+			// emitBytes should copy the []byte it receives,
+			// if it doesn&#39;t process it immediately.
+			emitBytes(z.Text())
+		}
+	case StartTagToken, EndTagToken:
+		tn, _ := z.TagName()
+		if len(tn) == 1 &amp;&amp; tn[0] == &#39;a&#39; {
+			if tt == StartTagToken {
+				depth++
+			} else {
+				depth--
+			}
+		}
+	}
+}
+</pre>
+<p>
+Parsing is done by calling Parse with an io.Reader, which returns the root of
+the parse tree (the document element) as a *Node. It is the caller&#39;s
+responsibility to ensure that the Reader provides UTF-8 encoded HTML. For
+example, to process each anchor node in depth-first order:
+</p>
+<pre>doc, err := html.Parse(r)
+if err != nil {
+	// ...
+}
+var f func(*html.Node)
+f = func(n *html.Node) {
+	if n.Type == html.ElementNode &amp;&amp; n.Data == &#34;a&#34; {
+		// Do something with n...
+	}
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		f(c)
+	}
+}
+f(doc)
+</pre>
+<p>
+The relevant specifications include:
+<a href="https://html.spec.whatwg.org/multipage/syntax.html">https://html.spec.whatwg.org/multipage/syntax.html</a> and
+<a href="https://html.spec.whatwg.org/multipage/syntax.html#tokenization">https://html.spec.whatwg.org/multipage/syntax.html#tokenization</a>
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+				
+				<dd><a href="index.html#EscapeString">func EscapeString(s string) string</a></dd>
+			
+				
+				<dd><a href="index.html#ParseFragment">func ParseFragment(r io.Reader, context *Node) ([]*Node, error)</a></dd>
+			
+				
+				<dd><a href="index.html#Render">func Render(w io.Writer, n *Node) error</a></dd>
+			
+				
+				<dd><a href="index.html#UnescapeString">func UnescapeString(s string) string</a></dd>
+			
+			
+				
+				<dd><a href="index.html#Attribute">type Attribute</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Node">type Node</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Parse">func Parse(r io.Reader) (*Node, error)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Node.AppendChild">func (n *Node) AppendChild(c *Node)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Node.InsertBefore">func (n *Node) InsertBefore(newChild, oldChild *Node)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Node.RemoveChild">func (n *Node) RemoveChild(c *Node)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#NodeType">type NodeType</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Token">type Token</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Token.String">func (t Token) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#TokenType">type TokenType</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#TokenType.String">func (t TokenType) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Tokenizer">type Tokenizer</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewTokenizer">func NewTokenizer(r io.Reader) *Tokenizer</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewTokenizerFragment">func NewTokenizerFragment(r io.Reader, contextTag string) *Tokenizer</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Tokenizer.AllowCDATA">func (z *Tokenizer) AllowCDATA(allowCDATA bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Tokenizer.Buffered">func (z *Tokenizer) Buffered() []byte</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Tokenizer.Err">func (z *Tokenizer) Err() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Tokenizer.Next">func (z *Tokenizer) Next() TokenType</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Tokenizer.NextIsNotRawText">func (z *Tokenizer) NextIsNotRawText()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Tokenizer.Raw">func (z *Tokenizer) Raw() []byte</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Tokenizer.SetMaxBuf">func (z *Tokenizer) SetMaxBuf(n int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Tokenizer.TagAttr">func (z *Tokenizer) TagAttr() (key, val []byte, moreAttr bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Tokenizer.TagName">func (z *Tokenizer) TagName() (name []byte, hasAttr bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Tokenizer.Text">func (z *Tokenizer) Text() []byte</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Tokenizer.Token">func (z *Tokenizer) Token() Token</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+		<div id="pkg-examples">
+			<h4>Examples</h4>
+			<dl>
+			
+			<dd><a class="exampleLink" href="index.html#example_Parse">Parse</a></dd>
+			
+			</dl>
+		</div>
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/golang.org/x/net/html/const.go">const.go</a>
+			
+				<a href="http://localhost:6060/src/golang.org/x/net/html/doc.go">doc.go</a>
+			
+				<a href="http://localhost:6060/src/golang.org/x/net/html/doctype.go">doctype.go</a>
+			
+				<a href="http://localhost:6060/src/golang.org/x/net/html/entity.go">entity.go</a>
+			
+				<a href="http://localhost:6060/src/golang.org/x/net/html/escape.go">escape.go</a>
+			
+				<a href="http://localhost:6060/src/golang.org/x/net/html/foreign.go">foreign.go</a>
+			
+				<a href="http://localhost:6060/src/golang.org/x/net/html/node.go">node.go</a>
+			
+				<a href="http://localhost:6060/src/golang.org/x/net/html/parse.go">parse.go</a>
+			
+				<a href="http://localhost:6060/src/golang.org/x/net/html/render.go">render.go</a>
+			
+				<a href="http://localhost:6060/src/golang.org/x/net/html/token.go">token.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var <span id="ErrBufferExceeded">ErrBufferExceeded</span> = <a href="../../../../errors/index.html">errors</a>.<a href="../../../../errors/index.html#New">New</a>(&#34;max buffer exceeded&#34;)</pre>
+				<p>
+ErrBufferExceeded means that the buffering limit was exceeded.
+</p>
+
+			
+		
+		
+			
+			
+			<h2 id="EscapeString">func <a href="http://localhost:6060/src/golang.org/x/net/html/escape.go?s=5448:5482#L227">EscapeString</a></h2>
+			<pre>func EscapeString(s <a href="../../../../builtin/index.html#string">string</a>) <a href="../../../../builtin/index.html#string">string</a></pre>
+			<p>
+EscapeString escapes special characters like &#34;&lt;&#34; to become &#34;&amp;lt;&#34;. It
+escapes only five such characters: &lt;, &gt;, &amp;, &#39; and &#34;.
+UnescapeString(EscapeString(s)) == s always holds, but the converse isn&#39;t
+always true.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ParseFragment">func <a href="http://localhost:6060/src/golang.org/x/net/html/parse.go?s=47851:47914#L2026">ParseFragment</a></h2>
+			<pre>func ParseFragment(r <a href="../../../../io/index.html">io</a>.<a href="../../../../io/index.html#Reader">Reader</a>, context *<a href="index.html#Node">Node</a>) ([]*<a href="index.html#Node">Node</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+ParseFragment parses a fragment of HTML and returns the nodes that were
+found. If the fragment is the InnerHTML for an existing element, pass that
+element in context.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Render">func <a href="http://localhost:6060/src/golang.org/x/net/html/render.go?s=1842:1881#L35">Render</a></h2>
+			<pre>func Render(w <a href="../../../../io/index.html">io</a>.<a href="../../../../io/index.html#Writer">Writer</a>, n *<a href="index.html#Node">Node</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+			<p>
+Render renders the parse tree n to the given writer.
+</p>
+<p>
+Rendering is done on a &#39;best effort&#39; basis: calling Parse on the output of
+Render will always result in something similar to the original tree, but it
+is not necessarily an exact clone unless the original tree was &#39;well-formed&#39;.
+&#39;Well-formed&#39; is not easily specified; the HTML5 specification is
+complicated.
+</p>
+<p>
+Calling Parse on arbitrary input typically results in a &#39;well-formed&#39; parse
+tree. However, it is possible for Parse to yield a &#39;badly-formed&#39; parse tree.
+For example, in a &#39;well-formed&#39; parse tree, no &lt;a&gt; element is a child of
+another &lt;a&gt; element: parsing &#34;&lt;a&gt;&lt;a&gt;&#34; results in two sibling elements.
+Similarly, in a &#39;well-formed&#39; parse tree, no &lt;a&gt; element is a child of a
+&lt;table&gt; element: parsing &#34;&lt;p&gt;&lt;table&gt;&lt;a&gt;&#34; results in a &lt;p&gt; with two sibling
+children; the &lt;a&gt; is reparented to the &lt;table&gt;&#39;s parent. However, calling
+Parse on &#34;&lt;a&gt;&lt;table&gt;&lt;a&gt;&#34; does not return an error, but the result has an &lt;a&gt;
+element with an &lt;a&gt; child, and is therefore not &#39;well-formed&#39;.
+</p>
+<p>
+Programmatically constructed trees are typically also &#39;well-formed&#39;, but it
+is possible to construct a tree that looks innocuous but, when rendered and
+re-parsed, results in a different tree. A simple example is that a solitary
+text node would become a tree containing &lt;html&gt;, &lt;head&gt; and &lt;body&gt; elements.
+Another example is that the programmatic equivalent of &#34;a&lt;head&gt;b&lt;/head&gt;c&#34;
+becomes &#34;&lt;html&gt;&lt;head&gt;&lt;head/&gt;&lt;body&gt;abc&lt;/body&gt;&lt;/html&gt;&#34;.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="UnescapeString">func <a href="http://localhost:6060/src/golang.org/x/net/html/escape.go?s=5911:5947#L241">UnescapeString</a></h2>
+			<pre>func UnescapeString(s <a href="../../../../builtin/index.html#string">string</a>) <a href="../../../../builtin/index.html#string">string</a></pre>
+			<p>
+UnescapeString unescapes entities like &#34;&amp;lt;&#34; to become &#34;&lt;&#34;. It unescapes a
+larger range of entities than EscapeString escapes. For example, &#34;&amp;aacute;&#34;
+unescapes to &#34;á&#34;, as does &#34;&amp;#225;&#34; and &#34;&amp;xE1;&#34;.
+UnescapeString(EscapeString(s)) == s always holds, but the converse isn&#39;t
+always true.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="Attribute">type <a href="http://localhost:6060/src/golang.org/x/net/html/token.go?s=1665:1718#L57">Attribute</a></h2>
+			<pre>type Attribute struct {
+    Namespace, Key, Val <a href="../../../../builtin/index.html#string">string</a>
+}</pre>
+			<p>
+An Attribute is an attribute namespace-key-value triple. Namespace is
+non-empty for foreign attributes like xlink, Key is alphabetic (and hence
+does not contain escapable characters like &#39;&amp;&#39;, &#39;&lt;&#39; or &#39;&gt;&#39;), and Val is
+unescaped (it looks like &#34;a&lt;b&#34; rather than &#34;a&amp;lt;b&#34;).
+</p>
+<p>
+Namespace is only used by the parser, not the tokenizer.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Node">type <a href="http://localhost:6060/src/golang.org/x/net/html/node.go?s=1230:1414#L28">Node</a></h2>
+			<pre>type Node struct {
+    Parent, FirstChild, LastChild, PrevSibling, NextSibling *<a href="index.html#Node">Node</a>
+
+    Type      <a href="index.html#NodeType">NodeType</a>
+    DataAtom  <a href="atom/index.html">atom</a>.<a href="atom/index.html#Atom">Atom</a>
+    Data      <a href="../../../../builtin/index.html#string">string</a>
+    Namespace <a href="../../../../builtin/index.html#string">string</a>
+    Attr      []<a href="index.html#Attribute">Attribute</a>
+}</pre>
+			<p>
+A Node consists of a NodeType and some Data (tag name for element nodes,
+content for text) and are part of a tree of Nodes. Element nodes may also
+have a Namespace and contain a slice of Attributes. Data is unescaped, so
+that it looks like &#34;a&lt;b&#34; rather than &#34;a&amp;lt;b&#34;. For element nodes, DataAtom
+is the atom for Data, or zero if Data is not a known tag name.
+</p>
+<p>
+An empty Namespace implies a &#34;<a href="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</a>&#34; namespace.
+Similarly, &#34;math&#34; is short for &#34;<a href="http://www.w3.org/1998/Math/MathML">http://www.w3.org/1998/Math/MathML</a>&#34;, and
+&#34;svg&#34; is short for &#34;<a href="http://www.w3.org/2000/svg">http://www.w3.org/2000/svg</a>&#34;.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="Parse">func <a href="http://localhost:6060/src/golang.org/x/net/html/parse.go?s=47401:47439#L2006">Parse</a></h3>
+				<pre>func Parse(r <a href="../../../../io/index.html">io</a>.<a href="../../../../io/index.html#Reader">Reader</a>) (*<a href="index.html#Node">Node</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Parse returns the parse tree for the HTML from the given Reader.
+The input is assumed to be UTF-8 encoded.
+</p>
+
+				<div id="example_Parse" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">s := `&lt;p&gt;Links:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;a href=&#34;foo&#34;&gt;Foo&lt;/a&gt;&lt;li&gt;&lt;a href=&#34;/bar/baz&#34;&gt;BarBaz&lt;/a&gt;&lt;/ul&gt;`
+doc, err := html.Parse(strings.NewReader(s))
+if err != nil {
+    log.Fatal(err)
+}
+var f func(*html.Node)
+f = func(n *html.Node) {
+    if n.Type == html.ElementNode &amp;&amp; n.Data == &#34;a&#34; {
+        for _, a := range n.Attr {
+            if a.Key == &#34;href&#34; {
+                fmt.Println(a.Val)
+                break
+            }
+        }
+    }
+    for c := n.FirstChild; c != nil; c = c.NextSibling {
+        f(c)
+    }
+}
+f(doc)
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">foo
+/bar/baz
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+
+			
+				
+				<h3 id="Node.AppendChild">func (*Node) <a href="http://localhost:6060/src/golang.org/x/net/html/node.go?s=2381:2416#L71">AppendChild</a></h3>
+				<pre>func (n *<a href="index.html#Node">Node</a>) AppendChild(c *<a href="index.html#Node">Node</a>)</pre>
+				<p>
+AppendChild adds a node c as a child of n.
+</p>
+<p>
+It will panic if c already has a parent or siblings.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Node.InsertBefore">func (*Node) <a href="http://localhost:6060/src/golang.org/x/net/html/node.go?s=1683:1736#L43">InsertBefore</a></h3>
+				<pre>func (n *<a href="index.html#Node">Node</a>) InsertBefore(newChild, oldChild *<a href="index.html#Node">Node</a>)</pre>
+				<p>
+InsertBefore inserts newChild as a child of n, immediately before oldChild
+in the sequence of n&#39;s children. oldChild may be nil, in which case newChild
+is appended to the end of n&#39;s children.
+</p>
+<p>
+It will panic if newChild already has a parent or siblings.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Node.RemoveChild">func (*Node) <a href="http://localhost:6060/src/golang.org/x/net/html/node.go?s=2857:2892#L90">RemoveChild</a></h3>
+				<pre>func (n *<a href="index.html#Node">Node</a>) RemoveChild(c *<a href="index.html#Node">Node</a>)</pre>
+				<p>
+RemoveChild removes a node c that is a child of n. Afterwards, c will have
+no parent and no siblings.
+</p>
+<p>
+It will panic if c&#39;s parent is not n.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="NodeType">type <a href="http://localhost:6060/src/golang.org/x/net/html/node.go?s=253:273#L2">NodeType</a></h2>
+			<pre>type NodeType <a href="../../../../builtin/index.html#uint32">uint32</a></pre>
+			<p>
+A NodeType is the type of a Node.
+</p>
+
+
+			
+				<pre>const (
+    <span id="ErrorNode">ErrorNode</span> <a href="index.html#NodeType">NodeType</a> = <a href="../../../../builtin/index.html#iota">iota</a>
+    <span id="TextNode">TextNode</span>
+    <span id="DocumentNode">DocumentNode</span>
+    <span id="ElementNode">ElementNode</span>
+    <span id="CommentNode">CommentNode</span>
+    <span id="DoctypeNode">DoctypeNode</span>
+)</pre>
+				
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Token">type <a href="http://localhost:6060/src/golang.org/x/net/html/token.go?s=2074:2174#L66">Token</a></h2>
+			<pre>type Token struct {
+    Type     <a href="index.html#TokenType">TokenType</a>
+    DataAtom <a href="atom/index.html">atom</a>.<a href="atom/index.html#Atom">Atom</a>
+    Data     <a href="../../../../builtin/index.html#string">string</a>
+    Attr     []<a href="index.html#Attribute">Attribute</a>
+}</pre>
+			<p>
+A Token consists of a TokenType and some Data (tag name for start and end
+tags, content for text, comments and doctypes). A tag Token may also contain
+a slice of Attributes. Data is unescaped for all Tokens (it looks like &#34;a&lt;b&#34;
+rather than &#34;a&amp;lt;b&#34;). For tag Tokens, DataAtom is the atom for Data, or
+zero if Data is not a known tag name.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Token.String">func (Token) <a href="http://localhost:6060/src/golang.org/x/net/html/token.go?s=2592:2622#L90">String</a></h3>
+				<pre>func (t <a href="index.html#Token">Token</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				<p>
+String returns a string representation of the Token.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="TokenType">type <a href="http://localhost:6060/src/golang.org/x/net/html/token.go?s=303:324#L8">TokenType</a></h2>
+			<pre>type TokenType <a href="../../../../builtin/index.html#uint32">uint32</a></pre>
+			<p>
+A TokenType is the type of a Token.
+</p>
+
+
+			
+				<pre>const (
+    <span class="comment">// ErrorToken means that an error occurred during tokenization.</span>
+    <span id="ErrorToken">ErrorToken</span> <a href="index.html#TokenType">TokenType</a> = <a href="../../../../builtin/index.html#iota">iota</a>
+    <span class="comment">// TextToken means a text node.</span>
+    <span id="TextToken">TextToken</span>
+    <span class="comment">// A StartTagToken looks like &lt;a&gt;.</span>
+    <span id="StartTagToken">StartTagToken</span>
+    <span class="comment">// An EndTagToken looks like &lt;/a&gt;.</span>
+    <span id="EndTagToken">EndTagToken</span>
+    <span class="comment">// A SelfClosingTagToken tag looks like &lt;br/&gt;.</span>
+    <span id="SelfClosingTagToken">SelfClosingTagToken</span>
+    <span class="comment">// A CommentToken looks like &lt;!--x--&gt;.</span>
+    <span id="CommentToken">CommentToken</span>
+    <span class="comment">// A DoctypeToken looks like &lt;!DOCTYPE x&gt;</span>
+    <span id="DoctypeToken">DoctypeToken</span>
+)</pre>
+				
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="TokenType.String">func (TokenType) <a href="http://localhost:6060/src/golang.org/x/net/html/token.go?s=940:974#L31">String</a></h3>
+				<pre>func (t <a href="index.html#TokenType">TokenType</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				<p>
+String returns a string representation of the TokenType.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Tokenizer">type <a href="http://localhost:6060/src/golang.org/x/net/html/token.go?s=3250:5402#L117">Tokenizer</a></h2>
+			<pre>type Tokenizer struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+A Tokenizer returns a stream of HTML Tokens.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewTokenizer">func <a href="http://localhost:6060/src/golang.org/x/net/html/token.go?s=29453:29494#L1185">NewTokenizer</a></h3>
+				<pre>func NewTokenizer(r <a href="../../../../io/index.html">io</a>.<a href="../../../../io/index.html#Reader">Reader</a>) *<a href="index.html#Tokenizer">Tokenizer</a></pre>
+				<p>
+NewTokenizer returns a new HTML Tokenizer for the given Reader.
+The input is assumed to be UTF-8 encoded.
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewTokenizerFragment">func <a href="http://localhost:6060/src/golang.org/x/net/html/token.go?s=29900:29968#L1197">NewTokenizerFragment</a></h3>
+				<pre>func NewTokenizerFragment(r <a href="../../../../io/index.html">io</a>.<a href="../../../../io/index.html#Reader">Reader</a>, contextTag <a href="../../../../builtin/index.html#string">string</a>) *<a href="index.html#Tokenizer">Tokenizer</a></pre>
+				<p>
+NewTokenizerFragment returns a new HTML Tokenizer for the given Reader, for
+tokenizing an existing element&#39;s InnerHTML fragment. contextTag is that
+element&#39;s tag, such as &#34;div&#34; or &#34;iframe&#34;.
+</p>
+<p>
+For example, how the InnerHTML &#34;a&lt;b&#34; is tokenized depends on whether it is
+for a &lt;p&gt; tag or a &lt;script&gt; tag.
+</p>
+<p>
+The input is assumed to be UTF-8 encoded.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Tokenizer.AllowCDATA">func (*Tokenizer) <a href="http://localhost:6060/src/golang.org/x/net/html/token.go?s=6364:6411#L178">AllowCDATA</a></h3>
+				<pre>func (z *<a href="index.html#Tokenizer">Tokenizer</a>) AllowCDATA(allowCDATA <a href="../../../../builtin/index.html#bool">bool</a>)</pre>
+				<p>
+AllowCDATA sets whether or not the tokenizer recognizes &lt;![CDATA[foo]]&gt; as
+the text &#34;foo&#34;. The default value is false, which means to recognize it as
+a bogus comment &#34;&lt;!-- [CDATA[foo]] --&gt;&#34; instead.
+</p>
+<p>
+Strictly speaking, an HTML5 compliant tokenizer should allow CDATA if and
+only if tokenizing foreign content, such as MathML and SVG. However,
+tracking foreign-contentness is difficult to do purely in the tokenizer,
+as opposed to the parser, due to HTML integration points: an &lt;svg&gt; element
+can contain a &lt;foreignObject&gt; that is foreign-to-SVG but not foreign-to-
+HTML. For strict compliance with the HTML5 tokenization algorithm, it is the
+responsibility of the user of a tokenizer to call AllowCDATA as appropriate.
+In practice, if using the tokenizer without caring whether MathML or SVG
+CDATA is text or comments, such as tokenizing HTML to find all the anchor
+text, it is acceptable to ignore this responsibility.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Tokenizer.Buffered">func (*Tokenizer) <a href="http://localhost:6060/src/golang.org/x/net/html/token.go?s=10222:10259#L280">Buffered</a></h3>
+				<pre>func (z *<a href="index.html#Tokenizer">Tokenizer</a>) Buffered() []<a href="../../../../builtin/index.html#byte">byte</a></pre>
+				<p>
+Buffered returns a slice containing data buffered but not yet tokenized.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Tokenizer.Err">func (*Tokenizer) <a href="http://localhost:6060/src/golang.org/x/net/html/token.go?s=8212:8243#L212">Err</a></h3>
+				<pre>func (z *<a href="index.html#Tokenizer">Tokenizer</a>) Err() <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Err returns the error associated with the most recent ErrorToken token.
+This is typically io.EOF, meaning the end of tokenization.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Tokenizer.Next">func (*Tokenizer) <a href="http://localhost:6060/src/golang.org/x/net/html/token.go?s=23371:23407#L940">Next</a></h3>
+				<pre>func (z *<a href="index.html#Tokenizer">Tokenizer</a>) Next() <a href="index.html#TokenType">TokenType</a></pre>
+				<p>
+Next scans the next token and returns its type.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Tokenizer.NextIsNotRawText">func (*Tokenizer) <a href="http://localhost:6060/src/golang.org/x/net/html/token.go?s=8016:8054#L206">NextIsNotRawText</a></h3>
+				<pre>func (z *<a href="index.html#Tokenizer">Tokenizer</a>) NextIsNotRawText()</pre>
+				<p>
+NextIsNotRawText instructs the tokenizer that the next token should not be
+considered as &#39;raw text&#39;. Some elements, such as script and title elements,
+normally require the next token after the opening tag to be &#39;raw text&#39; that
+has no child elements. For example, tokenizing &#34;&lt;title&gt;a&lt;b&gt;c&lt;/b&gt;d&lt;/title&gt;&#34;
+yields a start tag token for &#34;&lt;title&gt;&#34;, a text token for &#34;a&lt;b&gt;c&lt;/b&gt;d&#34;, and
+an end tag token for &#34;&lt;/title&gt;&#34;. There are no distinct start tag or end tag
+tokens for the &#34;&lt;b&gt;&#34; and &#34;&lt;/b&gt;&#34;.
+</p>
+<p>
+This tokenizer implementation will generally look for raw text at the right
+times. Strictly speaking, an HTML5 compliant tokenizer should not look for
+raw text if in foreign content: &lt;title&gt; generally needs raw text, but a
+&lt;title&gt; inside an &lt;svg&gt; does not. Another example is that a &lt;textarea&gt;
+generally needs raw text, but a &lt;textarea&gt; is not allowed as an immediate
+child of a &lt;select&gt;; in normal parsing, a &lt;textarea&gt; implies &lt;/select&gt;, but
+one cannot close the implicit element when parsing a &lt;select&gt;&#39;s InnerHTML.
+Similarly to AllowCDATA, tracking the correct moment to override raw-text-
+ness is difficult to do purely in the tokenizer, as opposed to the parser.
+For strict compliance with the HTML5 tokenization algorithm, it is the
+responsibility of the user of a tokenizer to call NextIsNotRawText as
+appropriate. In practice, like AllowCDATA, it is acceptable to ignore this
+responsibility for basic usage.
+</p>
+<p>
+Note that this &#39;raw text&#39; concept is different from the one offered by the
+Tokenizer.Raw method.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Tokenizer.Raw">func (*Tokenizer) <a href="http://localhost:6060/src/golang.org/x/net/html/token.go?s=26094:26126#L1060">Raw</a></h3>
+				<pre>func (z *<a href="index.html#Tokenizer">Tokenizer</a>) Raw() []<a href="../../../../builtin/index.html#byte">byte</a></pre>
+				<p>
+Raw returns the unmodified text of the current token. Calling Next, Token,
+Text, TagName or TagAttr may change the contents of the returned slice.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Tokenizer.SetMaxBuf">func (*Tokenizer) <a href="http://localhost:6060/src/golang.org/x/net/html/token.go?s=29285:29321#L1179">SetMaxBuf</a></h3>
+				<pre>func (z *<a href="index.html#Tokenizer">Tokenizer</a>) SetMaxBuf(n <a href="../../../../builtin/index.html#int">int</a>)</pre>
+				<p>
+SetMaxBuf sets a limit on the amount of data buffered during tokenization.
+A value of 0 means unlimited.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Tokenizer.TagAttr">func (*Tokenizer) <a href="http://localhost:6060/src/golang.org/x/net/html/token.go?s=28118:28180#L1140">TagAttr</a></h3>
+				<pre>func (z *<a href="index.html#Tokenizer">Tokenizer</a>) TagAttr() (key, val []<a href="../../../../builtin/index.html#byte">byte</a>, moreAttr <a href="../../../../builtin/index.html#bool">bool</a>)</pre>
+				<p>
+TagAttr returns the lower-cased key and unescaped value of the next unparsed
+attribute for the current tag token and whether there are more attributes.
+The contents of the returned slices may change on the next call to Next.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Tokenizer.TagName">func (*Tokenizer) <a href="http://localhost:6060/src/golang.org/x/net/html/token.go?s=27548:27605#L1124">TagName</a></h3>
+				<pre>func (z *<a href="index.html#Tokenizer">Tokenizer</a>) TagName() (name []<a href="../../../../builtin/index.html#byte">byte</a>, hasAttr <a href="../../../../builtin/index.html#bool">bool</a>)</pre>
+				<p>
+TagName returns the lower-cased name of a tag token (the `img` out of
+`&lt;IMG SRC=&#34;foo&#34;&gt;`) and whether the tag has attributes.
+The contents of the returned slice may change on the next call to Next.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Tokenizer.Text">func (*Tokenizer) <a href="http://localhost:6060/src/golang.org/x/net/html/token.go?s=26930:26963#L1103">Text</a></h3>
+				<pre>func (z *<a href="index.html#Tokenizer">Tokenizer</a>) Text() []<a href="../../../../builtin/index.html#byte">byte</a></pre>
+				<p>
+Text returns the unescaped text of a text, comment or doctype token. The
+contents of the returned slice may change on the next call to Next.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Tokenizer.Token">func (*Tokenizer) <a href="http://localhost:6060/src/golang.org/x/net/html/token.go?s=28639:28672#L1156">Token</a></h3>
+				<pre>func (z *<a href="index.html#Tokenizer">Tokenizer</a>) Token() <a href="index.html#Token">Token</a></pre>
+				<p>
+Token returns the next Token. The result&#39;s Data and Attr values remain valid
+after subsequent Next calls.
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+
+
+	<div class="pkg-dir">
+		<table>
+			<tr>
+				<th class="pkg-name">Name</th>
+				<th class="pkg-synopsis">Synopsis</th>
+			</tr>
+
+			
+			<tr>
+				<td colspan="2"><a href="../index.html">..</a></td>
+			</tr>
+			
+
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="atom/index.html">atom</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package atom provides integer codes (also known as atoms) for a fixed set of frequently occurring HTML strings: tag names and attribute keys such as &#34;p&#34; and &#34;id&#34;.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="charset/index.html">charset</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package charset provides common text encodings for HTML documents.
+						</td>
+					</tr>
+				
+			
+		</table>
+	</div>
+
+
+	
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

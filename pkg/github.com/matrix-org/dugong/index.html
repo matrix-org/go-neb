@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>dugong - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package dugong</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/matrix-org/dugong"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+				
+				<dd><a href="index.html#NewFSHook">func NewFSHook(infoPath, warnPath, errorPath string, formatter log.Formatter, rotSched RotationScheduler) log.Hook</a></dd>
+			
+			
+				
+				<dd><a href="index.html#DailyRotationSchedule">type DailyRotationSchedule</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DailyRotationSchedule.ShouldGZip">func (rs *DailyRotationSchedule) ShouldGZip() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DailyRotationSchedule.ShouldRotate">func (rs *DailyRotationSchedule) ShouldRotate() (bool, string)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#RotationScheduler">type RotationScheduler</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/matrix-org/dugong/fshook.go">fshook.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+			
+			
+			<h2 id="NewFSHook">func <a href="http://localhost:6060/src/github.com/matrix-org/dugong/fshook.go?s=2184:2298#L61">NewFSHook</a></h2>
+			<pre>func NewFSHook(infoPath, warnPath, errorPath <a href="../../../builtin/index.html#string">string</a>, formatter <a href="../../Sirupsen/logrus/index.html">log</a>.<a href="../../Sirupsen/logrus/index.html#Formatter">Formatter</a>, rotSched <a href="index.html#RotationScheduler">RotationScheduler</a>) <a href="../../Sirupsen/logrus/index.html">log</a>.<a href="../../Sirupsen/logrus/index.html#Hook">Hook</a></pre>
+			<p>
+NewFSHook makes a logging hook that writes formatted
+log entries to info, warn and error log files. Each log file
+contains the messages with that severity or higher. If a formatter is
+not specified, they will be logged using a JSON formatter. If a
+RotationScheduler is set, the files will be cycled according to its rules.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="DailyRotationSchedule">type <a href="http://localhost:6060/src/github.com/matrix-org/dugong/fshook.go?s=751:830#L17">DailyRotationSchedule</a></h2>
+			<pre>type DailyRotationSchedule struct {
+    GZip <a href="../../../builtin/index.html#bool">bool</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+DailyRotationSchedule rotates log files daily. Logs are only rotated
+when midnight passes *whilst the process is running*. E.g: if you run
+the process on Day 4 then stop it and start it on Day 7, no rotation will
+occur when the process starts.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="DailyRotationSchedule.ShouldGZip">func (*DailyRotationSchedule) <a href="http://localhost:6060/src/github.com/matrix-org/dugong/fshook.go?s=1774:1824#L52">ShouldGZip</a></h3>
+				<pre>func (rs *<a href="index.html#DailyRotationSchedule">DailyRotationSchedule</a>) ShouldGZip() <a href="../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="DailyRotationSchedule.ShouldRotate">func (*DailyRotationSchedule) <a href="http://localhost:6060/src/github.com/matrix-org/dugong/fshook.go?s=1242:1304#L34">ShouldRotate</a></h3>
+				<pre>func (rs *<a href="index.html#DailyRotationSchedule">DailyRotationSchedule</a>) ShouldRotate() (<a href="../../../builtin/index.html#bool">bool</a>, <a href="../../../builtin/index.html#string">string</a>)</pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="RotationScheduler">type <a href="http://localhost:6060/src/github.com/matrix-org/dugong/fshook.go?s=200:493#L5">RotationScheduler</a></h2>
+			<pre>type RotationScheduler interface {
+    <span class="comment">// ShouldRotate returns true if the file should be rotated. The suffix to apply</span>
+    <span class="comment">// to the filename is returned as the 2nd arg.</span>
+    ShouldRotate() (<a href="../../../builtin/index.html#bool">bool</a>, <a href="../../../builtin/index.html#string">string</a>)
+    <span class="comment">// ShouldGZip returns true if the file should be gzipped when it is rotated.</span>
+    ShouldGZip() <a href="../../../builtin/index.html#bool">bool</a>
+}</pre>
+			<p>
+RotationScheduler determines when files should be rotated.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>log - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package log</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "log"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+				<dd><a href="index.html#pkg-examples" class="examplesLink">Examples</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-subdirectories">Subdirectories</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package log implements a simple logging package. It defines a type, Logger,
+with methods for formatting output. It also has a predefined &#39;standard&#39;
+Logger accessible through helper functions Print[f|ln], Fatal[f|ln], and
+Panic[f|ln], which are easier to use than creating a Logger manually.
+That logger writes to standard error and prints the date and time
+of each logged message.
+The Fatal functions call os.Exit(1) after writing the log message.
+The Panic functions call panic after writing the log message.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="index.html#pkg-constants">Constants</a></dd>
+			
+			
+			
+				
+				<dd><a href="index.html#Fatal">func Fatal(v ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#Fatalf">func Fatalf(format string, v ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#Fatalln">func Fatalln(v ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#Flags">func Flags() int</a></dd>
+			
+				
+				<dd><a href="index.html#Output">func Output(calldepth int, s string) error</a></dd>
+			
+				
+				<dd><a href="index.html#Panic">func Panic(v ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#Panicf">func Panicf(format string, v ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#Panicln">func Panicln(v ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#Prefix">func Prefix() string</a></dd>
+			
+				
+				<dd><a href="index.html#Print">func Print(v ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#Printf">func Printf(format string, v ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#Println">func Println(v ...interface{})</a></dd>
+			
+				
+				<dd><a href="index.html#SetFlags">func SetFlags(flag int)</a></dd>
+			
+				
+				<dd><a href="index.html#SetOutput">func SetOutput(w io.Writer)</a></dd>
+			
+				
+				<dd><a href="index.html#SetPrefix">func SetPrefix(prefix string)</a></dd>
+			
+			
+				
+				<dd><a href="index.html#Logger">type Logger</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#New">func New(out io.Writer, prefix string, flag int) *Logger</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Fatal">func (l *Logger) Fatal(v ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Fatalf">func (l *Logger) Fatalf(format string, v ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Fatalln">func (l *Logger) Fatalln(v ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Flags">func (l *Logger) Flags() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Output">func (l *Logger) Output(calldepth int, s string) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Panic">func (l *Logger) Panic(v ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Panicf">func (l *Logger) Panicf(format string, v ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Panicln">func (l *Logger) Panicln(v ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Prefix">func (l *Logger) Prefix() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Print">func (l *Logger) Print(v ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Printf">func (l *Logger) Printf(format string, v ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.Println">func (l *Logger) Println(v ...interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.SetFlags">func (l *Logger) SetFlags(flag int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.SetOutput">func (l *Logger) SetOutput(w io.Writer)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Logger.SetPrefix">func (l *Logger) SetPrefix(prefix string)</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+		<div id="pkg-examples">
+			<h4>Examples</h4>
+			<dl>
+			
+			<dd><a class="exampleLink" href="index.html#example_Logger">Logger</a></dd>
+			
+			</dl>
+		</div>
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/log/log.go">log.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const (
+    <span class="comment">// Bits or&#39;ed together to control what&#39;s printed.</span>
+    <span class="comment">// There is no control over the order they appear (the order listed</span>
+    <span class="comment">// here) or the format they present (as described in the comments).</span>
+    <span class="comment">// The prefix is followed by a colon only when Llongfile or Lshortfile</span>
+    <span class="comment">// is specified.</span>
+    <span class="comment">// For example, flags Ldate | Ltime (or LstdFlags) produce,</span>
+    <span class="comment">//	2009/01/23 01:23:23 message</span>
+    <span class="comment">// while flags Ldate | Ltime | Lmicroseconds | Llongfile produce,</span>
+    <span class="comment">//	2009/01/23 01:23:23.123123 /a/b/c/d.go:23: message</span>
+    <span id="Ldate">Ldate</span>         = 1 &lt;&lt; <a href="../builtin/index.html#iota">iota</a>     <span class="comment">// the date in the local time zone: 2009/01/23</span>
+    <span id="Ltime">Ltime</span>                         <span class="comment">// the time in the local time zone: 01:23:23</span>
+    <span id="Lmicroseconds">Lmicroseconds</span>                 <span class="comment">// microsecond resolution: 01:23:23.123123.  assumes Ltime.</span>
+    <span id="Llongfile">Llongfile</span>                     <span class="comment">// full file name and line number: /a/b/c/d.go:23</span>
+    <span id="Lshortfile">Lshortfile</span>                    <span class="comment">// final file name element and line number: d.go:23. overrides Llongfile</span>
+    <span id="LUTC">LUTC</span>                          <span class="comment">// if Ldate or Ltime is set, use UTC rather than the local time zone</span>
+    <span id="LstdFlags">LstdFlags</span>     = <a href="index.html#Ldate">Ldate</a> | <a href="index.html#Ltime">Ltime</a> <span class="comment">// initial values for the standard logger</span>
+)</pre>
+				<p>
+These flags define which text to prefix to each log entry generated by the Logger.
+</p>
+
+			
+		
+		
+		
+			
+			
+			<h2 id="Fatal">func <a href="http://localhost:6060/src/log/log.go?s=8938:8966#L289">Fatal</a></h2>
+			<pre>func Fatal(v ...interface{})</pre>
+			<p>
+Fatal is equivalent to Print() followed by a call to os.Exit(1).
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Fatalf">func <a href="http://localhost:6060/src/log/log.go?s=9087:9131#L295">Fatalf</a></h2>
+			<pre>func Fatalf(format <a href="../builtin/index.html#string">string</a>, v ...interface{})</pre>
+			<p>
+Fatalf is equivalent to Printf() followed by a call to os.Exit(1).
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Fatalln">func <a href="http://localhost:6060/src/log/log.go?s=9263:9293#L301">Fatalln</a></h2>
+			<pre>func Fatalln(v ...interface{})</pre>
+			<p>
+Fatalln is equivalent to Println() followed by a call to os.Exit(1).
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Flags">func <a href="http://localhost:6060/src/log/log.go?s=7883:7899#L249">Flags</a></h2>
+			<pre>func Flags() <a href="../builtin/index.html#int">int</a></pre>
+			<p>
+Flags returns the output flags for the standard logger.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Output">func <a href="http://localhost:6060/src/log/log.go?s=10268:10310#L334">Output</a></h2>
+			<pre>func Output(calldepth <a href="../builtin/index.html#int">int</a>, s <a href="../builtin/index.html#string">string</a>) <a href="../builtin/index.html#error">error</a></pre>
+			<p>
+Output writes the output for a logging event.  The string s contains
+the text to print after the prefix specified by the flags of the
+Logger.  A newline is appended if the last character of s is not
+already a newline.  Calldepth is the count of the number of
+frames to skip when computing the file name and line number
+if Llongfile or Lshortfile is set; a value of 1 will print the details
+for the caller of Output.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Panic">func <a href="http://localhost:6060/src/log/log.go?s=9411:9439#L307">Panic</a></h2>
+			<pre>func Panic(v ...interface{})</pre>
+			<p>
+Panic is equivalent to Print() followed by a call to panic().
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Panicf">func <a href="http://localhost:6060/src/log/log.go?s=9563:9607#L314">Panicf</a></h2>
+			<pre>func Panicf(format <a href="../builtin/index.html#string">string</a>, v ...interface{})</pre>
+			<p>
+Panicf is equivalent to Printf() followed by a call to panic().
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Panicln">func <a href="http://localhost:6060/src/log/log.go?s=9742:9772#L321">Panicln</a></h2>
+			<pre>func Panicln(v ...interface{})</pre>
+			<p>
+Panicln is equivalent to Println() followed by a call to panic().
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Prefix">func <a href="http://localhost:6060/src/log/log.go?s=8094:8114#L259">Prefix</a></h2>
+			<pre>func Prefix() <a href="../builtin/index.html#string">string</a></pre>
+			<p>
+Prefix returns the output prefix for the standard logger.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Print">func <a href="http://localhost:6060/src/log/log.go?s=8418:8446#L272">Print</a></h2>
+			<pre>func Print(v ...interface{})</pre>
+			<p>
+Print calls Output to print to the standard logger.
+Arguments are handled in the manner of fmt.Print.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Printf">func <a href="http://localhost:6060/src/log/log.go?s=8595:8639#L278">Printf</a></h2>
+			<pre>func Printf(format <a href="../builtin/index.html#string">string</a>, v ...interface{})</pre>
+			<p>
+Printf calls Output to print to the standard logger.
+Arguments are handled in the manner of fmt.Printf.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Println">func <a href="http://localhost:6060/src/log/log.go?s=8799:8829#L284">Println</a></h2>
+			<pre>func Println(v ...interface{})</pre>
+			<p>
+Println calls Output to print to the standard logger.
+Arguments are handled in the manner of fmt.Println.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SetFlags">func <a href="http://localhost:6060/src/log/log.go?s=7984:8007#L254">SetFlags</a></h2>
+			<pre>func SetFlags(flag <a href="../builtin/index.html#int">int</a>)</pre>
+			<p>
+SetFlags sets the output flags for the standard logger.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SetOutput">func <a href="http://localhost:6060/src/log/log.go?s=7740:7767#L242">SetOutput</a></h2>
+			<pre>func SetOutput(w <a href="../io/index.html">io</a>.<a href="../io/index.html#Writer">Writer</a>)</pre>
+			<p>
+SetOutput sets the output destination for the standard logger.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SetPrefix">func <a href="http://localhost:6060/src/log/log.go?s=8202:8231#L264">SetPrefix</a></h2>
+			<pre>func SetPrefix(prefix <a href="../builtin/index.html#string">string</a>)</pre>
+			<p>
+SetPrefix sets the output prefix for the standard logger.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="Logger">type <a href="http://localhost:6060/src/log/log.go?s=2250:2542#L38">Logger</a></h2>
+			<pre>type Logger struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+A Logger represents an active logging object that generates lines of
+output to an io.Writer.  Each logging operation makes a single call to
+the Writer&#39;s Write method.  A Logger can be used simultaneously from
+multiple goroutines; it guarantees to serialize access to the Writer.
+</p>
+
+
+			
+
+			
+
+			<div id="example_Logger" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">var buf bytes.Buffer
+logger := log.New(&amp;buf, &#34;logger: &#34;, log.Lshortfile)
+logger.Print(&#34;Hello, log file!&#34;)
+
+fmt.Print(&amp;buf)
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">logger: example_test.go:16: Hello, log file!
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+			
+
+			
+				
+				<h3 id="New">func <a href="http://localhost:6060/src/log/log.go?s=2771:2827#L50">New</a></h3>
+				<pre>func New(out <a href="../io/index.html">io</a>.<a href="../io/index.html#Writer">Writer</a>, prefix <a href="../builtin/index.html#string">string</a>, flag <a href="../builtin/index.html#int">int</a>) *<a href="index.html#Logger">Logger</a></pre>
+				<p>
+New creates a new Logger.   The out variable sets the
+destination to which log data will be written.
+The prefix appears at the beginning of each generated log line.
+The flag argument defines the logging properties.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Logger.Fatal">func (*Logger) <a href="http://localhost:6060/src/log/log.go?s=6145:6185#L175">Fatal</a></h3>
+				<pre>func (l *<a href="index.html#Logger">Logger</a>) Fatal(v ...interface{})</pre>
+				<p>
+Fatal is equivalent to l.Print() followed by a call to os.Exit(1).
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Logger.Fatalf">func (*Logger) <a href="http://localhost:6060/src/log/log.go?s=6306:6362#L181">Fatalf</a></h3>
+				<pre>func (l *<a href="index.html#Logger">Logger</a>) Fatalf(format <a href="../builtin/index.html#string">string</a>, v ...interface{})</pre>
+				<p>
+Fatalf is equivalent to l.Printf() followed by a call to os.Exit(1).
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Logger.Fatalln">func (*Logger) <a href="http://localhost:6060/src/log/log.go?s=6494:6536#L187">Fatalln</a></h3>
+				<pre>func (l *<a href="index.html#Logger">Logger</a>) Fatalln(v ...interface{})</pre>
+				<p>
+Fatalln is equivalent to l.Println() followed by a call to os.Exit(1).
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Logger.Flags">func (*Logger) <a href="http://localhost:6060/src/log/log.go?s=7158:7186#L214">Flags</a></h3>
+				<pre>func (l *<a href="index.html#Logger">Logger</a>) Flags() <a href="../builtin/index.html#int">int</a></pre>
+				<p>
+Flags returns the output flags for the logger.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Logger.Output">func (*Logger) <a href="http://localhost:6060/src/log/log.go?s=4899:4953#L133">Output</a></h3>
+				<pre>func (l *<a href="index.html#Logger">Logger</a>) Output(calldepth <a href="../builtin/index.html#int">int</a>, s <a href="../builtin/index.html#string">string</a>) <a href="../builtin/index.html#error">error</a></pre>
+				<p>
+Output writes the output for a logging event.  The string s contains
+the text to print after the prefix specified by the flags of the
+Logger.  A newline is appended if the last character of s is not
+already a newline.  Calldepth is used to recover the PC and is
+provided for generality, although at the moment on all pre-defined
+paths it will be 2.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Logger.Panic">func (*Logger) <a href="http://localhost:6060/src/log/log.go?s=6654:6694#L193">Panic</a></h3>
+				<pre>func (l *<a href="index.html#Logger">Logger</a>) Panic(v ...interface{})</pre>
+				<p>
+Panic is equivalent to l.Print() followed by a call to panic().
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Logger.Panicf">func (*Logger) <a href="http://localhost:6060/src/log/log.go?s=6818:6874#L200">Panicf</a></h3>
+				<pre>func (l *<a href="index.html#Logger">Logger</a>) Panicf(format <a href="../builtin/index.html#string">string</a>, v ...interface{})</pre>
+				<p>
+Panicf is equivalent to l.Printf() followed by a call to panic().
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Logger.Panicln">func (*Logger) <a href="http://localhost:6060/src/log/log.go?s=7009:7051#L207">Panicln</a></h3>
+				<pre>func (l *<a href="index.html#Logger">Logger</a>) Panicln(v ...interface{})</pre>
+				<p>
+Panicln is equivalent to l.Println() followed by a call to panic().
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Logger.Prefix">func (*Logger) <a href="http://localhost:6060/src/log/log.go?s=7433:7465#L228">Prefix</a></h3>
+				<pre>func (l *<a href="index.html#Logger">Logger</a>) Prefix() <a href="../builtin/index.html#string">string</a></pre>
+				<p>
+Prefix returns the output prefix for the logger.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Logger.Print">func (*Logger) <a href="http://localhost:6060/src/log/log.go?s=5814:5854#L168">Print</a></h3>
+				<pre>func (l *<a href="index.html#Logger">Logger</a>) Print(v ...interface{})</pre>
+				<p>
+Print calls l.Output to print to the logger.
+Arguments are handled in the manner of fmt.Print.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Logger.Printf">func (*Logger) <a href="http://localhost:6060/src/log/log.go?s=5611:5667#L162">Printf</a></h3>
+				<pre>func (l *<a href="index.html#Logger">Logger</a>) Printf(format <a href="../builtin/index.html#string">string</a>, v ...interface{})</pre>
+				<p>
+Printf calls l.Output to print to the logger.
+Arguments are handled in the manner of fmt.Printf.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Logger.Println">func (*Logger) <a href="http://localhost:6060/src/log/log.go?s=5995:6037#L172">Println</a></h3>
+				<pre>func (l *<a href="index.html#Logger">Logger</a>) Println(v ...interface{})</pre>
+				<p>
+Println calls l.Output to print to the logger.
+Arguments are handled in the manner of fmt.Println.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Logger.SetFlags">func (*Logger) <a href="http://localhost:6060/src/log/log.go?s=7291:7326#L221">SetFlags</a></h3>
+				<pre>func (l *<a href="index.html#Logger">Logger</a>) SetFlags(flag <a href="../builtin/index.html#int">int</a>)</pre>
+				<p>
+SetFlags sets the output flags for the logger.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Logger.SetOutput">func (*Logger) <a href="http://localhost:6060/src/log/log.go?s=2944:2983#L55">SetOutput</a></h3>
+				<pre>func (l *<a href="index.html#Logger">Logger</a>) SetOutput(w <a href="../io/index.html">io</a>.<a href="../io/index.html#Writer">Writer</a>)</pre>
+				<p>
+SetOutput sets the output destination for the logger.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Logger.SetPrefix">func (*Logger) <a href="http://localhost:6060/src/log/log.go?s=7574:7615#L235">SetPrefix</a></h3>
+				<pre>func (l *<a href="index.html#Logger">Logger</a>) SetPrefix(prefix <a href="../builtin/index.html#string">string</a>)</pre>
+				<p>
+SetPrefix sets the output prefix for the logger.
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+
+
+	<div class="pkg-dir">
+		<table>
+			<tr>
+				<th class="pkg-name">Name</th>
+				<th class="pkg-synopsis">Synopsis</th>
+			</tr>
+
+			
+			<tr>
+				<td colspan="2"><a href="http://localhost:6060/pkg/">..</a></td>
+			</tr>
+			
+
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="syslog/index.html">syslog</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package syslog provides a simple interface to the system log service.
+						</td>
+					</tr>
+				
+			
+		</table>
+	</div>
+
+
+	
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

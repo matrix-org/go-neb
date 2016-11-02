@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>procfs - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package procfs</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/prometheus/procfs"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package procfs provides functions to retrieve system, kernel and process
+metrics from the pseudo-filesystem proc.
+</p>
+<p>
+Example:
+</p>
+<pre>package main
+
+import (
+	&#34;fmt&#34;
+	&#34;log&#34;
+
+	&#34;github.com/prometheus/procfs&#34;
+)
+
+func main() {
+	p, err := procfs.Self()
+	if err != nil {
+		log.Fatalf(&#34;could not get process: %s&#34;, err)
+	}
+
+	stat, err := p.NewStat()
+	if err != nil {
+		log.Fatalf(&#34;could not get process stat: %s&#34;, err)
+	}
+
+	fmt.Printf(&#34;command:  %s\n&#34;, stat.Comm)
+	fmt.Printf(&#34;cpu time: %fs\n&#34;, stat.CPUTime())
+	fmt.Printf(&#34;vsize:    %dB\n&#34;, stat.VirtualMemory())
+	fmt.Printf(&#34;rss:      %dB\n&#34;, stat.ResidentMemory())
+}
+</pre>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="index.html#pkg-constants">Constants</a></dd>
+			
+			
+			
+				
+				<dd><a href="index.html#NewIPVSBackendStatus">func NewIPVSBackendStatus() ([]IPVSBackendStatus, error)</a></dd>
+			
+			
+				
+				<dd><a href="index.html#FS">type FS</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewFS">func NewFS(mountPoint string) (FS, error)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#FS.AllProcs">func (fs FS) AllProcs() (Procs, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#FS.NewIPVSBackendStatus">func (fs FS) NewIPVSBackendStatus() ([]IPVSBackendStatus, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#FS.NewIPVSStats">func (fs FS) NewIPVSStats() (IPVSStats, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#FS.NewProc">func (fs FS) NewProc(pid int) (Proc, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#FS.NewStat">func (fs FS) NewStat() (Stat, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#FS.ParseMDStat">func (fs FS) ParseMDStat() (mdstates []MDStat, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#FS.Path">func (fs FS) Path(p ...string) string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#FS.Self">func (fs FS) Self() (Proc, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#IPVSBackendStatus">type IPVSBackendStatus</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#IPVSStats">type IPVSStats</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewIPVSStats">func NewIPVSStats() (IPVSStats, error)</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#MDStat">type MDStat</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Proc">type Proc</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewProc">func NewProc(pid int) (Proc, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Self">func Self() (Proc, error)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Proc.CmdLine">func (p Proc) CmdLine() ([]string, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Proc.Comm">func (p Proc) Comm() (string, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Proc.Executable">func (p Proc) Executable() (string, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Proc.FileDescriptorTargets">func (p Proc) FileDescriptorTargets() ([]string, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Proc.FileDescriptors">func (p Proc) FileDescriptors() ([]uintptr, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Proc.FileDescriptorsLen">func (p Proc) FileDescriptorsLen() (int, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Proc.NewIO">func (p Proc) NewIO() (ProcIO, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Proc.NewLimits">func (p Proc) NewLimits() (ProcLimits, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Proc.NewStat">func (p Proc) NewStat() (ProcStat, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#ProcIO">type ProcIO</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ProcLimits">type ProcLimits</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ProcStat">type ProcStat</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ProcStat.CPUTime">func (s ProcStat) CPUTime() float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ProcStat.ResidentMemory">func (s ProcStat) ResidentMemory() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ProcStat.StartTime">func (s ProcStat) StartTime() (float64, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ProcStat.VirtualMemory">func (s ProcStat) VirtualMemory() int</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Procs">type Procs</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#AllProcs">func AllProcs() (Procs, error)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Procs.Len">func (p Procs) Len() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Procs.Less">func (p Procs) Less(i, j int) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Procs.Swap">func (p Procs) Swap(i, j int)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Stat">type Stat</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewStat">func NewStat() (Stat, error)</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/procfs/doc.go">doc.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/procfs/fs.go">fs.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/procfs/ipvs.go">ipvs.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/procfs/mdstat.go">mdstat.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/procfs/proc.go">proc.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/procfs/proc_io.go">proc_io.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/procfs/proc_limits.go">proc_limits.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/procfs/proc_stat.go">proc_stat.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/procfs/stat.go">stat.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const <span id="DefaultMountPoint">DefaultMountPoint</span> = &#34;/proc&#34;</pre>
+				<p>
+DefaultMountPoint is the common mount point of the proc filesystem.
+</p>
+
+			
+		
+		
+		
+			
+			
+			<h2 id="NewIPVSBackendStatus">func <a href="http://localhost:6060/src/github.com/prometheus/procfs/ipvs.go?s=2957:3013#L110">NewIPVSBackendStatus</a></h2>
+			<pre>func NewIPVSBackendStatus() ([]<a href="index.html#IPVSBackendStatus">IPVSBackendStatus</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+NewIPVSBackendStatus reads and returns the status of all (virtual,real) server pairs.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="FS">type <a href="http://localhost:6060/src/github.com/prometheus/procfs/fs.go?s=152:166#L1">FS</a></h2>
+			<pre>type FS <a href="../../../builtin/index.html#string">string</a></pre>
+			<p>
+FS represents the pseudo-filesystem proc, which provides an interface to
+kernel data structures.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewFS">func <a href="http://localhost:6060/src/github.com/prometheus/procfs/fs.go?s=387:428#L8">NewFS</a></h3>
+				<pre>func NewFS(mountPoint <a href="../../../builtin/index.html#string">string</a>) (<a href="index.html#FS">FS</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+NewFS returns a new FS mounted under the given mountPoint. It will error
+if the mount point can&#39;t be read.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="FS.AllProcs">func (FS) <a href="http://localhost:6060/src/github.com/prometheus/procfs/proc.go?s=1638:1676#L65">AllProcs</a></h3>
+				<pre>func (fs <a href="index.html#FS">FS</a>) AllProcs() (<a href="index.html#Procs">Procs</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+AllProcs returns a list of all currently available processes.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="FS.NewIPVSBackendStatus">func (FS) <a href="http://localhost:6060/src/github.com/prometheus/procfs/ipvs.go?s=3273:3337#L120">NewIPVSBackendStatus</a></h3>
+				<pre>func (fs <a href="index.html#FS">FS</a>) NewIPVSBackendStatus() ([]<a href="index.html#IPVSBackendStatus">IPVSBackendStatus</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+NewIPVSBackendStatus reads and returns the status of all (virtual,real) server pairs from the specified `proc` filesystem.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="FS.NewIPVSStats">func (FS) <a href="http://localhost:6060/src/github.com/prometheus/procfs/ipvs.go?s=1444:1490#L51">NewIPVSStats</a></h3>
+				<pre>func (fs <a href="index.html#FS">FS</a>) NewIPVSStats() (<a href="index.html#IPVSStats">IPVSStats</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+NewIPVSStats reads the IPVS statistics from the specified `proc` filesystem.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="FS.NewProc">func (FS) <a href="http://localhost:6060/src/github.com/prometheus/procfs/proc.go?s=1400:1443#L57">NewProc</a></h3>
+				<pre>func (fs <a href="index.html#FS">FS</a>) NewProc(pid <a href="../../../builtin/index.html#int">int</a>) (<a href="index.html#Proc">Proc</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+NewProc returns a process for the given pid.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="FS.NewStat">func (FS) <a href="http://localhost:6060/src/github.com/prometheus/procfs/stat.go?s=471:507#L18">NewStat</a></h3>
+				<pre>func (fs <a href="index.html#FS">FS</a>) NewStat() (<a href="index.html#Stat">Stat</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+NewStat returns an information about current kernel/system statistics.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="FS.ParseMDStat">func (FS) <a href="http://localhost:6060/src/github.com/prometheus/procfs/mdstat.go?s=713:770#L23">ParseMDStat</a></h3>
+				<pre>func (fs <a href="index.html#FS">FS</a>) ParseMDStat() (mdstates []<a href="index.html#MDStat">MDStat</a>, err <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+ParseMDStat parses an mdstat-file and returns a struct with the relevant infos.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="FS.Path">func (FS) <a href="http://localhost:6060/src/github.com/prometheus/procfs/fs.go?s=756:793#L21">Path</a></h3>
+				<pre>func (fs <a href="index.html#FS">FS</a>) Path(p ...<a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+Path returns the path of the given subsystem relative to the procfs root.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="FS.Self">func (FS) <a href="http://localhost:6060/src/github.com/prometheus/procfs/proc.go?s=1101:1134#L44">Self</a></h3>
+				<pre>func (fs <a href="index.html#FS">FS</a>) Self() (<a href="index.html#Proc">Proc</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Self returns a process for the current process.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="IPVSBackendStatus">type <a href="http://localhost:6060/src/github.com/prometheus/procfs/ipvs.go?s=597:1165#L21">IPVSBackendStatus</a></h2>
+			<pre>type IPVSBackendStatus struct {
+    <span class="comment">// The local (virtual) IP address.</span>
+    LocalAddress <a href="../../../net/index.html">net</a>.<a href="../../../net/index.html#IP">IP</a>
+    <span class="comment">// The local (virtual) port.</span>
+    LocalPort <a href="../../../builtin/index.html#uint16">uint16</a>
+    <span class="comment">// The transport protocol (TCP, UDP).</span>
+    Proto <a href="../../../builtin/index.html#string">string</a>
+    <span class="comment">// The remote (real) IP address.</span>
+    RemoteAddress <a href="../../../net/index.html">net</a>.<a href="../../../net/index.html#IP">IP</a>
+    <span class="comment">// The remote (real) port.</span>
+    RemotePort <a href="../../../builtin/index.html#uint16">uint16</a>
+    <span class="comment">// The current number of active connections for this virtual/real address pair.</span>
+    ActiveConn <a href="../../../builtin/index.html#uint64">uint64</a>
+    <span class="comment">// The current number of inactive connections for this virtual/real address pair.</span>
+    InactConn <a href="../../../builtin/index.html#uint64">uint64</a>
+    <span class="comment">// The current weight of this virtual/real address pair.</span>
+    Weight <a href="../../../builtin/index.html#uint64">uint64</a>
+}</pre>
+			<p>
+IPVSBackendStatus holds current metrics of one virtual / real address pair.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="IPVSStats">type <a href="http://localhost:6060/src/github.com/prometheus/procfs/ipvs.go?s=213:516#L7">IPVSStats</a></h2>
+			<pre>type IPVSStats struct {
+    <span class="comment">// Total count of connections.</span>
+    Connections <a href="../../../builtin/index.html#uint64">uint64</a>
+    <span class="comment">// Total incoming packages processed.</span>
+    IncomingPackets <a href="../../../builtin/index.html#uint64">uint64</a>
+    <span class="comment">// Total outgoing packages processed.</span>
+    OutgoingPackets <a href="../../../builtin/index.html#uint64">uint64</a>
+    <span class="comment">// Total incoming traffic.</span>
+    IncomingBytes <a href="../../../builtin/index.html#uint64">uint64</a>
+    <span class="comment">// Total outgoing traffic.</span>
+    OutgoingBytes <a href="../../../builtin/index.html#uint64">uint64</a>
+}</pre>
+			<p>
+IPVSStats holds IPVS statistics, as exposed by the kernel in `/proc/net/ip_vs_stats`.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewIPVSStats">func <a href="http://localhost:6060/src/github.com/prometheus/procfs/ipvs.go?s=1210:1248#L41">NewIPVSStats</a></h3>
+				<pre>func NewIPVSStats() (<a href="index.html#IPVSStats">IPVSStats</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+NewIPVSStats reads the IPVS statistics.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="MDStat">type <a href="http://localhost:6060/src/github.com/prometheus/procfs/mdstat.go?s=267:628#L7">MDStat</a></h2>
+			<pre>type MDStat struct {
+    <span class="comment">// Name of the device.</span>
+    Name <a href="../../../builtin/index.html#string">string</a>
+    <span class="comment">// activity-state of the device.</span>
+    ActivityState <a href="../../../builtin/index.html#string">string</a>
+    <span class="comment">// Number of active disks.</span>
+    DisksActive <a href="../../../builtin/index.html#int64">int64</a>
+    <span class="comment">// Total number of disks the device consists of.</span>
+    DisksTotal <a href="../../../builtin/index.html#int64">int64</a>
+    <span class="comment">// Number of blocks the device holds.</span>
+    BlocksTotal <a href="../../../builtin/index.html#int64">int64</a>
+    <span class="comment">// Number of blocks on the device that are in sync.</span>
+    BlocksSynced <a href="../../../builtin/index.html#int64">int64</a>
+}</pre>
+			<p>
+MDStat holds info parsed from /proc/mdstat.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Proc">type <a href="http://localhost:6060/src/github.com/prometheus/procfs/proc.go?s=130:187#L2">Proc</a></h2>
+			<pre>type Proc struct {
+    <span class="comment">// The process ID.</span>
+    PID <a href="../../../builtin/index.html#int">int</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Proc provides information about a running process.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewProc">func <a href="http://localhost:6060/src/github.com/prometheus/procfs/proc.go?s=693:728#L26">NewProc</a></h3>
+				<pre>func NewProc(pid <a href="../../../builtin/index.html#int">int</a>) (<a href="index.html#Proc">Proc</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+NewProc returns a process for the given pid under /proc.
+</p>
+
+				
+				
+			
+				
+				<h3 id="Self">func <a href="http://localhost:6060/src/github.com/prometheus/procfs/proc.go?s=506:531#L17">Self</a></h3>
+				<pre>func Self() (<a href="index.html#Proc">Proc</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Self returns a process for the current process read via /proc/self.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Proc.CmdLine">func (Proc) <a href="http://localhost:6060/src/github.com/prometheus/procfs/proc.go?s=2127:2168#L90">CmdLine</a></h3>
+				<pre>func (p <a href="index.html#Proc">Proc</a>) CmdLine() ([]<a href="../../../builtin/index.html#string">string</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+CmdLine returns the command line of a process.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Proc.Comm">func (Proc) <a href="http://localhost:6060/src/github.com/prometheus/procfs/proc.go?s=2507:2543#L110">Comm</a></h3>
+				<pre>func (p <a href="index.html#Proc">Proc</a>) Comm() (<a href="../../../builtin/index.html#string">string</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Comm returns the command name of a process.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Proc.Executable">func (Proc) <a href="http://localhost:6060/src/github.com/prometheus/procfs/proc.go?s=2834:2876#L126">Executable</a></h3>
+				<pre>func (p <a href="index.html#Proc">Proc</a>) Executable() (<a href="../../../builtin/index.html#string">string</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Executable returns the absolute path of the executable command of a process.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Proc.FileDescriptorTargets">func (Proc) <a href="http://localhost:6060/src/github.com/prometheus/procfs/proc.go?s=3613:3668#L156">FileDescriptorTargets</a></h3>
+				<pre>func (p <a href="index.html#Proc">Proc</a>) FileDescriptorTargets() ([]<a href="../../../builtin/index.html#string">string</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+FileDescriptorTargets returns the targets of all file descriptors of a process.
+If a file descriptor is not a symlink to a file (like a socket), that value will be the empty string.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Proc.FileDescriptors">func (Proc) <a href="http://localhost:6060/src/github.com/prometheus/procfs/proc.go?s=3062:3112#L136">FileDescriptors</a></h3>
+				<pre>func (p <a href="index.html#Proc">Proc</a>) FileDescriptors() ([]<a href="../../../builtin/index.html#uintptr">uintptr</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+FileDescriptors returns the currently open file descriptors of a process.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Proc.FileDescriptorsLen">func (Proc) <a href="http://localhost:6060/src/github.com/prometheus/procfs/proc.go?s=4030:4077#L176">FileDescriptorsLen</a></h3>
+				<pre>func (p <a href="index.html#Proc">Proc</a>) FileDescriptorsLen() (<a href="../../../builtin/index.html#int">int</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+FileDescriptorsLen returns the number of currently open file descriptors of
+a process.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Proc.NewIO">func (Proc) <a href="http://localhost:6060/src/github.com/prometheus/procfs/proc_io.go?s=572:609#L20">NewIO</a></h3>
+				<pre>func (p <a href="index.html#Proc">Proc</a>) NewIO() (<a href="index.html#ProcIO">ProcIO</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+NewIO creates a new ProcIO instance from a given Proc instance.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Proc.NewLimits">func (Proc) <a href="http://localhost:6060/src/github.com/prometheus/procfs/proc_limits.go?s=2055:2100#L58">NewLimits</a></h3>
+				<pre>func (p <a href="index.html#Proc">Proc</a>) NewLimits() (<a href="index.html#ProcLimits">ProcLimits</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+NewLimits returns the current soft limits of the process.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Proc.NewStat">func (Proc) <a href="http://localhost:6060/src/github.com/prometheus/procfs/proc_stat.go?s=3108:3149#L83">NewStat</a></h3>
+				<pre>func (p <a href="index.html#Proc">Proc</a>) NewStat() (<a href="index.html#ProcStat">ProcStat</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+NewStat returns the current status information of the process.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ProcIO">type <a href="http://localhost:6060/src/github.com/prometheus/procfs/proc_io.go?s=102:503#L1">ProcIO</a></h2>
+			<pre>type ProcIO struct {
+    <span class="comment">// Chars read.</span>
+    RChar <a href="../../../builtin/index.html#uint64">uint64</a>
+    <span class="comment">// Chars written.</span>
+    WChar <a href="../../../builtin/index.html#uint64">uint64</a>
+    <span class="comment">// Read syscalls.</span>
+    SyscR <a href="../../../builtin/index.html#uint64">uint64</a>
+    <span class="comment">// Write syscalls.</span>
+    SyscW <a href="../../../builtin/index.html#uint64">uint64</a>
+    <span class="comment">// Bytes read.</span>
+    ReadBytes <a href="../../../builtin/index.html#uint64">uint64</a>
+    <span class="comment">// Bytes written.</span>
+    WriteBytes <a href="../../../builtin/index.html#uint64">uint64</a>
+    <span class="comment">// Bytes written, but taking into account truncation. See</span>
+    <span class="comment">// Documentation/filesystems/proc.txt in the kernel sources for</span>
+    <span class="comment">// detailed explanation.</span>
+    CancelledWriteBytes <a href="../../../builtin/index.html#int64">int64</a>
+}</pre>
+			<p>
+ProcIO models the content of /proc/&lt;pid&gt;/io.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ProcLimits">type <a href="http://localhost:6060/src/github.com/prometheus/procfs/proc_limits.go?s=255:1875#L4">ProcLimits</a></h2>
+			<pre>type ProcLimits struct {
+    <span class="comment">// CPU time limit in seconds.</span>
+    CPUTime <a href="../../../builtin/index.html#int">int</a>
+    <span class="comment">// Maximum size of files that the process may create.</span>
+    FileSize <a href="../../../builtin/index.html#int">int</a>
+    <span class="comment">// Maximum size of the process&#39;s data segment (initialized data,</span>
+    <span class="comment">// uninitialized data, and heap).</span>
+    DataSize <a href="../../../builtin/index.html#int">int</a>
+    <span class="comment">// Maximum size of the process stack in bytes.</span>
+    StackSize <a href="../../../builtin/index.html#int">int</a>
+    <span class="comment">// Maximum size of a core file.</span>
+    CoreFileSize <a href="../../../builtin/index.html#int">int</a>
+    <span class="comment">// Limit of the process&#39;s resident set in pages.</span>
+    ResidentSet <a href="../../../builtin/index.html#int">int</a>
+    <span class="comment">// Maximum number of processes that can be created for the real user ID of</span>
+    <span class="comment">// the calling process.</span>
+    Processes <a href="../../../builtin/index.html#int">int</a>
+    <span class="comment">// Value one greater than the maximum file descriptor number that can be</span>
+    <span class="comment">// opened by this process.</span>
+    OpenFiles <a href="../../../builtin/index.html#int">int</a>
+    <span class="comment">// Maximum number of bytes of memory that may be locked into RAM.</span>
+    LockedMemory <a href="../../../builtin/index.html#int">int</a>
+    <span class="comment">// Maximum size of the process&#39;s virtual memory address space in bytes.</span>
+    AddressSpace <a href="../../../builtin/index.html#int">int</a>
+    <span class="comment">// Limit on the combined number of flock(2) locks and fcntl(2) leases that</span>
+    <span class="comment">// this process may establish.</span>
+    FileLocks <a href="../../../builtin/index.html#int">int</a>
+    <span class="comment">// Limit of signals that may be queued for the real user ID of the calling</span>
+    <span class="comment">// process.</span>
+    PendingSignals <a href="../../../builtin/index.html#int">int</a>
+    <span class="comment">// Limit on the number of bytes that can be allocated for POSIX message</span>
+    <span class="comment">// queues for the real user ID of the calling process.</span>
+    MsqqueueSize <a href="../../../builtin/index.html#int">int</a>
+    <span class="comment">// Limit of the nice priority set using setpriority(2) or nice(2).</span>
+    NicePriority <a href="../../../builtin/index.html#int">int</a>
+    <span class="comment">// Limit of the real-time priority set using sched_setscheduler(2) or</span>
+    <span class="comment">// sched_setparam(2).</span>
+    RealtimePriority <a href="../../../builtin/index.html#int">int</a>
+    <span class="comment">// Limit (in microseconds) on the amount of CPU time that a process</span>
+    <span class="comment">// scheduled under a real-time scheduling policy may consume without making</span>
+    <span class="comment">// a blocking system call.</span>
+    RealtimeTimeout <a href="../../../builtin/index.html#int">int</a>
+}</pre>
+			<p>
+ProcLimits represents the soft limits for each of the process&#39;s resource
+limits. For more information see getrlimit(2):
+<a href="http://man7.org/linux/man-pages/man2/getrlimit.2.html">http://man7.org/linux/man-pages/man2/getrlimit.2.html</a>.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ProcStat">type <a href="http://localhost:6060/src/github.com/prometheus/procfs/proc_stat.go?s=1111:3040#L19">ProcStat</a></h2>
+			<pre>type ProcStat struct {
+    <span class="comment">// The process ID.</span>
+    PID <a href="../../../builtin/index.html#int">int</a>
+    <span class="comment">// The filename of the executable.</span>
+    Comm <a href="../../../builtin/index.html#string">string</a>
+    <span class="comment">// The process state.</span>
+    State <a href="../../../builtin/index.html#string">string</a>
+    <span class="comment">// The PID of the parent of this process.</span>
+    PPID <a href="../../../builtin/index.html#int">int</a>
+    <span class="comment">// The process group ID of the process.</span>
+    PGRP <a href="../../../builtin/index.html#int">int</a>
+    <span class="comment">// The session ID of the process.</span>
+    Session <a href="../../../builtin/index.html#int">int</a>
+    <span class="comment">// The controlling terminal of the process.</span>
+    TTY <a href="../../../builtin/index.html#int">int</a>
+    <span class="comment">// The ID of the foreground process group of the controlling terminal of</span>
+    <span class="comment">// the process.</span>
+    TPGID <a href="../../../builtin/index.html#int">int</a>
+    <span class="comment">// The kernel flags word of the process.</span>
+    Flags <a href="../../../builtin/index.html#uint">uint</a>
+    <span class="comment">// The number of minor faults the process has made which have not required</span>
+    <span class="comment">// loading a memory page from disk.</span>
+    MinFlt <a href="../../../builtin/index.html#uint">uint</a>
+    <span class="comment">// The number of minor faults that the process&#39;s waited-for children have</span>
+    <span class="comment">// made.</span>
+    CMinFlt <a href="../../../builtin/index.html#uint">uint</a>
+    <span class="comment">// The number of major faults the process has made which have required</span>
+    <span class="comment">// loading a memory page from disk.</span>
+    MajFlt <a href="../../../builtin/index.html#uint">uint</a>
+    <span class="comment">// The number of major faults that the process&#39;s waited-for children have</span>
+    <span class="comment">// made.</span>
+    CMajFlt <a href="../../../builtin/index.html#uint">uint</a>
+    <span class="comment">// Amount of time that this process has been scheduled in user mode,</span>
+    <span class="comment">// measured in clock ticks.</span>
+    UTime <a href="../../../builtin/index.html#uint">uint</a>
+    <span class="comment">// Amount of time that this process has been scheduled in kernel mode,</span>
+    <span class="comment">// measured in clock ticks.</span>
+    STime <a href="../../../builtin/index.html#uint">uint</a>
+    <span class="comment">// Amount of time that this process&#39;s waited-for children have been</span>
+    <span class="comment">// scheduled in user mode, measured in clock ticks.</span>
+    CUTime <a href="../../../builtin/index.html#uint">uint</a>
+    <span class="comment">// Amount of time that this process&#39;s waited-for children have been</span>
+    <span class="comment">// scheduled in kernel mode, measured in clock ticks.</span>
+    CSTime <a href="../../../builtin/index.html#uint">uint</a>
+    <span class="comment">// For processes running a real-time scheduling policy, this is the negated</span>
+    <span class="comment">// scheduling priority, minus one.</span>
+    Priority <a href="../../../builtin/index.html#int">int</a>
+    <span class="comment">// The nice value, a value in the range 19 (low priority) to -20 (high</span>
+    <span class="comment">// priority).</span>
+    Nice <a href="../../../builtin/index.html#int">int</a>
+    <span class="comment">// Number of threads in this process.</span>
+    NumThreads <a href="../../../builtin/index.html#int">int</a>
+    <span class="comment">// The time the process started after system boot, the value is expressed</span>
+    <span class="comment">// in clock ticks.</span>
+    Starttime <a href="../../../builtin/index.html#uint64">uint64</a>
+    <span class="comment">// Virtual memory size in bytes.</span>
+    VSize <a href="../../../builtin/index.html#int">int</a>
+    <span class="comment">// Resident set size in pages.</span>
+    RSS <a href="../../../builtin/index.html#int">int</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+ProcStat provides status information about the process,
+read from /proc/[pid]/stat.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ProcStat.CPUTime">func (ProcStat) <a href="http://localhost:6060/src/github.com/prometheus/procfs/proc_stat.go?s=4595:4630#L163">CPUTime</a></h3>
+				<pre>func (s <a href="index.html#ProcStat">ProcStat</a>) CPUTime() <a href="../../../builtin/index.html#float64">float64</a></pre>
+				<p>
+CPUTime returns the total CPU user and system time in seconds.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ProcStat.ResidentMemory">func (ProcStat) <a href="http://localhost:6060/src/github.com/prometheus/procfs/proc_stat.go?s=4198:4236#L149">ResidentMemory</a></h3>
+				<pre>func (s <a href="index.html#ProcStat">ProcStat</a>) ResidentMemory() <a href="../../../builtin/index.html#int">int</a></pre>
+				<p>
+ResidentMemory returns the resident memory size in bytes.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ProcStat.StartTime">func (ProcStat) <a href="http://localhost:6060/src/github.com/prometheus/procfs/proc_stat.go?s=4342:4388#L154">StartTime</a></h3>
+				<pre>func (s <a href="index.html#ProcStat">ProcStat</a>) StartTime() (<a href="../../../builtin/index.html#float64">float64</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+StartTime returns the unix timestamp of the process in seconds.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ProcStat.VirtualMemory">func (ProcStat) <a href="http://localhost:6060/src/github.com/prometheus/procfs/proc_stat.go?s=4078:4115#L144">VirtualMemory</a></h3>
+				<pre>func (s <a href="index.html#ProcStat">ProcStat</a>) VirtualMemory() <a href="../../../builtin/index.html#int">int</a></pre>
+				<p>
+VirtualMemory returns the virtual memory size in bytes.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Procs">type <a href="http://localhost:6060/src/github.com/prometheus/procfs/proc.go?s=233:250#L10">Procs</a></h2>
+			<pre>type Procs []<a href="index.html#Proc">Proc</a></pre>
+			<p>
+Procs represents a list of Proc structs.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="AllProcs">func <a href="http://localhost:6060/src/github.com/prometheus/procfs/proc.go?s=913:943#L35">AllProcs</a></h3>
+				<pre>func AllProcs() (<a href="index.html#Procs">Procs</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+AllProcs returns a list of all currently available processes under /proc.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Procs.Len">func (Procs) <a href="http://localhost:6060/src/github.com/prometheus/procfs/proc.go?s=252:276#L12">Len</a></h3>
+				<pre>func (p <a href="index.html#Procs">Procs</a>) Len() <a href="../../../builtin/index.html#int">int</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Procs.Less">func (Procs) <a href="http://localhost:6060/src/github.com/prometheus/procfs/proc.go?s=368:402#L14">Less</a></h3>
+				<pre>func (p <a href="index.html#Procs">Procs</a>) Less(i, j <a href="../../../builtin/index.html#int">int</a>) <a href="../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Procs.Swap">func (Procs) <a href="http://localhost:6060/src/github.com/prometheus/procfs/proc.go?s=305:334#L13">Swap</a></h3>
+				<pre>func (p <a href="index.html#Procs">Procs</a>) Swap(i, j <a href="../../../builtin/index.html#int">int</a>)</pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Stat">type <a href="http://localhost:6060/src/github.com/prometheus/procfs/stat.go?s=117:195#L2">Stat</a></h2>
+			<pre>type Stat struct {
+    <span class="comment">// Boot time in seconds since the Epoch.</span>
+    BootTime <a href="../../../builtin/index.html#int64">int64</a>
+}</pre>
+			<p>
+Stat represents kernel/system statistics.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewStat">func <a href="http://localhost:6060/src/github.com/prometheus/procfs/stat.go?s=263:291#L8">NewStat</a></h3>
+				<pre>func NewStat() (<a href="index.html#Stat">Stat</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+NewStat returns kernel/system statistics read from /proc/stat.
+</p>
+
+				
+				
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

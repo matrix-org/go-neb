@@ -1,0 +1,2692 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>model - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package model</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/prometheus/common/model"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package model contains common data structures that are shared across
+Prometheus components and libraries.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="index.html#pkg-constants">Constants</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+				
+				<dd><a href="index.html#IsValidMetricName">func IsValidMetricName(n LabelValue) bool</a></dd>
+			
+				
+				<dd><a href="index.html#LabelsToSignature">func LabelsToSignature(labels map[string]string) uint64</a></dd>
+			
+				
+				<dd><a href="index.html#SignatureForLabels">func SignatureForLabels(m Metric, labels ...LabelName) uint64</a></dd>
+			
+				
+				<dd><a href="index.html#SignatureWithoutLabels">func SignatureWithoutLabels(m Metric, labels map[LabelName]struct{}) uint64</a></dd>
+			
+			
+				
+				<dd><a href="index.html#Alert">type Alert</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Alert.Fingerprint">func (a *Alert) Fingerprint() Fingerprint</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Alert.Name">func (a *Alert) Name() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Alert.Resolved">func (a *Alert) Resolved() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Alert.ResolvedAt">func (a *Alert) ResolvedAt(ts time.Time) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Alert.Status">func (a *Alert) Status() AlertStatus</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Alert.String">func (a *Alert) String() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Alert.Validate">func (a *Alert) Validate() error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#AlertStatus">type AlertStatus</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Alerts">type Alerts</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Alerts.HasFiring">func (as Alerts) HasFiring() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Alerts.Len">func (as Alerts) Len() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Alerts.Less">func (as Alerts) Less(i, j int) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Alerts.Status">func (as Alerts) Status() AlertStatus</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Alerts.Swap">func (as Alerts) Swap(i, j int)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Duration">type Duration</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ParseDuration">func ParseDuration(durationStr string) (Duration, error)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Duration.MarshalYAML">func (d Duration) MarshalYAML() (interface{}, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Duration.String">func (d Duration) String() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Duration.UnmarshalYAML">func (d *Duration) UnmarshalYAML(unmarshal func(interface{}) error) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Fingerprint">type Fingerprint</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#FingerprintFromString">func FingerprintFromString(s string) (Fingerprint, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ParseFingerprint">func ParseFingerprint(s string) (Fingerprint, error)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Fingerprint.String">func (f Fingerprint) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#FingerprintSet">type FingerprintSet</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#FingerprintSet.Equal">func (s FingerprintSet) Equal(o FingerprintSet) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#FingerprintSet.Intersection">func (s FingerprintSet) Intersection(o FingerprintSet) FingerprintSet</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Fingerprints">type Fingerprints</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Fingerprints.Len">func (f Fingerprints) Len() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Fingerprints.Less">func (f Fingerprints) Less(i, j int) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Fingerprints.Swap">func (f Fingerprints) Swap(i, j int)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Interval">type Interval</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#LabelName">type LabelName</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LabelName.IsValid">func (ln LabelName) IsValid() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LabelName.UnmarshalJSON">func (ln *LabelName) UnmarshalJSON(b []byte) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LabelName.UnmarshalYAML">func (ln *LabelName) UnmarshalYAML(unmarshal func(interface{}) error) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#LabelNames">type LabelNames</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LabelNames.Len">func (l LabelNames) Len() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LabelNames.Less">func (l LabelNames) Less(i, j int) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LabelNames.String">func (l LabelNames) String() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LabelNames.Swap">func (l LabelNames) Swap(i, j int)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#LabelPair">type LabelPair</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#LabelPairs">type LabelPairs</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LabelPairs.Len">func (l LabelPairs) Len() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LabelPairs.Less">func (l LabelPairs) Less(i, j int) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LabelPairs.Swap">func (l LabelPairs) Swap(i, j int)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#LabelSet">type LabelSet</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LabelSet.Before">func (ls LabelSet) Before(o LabelSet) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LabelSet.Clone">func (ls LabelSet) Clone() LabelSet</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LabelSet.Equal">func (ls LabelSet) Equal(o LabelSet) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LabelSet.FastFingerprint">func (ls LabelSet) FastFingerprint() Fingerprint</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LabelSet.Fingerprint">func (ls LabelSet) Fingerprint() Fingerprint</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LabelSet.Merge">func (l LabelSet) Merge(other LabelSet) LabelSet</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LabelSet.String">func (l LabelSet) String() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LabelSet.UnmarshalJSON">func (l *LabelSet) UnmarshalJSON(b []byte) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LabelSet.Validate">func (ls LabelSet) Validate() error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#LabelValue">type LabelValue</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LabelValue.IsValid">func (lv LabelValue) IsValid() bool</a></dd>
+				
+			
+				
+				<dd><a href="index.html#LabelValues">type LabelValues</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LabelValues.Len">func (l LabelValues) Len() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LabelValues.Less">func (l LabelValues) Less(i, j int) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LabelValues.Swap">func (l LabelValues) Swap(i, j int)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Matcher">type Matcher</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Matcher.UnmarshalJSON">func (m *Matcher) UnmarshalJSON(b []byte) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Matcher.Validate">func (m *Matcher) Validate() error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Matrix">type Matrix</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Matrix.Len">func (m Matrix) Len() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Matrix.Less">func (m Matrix) Less(i, j int) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Matrix.String">func (mat Matrix) String() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Matrix.Swap">func (m Matrix) Swap(i, j int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Matrix.Type">func (Matrix) Type() ValueType</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Metric">type Metric</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Metric.Before">func (m Metric) Before(o Metric) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Metric.Clone">func (m Metric) Clone() Metric</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Metric.Equal">func (m Metric) Equal(o Metric) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Metric.FastFingerprint">func (m Metric) FastFingerprint() Fingerprint</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Metric.Fingerprint">func (m Metric) Fingerprint() Fingerprint</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Metric.String">func (m Metric) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Sample">type Sample</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Sample.Equal">func (s *Sample) Equal(o *Sample) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Sample.MarshalJSON">func (s Sample) MarshalJSON() ([]byte, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Sample.String">func (s Sample) String() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Sample.UnmarshalJSON">func (s *Sample) UnmarshalJSON(b []byte) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#SamplePair">type SamplePair</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SamplePair.Equal">func (s *SamplePair) Equal(o *SamplePair) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SamplePair.MarshalJSON">func (s SamplePair) MarshalJSON() ([]byte, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SamplePair.String">func (s SamplePair) String() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SamplePair.UnmarshalJSON">func (s *SamplePair) UnmarshalJSON(b []byte) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#SampleStream">type SampleStream</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SampleStream.String">func (ss SampleStream) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#SampleValue">type SampleValue</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SampleValue.Equal">func (v SampleValue) Equal(o SampleValue) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SampleValue.MarshalJSON">func (v SampleValue) MarshalJSON() ([]byte, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SampleValue.String">func (v SampleValue) String() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SampleValue.UnmarshalJSON">func (v *SampleValue) UnmarshalJSON(b []byte) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Samples">type Samples</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Samples.Equal">func (s Samples) Equal(o Samples) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Samples.Len">func (s Samples) Len() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Samples.Less">func (s Samples) Less(i, j int) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Samples.Swap">func (s Samples) Swap(i, j int)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Scalar">type Scalar</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Scalar.MarshalJSON">func (s Scalar) MarshalJSON() ([]byte, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Scalar.String">func (s Scalar) String() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Scalar.Type">func (*Scalar) Type() ValueType</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Scalar.UnmarshalJSON">func (s *Scalar) UnmarshalJSON(b []byte) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Silence">type Silence</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Silence.Validate">func (s *Silence) Validate() error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#String">type String</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#String.MarshalJSON">func (s String) MarshalJSON() ([]byte, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#String.String">func (s *String) String() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#String.Type">func (*String) Type() ValueType</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#String.UnmarshalJSON">func (s *String) UnmarshalJSON(b []byte) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Time">type Time</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Now">func Now() Time</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#TimeFromUnix">func TimeFromUnix(t int64) Time</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#TimeFromUnixNano">func TimeFromUnixNano(t int64) Time</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Time.Add">func (t Time) Add(d time.Duration) Time</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Time.After">func (t Time) After(o Time) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Time.Before">func (t Time) Before(o Time) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Time.Equal">func (t Time) Equal(o Time) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Time.MarshalJSON">func (t Time) MarshalJSON() ([]byte, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Time.String">func (t Time) String() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Time.Sub">func (t Time) Sub(o Time) time.Duration</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Time.Time">func (t Time) Time() time.Time</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Time.Unix">func (t Time) Unix() int64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Time.UnixNano">func (t Time) UnixNano() int64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Time.UnmarshalJSON">func (t *Time) UnmarshalJSON(b []byte) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Value">type Value</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ValueType">type ValueType</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ValueType.MarshalJSON">func (et ValueType) MarshalJSON() ([]byte, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ValueType.String">func (e ValueType) String() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ValueType.UnmarshalJSON">func (et *ValueType) UnmarshalJSON(b []byte) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Vector">type Vector</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Vector.Equal">func (vec Vector) Equal(o Vector) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Vector.Len">func (vec Vector) Len() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Vector.Less">func (vec Vector) Less(i, j int) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Vector.String">func (vec Vector) String() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Vector.Swap">func (vec Vector) Swap(i, j int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Vector.Type">func (Vector) Type() ValueType</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/common/model/alert.go">alert.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/common/model/fingerprinting.go">fingerprinting.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/common/model/fnv.go">fnv.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/common/model/labels.go">labels.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/common/model/labelset.go">labelset.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/common/model/metric.go">metric.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/common/model/model.go">model.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/common/model/signature.go">signature.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/common/model/silence.go">silence.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/common/model/time.go">time.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go">value.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const (
+    <span class="comment">// AlertNameLabel is the name of the label containing the an alert&#39;s name.</span>
+    <span id="AlertNameLabel">AlertNameLabel</span> = &#34;alertname&#34;
+
+    <span class="comment">// ExportedLabelPrefix is the prefix to prepend to the label names present in</span>
+    <span class="comment">// exported metrics if a label of the same name is added by the server.</span>
+    <span id="ExportedLabelPrefix">ExportedLabelPrefix</span> = &#34;exported_&#34;
+
+    <span class="comment">// MetricNameLabel is the label name indicating the metric name of a</span>
+    <span class="comment">// timeseries.</span>
+    <span id="MetricNameLabel">MetricNameLabel</span> = &#34;__name__&#34;
+
+    <span class="comment">// SchemeLabel is the name of the label that holds the scheme on which to</span>
+    <span class="comment">// scrape a target.</span>
+    <span id="SchemeLabel">SchemeLabel</span> = &#34;__scheme__&#34;
+
+    <span class="comment">// AddressLabel is the name of the label that holds the address of</span>
+    <span class="comment">// a scrape target.</span>
+    <span id="AddressLabel">AddressLabel</span> = &#34;__address__&#34;
+
+    <span class="comment">// MetricsPathLabel is the name of the label that holds the path on which to</span>
+    <span class="comment">// scrape a target.</span>
+    <span id="MetricsPathLabel">MetricsPathLabel</span> = &#34;__metrics_path__&#34;
+
+    <span class="comment">// ReservedLabelPrefix is a prefix which is not legal in user-supplied</span>
+    <span class="comment">// label names.</span>
+    <span id="ReservedLabelPrefix">ReservedLabelPrefix</span> = &#34;__&#34;
+
+    <span class="comment">// MetaLabelPrefix is a prefix for labels that provide meta information.</span>
+    <span class="comment">// Labels with this prefix are used for intermediate label processing and</span>
+    <span class="comment">// will not be attached to time series.</span>
+    <span id="MetaLabelPrefix">MetaLabelPrefix</span> = &#34;__meta_&#34;
+
+    <span class="comment">// TmpLabelPrefix is a prefix for temporary labels as part of relabelling.</span>
+    <span class="comment">// Labels with this prefix are used for intermediate label processing and</span>
+    <span class="comment">// will not be attached to time series. This is reserved for use in</span>
+    <span class="comment">// Prometheus configuration files by users.</span>
+    <span id="TmpLabelPrefix">TmpLabelPrefix</span> = &#34;__tmp_&#34;
+
+    <span class="comment">// ParamLabelPrefix is a prefix for labels that provide URL parameters</span>
+    <span class="comment">// used to scrape a target.</span>
+    <span id="ParamLabelPrefix">ParamLabelPrefix</span> = &#34;__param_&#34;
+
+    <span class="comment">// JobLabel is the label name indicating the job from which a timeseries</span>
+    <span class="comment">// was scraped.</span>
+    <span id="JobLabel">JobLabel</span> = &#34;job&#34;
+
+    <span class="comment">// InstanceLabel is the label name used for the instance label.</span>
+    <span id="InstanceLabel">InstanceLabel</span> = &#34;instance&#34;
+
+    <span class="comment">// BucketLabel is used for the label that defines the upper bound of a</span>
+    <span class="comment">// bucket of a histogram (&#34;le&#34; -&gt; &#34;less or equal&#34;).</span>
+    <span id="BucketLabel">BucketLabel</span> = &#34;le&#34;
+
+    <span class="comment">// QuantileLabel is used for the label that defines the quantile in a</span>
+    <span class="comment">// summary.</span>
+    <span id="QuantileLabel">QuantileLabel</span> = &#34;quantile&#34;
+)</pre>
+				
+			
+				<pre>const (
+
+    <span class="comment">// Earliest is the earliest Time representable. Handy for</span>
+    <span class="comment">// initializing a high watermark.</span>
+    <span id="Earliest">Earliest</span> = <a href="index.html#Time">Time</a>(<a href="../../../../math/index.html">math</a>.<a href="../../../../math/index.html#MinInt64">MinInt64</a>)
+    <span class="comment">// Latest is the latest Time representable. Handy for initializing</span>
+    <span class="comment">// a low watermark.</span>
+    <span id="Latest">Latest</span> = <a href="index.html#Time">Time</a>(<a href="../../../../math/index.html">math</a>.<a href="../../../../math/index.html#MaxInt64">MaxInt64</a>)
+)</pre>
+				
+			
+				<pre>const <span id="SeparatorByte">SeparatorByte</span> <a href="../../../../builtin/index.html#byte">byte</a> = 255</pre>
+				<p>
+SeparatorByte is a byte that cannot occur in valid UTF-8 sequences and is
+used to separate label names, label values, and other strings from each other
+when calculating their combined hash value (aka signature aka fingerprint).
+</p>
+
+			
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var (
+    <span class="comment">// ZeroSamplePair is the pseudo zero-value of SamplePair used to signal a</span>
+    <span class="comment">// non-existing sample pair. It is a SamplePair with timestamp Earliest and</span>
+    <span class="comment">// value 0.0. Note that the natural zero value of SamplePair has a timestamp</span>
+    <span class="comment">// of 0, which is possible to appear in a real SamplePair and thus not</span>
+    <span class="comment">// suitable to signal a non-existing SamplePair.</span>
+    <span id="ZeroSamplePair">ZeroSamplePair</span> = <a href="index.html#SamplePair">SamplePair</a>{<a href="index.html#Timestamp">Timestamp</a>: <a href="index.html#Earliest">Earliest</a>}
+
+    <span class="comment">// ZeroSample is the pseudo zero-value of Sample used to signal a</span>
+    <span class="comment">// non-existing sample. It is a Sample with timestamp Earliest, value 0.0,</span>
+    <span class="comment">// and metric nil. Note that the natural zero value of Sample has a timestamp</span>
+    <span class="comment">// of 0, which is possible to appear in a real Sample and thus not suitable</span>
+    <span class="comment">// to signal a non-existing Sample.</span>
+    <span id="ZeroSample">ZeroSample</span> = <a href="index.html#Sample">Sample</a>{<a href="index.html#Timestamp">Timestamp</a>: <a href="index.html#Earliest">Earliest</a>}
+)</pre>
+				
+			
+				<pre>var <span id="LabelNameRE">LabelNameRE</span> = <a href="../../../../regexp/index.html">regexp</a>.<a href="../../../../regexp/index.html#MustCompile">MustCompile</a>(&#34;^[a-zA-Z_][a-zA-Z0-9_]*$&#34;)</pre>
+				<p>
+LabelNameRE is a regular expression matching valid label names.
+</p>
+
+			
+				<pre>var (
+    <span id="MetricNameRE">MetricNameRE</span> = <a href="../../../../regexp/index.html">regexp</a>.<a href="../../../../regexp/index.html#MustCompile">MustCompile</a>(`^[a-zA-Z_][a-zA-Z0-9_:]*$`)
+)</pre>
+				
+			
+		
+		
+			
+			
+			<h2 id="IsValidMetricName">func <a href="http://localhost:6060/src/github.com/prometheus/common/model/metric.go?s=2316:2357#L78">IsValidMetricName</a></h2>
+			<pre>func IsValidMetricName(n <a href="index.html#LabelValue">LabelValue</a>) <a href="../../../../builtin/index.html#bool">bool</a></pre>
+			<p>
+IsValidMetricName returns true iff name matches the pattern of MetricNameRE.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="LabelsToSignature">func <a href="http://localhost:6060/src/github.com/prometheus/common/model/signature.go?s=1193:1248#L23">LabelsToSignature</a></h2>
+			<pre>func LabelsToSignature(labels map[<a href="../../../../builtin/index.html#string">string</a>]<a href="../../../../builtin/index.html#string">string</a>) <a href="../../../../builtin/index.html#uint64">uint64</a></pre>
+			<p>
+LabelsToSignature returns a quasi-unique signature (i.e., fingerprint) for a
+given label set. (Collisions are possible but unlikely if the number of label
+sets the function is applied to is small.)
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SignatureForLabels">func <a href="http://localhost:6060/src/github.com/prometheus/common/model/signature.go?s=3228:3289#L90">SignatureForLabels</a></h2>
+			<pre>func SignatureForLabels(m <a href="index.html#Metric">Metric</a>, labels ...<a href="index.html#LabelName">LabelName</a>) <a href="../../../../builtin/index.html#uint64">uint64</a></pre>
+			<p>
+SignatureForLabels works like LabelsToSignature but takes a Metric as
+parameter (rather than a label map) and only includes the labels with the
+specified LabelNames into the signature calculation. The labels passed in
+will be sorted by this function.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SignatureWithoutLabels">func <a href="http://localhost:6060/src/github.com/prometheus/common/model/signature.go?s=3815:3890#L110">SignatureWithoutLabels</a></h2>
+			<pre>func SignatureWithoutLabels(m <a href="index.html#Metric">Metric</a>, labels map[<a href="index.html#LabelName">LabelName</a>]struct{}) <a href="../../../../builtin/index.html#uint64">uint64</a></pre>
+			<p>
+SignatureWithoutLabels works like LabelsToSignature but takes a Metric as
+parameter (rather than a label map) and excludes the labels with any of the
+specified LabelNames from the signature calculation.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="Alert">type <a href="http://localhost:6060/src/github.com/prometheus/common/model/alert.go?s=828:1353#L19">Alert</a></h2>
+			<pre>type Alert struct {
+    <span class="comment">// Label value pairs for purpose of aggregation, matching, and disposition</span>
+    <span class="comment">// dispatching. This must minimally include an &#34;alertname&#34; label.</span>
+    Labels <a href="index.html#LabelSet">LabelSet</a> `json:&#34;labels&#34;`
+
+    <span class="comment">// Extra key/value information which does not define alert identity.</span>
+    Annotations <a href="index.html#LabelSet">LabelSet</a> `json:&#34;annotations&#34;`
+
+    <span class="comment">// The known time range for this alert. Both ends are optional.</span>
+    StartsAt     <a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Time">Time</a> `json:&#34;startsAt,omitempty&#34;`
+    EndsAt       <a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Time">Time</a> `json:&#34;endsAt,omitempty&#34;`
+    GeneratorURL <a href="../../../../builtin/index.html#string">string</a>    `json:&#34;generatorURL&#34;`
+}</pre>
+			<p>
+Alert is a generic representation of an alert in the Prometheus eco-system.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Alert.Fingerprint">func (*Alert) <a href="http://localhost:6060/src/github.com/prometheus/common/model/alert.go?s=1630:1671#L40">Fingerprint</a></h3>
+				<pre>func (a *<a href="index.html#Alert">Alert</a>) Fingerprint() <a href="index.html#Fingerprint">Fingerprint</a></pre>
+				<p>
+Fingerprint returns a unique hash for the alert. It is equivalent to
+the fingerprint of the alert&#39;s label set.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Alert.Name">func (*Alert) <a href="http://localhost:6060/src/github.com/prometheus/common/model/alert.go?s=1437:1466#L34">Name</a></h3>
+				<pre>func (a *<a href="index.html#Alert">Alert</a>) Name() <a href="../../../../builtin/index.html#string">string</a></pre>
+				<p>
+Name returns the name of the alert. It is equivalent to the &#34;alertname&#34; label.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Alert.Resolved">func (*Alert) <a href="http://localhost:6060/src/github.com/prometheus/common/model/alert.go?s=1954:1985#L53">Resolved</a></h3>
+				<pre>func (a *<a href="index.html#Alert">Alert</a>) Resolved() <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Resolved returns true iff the activity interval ended in the past.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Alert.ResolvedAt">func (*Alert) <a href="http://localhost:6060/src/github.com/prometheus/common/model/alert.go?s=2114:2159#L59">ResolvedAt</a></h3>
+				<pre>func (a *<a href="index.html#Alert">Alert</a>) ResolvedAt(ts <a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Time">Time</a>) <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+ResolvedAt returns true off the activity interval ended before
+the given timestamp.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Alert.Status">func (*Alert) <a href="http://localhost:6060/src/github.com/prometheus/common/model/alert.go?s=2278:2314#L67">Status</a></h3>
+				<pre>func (a *<a href="index.html#Alert">Alert</a>) Status() <a href="index.html#AlertStatus">AlertStatus</a></pre>
+				<p>
+Status returns the status of the alert.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Alert.String">func (*Alert) <a href="http://localhost:6060/src/github.com/prometheus/common/model/alert.go?s=1708:1739#L44">String</a></h3>
+				<pre>func (a *<a href="index.html#Alert">Alert</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Alert.Validate">func (*Alert) <a href="http://localhost:6060/src/github.com/prometheus/common/model/alert.go?s=2444:2476#L75">Validate</a></h3>
+				<pre>func (a *<a href="index.html#Alert">Alert</a>) Validate() <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Validate checks whether the alert data is inconsistent.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="AlertStatus">type <a href="http://localhost:6060/src/github.com/prometheus/common/model/alert.go?s=635:658#L11">AlertStatus</a></h2>
+			<pre>type AlertStatus <a href="../../../../builtin/index.html#string">string</a></pre>
+			
+
+			
+				<pre>const (
+    <span id="AlertFiring">AlertFiring</span>   <a href="index.html#AlertStatus">AlertStatus</a> = &#34;firing&#34;
+    <span id="AlertResolved">AlertResolved</span> <a href="index.html#AlertStatus">AlertStatus</a> = &#34;resolved&#34;
+)</pre>
+				
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Alerts">type <a href="http://localhost:6060/src/github.com/prometheus/common/model/alert.go?s=3041:3061#L95">Alerts</a></h2>
+			<pre>type Alerts []*<a href="index.html#Alert">Alert</a></pre>
+			<p>
+Alert is a list of alerts that can be sorted in chronological order.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Alerts.HasFiring">func (Alerts) <a href="http://localhost:6060/src/github.com/prometheus/common/model/alert.go?s=3454:3487#L111">HasFiring</a></h3>
+				<pre>func (as <a href="index.html#Alerts">Alerts</a>) HasFiring() <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+HasFiring returns true iff one of the alerts is not resolved.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Alerts.Len">func (Alerts) <a href="http://localhost:6060/src/github.com/prometheus/common/model/alert.go?s=3063:3089#L97">Len</a></h3>
+				<pre>func (as <a href="index.html#Alerts">Alerts</a>) Len() <a href="../../../../builtin/index.html#int">int</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Alerts.Less">func (Alerts) <a href="http://localhost:6060/src/github.com/prometheus/common/model/alert.go?s=3179:3215#L100">Less</a></h3>
+				<pre>func (as <a href="index.html#Alerts">Alerts</a>) Less(i, j <a href="../../../../builtin/index.html#int">int</a>) <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Alerts.Status">func (Alerts) <a href="http://localhost:6060/src/github.com/prometheus/common/model/alert.go?s=3647:3684#L121">Status</a></h3>
+				<pre>func (as <a href="index.html#Alerts">Alerts</a>) Status() <a href="index.html#AlertStatus">AlertStatus</a></pre>
+				<p>
+Status returns StatusFiring iff at least one of the alerts is firing.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Alerts.Swap">func (Alerts) <a href="http://localhost:6060/src/github.com/prometheus/common/model/alert.go?s=3114:3145#L98">Swap</a></h3>
+				<pre>func (as <a href="index.html#Alerts">Alerts</a>) Swap(i, j <a href="../../../../builtin/index.html#int">int</a>)</pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Duration">type <a href="http://localhost:6060/src/github.com/prometheus/common/model/time.go?s=4261:4288#L154">Duration</a></h2>
+			<pre>type Duration <a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Duration">Duration</a></pre>
+			<p>
+Duration wraps time.Duration. It is used to parse the custom duration format
+from YAML.
+This type should not propagate beyond the scope of input/output processing.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="ParseDuration">func <a href="http://localhost:6060/src/github.com/prometheus/common/model/time.go?s=4504:4560#L160">ParseDuration</a></h3>
+				<pre>func ParseDuration(durationStr <a href="../../../../builtin/index.html#string">string</a>) (<a href="index.html#Duration">Duration</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+StringToDuration parses a string into a time.Duration, assuming that a year
+always has 365d, a week always has 7d, and a day always has 24h.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Duration.MarshalYAML">func (Duration) <a href="http://localhost:6060/src/github.com/prometheus/common/model/time.go?s=5887:5939#L223">MarshalYAML</a></h3>
+				<pre>func (d <a href="index.html#Duration">Duration</a>) MarshalYAML() (interface{}, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+MarshalYAML implements the yaml.Marshaler interface.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Duration.String">func (Duration) <a href="http://localhost:6060/src/github.com/prometheus/common/model/time.go?s=5215:5248#L190">String</a></h3>
+				<pre>func (d <a href="index.html#Duration">Duration</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Duration.UnmarshalYAML">func (*Duration) <a href="http://localhost:6060/src/github.com/prometheus/common/model/time.go?s=6029:6102#L228">UnmarshalYAML</a></h3>
+				<pre>func (d *<a href="index.html#Duration">Duration</a>) UnmarshalYAML(unmarshal func(interface{}) <a href="../../../../builtin/index.html#error">error</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+UnmarshalYAML implements the yaml.Unmarshaler interface.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Fingerprint">type <a href="http://localhost:6060/src/github.com/prometheus/common/model/fingerprinting.go?s=749:772#L13">Fingerprint</a></h2>
+			<pre>type Fingerprint <a href="../../../../builtin/index.html#uint64">uint64</a></pre>
+			<p>
+Fingerprint provides a hash-capable representation of a Metric.
+For our purposes, FNV-1A 64-bit is used.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="FingerprintFromString">func <a href="http://localhost:6060/src/github.com/prometheus/common/model/fingerprinting.go?s=854:911#L16">FingerprintFromString</a></h3>
+				<pre>func FingerprintFromString(s <a href="../../../../builtin/index.html#string">string</a>) (<a href="index.html#Fingerprint">Fingerprint</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+FingerprintFromString transforms a string representation into a Fingerprint.
+</p>
+
+				
+				
+			
+				
+				<h3 id="ParseFingerprint">func <a href="http://localhost:6060/src/github.com/prometheus/common/model/fingerprinting.go?s=1053:1105#L22">ParseFingerprint</a></h3>
+				<pre>func ParseFingerprint(s <a href="../../../../builtin/index.html#string">string</a>) (<a href="index.html#Fingerprint">Fingerprint</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+ParseFingerprint parses the input string into a fingerprint.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Fingerprint.String">func (Fingerprint) <a href="http://localhost:6060/src/github.com/prometheus/common/model/fingerprinting.go?s=1219:1255#L30">String</a></h3>
+				<pre>func (f <a href="index.html#Fingerprint">Fingerprint</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="FingerprintSet">type <a href="http://localhost:6060/src/github.com/prometheus/common/model/fingerprinting.go?s=1799:1843#L54">FingerprintSet</a></h2>
+			<pre>type FingerprintSet map[<a href="index.html#Fingerprint">Fingerprint</a>]struct{}</pre>
+			<p>
+FingerprintSet is a set of Fingerprints.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="FingerprintSet.Equal">func (FingerprintSet) <a href="http://localhost:6060/src/github.com/prometheus/common/model/fingerprinting.go?s=1922:1974#L57">Equal</a></h3>
+				<pre>func (s <a href="index.html#FingerprintSet">FingerprintSet</a>) Equal(o <a href="index.html#FingerprintSet">FingerprintSet</a>) <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Equal returns true if both sets contain the same elements (and not more).
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="FingerprintSet.Intersection">func (FingerprintSet) <a href="http://localhost:6060/src/github.com/prometheus/common/model/fingerprinting.go?s=2166:2235#L72">Intersection</a></h3>
+				<pre>func (s <a href="index.html#FingerprintSet">FingerprintSet</a>) Intersection(o <a href="index.html#FingerprintSet">FingerprintSet</a>) <a href="index.html#FingerprintSet">FingerprintSet</a></pre>
+				<p>
+Intersection returns the elements contained in both sets.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Fingerprints">type <a href="http://localhost:6060/src/github.com/prometheus/common/model/fingerprinting.go?s=1432:1463#L36">Fingerprints</a></h2>
+			<pre>type Fingerprints []<a href="index.html#Fingerprint">Fingerprint</a></pre>
+			<p>
+Fingerprints represents a collection of Fingerprint subject to a given
+natural sorting scheme. It implements sort.Interface.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Fingerprints.Len">func (Fingerprints) <a href="http://localhost:6060/src/github.com/prometheus/common/model/fingerprinting.go?s=1499:1530#L39">Len</a></h3>
+				<pre>func (f <a href="index.html#Fingerprints">Fingerprints</a>) Len() <a href="../../../../builtin/index.html#int">int</a></pre>
+				<p>
+Len implements sort.Interface.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Fingerprints.Less">func (Fingerprints) <a href="http://localhost:6060/src/github.com/prometheus/common/model/fingerprinting.go?s=1586:1627#L44">Less</a></h3>
+				<pre>func (f <a href="index.html#Fingerprints">Fingerprints</a>) Less(i, j <a href="../../../../builtin/index.html#int">int</a>) <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Less implements sort.Interface.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Fingerprints.Swap">func (Fingerprints) <a href="http://localhost:6060/src/github.com/prometheus/common/model/fingerprinting.go?s=1688:1724#L49">Swap</a></h3>
+				<pre>func (f <a href="index.html#Fingerprints">Fingerprints</a>) Swap(i, j <a href="../../../../builtin/index.html#int">int</a>)</pre>
+				<p>
+Swap implements sort.Interface.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Interval">type <a href="http://localhost:6060/src/github.com/prometheus/common/model/time.go?s=1481:1522#L37">Interval</a></h2>
+			<pre>type Interval struct {
+    Start, End <a href="index.html#Time">Time</a>
+}</pre>
+			<p>
+Interval describes and interval between two timestamps.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="LabelName">type <a href="http://localhost:6060/src/github.com/prometheus/common/model/labels.go?s=2938:2959#L78">LabelName</a></h2>
+			<pre>type LabelName <a href="../../../../builtin/index.html#string">string</a></pre>
+			<p>
+A LabelName is a key for a LabelSet or Metric.  It has a value associated
+therewith.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="LabelName.IsValid">func (LabelName) <a href="http://localhost:6060/src/github.com/prometheus/common/model/labels.go?s=3035:3069#L81">IsValid</a></h3>
+				<pre>func (ln <a href="index.html#LabelName">LabelName</a>) IsValid() <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+IsValid is true iff the label name matches the pattern of LabelNameRE.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="LabelName.UnmarshalJSON">func (*LabelName) <a href="http://localhost:6060/src/github.com/prometheus/common/model/labels.go?s=3672:3722#L107">UnmarshalJSON</a></h3>
+				<pre>func (ln *<a href="index.html#LabelName">LabelName</a>) UnmarshalJSON(b []<a href="../../../../builtin/index.html#byte">byte</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+UnmarshalJSON implements the json.Unmarshaler interface.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="LabelName.UnmarshalYAML">func (*LabelName) <a href="http://localhost:6060/src/github.com/prometheus/common/model/labels.go?s=3338:3413#L94">UnmarshalYAML</a></h3>
+				<pre>func (ln *<a href="index.html#LabelName">LabelName</a>) UnmarshalYAML(unmarshal func(interface{}) <a href="../../../../builtin/index.html#error">error</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+UnmarshalYAML implements the yaml.Unmarshaler interface.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="LabelNames">type <a href="http://localhost:6060/src/github.com/prometheus/common/model/labels.go?s=4004:4031#L120">LabelNames</a></h2>
+			<pre>type LabelNames []<a href="index.html#LabelName">LabelName</a></pre>
+			<p>
+LabelNames is a sortable LabelName slice. In implements sort.Interface.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="LabelNames.Len">func (LabelNames) <a href="http://localhost:6060/src/github.com/prometheus/common/model/labels.go?s=4033:4062#L122">Len</a></h3>
+				<pre>func (l <a href="index.html#LabelNames">LabelNames</a>) Len() <a href="../../../../builtin/index.html#int">int</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="LabelNames.Less">func (LabelNames) <a href="http://localhost:6060/src/github.com/prometheus/common/model/labels.go?s=4083:4122#L126">Less</a></h3>
+				<pre>func (l <a href="index.html#LabelNames">LabelNames</a>) Less(i, j <a href="../../../../builtin/index.html#int">int</a>) <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="LabelNames.String">func (LabelNames) <a href="http://localhost:6060/src/github.com/prometheus/common/model/labels.go?s=4213:4248#L134">String</a></h3>
+				<pre>func (l <a href="index.html#LabelNames">LabelNames</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="LabelNames.Swap">func (LabelNames) <a href="http://localhost:6060/src/github.com/prometheus/common/model/labels.go?s=4148:4182#L130">Swap</a></h3>
+				<pre>func (l <a href="index.html#LabelNames">LabelNames</a>) Swap(i, j <a href="../../../../builtin/index.html#int">int</a>)</pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="LabelPair">type <a href="http://localhost:6060/src/github.com/prometheus/common/model/labels.go?s=4982:5042#L166">LabelPair</a></h2>
+			<pre>type LabelPair struct {
+    Name  <a href="index.html#LabelName">LabelName</a>
+    Value <a href="index.html#LabelValue">LabelValue</a>
+}</pre>
+			<p>
+LabelPair pairs a name with a value.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="LabelPairs">type <a href="http://localhost:6060/src/github.com/prometheus/common/model/labels.go?s=5134:5162#L173">LabelPairs</a></h2>
+			<pre>type LabelPairs []*<a href="index.html#LabelPair">LabelPair</a></pre>
+			<p>
+LabelPairs is a sortable slice of LabelPair pointers. It implements
+sort.Interface.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="LabelPairs.Len">func (LabelPairs) <a href="http://localhost:6060/src/github.com/prometheus/common/model/labels.go?s=5164:5193#L175">Len</a></h3>
+				<pre>func (l <a href="index.html#LabelPairs">LabelPairs</a>) Len() <a href="../../../../builtin/index.html#int">int</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="LabelPairs.Less">func (LabelPairs) <a href="http://localhost:6060/src/github.com/prometheus/common/model/labels.go?s=5214:5253#L179">Less</a></h3>
+				<pre>func (l <a href="index.html#LabelPairs">LabelPairs</a>) Less(i, j <a href="../../../../builtin/index.html#int">int</a>) <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="LabelPairs.Swap">func (LabelPairs) <a href="http://localhost:6060/src/github.com/prometheus/common/model/labels.go?s=5475:5509#L194">Swap</a></h3>
+				<pre>func (l <a href="index.html#LabelPairs">LabelPairs</a>) Swap(i, j <a href="../../../../builtin/index.html#int">int</a>)</pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="LabelSet">type <a href="http://localhost:6060/src/github.com/prometheus/common/model/labelset.go?s=989:1027#L18">LabelSet</a></h2>
+			<pre>type LabelSet map[<a href="index.html#LabelName">LabelName</a>]<a href="index.html#LabelValue">LabelValue</a></pre>
+			<p>
+A LabelSet is a collection of LabelName and LabelValue pairs.  The LabelSet
+may be fully-qualified down to the point where it may resolve to a single
+Metric in the data store or not.  All operations that occur within the realm
+of a LabelSet can emit a vector of Metric entities to which the LabelSet may
+match.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="LabelSet.Before">func (LabelSet) <a href="http://localhost:6060/src/github.com/prometheus/common/model/labelset.go?s=2146:2188#L62">Before</a></h3>
+				<pre>func (ls <a href="index.html#LabelSet">LabelSet</a>) Before(o <a href="index.html#LabelSet">LabelSet</a>) <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Before compares the metrics, using the following criteria:
+</p>
+<p>
+If m has fewer labels than o, it is before o. If it has more, it is not.
+</p>
+<p>
+If the number of labels is the same, the superset of all label names is
+sorted alphanumerically. The first differing label pair found in that order
+determines the outcome: If the label does not exist at all in m, then m is
+before o, and vice versa. Otherwise the label value is compared
+alphanumerically.
+</p>
+<p>
+If m and o are equal, the method returns false.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="LabelSet.Clone">func (LabelSet) <a href="http://localhost:6060/src/github.com/prometheus/common/model/labelset.go?s=2737:2772#L99">Clone</a></h3>
+				<pre>func (ls <a href="index.html#LabelSet">LabelSet</a>) Clone() <a href="index.html#LabelSet">LabelSet</a></pre>
+				<p>
+Clone returns a copy of the label set.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="LabelSet.Equal">func (LabelSet) <a href="http://localhost:6060/src/github.com/prometheus/common/model/labelset.go?s=1410:1451#L35">Equal</a></h3>
+				<pre>func (ls <a href="index.html#LabelSet">LabelSet</a>) Equal(o <a href="index.html#LabelSet">LabelSet</a>) <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Equal returns true iff both label sets have exactly the same key/value pairs.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="LabelSet.FastFingerprint">func (LabelSet) <a href="http://localhost:6060/src/github.com/prometheus/common/model/labelset.go?s=3653:3701#L139">FastFingerprint</a></h3>
+				<pre>func (ls <a href="index.html#LabelSet">LabelSet</a>) FastFingerprint() <a href="index.html#Fingerprint">Fingerprint</a></pre>
+				<p>
+FastFingerprint returns the LabelSet&#39;s Fingerprint calculated by a faster hashing
+algorithm, which is, however, more susceptible to hash collisions.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="LabelSet.Fingerprint">func (LabelSet) <a href="http://localhost:6060/src/github.com/prometheus/common/model/labelset.go?s=3414:3458#L133">Fingerprint</a></h3>
+				<pre>func (ls <a href="index.html#LabelSet">LabelSet</a>) Fingerprint() <a href="index.html#Fingerprint">Fingerprint</a></pre>
+				<p>
+Fingerprint returns the LabelSet&#39;s fingerprint.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="LabelSet.Merge">func (LabelSet) <a href="http://localhost:6060/src/github.com/prometheus/common/model/labelset.go?s=2939:2987#L108">Merge</a></h3>
+				<pre>func (l <a href="index.html#LabelSet">LabelSet</a>) Merge(other <a href="index.html#LabelSet">LabelSet</a>) <a href="index.html#LabelSet">LabelSet</a></pre>
+				<p>
+Merge is a helper function to non-destructively merge two label sets.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="LabelSet.String">func (LabelSet) <a href="http://localhost:6060/src/github.com/prometheus/common/model/labelset.go?s=3133:3166#L122">String</a></h3>
+				<pre>func (l <a href="index.html#LabelSet">LabelSet</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="LabelSet.UnmarshalJSON">func (*LabelSet) <a href="http://localhost:6060/src/github.com/prometheus/common/model/labelset.go?s=3805:3853#L144">UnmarshalJSON</a></h3>
+				<pre>func (l *<a href="index.html#LabelSet">LabelSet</a>) UnmarshalJSON(b []<a href="../../../../builtin/index.html#byte">byte</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+UnmarshalJSON implements the json.Unmarshaler interface.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="LabelSet.Validate">func (LabelSet) <a href="http://localhost:6060/src/github.com/prometheus/common/model/labelset.go?s=1108:1143#L22">Validate</a></h3>
+				<pre>func (ls <a href="index.html#LabelSet">LabelSet</a>) Validate() <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Validate checks whether all names and values in the label set
+are valid.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="LabelValue">type <a href="http://localhost:6060/src/github.com/prometheus/common/model/labels.go?s=4477:4499#L143">LabelValue</a></h2>
+			<pre>type LabelValue <a href="../../../../builtin/index.html#string">string</a></pre>
+			<p>
+A LabelValue is an associated value for a LabelName.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="LabelValue.IsValid">func (LabelValue) <a href="http://localhost:6060/src/github.com/prometheus/common/model/labels.go?s=4557:4592#L146">IsValid</a></h3>
+				<pre>func (lv <a href="index.html#LabelValue">LabelValue</a>) IsValid() <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+IsValid returns true iff the string is a valid UTF8.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="LabelValues">type <a href="http://localhost:6060/src/github.com/prometheus/common/model/labels.go?s=4712:4741#L151">LabelValues</a></h2>
+			<pre>type LabelValues []<a href="index.html#LabelValue">LabelValue</a></pre>
+			<p>
+LabelValues is a sortable LabelValue slice. It implements sort.Interface.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="LabelValues.Len">func (LabelValues) <a href="http://localhost:6060/src/github.com/prometheus/common/model/labels.go?s=4743:4773#L153">Len</a></h3>
+				<pre>func (l <a href="index.html#LabelValues">LabelValues</a>) Len() <a href="../../../../builtin/index.html#int">int</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="LabelValues.Less">func (LabelValues) <a href="http://localhost:6060/src/github.com/prometheus/common/model/labels.go?s=4794:4834#L157">Less</a></h3>
+				<pre>func (l <a href="index.html#LabelValues">LabelValues</a>) Less(i, j <a href="../../../../builtin/index.html#int">int</a>) <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="LabelValues.Swap">func (LabelValues) <a href="http://localhost:6060/src/github.com/prometheus/common/model/labels.go?s=4876:4911#L161">Swap</a></h3>
+				<pre>func (l <a href="index.html#LabelValues">LabelValues</a>) Swap(i, j <a href="../../../../builtin/index.html#int">int</a>)</pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Matcher">type <a href="http://localhost:6060/src/github.com/prometheus/common/model/silence.go?s=721:847#L14">Matcher</a></h2>
+			<pre>type Matcher struct {
+    Name    <a href="index.html#LabelName">LabelName</a> `json:&#34;name&#34;`
+    Value   <a href="../../../../builtin/index.html#string">string</a>    `json:&#34;value&#34;`
+    IsRegex <a href="../../../../builtin/index.html#bool">bool</a>      `json:&#34;isRegex&#34;`
+}</pre>
+			<p>
+Matcher describes a matches the value of a given label.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Matcher.UnmarshalJSON">func (*Matcher) <a href="http://localhost:6060/src/github.com/prometheus/common/model/silence.go?s=849:896#L20">UnmarshalJSON</a></h3>
+				<pre>func (m *<a href="index.html#Matcher">Matcher</a>) UnmarshalJSON(b []<a href="../../../../builtin/index.html#byte">byte</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Matcher.Validate">func (*Matcher) <a href="http://localhost:6060/src/github.com/prometheus/common/model/silence.go?s=1260:1294#L38">Validate</a></h3>
+				<pre>func (m *<a href="index.html#Matcher">Matcher</a>) Validate() <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Validate returns true iff all fields of the matcher have valid values.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Matrix">type <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=9776:9803#L391">Matrix</a></h2>
+			<pre>type Matrix []*<a href="index.html#SampleStream">SampleStream</a></pre>
+			<p>
+Matrix is a list of time series.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Matrix.Len">func (Matrix) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=9805:9830#L393">Len</a></h3>
+				<pre>func (m <a href="index.html#Matrix">Matrix</a>) Len() <a href="../../../../builtin/index.html#int">int</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Matrix.Less">func (Matrix) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=9859:9894#L394">Less</a></h3>
+				<pre>func (m <a href="index.html#Matrix">Matrix</a>) Less(i, j <a href="../../../../builtin/index.html#int">int</a>) <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Matrix.String">func (Matrix) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=10003:10036#L397">String</a></h3>
+				<pre>func (mat <a href="index.html#Matrix">Matrix</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Matrix.Swap">func (Matrix) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=9938:9968#L395">Swap</a></h3>
+				<pre>func (m <a href="index.html#Matrix">Matrix</a>) Swap(i, j <a href="../../../../builtin/index.html#int">int</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Matrix.Type">func (Matrix) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=6226:6256#L235">Type</a></h3>
+				<pre>func (<a href="index.html#Matrix">Matrix</a>) Type() <a href="index.html#ValueType">ValueType</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Metric">type <a href="http://localhost:6060/src/github.com/prometheus/common/model/metric.go?s=901:921#L20">Metric</a></h2>
+			<pre>type Metric <a href="index.html#LabelSet">LabelSet</a></pre>
+			<p>
+A Metric is similar to a LabelSet, but the key difference is that a Metric is
+a singleton and refers to one and only one stream of samples.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Metric.Before">func (Metric) <a href="http://localhost:6060/src/github.com/prometheus/common/model/metric.go?s=1090:1127#L28">Before</a></h3>
+				<pre>func (m <a href="index.html#Metric">Metric</a>) Before(o <a href="index.html#Metric">Metric</a>) <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Before compares the metrics&#39; underlying label sets.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Metric.Clone">func (Metric) <a href="http://localhost:6060/src/github.com/prometheus/common/model/metric.go?s=1212:1242#L33">Clone</a></h3>
+				<pre>func (m <a href="index.html#Metric">Metric</a>) Clone() <a href="index.html#Metric">Metric</a></pre>
+				<p>
+Clone returns a copy of the Metric.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Metric.Equal">func (Metric) <a href="http://localhost:6060/src/github.com/prometheus/common/model/metric.go?s=954:990#L23">Equal</a></h3>
+				<pre>func (m <a href="index.html#Metric">Metric</a>) Equal(o <a href="index.html#Metric">Metric</a>) <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Equal compares the metrics.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Metric.FastFingerprint">func (Metric) <a href="http://localhost:6060/src/github.com/prometheus/common/model/metric.go?s=2147:2192#L73">FastFingerprint</a></h3>
+				<pre>func (m <a href="index.html#Metric">Metric</a>) FastFingerprint() <a href="index.html#Fingerprint">Fingerprint</a></pre>
+				<p>
+FastFingerprint returns a Metric&#39;s Fingerprint calculated by a faster hashing
+algorithm, which is, however, more susceptible to hash collisions.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Metric.Fingerprint">func (Metric) <a href="http://localhost:6060/src/github.com/prometheus/common/model/metric.go?s=1915:1956#L67">Fingerprint</a></h3>
+				<pre>func (m <a href="index.html#Metric">Metric</a>) Fingerprint() <a href="index.html#Fingerprint">Fingerprint</a></pre>
+				<p>
+Fingerprint returns a Metric&#39;s Fingerprint.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Metric.String">func (Metric) <a href="http://localhost:6060/src/github.com/prometheus/common/model/metric.go?s=1322:1353#L41">String</a></h3>
+				<pre>func (m <a href="index.html#Metric">Metric</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Sample">type <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=3523:3664#L103">Sample</a></h2>
+			<pre>type Sample struct {
+    Metric    <a href="index.html#Metric">Metric</a>      `json:&#34;metric&#34;`
+    Value     <a href="index.html#SampleValue">SampleValue</a> `json:&#34;value&#34;`
+    Timestamp <a href="index.html#Time">Time</a>        `json:&#34;timestamp&#34;`
+}</pre>
+			<p>
+Sample is a sample pair associated with a metric.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Sample.Equal">func (*Sample) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=3806:3844#L111">Equal</a></h3>
+				<pre>func (s *<a href="index.html#Sample">Sample</a>) Equal(o *<a href="index.html#Sample">Sample</a>) <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Equal compares first the metrics, then the timestamp, then the value. The
+sematics of value equality is defined by SampleValue.Equal.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Sample.MarshalJSON">func (Sample) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=4233:4278#L137">MarshalJSON</a></h3>
+				<pre>func (s <a href="index.html#Sample">Sample</a>) MarshalJSON() ([]<a href="../../../../builtin/index.html#byte">byte</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+MarshalJSON implements json.Marshaler.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Sample.String">func (Sample) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=4048:4079#L129">String</a></h3>
+				<pre>func (s <a href="index.html#Sample">Sample</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Sample.UnmarshalJSON">func (*Sample) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=4545:4591#L153">UnmarshalJSON</a></h3>
+				<pre>func (s *<a href="index.html#Sample">Sample</a>) UnmarshalJSON(b []<a href="../../../../builtin/index.html#byte">byte</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+UnmarshalJSON implements json.Unmarshaler.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="SamplePair">type <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=2548:2613#L68">SamplePair</a></h2>
+			<pre>type SamplePair struct {
+    Timestamp <a href="index.html#Time">Time</a>
+    Value     <a href="index.html#SampleValue">SampleValue</a>
+}</pre>
+			<p>
+SamplePair pairs a SampleValue with a Timestamp.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="SamplePair.Equal">func (*SamplePair) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=3246:3292#L94">Equal</a></h3>
+				<pre>func (s *<a href="index.html#SamplePair">SamplePair</a>) Equal(o *<a href="index.html#SamplePair">SamplePair</a>) <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Equal returns true if this SamplePair and o have equal Values and equal
+Timestamps. The sematics of Value equality is defined by SampleValue.Equal.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="SamplePair.MarshalJSON">func (SamplePair) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=2657:2706#L74">MarshalJSON</a></h3>
+				<pre>func (s <a href="index.html#SamplePair">SamplePair</a>) MarshalJSON() ([]<a href="../../../../builtin/index.html#byte">byte</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+MarshalJSON implements json.Marshaler.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="SamplePair.String">func (SamplePair) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=3375:3410#L98">String</a></h3>
+				<pre>func (s <a href="index.html#SamplePair">SamplePair</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="SamplePair.UnmarshalJSON">func (*SamplePair) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=2954:3004#L87">UnmarshalJSON</a></h3>
+				<pre>func (s *<a href="index.html#SamplePair">SamplePair</a>) UnmarshalJSON(b []<a href="../../../../builtin/index.html#byte">byte</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+UnmarshalJSON implements json.Unmarshaler.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="SampleStream">type <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=5772:5874#L216">SampleStream</a></h2>
+			<pre>type SampleStream struct {
+    Metric <a href="index.html#Metric">Metric</a>       `json:&#34;metric&#34;`
+    Values []<a href="index.html#SamplePair">SamplePair</a> `json:&#34;values&#34;`
+}</pre>
+			<p>
+SampleStream is a stream of Values belonging to an attached COWMetric.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="SampleStream.String">func (SampleStream) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=5876:5914#L221">String</a></h3>
+				<pre>func (ss <a href="index.html#SampleStream">SampleStream</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="SampleValue">type <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=1559:1583#L33">SampleValue</a></h2>
+			<pre>type SampleValue <a href="../../../../builtin/index.html#float64">float64</a></pre>
+			<p>
+A SampleValue is a representation of a value for a given sample at a given
+time.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="SampleValue.Equal">func (SampleValue) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=2262:2308#L56">Equal</a></h3>
+				<pre>func (v <a href="index.html#SampleValue">SampleValue</a>) Equal(o <a href="index.html#SampleValue">SampleValue</a>) <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Equal returns true if the value of v and o is equal or if both are NaN. Note
+that v==o is false if both are NaN. If you want the conventional float
+behavior, use == to compare two SampleValues.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="SampleValue.MarshalJSON">func (SampleValue) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=1627:1677#L36">MarshalJSON</a></h3>
+				<pre>func (v <a href="index.html#SampleValue">SampleValue</a>) MarshalJSON() ([]<a href="../../../../builtin/index.html#byte">byte</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+MarshalJSON implements json.Marshaler.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="SampleValue.String">func (SampleValue) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=2401:2437#L63">String</a></h3>
+				<pre>func (v <a href="index.html#SampleValue">SampleValue</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="SampleValue.UnmarshalJSON">func (*SampleValue) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=1762:1813#L41">UnmarshalJSON</a></h3>
+				<pre>func (v *<a href="index.html#SampleValue">SampleValue</a>) UnmarshalJSON(b []<a href="../../../../builtin/index.html#byte">byte</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+UnmarshalJSON implements json.Unmarshaler.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Samples">type <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=5012:5034#L177">Samples</a></h2>
+			<pre>type Samples []*<a href="index.html#Sample">Sample</a></pre>
+			<p>
+Samples is a sortable Sample slice. It implements sort.Interface.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Samples.Equal">func (Samples) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=5521:5559#L202">Equal</a></h3>
+				<pre>func (s <a href="index.html#Samples">Samples</a>) Equal(o <a href="index.html#Samples">Samples</a>) <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Equal compares two sets of samples and returns true if they are equal.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Samples.Len">func (Samples) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=5036:5062#L179">Len</a></h3>
+				<pre>func (s <a href="index.html#Samples">Samples</a>) Len() <a href="../../../../builtin/index.html#int">int</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Samples.Less">func (Samples) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=5139:5175#L184">Less</a></h3>
+				<pre>func (s <a href="index.html#Samples">Samples</a>) Less(i, j <a href="../../../../builtin/index.html#int">int</a>) <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Less compares first the metrics, then the timestamp.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Samples.Swap">func (Samples) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=5385:5416#L197">Swap</a></h3>
+				<pre>func (s <a href="index.html#Samples">Samples</a>) Swap(i, j <a href="../../../../builtin/index.html#int">int</a>)</pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Scalar">type <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=7400:7502#L294">Scalar</a></h2>
+			<pre>type Scalar struct {
+    Value     <a href="index.html#SampleValue">SampleValue</a> `json:&#34;value&#34;`
+    Timestamp <a href="index.html#Time">Time</a>        `json:&#34;timestamp&#34;`
+}</pre>
+			<p>
+Scalar is a scalar value evaluated at the set timestamp.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Scalar.MarshalJSON">func (Scalar) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=7645:7690#L304">MarshalJSON</a></h3>
+				<pre>func (s <a href="index.html#Scalar">Scalar</a>) MarshalJSON() ([]<a href="../../../../builtin/index.html#byte">byte</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+MarshalJSON implements json.Marshaler.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Scalar.String">func (Scalar) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=7504:7535#L299">String</a></h3>
+				<pre>func (s <a href="index.html#Scalar">Scalar</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Scalar.Type">func (*Scalar) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=6332:6363#L237">Type</a></h3>
+				<pre>func (*<a href="index.html#Scalar">Scalar</a>) Type() <a href="index.html#ValueType">ValueType</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Scalar.UnmarshalJSON">func (*Scalar) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=7862:7908#L310">UnmarshalJSON</a></h3>
+				<pre>func (s *<a href="index.html#Scalar">Scalar</a>) UnmarshalJSON(b []<a href="../../../../builtin/index.html#byte">byte</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+UnmarshalJSON implements json.Unmarshaler.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Silence">type <a href="http://localhost:6060/src/github.com/prometheus/common/model/silence.go?s=1733:2043#L54">Silence</a></h2>
+			<pre>type Silence struct {
+    ID <a href="../../../../builtin/index.html#uint64">uint64</a> `json:&#34;id,omitempty&#34;`
+
+    Matchers []*<a href="index.html#Matcher">Matcher</a> `json:&#34;matchers&#34;`
+
+    StartsAt <a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Time">Time</a> `json:&#34;startsAt&#34;`
+    EndsAt   <a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Time">Time</a> `json:&#34;endsAt&#34;`
+
+    CreatedAt <a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Time">Time</a> `json:&#34;createdAt,omitempty&#34;`
+    CreatedBy <a href="../../../../builtin/index.html#string">string</a>    `json:&#34;createdBy&#34;`
+    Comment   <a href="../../../../builtin/index.html#string">string</a>    `json:&#34;comment,omitempty&#34;`
+}</pre>
+			<p>
+Silence defines the representation of a silence definiton
+in the Prometheus eco-system.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Silence.Validate">func (*Silence) <a href="http://localhost:6060/src/github.com/prometheus/common/model/silence.go?s=2119:2153#L68">Validate</a></h3>
+				<pre>func (s *<a href="index.html#Silence">Silence</a>) Validate() <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Validate returns true iff all fields of the silence have valid values.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="String">type <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=8256:8348#L327">String</a></h2>
+			<pre>type String struct {
+    Value     <a href="../../../../builtin/index.html#string">string</a> `json:&#34;value&#34;`
+    Timestamp <a href="index.html#Time">Time</a>   `json:&#34;timestamp&#34;`
+}</pre>
+			<p>
+String is a string value evaluated at the set timestamp.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="String.MarshalJSON">func (String) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=8446:8491#L337">MarshalJSON</a></h3>
+				<pre>func (s <a href="index.html#String">String</a>) MarshalJSON() ([]<a href="../../../../builtin/index.html#byte">byte</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+MarshalJSON implements json.Marshaler.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="String.String">func (*String) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=8350:8382#L332">String</a></h3>
+				<pre>func (s *<a href="index.html#String">String</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="String.Type">func (*String) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=6385:6416#L238">Type</a></h3>
+				<pre>func (*<a href="index.html#String">String</a>) Type() <a href="index.html#ValueType">ValueType</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="String.UnmarshalJSON">func (*String) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=8601:8647#L342">UnmarshalJSON</a></h3>
+				<pre>func (s *<a href="index.html#String">String</a>) UnmarshalJSON(b []<a href="../../../../builtin/index.html#byte">byte</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+UnmarshalJSON implements json.Unmarshaler.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Time">type <a href="http://localhost:6060/src/github.com/prometheus/common/model/time.go?s=1405:1420#L34">Time</a></h2>
+			<pre>type Time <a href="../../../../builtin/index.html#int64">int64</a></pre>
+			<p>
+Time is the number of milliseconds since the epoch
+(1970-01-01 00:00 UTC) excluding leap seconds.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="Now">func <a href="http://localhost:6060/src/github.com/prometheus/common/model/time.go?s=1567:1582#L42">Now</a></h3>
+				<pre>func Now() <a href="index.html#Time">Time</a></pre>
+				<p>
+Now returns the current time as a Time.
+</p>
+
+				
+				
+			
+				
+				<h3 id="TimeFromUnix">func <a href="http://localhost:6060/src/github.com/prometheus/common/model/time.go?s=1723:1754#L48">TimeFromUnix</a></h3>
+				<pre>func TimeFromUnix(t <a href="../../../../builtin/index.html#int64">int64</a>) <a href="index.html#Time">Time</a></pre>
+				<p>
+TimeFromUnix returns the Time equivalent to the Unix Time t
+provided in seconds.
+</p>
+
+				
+				
+			
+				
+				<h3 id="TimeFromUnixNano">func <a href="http://localhost:6060/src/github.com/prometheus/common/model/time.go?s=1880:1915#L54">TimeFromUnixNano</a></h3>
+				<pre>func TimeFromUnixNano(t <a href="../../../../builtin/index.html#int64">int64</a>) <a href="index.html#Time">Time</a></pre>
+				<p>
+TimeFromUnixNano returns the Time equivalent to the Unix Time
+t provided in nanoseconds.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Time.Add">func (Time) <a href="http://localhost:6060/src/github.com/prometheus/common/model/time.go?s=2302:2341#L74">Add</a></h3>
+				<pre>func (t <a href="index.html#Time">Time</a>) Add(d <a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Duration">Duration</a>) <a href="index.html#Time">Time</a></pre>
+				<p>
+Add returns the Time t + d.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Time.After">func (Time) <a href="http://localhost:6060/src/github.com/prometheus/common/model/time.go?s=2219:2251#L69">After</a></h3>
+				<pre>func (t <a href="index.html#Time">Time</a>) After(o <a href="index.html#Time">Time</a>) <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+After reports whether the Time t is after o.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Time.Before">func (Time) <a href="http://localhost:6060/src/github.com/prometheus/common/model/time.go?s=2118:2151#L64">Before</a></h3>
+				<pre>func (t <a href="index.html#Time">Time</a>) Before(o <a href="index.html#Time">Time</a>) <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Before reports whether the Time t is before o.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Time.Equal">func (Time) <a href="http://localhost:6060/src/github.com/prometheus/common/model/time.go?s=2015:2047#L59">Equal</a></h3>
+				<pre>func (t <a href="index.html#Time">Time</a>) Equal(o <a href="index.html#Time">Time</a>) <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Equal reports whether two Times represent the same instant.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Time.MarshalJSON">func (Time) <a href="http://localhost:6060/src/github.com/prometheus/common/model/time.go?s=3283:3326#L109">MarshalJSON</a></h3>
+				<pre>func (t <a href="index.html#Time">Time</a>) MarshalJSON() ([]<a href="../../../../builtin/index.html#byte">byte</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+MarshalJSON implements the json.Marshaler interface.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Time.String">func (Time) <a href="http://localhost:6060/src/github.com/prometheus/common/model/time.go?s=3123:3152#L104">String</a></h3>
+				<pre>func (t <a href="index.html#Time">Time</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				<p>
+String returns a string representation of the Time.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Time.Sub">func (Time) <a href="http://localhost:6060/src/github.com/prometheus/common/model/time.go?s=2414:2453#L79">Sub</a></h3>
+				<pre>func (t <a href="index.html#Time">Time</a>) Sub(o <a href="index.html#Time">Time</a>) <a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Duration">Duration</a></pre>
+				<p>
+Sub returns the Duration t - o.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Time.Time">func (Time) <a href="http://localhost:6060/src/github.com/prometheus/common/model/time.go?s=2551:2581#L84">Time</a></h3>
+				<pre>func (t <a href="index.html#Time">Time</a>) Time() <a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Time">Time</a></pre>
+				<p>
+Time returns the time.Time representation of t.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Time.Unix">func (Time) <a href="http://localhost:6060/src/github.com/prometheus/common/model/time.go?s=2748:2774#L90">Unix</a></h3>
+				<pre>func (t <a href="index.html#Time">Time</a>) Unix() <a href="../../../../builtin/index.html#int64">int64</a></pre>
+				<p>
+Unix returns t as a Unix time, the number of seconds elapsed
+since January 1, 1970 UTC.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Time.UnixNano">func (Time) <a href="http://localhost:6060/src/github.com/prometheus/common/model/time.go?s=2908:2938#L96">UnixNano</a></h3>
+				<pre>func (t <a href="index.html#Time">Time</a>) UnixNano() <a href="../../../../builtin/index.html#int64">int64</a></pre>
+				<p>
+UnixNano returns t as a Unix time, the number of nanoseconds elapsed
+since January 1, 1970 UTC.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Time.UnmarshalJSON">func (*Time) <a href="http://localhost:6060/src/github.com/prometheus/common/model/time.go?s=3424:3468#L114">UnmarshalJSON</a></h3>
+				<pre>func (t *<a href="index.html#Time">Time</a>) UnmarshalJSON(b []<a href="../../../../builtin/index.html#byte">byte</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+UnmarshalJSON implements the json.Unmarshaler interface.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Value">type <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=6165:6224#L230">Value</a></h2>
+			<pre>type Value interface {
+    Type() <a href="index.html#ValueType">ValueType</a>
+    String() <a href="../../../../builtin/index.html#string">string</a>
+}</pre>
+			<p>
+Value is a generic interface for values resulting from a query evaluation.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ValueType">type <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=6439:6457#L240">ValueType</a></h2>
+			<pre>type ValueType <a href="../../../../builtin/index.html#int">int</a></pre>
+			
+
+			
+				<pre>const (
+    <span id="ValNone">ValNone</span> <a href="index.html#ValueType">ValueType</a> = <a href="../../../../builtin/index.html#iota">iota</a>
+    <span id="ValScalar">ValScalar</span>
+    <span id="ValVector">ValVector</span>
+    <span id="ValMatrix">ValMatrix</span>
+    <span id="ValString">ValString</span>
+)</pre>
+				
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ValueType.MarshalJSON">func (ValueType) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=6582:6631#L251">MarshalJSON</a></h3>
+				<pre>func (et <a href="index.html#ValueType">ValueType</a>) MarshalJSON() ([]<a href="../../../../builtin/index.html#byte">byte</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+MarshalJSON implements json.Marshaler.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ValueType.String">func (ValueType) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=7060:7094#L277">String</a></h3>
+				<pre>func (e <a href="index.html#ValueType">ValueType</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="ValueType.UnmarshalJSON">func (*ValueType) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=6671:6721#L255">UnmarshalJSON</a></h3>
+				<pre>func (et *<a href="index.html#ValueType">ValueType</a>) UnmarshalJSON(b []<a href="../../../../builtin/index.html#byte">byte</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Vector">type <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=8858:8879#L349">Vector</a></h2>
+			<pre>type Vector []*<a href="index.html#Sample">Sample</a></pre>
+			<p>
+Vector is basically only an alias for Samples, but the
+contract is that in a Vector, all Samples have the same timestamp.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Vector.Equal">func (Vector) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=9559:9597#L377">Equal</a></h3>
+				<pre>func (vec <a href="index.html#Vector">Vector</a>) Equal(o <a href="index.html#Vector">Vector</a>) <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Equal compares two sets of samples and returns true if they are equal.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Vector.Len">func (Vector) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=9047:9074#L359">Len</a></h3>
+				<pre>func (vec <a href="index.html#Vector">Vector</a>) Len() <a href="../../../../builtin/index.html#int">int</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Vector.Less">func (Vector) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=9226:9263#L363">Less</a></h3>
+				<pre>func (vec <a href="index.html#Vector">Vector</a>) Less(i, j <a href="../../../../builtin/index.html#int">int</a>) <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Less compares first the metrics, then the timestamp.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Vector.String">func (Vector) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=8881:8914#L351">String</a></h3>
+				<pre>func (vec <a href="index.html#Vector">Vector</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Vector.Swap">func (Vector) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=9100:9132#L360">Swap</a></h3>
+				<pre>func (vec <a href="index.html#Vector">Vector</a>) Swap(i, j <a href="../../../../builtin/index.html#int">int</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Vector.Type">func (Vector) <a href="http://localhost:6060/src/github.com/prometheus/common/model/value.go?s=6279:6309#L236">Type</a></h3>
+				<pre>func (<a href="index.html#Vector">Vector</a>) Type() <a href="index.html#ValueType">ValueType</a></pre>
+				
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

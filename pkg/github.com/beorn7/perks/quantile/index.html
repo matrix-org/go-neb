@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>quantile - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package quantile</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/beorn7/perks/quantile"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+				<dd><a href="index.html#pkg-examples" class="examplesLink">Examples</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package quantile computes approximate quantiles over an unbounded data
+stream within low memory and CPU bounds.
+</p>
+<p>
+A small amount of accuracy is traded to achieve the above properties.
+</p>
+<p>
+Multiple streams can be merged before calling Query to generate a single set
+of results. This is meaningful when the streams represent the same type of
+data. See Merge and Samples.
+</p>
+<p>
+For more detailed information about the algorithm used, see:
+</p>
+<h3 id="hdr-Effective_Computation_of_Biased_Quantiles_over_Data_Streams">Effective Computation of Biased Quantiles over Data Streams</h3>
+<p>
+<a href="http://www.cs.rutgers.edu/~muthu/bquant.pdf">http://www.cs.rutgers.edu/~muthu/bquant.pdf</a>
+</p>
+
+			</div>
+		</div>
+		<div id="example__mergeMultipleStreams" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example (MergeMultipleStreams)</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example (MergeMultipleStreams)</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+<span class="comment">// Scenario:</span>
+<span class="comment">// We have multiple database shards. On each shard, there is a process</span>
+<span class="comment">// collecting query response times from the database logs and inserting</span>
+<span class="comment">// them into a Stream (created via NewTargeted(0.90)), much like the</span>
+<span class="comment">// Simple example. These processes expose a network interface for us to</span>
+<span class="comment">// ask them to serialize and send us the results of their</span>
+<span class="comment">// Stream.Samples so we may Merge and Query them.</span>
+<span class="comment">//</span>
+<span class="comment">// NOTES:</span>
+<span class="comment">// * These sample sets are small, allowing us to get them</span>
+<span class="comment">// across the network much faster than sending the entire list of data</span>
+<span class="comment">// points.</span>
+<span class="comment">//</span>
+<span class="comment">// * For this to work correctly, we must supply the same quantiles</span>
+<span class="comment">// a priori the process collecting the samples supplied to NewTargeted,</span>
+<span class="comment">// even if we do not plan to query them all here.</span>
+ch := make(chan quantile.Samples)
+getDBQuerySamples(ch)
+q := quantile.NewTargeted(map[float64]float64{0.90: 0.001})
+for samples := range ch {
+    q.Merge(samples)
+}
+fmt.Println(&#34;perc90:&#34;, q.Query(0.90))
+</pre>
+			
+		
+	</div>
+</div>
+<div id="example__simple" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example (Simple)</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example (Simple)</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">ch := make(chan float64)
+go sendFloats(ch)
+
+<span class="comment">// Compute the 50th, 90th, and 99th percentile.</span>
+q := quantile.NewTargeted(map[float64]float64{
+    0.50: 0.005,
+    0.90: 0.001,
+    0.99: 0.0001,
+})
+for v := range ch {
+    q.Insert(v)
+}
+
+fmt.Println(&#34;perc50:&#34;, q.Query(0.50))
+fmt.Println(&#34;perc90:&#34;, q.Query(0.90))
+fmt.Println(&#34;perc99:&#34;, q.Query(0.99))
+fmt.Println(&#34;count:&#34;, q.Count())
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">perc50: 5
+perc90: 16
+perc99: 223
+count: 2388
+</pre>
+			
+		
+	</div>
+</div>
+<div id="example__window" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example (Window)</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example (Window)</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+<span class="comment">// Scenario: We want the 90th, 95th, and 99th percentiles for each</span>
+<span class="comment">// minute.</span>
+
+ch := make(chan float64)
+go sendStreamValues(ch)
+
+tick := time.NewTicker(1 * time.Minute)
+q := quantile.NewTargeted(map[float64]float64{
+    0.90: 0.001,
+    0.95: 0.0005,
+    0.99: 0.0001,
+})
+for {
+    select {
+    case t := &lt;-tick.C:
+        flushToDB(t, q.Samples())
+        q.Reset()
+    case v := &lt;-ch:
+        q.Insert(v)
+    }
+}
+</pre>
+			
+		
+	</div>
+</div>
+
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+			
+				
+				<dd><a href="index.html#Sample">type Sample</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Samples">type Samples</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Samples.Len">func (a Samples) Len() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Samples.Less">func (a Samples) Less(i, j int) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Samples.Swap">func (a Samples) Swap(i, j int)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Stream">type Stream</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewHighBiased">func NewHighBiased(epsilon float64) *Stream</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewLowBiased">func NewLowBiased(epsilon float64) *Stream</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewTargeted">func NewTargeted(targets map[float64]float64) *Stream</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Stream.Count">func (s *Stream) Count() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Stream.Insert">func (s *Stream) Insert(v float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Stream.Merge">func (s *Stream) Merge(samples Samples)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Stream.Query">func (s *Stream) Query(q float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Stream.Reset">func (s *Stream) Reset()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Stream.Samples">func (s *Stream) Samples() Samples</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+		<div id="pkg-examples">
+			<h4>Examples</h4>
+			<dl>
+			
+			<dd><a class="exampleLink" href="index.html#example__mergeMultipleStreams">Package (MergeMultipleStreams)</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example__simple">Package (Simple)</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example__window">Package (Window)</a></dd>
+			
+			</dl>
+		</div>
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/beorn7/perks/quantile/stream.go">stream.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+		
+			
+			
+			<h2 id="Sample">type <a href="http://localhost:6060/src/github.com/beorn7/perks/quantile/stream.go?s=734:852#L14">Sample</a></h2>
+			<pre>type Sample struct {
+    Value <a href="../../../../builtin/index.html#float64">float64</a> `json:&#34;,string&#34;`
+    Width <a href="../../../../builtin/index.html#float64">float64</a> `json:&#34;,string&#34;`
+    Delta <a href="../../../../builtin/index.html#float64">float64</a> `json:&#34;,string&#34;`
+}</pre>
+			<p>
+Sample holds an observed value and meta information for compression. JSON
+tags have been added for convenience.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Samples">type <a href="http://localhost:6060/src/github.com/beorn7/perks/quantile/stream.go?s=926:947#L21">Samples</a></h2>
+			<pre>type Samples []<a href="index.html#Sample">Sample</a></pre>
+			<p>
+Samples represents a slice of samples. It implements sort.Interface.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Samples.Len">func (Samples) <a href="http://localhost:6060/src/github.com/beorn7/perks/quantile/stream.go?s=949:975#L23">Len</a></h3>
+				<pre>func (a <a href="index.html#Samples">Samples</a>) Len() <a href="../../../../builtin/index.html#int">int</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Samples.Less">func (Samples) <a href="http://localhost:6060/src/github.com/beorn7/perks/quantile/stream.go?s=1004:1040#L24">Less</a></h3>
+				<pre>func (a <a href="index.html#Samples">Samples</a>) Less(i, j <a href="../../../../builtin/index.html#int">int</a>) <a href="../../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Samples.Swap">func (Samples) <a href="http://localhost:6060/src/github.com/beorn7/perks/quantile/stream.go?s=1076:1107#L25">Swap</a></h3>
+				<pre>func (a <a href="index.html#Samples">Samples</a>) Swap(i, j <a href="../../../../builtin/index.html#int">int</a>)</pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Stream">type <a href="http://localhost:6060/src/github.com/beorn7/perks/quantile/stream.go?s=3472:3532#L91">Stream</a></h2>
+			<pre>type Stream struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Stream computes quantiles for a stream of float64s. It is not thread-safe by
+design. Take care when using across multiple goroutines.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewHighBiased">func <a href="http://localhost:6060/src/github.com/beorn7/perks/quantile/stream.go?s=2334:2377#L56">NewHighBiased</a></h3>
+				<pre>func NewHighBiased(epsilon <a href="../../../../builtin/index.html#float64">float64</a>) *<a href="index.html#Stream">Stream</a></pre>
+				<p>
+NewHighBiased returns an initialized Stream for high-biased quantiles
+(e.g. 0.01, 0.1, 0.5) where the needed quantiles are not known a priori, but
+error guarantees can still be given even for the higher ranks of the data
+distribution.
+</p>
+<p>
+The provided epsilon is a relative error, i.e. the true quantile of a value
+returned by a query is guaranteed to be within 1-(1±Epsilon)*(1-Quantile).
+</p>
+<p>
+See <a href="http://www.cs.rutgers.edu/~muthu/bquant.pdf">http://www.cs.rutgers.edu/~muthu/bquant.pdf</a> for time, space, and error
+properties.
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewLowBiased">func <a href="http://localhost:6060/src/github.com/beorn7/perks/quantile/stream.go?s=1688:1730#L39">NewLowBiased</a></h3>
+				<pre>func NewLowBiased(epsilon <a href="../../../../builtin/index.html#float64">float64</a>) *<a href="index.html#Stream">Stream</a></pre>
+				<p>
+NewLowBiased returns an initialized Stream for low-biased quantiles
+(e.g. 0.01, 0.1, 0.5) where the needed quantiles are not known a priori, but
+error guarantees can still be given even for the lower ranks of the data
+distribution.
+</p>
+<p>
+The provided epsilon is a relative error, i.e. the true quantile of a value
+returned by a query is guaranteed to be within (1±Epsilon)*Quantile.
+</p>
+<p>
+See <a href="http://www.cs.rutgers.edu/~muthu/bquant.pdf">http://www.cs.rutgers.edu/~muthu/bquant.pdf</a> for time, space, and error
+properties.
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewTargeted">func <a href="http://localhost:6060/src/github.com/beorn7/perks/quantile/stream.go?s=2944:2997#L70">NewTargeted</a></h3>
+				<pre>func NewTargeted(targets map[<a href="../../../../builtin/index.html#float64">float64</a>]<a href="../../../../builtin/index.html#float64">float64</a>) *<a href="index.html#Stream">Stream</a></pre>
+				<p>
+NewTargeted returns an initialized Stream concerned with a particular set of
+quantile values that are supplied a priori. Knowing these a priori reduces
+space and computation time. The targets map maps the desired quantiles to
+their absolute errors, i.e. the true quantile of a value returned by a query
+is guaranteed to be within (Quantile±Epsilon).
+</p>
+<p>
+See <a href="http://www.cs.rutgers.edu/~muthu/bquant.pdf">http://www.cs.rutgers.edu/~muthu/bquant.pdf</a> for time, space, and error properties.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Stream.Count">func (*Stream) <a href="http://localhost:6060/src/github.com/beorn7/perks/quantile/stream.go?s=5246:5274#L164">Count</a></h3>
+				<pre>func (s *<a href="index.html#Stream">Stream</a>) Count() <a href="../../../../builtin/index.html#int">int</a></pre>
+				<p>
+Count returns the total number of samples observed in the stream
+since initialization.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Stream.Insert">func (*Stream) <a href="http://localhost:6060/src/github.com/beorn7/perks/quantile/stream.go?s=3683:3717#L103">Insert</a></h3>
+				<pre>func (s *<a href="index.html#Stream">Stream</a>) Insert(v <a href="../../../../builtin/index.html#float64">float64</a>)</pre>
+				<p>
+Insert inserts v into the stream.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Stream.Merge">func (*Stream) <a href="http://localhost:6060/src/github.com/beorn7/perks/quantile/stream.go?s=4764:4803#L142">Merge</a></h3>
+				<pre>func (s *<a href="index.html#Stream">Stream</a>) Merge(samples <a href="index.html#Samples">Samples</a>)</pre>
+				<p>
+Merge merges samples into the underlying streams samples. This is handy when
+merging multiple streams from separate threads, database shards, etc.
+</p>
+<p>
+ATTENTION: This method is broken and does not yield correct results. The
+underlying algorithm is not capable of merging streams correctly.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Stream.Query">func (*Stream) <a href="http://localhost:6060/src/github.com/beorn7/perks/quantile/stream.go?s=4083:4124#L118">Query</a></h3>
+				<pre>func (s *<a href="index.html#Stream">Stream</a>) Query(q <a href="../../../../builtin/index.html#float64">float64</a>) <a href="../../../../builtin/index.html#float64">float64</a></pre>
+				<p>
+Query returns the computed qth percentiles value. If s was created with
+NewTargeted, and q is not in the set of quantiles provided a priori, Query
+will return an unspecified result.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Stream.Reset">func (*Stream) <a href="http://localhost:6060/src/github.com/beorn7/perks/quantile/stream.go?s=4932:4956#L148">Reset</a></h3>
+				<pre>func (s *<a href="index.html#Stream">Stream</a>) Reset()</pre>
+				<p>
+Reset reinitializes and clears the list reusing the samples buffer memory.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Stream.Samples">func (*Stream) <a href="http://localhost:6060/src/github.com/beorn7/perks/quantile/stream.go?s=5040:5074#L154">Samples</a></h3>
+				<pre>func (s *<a href="index.html#Stream">Stream</a>) Samples() <a href="index.html#Samples">Samples</a></pre>
+				<p>
+Samples returns stream samples held by s.
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

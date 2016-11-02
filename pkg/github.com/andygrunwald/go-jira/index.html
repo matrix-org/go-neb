@@ -1,0 +1,2338 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>jira - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package jira</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/andygrunwald/go-jira"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="index.html#pkg-constants">Constants</a></dd>
+			
+			
+			
+				
+				<dd><a href="index.html#CheckResponse">func CheckResponse(r *http.Response) error</a></dd>
+			
+			
+				
+				<dd><a href="index.html#Attachment">type Attachment</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#AuthenticationService">type AuthenticationService</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#AuthenticationService.AcquireSessionCookie">func (s *AuthenticationService) AcquireSessionCookie(username, password string) (bool, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#AuthenticationService.Authenticated">func (s *AuthenticationService) Authenticated() bool</a></dd>
+				
+			
+				
+				<dd><a href="index.html#AvatarUrls">type AvatarUrls</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Board">type Board</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#BoardListOptions">type BoardListOptions</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#BoardService">type BoardService</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BoardService.CreateBoard">func (s *BoardService) CreateBoard(board *Board) (*Board, *Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BoardService.DeleteBoard">func (s *BoardService) DeleteBoard(boardID int) (*Board, *Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BoardService.GetAllBoards">func (s *BoardService) GetAllBoards(opt *BoardListOptions) (*BoardsList, *Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BoardService.GetAllSprints">func (s *BoardService) GetAllSprints(boardID string) ([]Sprint, *Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BoardService.GetBoard">func (s *BoardService) GetBoard(boardID int) (*Board, *Response, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#BoardsList">type BoardsList</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Client">type Client</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewClient">func NewClient(httpClient *http.Client, baseURL string) (*Client, error)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.Do">func (c *Client) Do(req *http.Request, v interface{}) (*Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.GetBaseURL">func (c *Client) GetBaseURL() url.URL</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.NewMultiPartRequest">func (c *Client) NewMultiPartRequest(method, urlStr string, buf *bytes.Buffer) (*http.Request, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.NewRequest">func (c *Client) NewRequest(method, urlStr string, body interface{}) (*http.Request, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Comment">type Comment</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#CommentVisibility">type CommentVisibility</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Comments">type Comments</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Component">type Component</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#CreateTransitionPayload">type CreateTransitionPayload</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#CustomFields">type CustomFields</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Epic">type Epic</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#FixVersion">type FixVersion</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Issue">type Issue</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#IssueFields">type IssueFields</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#IssueLink">type IssueLink</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#IssueLinkType">type IssueLinkType</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#IssueService">type IssueService</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IssueService.AddComment">func (s *IssueService) AddComment(issueID string, comment *Comment) (*Comment, *Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IssueService.AddLink">func (s *IssueService) AddLink(issueLink *IssueLink) (*Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IssueService.Create">func (s *IssueService) Create(issue *Issue) (*Issue, *Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IssueService.DoTransition">func (s *IssueService) DoTransition(ticketID, transitionID string) (*Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IssueService.DownloadAttachment">func (s *IssueService) DownloadAttachment(attachmentID string) (*Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IssueService.Get">func (s *IssueService) Get(issueID string) (*Issue, *Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IssueService.GetCustomFields">func (s *IssueService) GetCustomFields(issueID string) (CustomFields, *Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IssueService.GetTransitions">func (s *IssueService) GetTransitions(id string) ([]Transition, *Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IssueService.PostAttachment">func (s *IssueService) PostAttachment(attachmentID string, r io.Reader, attachmentName string) (*[]Attachment, *Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IssueService.Search">func (s *IssueService) Search(jql string, options *SearchOptions) ([]Issue, *Response, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#IssueType">type IssueType</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#IssuesInSprintResult">type IssuesInSprintResult</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#IssuesWrapper">type IssuesWrapper</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Priority">type Priority</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Progress">type Progress</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Project">type Project</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ProjectCategory">type ProjectCategory</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ProjectComponent">type ProjectComponent</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ProjectList">type ProjectList</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ProjectService">type ProjectService</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ProjectService.Get">func (s *ProjectService) Get(projectID string) (*Project, *Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ProjectService.GetList">func (s *ProjectService) GetList() (*ProjectList, *Response, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Resolution">type Resolution</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Response">type Response</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#SearchOptions">type SearchOptions</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Session">type Session</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Sprint">type Sprint</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#SprintService">type SprintService</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SprintService.GetIssuesForSprint">func (s *SprintService) GetIssuesForSprint(sprintID int) ([]Issue, *Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SprintService.MoveIssuesToSprint">func (s *SprintService) MoveIssuesToSprint(sprintID int, issueIDs []string) (*Response, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Status">type Status</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#StatusCategory">type StatusCategory</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Subtasks">type Subtasks</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Time">type Time</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Time.UnmarshalJSON">func (t *Time) UnmarshalJSON(b []byte) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Transition">type Transition</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#TransitionField">type TransitionField</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#TransitionPayload">type TransitionPayload</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#User">type User</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Version">type Version</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Watches">type Watches</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Worklog">type Worklog</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#WorklogRecord">type WorklogRecord</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/authentication.go">authentication.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/board.go">board.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go">issue.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/jira.go">jira.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/project.go">project.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/sprint.go">sprint.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const (
+    <span class="comment">// AssigneeAutomatic represents the value of the &#34;Assignee: Automatic&#34; of JIRA</span>
+    <span id="AssigneeAutomatic">AssigneeAutomatic</span> = &#34;-1&#34;
+)</pre>
+				
+			
+		
+		
+		
+			
+			
+			<h2 id="CheckResponse">func <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/jira.go?s=5240:5282#L173">CheckResponse</a></h2>
+			<pre>func CheckResponse(r *<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Response">Response</a>) <a href="../../../builtin/index.html#error">error</a></pre>
+			<p>
+CheckResponse checks the API response for errors, and returns them if present.
+A response is considered an error if it has a status code outside the 200 range.
+The caller is responsible to analyze the response body.
+The body can contain JSON (if the error is intended) or xml (sometimes JIRA just failes).
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="Attachment">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=723:1146#L25">Attachment</a></h2>
+			<pre>type Attachment struct {
+    Self      <a href="../../../builtin/index.html#string">string</a> `json:&#34;self,omitempty&#34;`
+    ID        <a href="../../../builtin/index.html#string">string</a> `json:&#34;id,omitempty&#34;`
+    Filename  <a href="../../../builtin/index.html#string">string</a> `json:&#34;filename,omitempty&#34;`
+    Author    *<a href="index.html#User">User</a>  `json:&#34;author,omitempty&#34;`
+    Created   <a href="../../../builtin/index.html#string">string</a> `json:&#34;created,omitempty&#34;`
+    Size      <a href="../../../builtin/index.html#int">int</a>    `json:&#34;size,omitempty&#34;`
+    MimeType  <a href="../../../builtin/index.html#string">string</a> `json:&#34;mimeType,omitempty&#34;`
+    Content   <a href="../../../builtin/index.html#string">string</a> `json:&#34;content,omitempty&#34;`
+    Thumbnail <a href="../../../builtin/index.html#string">string</a> `json:&#34;thumbnail,omitempty&#34;`
+}</pre>
+			<p>
+Attachment represents a JIRA attachment
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="AuthenticationService">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/authentication.go?s=203:256#L1">AuthenticationService</a></h2>
+			<pre>type AuthenticationService struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+AuthenticationService handles authentication for the JIRA instance / API.
+</p>
+<p>
+JIRA API docs: <a href="https://docs.atlassian.com/jira/REST/latest/#authentication">https://docs.atlassian.com/jira/REST/latest/#authentication</a>
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="AuthenticationService.AcquireSessionCookie">func (*AuthenticationService) <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/authentication.go?s=1415:1508#L29">AcquireSessionCookie</a></h3>
+				<pre>func (s *<a href="index.html#AuthenticationService">AuthenticationService</a>) AcquireSessionCookie(username, password <a href="../../../builtin/index.html#string">string</a>) (<a href="../../../builtin/index.html#bool">bool</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+AcquireSessionCookie creates a new session for a user in JIRA.
+Once a session has been successfully created it can be used to access any of JIRA&#39;s remote APIs and also the web UI by passing the appropriate HTTP Cookie header.
+The header will by automatically applied to every API request.
+Note that it is generally preferrable to use HTTP BASIC authentication with the REST API.
+However, this resource may be used to mimic the behaviour of JIRA&#39;s log-in page (e.g. to display log-in errors to a user).
+</p>
+<p>
+JIRA API docs: <a href="https://docs.atlassian.com/jira/REST/latest/#auth/1/session">https://docs.atlassian.com/jira/REST/latest/#auth/1/session</a>
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="AuthenticationService.Authenticated">func (*AuthenticationService) <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/authentication.go?s=2273:2325#L61">Authenticated</a></h3>
+				<pre>func (s *<a href="index.html#AuthenticationService">AuthenticationService</a>) Authenticated() <a href="../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Authenticated reports if the current Client has an authenticated session with JIRA
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="AvatarUrls">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=5355:5553#L140">AvatarUrls</a></h2>
+			<pre>type AvatarUrls struct {
+    Four8X48  <a href="../../../builtin/index.html#string">string</a> `json:&#34;48x48,omitempty&#34;`
+    Two4X24   <a href="../../../builtin/index.html#string">string</a> `json:&#34;24x24,omitempty&#34;`
+    One6X16   <a href="../../../builtin/index.html#string">string</a> `json:&#34;16x16,omitempty&#34;`
+    Three2X32 <a href="../../../builtin/index.html#string">string</a> `json:&#34;32x32,omitempty&#34;`
+}</pre>
+			<p>
+AvatarUrls represents different dimensions of avatars / images
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Board">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/board.go?s=525:753#L15">Board</a></h2>
+			<pre>type Board struct {
+    ID       <a href="../../../builtin/index.html#int">int</a>    `json:&#34;id,omitempty&#34;`
+    Self     <a href="../../../builtin/index.html#string">string</a> `json:&#34;self,omitempty&#34;`
+    Name     <a href="../../../builtin/index.html#string">string</a> `json:&#34;name,omitempty&#34;`
+    Type     <a href="../../../builtin/index.html#string">string</a> `json:&#34;type,omitempty&#34;`
+    FilterID <a href="../../../builtin/index.html#int">int</a>    `json:&#34;filterId,omitempty&#34;`
+}</pre>
+			<p>
+Board represents a JIRA agile board
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="BoardListOptions">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/board.go?s=837:1375#L24">BoardListOptions</a></h2>
+			<pre>type BoardListOptions struct {
+    <span class="comment">// BoardType filters results to boards of the specified type.</span>
+    <span class="comment">// Valid values: scrum, kanban.</span>
+    BoardType <a href="../../../builtin/index.html#string">string</a> `url:&#34;boardType,omitempty&#34;`
+    <span class="comment">// Name filters results to boards that match or partially match the specified name.</span>
+    Name <a href="../../../builtin/index.html#string">string</a> `url:&#34;name,omitempty&#34;`
+    <span class="comment">// ProjectKeyOrID filters results to boards that are relevant to a project.</span>
+    <span class="comment">// Relevance meaning that the JQL filter defined in board contains a reference to a project.</span>
+    ProjectKeyOrID <a href="../../../builtin/index.html#string">string</a> `url:&#34;projectKeyOrId,omitempty&#34;`
+
+    <a href="index.html#SearchOptions">SearchOptions</a>
+}</pre>
+			<p>
+BoardListOptions specifies the optional parameters to the BoardService.GetList
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="BoardService">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/board.go?s=182:226#L1">BoardService</a></h2>
+			<pre>type BoardService struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+BoardService handles Agile Boards for the JIRA instance / API.
+</p>
+<p>
+JIRA API docs: <a href="https://docs.atlassian.com/jira-software/REST/server/">https://docs.atlassian.com/jira-software/REST/server/</a>
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="BoardService.CreateBoard">func (*BoardService) <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/board.go?s=3661:3736#L101">CreateBoard</a></h3>
+				<pre>func (s *<a href="index.html#BoardService">BoardService</a>) CreateBoard(board *<a href="index.html#Board">Board</a>) (*<a href="index.html#Board">Board</a>, *<a href="index.html#Response">Response</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+CreateBoard creates a new board. Board name, type and filter Id is required.
+name - Must be less than 255 characters.
+type - Valid values: scrum, kanban
+filterId - Id of a filter that the user has permissions to view.
+Note, if the user does not have the &#39;Create shared objects&#39; permission and tries to create a shared board, a private
+board will be created instead (remember that board sharing depends on the filter sharing).
+</p>
+<p>
+JIRA API docs: <a href="https://docs.atlassian.com/jira-software/REST/cloud/#agile/1.0/board-createBoard">https://docs.atlassian.com/jira-software/REST/cloud/#agile/1.0/board-createBoard</a>
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BoardService.DeleteBoard">func (*BoardService) <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/board.go?s=4184:4258#L120">DeleteBoard</a></h3>
+				<pre>func (s *<a href="index.html#BoardService">BoardService</a>) DeleteBoard(boardID <a href="../../../builtin/index.html#int">int</a>) (*<a href="index.html#Board">Board</a>, *<a href="index.html#Response">Response</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+DeleteBoard will delete an agile board.
+</p>
+<p>
+JIRA API docs: <a href="https://docs.atlassian.com/jira-software/REST/cloud/#agile/1.0/board-deleteBoard">https://docs.atlassian.com/jira-software/REST/cloud/#agile/1.0/board-deleteBoard</a>
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BoardService.GetAllBoards">func (*BoardService) <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/board.go?s=2104:2194#L57">GetAllBoards</a></h3>
+				<pre>func (s *<a href="index.html#BoardService">BoardService</a>) GetAllBoards(opt *<a href="index.html#BoardListOptions">BoardListOptions</a>) (*<a href="index.html#BoardsList">BoardsList</a>, *<a href="index.html#Response">Response</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+GetAllBoards will returns all boards. This only includes boards that the user has permission to view.
+</p>
+<p>
+JIRA API docs: <a href="https://docs.atlassian.com/jira-software/REST/cloud/#agile/1.0/board-getAllBoards">https://docs.atlassian.com/jira-software/REST/cloud/#agile/1.0/board-getAllBoards</a>
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BoardService.GetAllSprints">func (*BoardService) <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/board.go?s=4745:4826#L135">GetAllSprints</a></h3>
+				<pre>func (s *<a href="index.html#BoardService">BoardService</a>) GetAllSprints(boardID <a href="../../../builtin/index.html#string">string</a>) ([]<a href="index.html#Sprint">Sprint</a>, *<a href="index.html#Response">Response</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+GetAllSprints will returns all sprints from a board, for a given board Id.
+This only includes sprints that the user has permission to view.
+</p>
+<p>
+JIRA API docs: <a href="https://docs.atlassian.com/jira-software/REST/cloud/#agile/1.0/board/">https://docs.atlassian.com/jira-software/REST/cloud/#agile/1.0/board/</a>{boardId}/sprint
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BoardService.GetBoard">func (*BoardService) <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/board.go?s=2744:2815#L78">GetBoard</a></h3>
+				<pre>func (s *<a href="index.html#BoardService">BoardService</a>) GetBoard(boardID <a href="../../../builtin/index.html#int">int</a>) (*<a href="index.html#Board">Board</a>, *<a href="index.html#Response">Response</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+GetBoard will returns the board for the given boardID.
+This board will only be returned if the user has permission to view it.
+</p>
+<p>
+JIRA API docs: <a href="https://docs.atlassian.com/jira-software/REST/cloud/#agile/1.0/board-getBoard">https://docs.atlassian.com/jira-software/REST/cloud/#agile/1.0/board-getBoard</a>
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="BoardsList">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/board.go?s=274:484#L6">BoardsList</a></h2>
+			<pre>type BoardsList struct {
+    MaxResults <a href="../../../builtin/index.html#int">int</a>     `json:&#34;maxResults&#34;`
+    StartAt    <a href="../../../builtin/index.html#int">int</a>     `json:&#34;startAt&#34;`
+    Total      <a href="../../../builtin/index.html#int">int</a>     `json:&#34;total&#34;`
+    IsLast     <a href="../../../builtin/index.html#bool">bool</a>    `json:&#34;isLast&#34;`
+    Values     []<a href="index.html#Board">Board</a> `json:&#34;values&#34;`
+}</pre>
+			<p>
+BoardsList reflects a list of agile boards
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Client">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/jira.go?s=195:655#L6">Client</a></h2>
+			<pre>type Client struct {
+
+    <span class="comment">// Services used for talking to different parts of the JIRA API.</span>
+    Authentication *<a href="index.html#AuthenticationService">AuthenticationService</a>
+    Issue          *<a href="index.html#IssueService">IssueService</a>
+    Project        *<a href="index.html#ProjectService">ProjectService</a>
+    Board          *<a href="index.html#BoardService">BoardService</a>
+    Sprint         *<a href="index.html#SprintService">SprintService</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+A Client manages communication with the JIRA API.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewClient">func <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/jira.go?s=1298:1370#L31">NewClient</a></h3>
+				<pre>func NewClient(httpClient *<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Client">Client</a>, baseURL <a href="../../../builtin/index.html#string">string</a>) (*<a href="index.html#Client">Client</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+NewClient returns a new JIRA API client.
+If a nil httpClient is provided, http.DefaultClient will be used.
+To use API methods which require authentication you can follow the preferred solution and
+provide an http.Client that will perform the authentication for you with OAuth and HTTP Basic (such as that provided by the golang.org/x/oauth2 library).
+As an alternative you can use Session Cookie based authentication provided by this package as well.
+See <a href="https://docs.atlassian.com/jira/REST/latest/#authentication">https://docs.atlassian.com/jira/REST/latest/#authentication</a>
+baseURL is the HTTP endpoint of your JIRA instance and should always be specified with a trailing slash.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Client.Do">func (*Client) <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/jira.go?s=4306:4378#L146">Do</a></h3>
+				<pre>func (c *<a href="index.html#Client">Client</a>) Do(req *<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Request">Request</a>, v interface{}) (*<a href="index.html#Response">Response</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Do sends an API request and returns the API response.
+The API response is JSON decoded and stored in the value pointed to by v, or returned as an error if an API error has occurred.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Client.GetBaseURL">func (*Client) <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/jira.go?s=5581:5618#L184">GetBaseURL</a></h3>
+				<pre>func (c *<a href="index.html#Client">Client</a>) GetBaseURL() <a href="../../../net/url/index.html">url</a>.<a href="../../../net/url/index.html#URL">URL</a></pre>
+				<p>
+GetBaseURL will return you the Base URL.
+This is the same URL as in the NewClient constructor
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Client.NewMultiPartRequest">func (*Client) <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/jira.go?s=3578:3679#L118">NewMultiPartRequest</a></h3>
+				<pre>func (c *<a href="index.html#Client">Client</a>) NewMultiPartRequest(method, urlStr <a href="../../../builtin/index.html#string">string</a>, buf *<a href="../../../bytes/index.html">bytes</a>.<a href="../../../bytes/index.html#Buffer">Buffer</a>) (*<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Request">Request</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+NewMultiPartRequest creates an API request including a multi-part file.
+A relative URL can be provided in urlStr, in which case it is resolved relative to the baseURL of the Client.
+Relative URLs should always be specified without a preceding slash.
+If specified, the value pointed to by buf is a multipart form.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Client.NewRequest">func (*Client) <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/jira.go?s=2124:2215#L58">NewRequest</a></h3>
+				<pre>func (c *<a href="index.html#Client">Client</a>) NewRequest(method, urlStr <a href="../../../builtin/index.html#string">string</a>, body interface{}) (*<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Request">Request</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+NewRequest creates an API request.
+A relative URL can be provided in urlStr, in which case it is resolved relative to the baseURL of the Client.
+Relative URLs should always be specified without a preceding slash.
+If specified, the value pointed to by body is JSON encoded and included as the request body.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Comment">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=10002:10549#L283">Comment</a></h2>
+			<pre>type Comment struct {
+    ID           <a href="../../../builtin/index.html#string">string</a>            `json:&#34;id,omitempty&#34;`
+    Self         <a href="../../../builtin/index.html#string">string</a>            `json:&#34;self,omitempty&#34;`
+    Name         <a href="../../../builtin/index.html#string">string</a>            `json:&#34;name,omitempty&#34;`
+    Author       <a href="index.html#User">User</a>              `json:&#34;author,omitempty&#34;`
+    Body         <a href="../../../builtin/index.html#string">string</a>            `json:&#34;body,omitempty&#34;`
+    UpdateAuthor <a href="index.html#User">User</a>              `json:&#34;updateAuthor,omitempty&#34;`
+    Updated      <a href="../../../builtin/index.html#string">string</a>            `json:&#34;updated,omitempty&#34;`
+    Created      <a href="../../../builtin/index.html#string">string</a>            `json:&#34;created,omitempty&#34;`
+    Visibility   <a href="index.html#CommentVisibility">CommentVisibility</a> `json:&#34;visibility,omitempty&#34;`
+}</pre>
+			<p>
+Comment represents a comment by a person to an issue in JIRA.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="CommentVisibility">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=11180:11290#L309">CommentVisibility</a></h2>
+			<pre>type CommentVisibility struct {
+    Type  <a href="../../../builtin/index.html#string">string</a> `json:&#34;type,omitempty&#34;`
+    Value <a href="../../../builtin/index.html#string">string</a> `json:&#34;value,omitempty&#34;`
+}</pre>
+			<p>
+CommentVisibility represents he visibility of a comment.
+E.g. Type could be &#34;role&#34; and Value &#34;Administrators&#34;
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Comments">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=9862:9935#L278">Comments</a></h2>
+			<pre>type Comments struct {
+    Comments []*<a href="index.html#Comment">Comment</a> `json:&#34;comments,omitempty&#34;`
+}</pre>
+			<p>
+Comments represents a list of Comment.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Component">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=5668:5802#L149">Component</a></h2>
+			<pre>type Component struct {
+    Self <a href="../../../builtin/index.html#string">string</a> `json:&#34;self,omitempty&#34;`
+    ID   <a href="../../../builtin/index.html#string">string</a> `json:&#34;id,omitempty&#34;`
+    Name <a href="../../../builtin/index.html#string">string</a> `json:&#34;name,omitempty&#34;`
+}</pre>
+			<p>
+Component represents a &#34;component&#34; of a JIRA issue.
+Components can be user defined in every JIRA instance.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="CreateTransitionPayload">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=7376:7465#L204">CreateTransitionPayload</a></h2>
+			<pre>type CreateTransitionPayload struct {
+    Transition <a href="index.html#TransitionPayload">TransitionPayload</a> `json:&#34;transition&#34;`
+}</pre>
+			<p>
+CreateTransitionPayload is used for creating new issue transitions
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="CustomFields">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=12357:12392#L338">CustomFields</a></h2>
+			<pre>type CustomFields map[<a href="../../../builtin/index.html#string">string</a>]<a href="../../../builtin/index.html#string">string</a></pre>
+			<p>
+CustomFields represents custom fields of JIRA
+This can heavily differ between JIRA instances
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Epic">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=1276:1476#L39">Epic</a></h2>
+			<pre>type Epic struct {
+    ID      <a href="../../../builtin/index.html#int">int</a>    `json:&#34;id&#34;`
+    Key     <a href="../../../builtin/index.html#string">string</a> `json:&#34;key&#34;`
+    Self    <a href="../../../builtin/index.html#string">string</a> `json:&#34;self&#34;`
+    Name    <a href="../../../builtin/index.html#string">string</a> `json:&#34;name&#34;`
+    Summary <a href="../../../builtin/index.html#string">string</a> `json:&#34;summary&#34;`
+    Done    <a href="../../../builtin/index.html#bool">bool</a>   `json:&#34;done&#34;`
+}</pre>
+			<p>
+Epic represents the epic to which an issue is associated
+Not that this struct does not process the returned &#34;color&#34; value
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="FixVersion">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=10623:11062#L296">FixVersion</a></h2>
+			<pre>type FixVersion struct {
+    Archived        *<a href="../../../builtin/index.html#bool">bool</a>  `json:&#34;archived,omitempty&#34;`
+    ID              <a href="../../../builtin/index.html#string">string</a> `json:&#34;id,omitempty&#34;`
+    Name            <a href="../../../builtin/index.html#string">string</a> `json:&#34;name,omitempty&#34;`
+    ProjectID       <a href="../../../builtin/index.html#int">int</a>    `json:&#34;projectId,omitempty&#34;`
+    ReleaseDate     <a href="../../../builtin/index.html#string">string</a> `json:&#34;releaseDate,omitempty&#34;`
+    Released        *<a href="../../../builtin/index.html#bool">bool</a>  `json:&#34;released,omitempty&#34;`
+    Self            <a href="../../../builtin/index.html#string">string</a> `json:&#34;self,omitempty&#34;`
+    UserReleaseDate <a href="../../../builtin/index.html#string">string</a> `json:&#34;userReleaseDate,omitempty&#34;`
+}</pre>
+			<p>
+FixVersion represents a software release in which an issue is fixed.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Issue">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=431:678#L16">Issue</a></h2>
+			<pre>type Issue struct {
+    Expand <a href="../../../builtin/index.html#string">string</a>       `json:&#34;expand,omitempty&#34;`
+    ID     <a href="../../../builtin/index.html#string">string</a>       `json:&#34;id,omitempty&#34;`
+    Self   <a href="../../../builtin/index.html#string">string</a>       `json:&#34;self,omitempty&#34;`
+    Key    <a href="../../../builtin/index.html#string">string</a>       `json:&#34;key,omitempty&#34;`
+    Fields *<a href="index.html#IssueFields">IssueFields</a> `json:&#34;fields,omitempty&#34;`
+}</pre>
+			<p>
+Issue represents a JIRA issue.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="IssueFields">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=1584:3484#L50">IssueFields</a></h2>
+			<pre>type IssueFields struct {
+    <span class="comment">// TODO Missing fields</span>
+    <span class="comment">//	* &#34;timespent&#34;: null,</span>
+    <span class="comment">//	* &#34;aggregatetimespent&#34;: null,</span>
+    <span class="comment">//	* &#34;workratio&#34;: -1,</span>
+    <span class="comment">//	* &#34;lastViewed&#34;: null,</span>
+    <span class="comment">//	* &#34;timeestimate&#34;: null,</span>
+    <span class="comment">//	* &#34;aggregatetimeoriginalestimate&#34;: null,</span>
+    <span class="comment">//	* &#34;timeoriginalestimate&#34;: null,</span>
+    <span class="comment">//	* &#34;timetracking&#34;: {},</span>
+    <span class="comment">//	* &#34;aggregatetimeestimate&#34;: null,</span>
+    <span class="comment">//	* &#34;environment&#34;: null,</span>
+    <span class="comment">//	* &#34;duedate&#34;: null,</span>
+    Type              <a href="index.html#IssueType">IssueType</a>     `json:&#34;issuetype&#34;`
+    Project           <a href="index.html#Project">Project</a>       `json:&#34;project,omitempty&#34;`
+    Resolution        *<a href="index.html#Resolution">Resolution</a>   `json:&#34;resolution,omitempty&#34;`
+    Priority          *<a href="index.html#Priority">Priority</a>     `json:&#34;priority,omitempty&#34;`
+    Resolutiondate    <a href="../../../builtin/index.html#string">string</a>        `json:&#34;resolutiondate,omitempty&#34;`
+    Created           <a href="../../../builtin/index.html#string">string</a>        `json:&#34;created,omitempty&#34;`
+    Watches           *<a href="index.html#Watches">Watches</a>      `json:&#34;watches,omitempty&#34;`
+    Assignee          *<a href="index.html#User">User</a>         `json:&#34;assignee,omitempty&#34;`
+    Updated           <a href="../../../builtin/index.html#string">string</a>        `json:&#34;updated,omitempty&#34;`
+    Description       <a href="../../../builtin/index.html#string">string</a>        `json:&#34;description,omitempty&#34;`
+    Summary           <a href="../../../builtin/index.html#string">string</a>        `json:&#34;summary&#34;`
+    Creator           *<a href="index.html#User">User</a>         `json:&#34;Creator,omitempty&#34;`
+    Reporter          *<a href="index.html#User">User</a>         `json:&#34;reporter,omitempty&#34;`
+    Components        []*<a href="index.html#Component">Component</a>  `json:&#34;components,omitempty&#34;`
+    Status            *<a href="index.html#Status">Status</a>       `json:&#34;status,omitempty&#34;`
+    Progress          *<a href="index.html#Progress">Progress</a>     `json:&#34;progress,omitempty&#34;`
+    AggregateProgress *<a href="index.html#Progress">Progress</a>     `json:&#34;aggregateprogress,omitempty&#34;`
+    Worklog           *<a href="index.html#Worklog">Worklog</a>      `json:&#34;worklog,omitempty&#34;`
+    IssueLinks        []*<a href="index.html#IssueLink">IssueLink</a>  `json:&#34;issuelinks,omitempty&#34;`
+    Comments          *<a href="index.html#Comments">Comments</a>     `json:&#34;comment,omitempty&#34;`
+    FixVersions       []*<a href="index.html#FixVersion">FixVersion</a> `json:&#34;fixVersions,omitempty&#34;`
+    Labels            []<a href="../../../builtin/index.html#string">string</a>      `json:&#34;labels,omitempty&#34;`
+    Subtasks          []*<a href="index.html#Subtasks">Subtasks</a>   `json:&#34;subtasks,omitempty&#34;`
+    Attachments       []*<a href="index.html#Attachment">Attachment</a> `json:&#34;attachment,omitempty&#34;`
+    Epic              *<a href="index.html#Epic">Epic</a>         `json:&#34;epic,omitempty&#34;`
+}</pre>
+			<p>
+IssueFields represents single fields of a JIRA issue.
+Every JIRA issue has several fields attached.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="IssueLink">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=9138:9461#L258">IssueLink</a></h2>
+			<pre>type IssueLink struct {
+    ID           <a href="../../../builtin/index.html#string">string</a>        `json:&#34;id,omitempty&#34;`
+    Self         <a href="../../../builtin/index.html#string">string</a>        `json:&#34;self,omitempty&#34;`
+    Type         <a href="index.html#IssueLinkType">IssueLinkType</a> `json:&#34;type&#34;`
+    OutwardIssue *<a href="index.html#Issue">Issue</a>        `json:&#34;outwardIssue&#34;`
+    InwardIssue  *<a href="index.html#Issue">Issue</a>        `json:&#34;inwardIssue&#34;`
+    Comment      *<a href="index.html#Comment">Comment</a>      `json:&#34;comment,omitempty&#34;`
+}</pre>
+			<p>
+IssueLink represents a link between two issues in JIRA.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="IssueLinkType">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=9616:9818#L269">IssueLinkType</a></h2>
+			<pre>type IssueLinkType struct {
+    ID      <a href="../../../builtin/index.html#string">string</a> `json:&#34;id,omitempty&#34;`
+    Self    <a href="../../../builtin/index.html#string">string</a> `json:&#34;self,omitempty&#34;`
+    Name    <a href="../../../builtin/index.html#string">string</a> `json:&#34;name&#34;`
+    Inward  <a href="../../../builtin/index.html#string">string</a> `json:&#34;inward&#34;`
+    Outward <a href="../../../builtin/index.html#string">string</a> `json:&#34;outward&#34;`
+}</pre>
+			<p>
+IssueLinkType represents a type of a link between to issues in JIRA.
+Typical issue link types are &#34;Related to&#34;, &#34;Duplicate&#34;, &#34;Is blocked by&#34;, etc.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="IssueService">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=351:395#L11">IssueService</a></h2>
+			<pre>type IssueService struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+IssueService handles Issues for the JIRA instance / API.
+</p>
+<p>
+JIRA API docs: <a href="https://docs.atlassian.com/jira/REST/latest/#api/2/issue">https://docs.atlassian.com/jira/REST/latest/#api/2/issue</a>
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="IssueService.AddComment">func (*IssueService) <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=15688:15784#L442">AddComment</a></h3>
+				<pre>func (s *<a href="index.html#IssueService">IssueService</a>) AddComment(issueID <a href="../../../builtin/index.html#string">string</a>, comment *<a href="index.html#Comment">Comment</a>) (*<a href="index.html#Comment">Comment</a>, *<a href="index.html#Response">Response</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+AddComment adds a new comment to issueID.
+</p>
+<p>
+JIRA API docs: <a href="https://docs.atlassian.com/jira/REST/latest/#api/2/issue-addComment">https://docs.atlassian.com/jira/REST/latest/#api/2/issue-addComment</a>
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="IssueService.AddLink">func (*IssueService) <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=16251:16322#L461">AddLink</a></h3>
+				<pre>func (s *<a href="index.html#IssueService">IssueService</a>) AddLink(issueLink *<a href="index.html#IssueLink">IssueLink</a>) (*<a href="index.html#Response">Response</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+AddLink adds a link between two issues.
+</p>
+<p>
+JIRA API docs: <a href="https://docs.atlassian.com/jira/REST/latest/#api/2/issueLink">https://docs.atlassian.com/jira/REST/latest/#api/2/issueLink</a>
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="IssueService.Create">func (*IssueService) <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=15184:15254#L423">Create</a></h3>
+				<pre>func (s *<a href="index.html#IssueService">IssueService</a>) Create(issue *<a href="index.html#Issue">Issue</a>) (*<a href="index.html#Issue">Issue</a>, *<a href="index.html#Response">Response</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Create creates an issue or a sub-task from a JSON representation.
+Creating a sub-task is similar to creating a regular issue, with two important differences:
+The issueType field must correspond to a sub-task issue type and you must provide a parent field in the issue create request containing the id or key of the parent issue.
+</p>
+<p>
+JIRA API docs: <a href="https://docs.atlassian.com/jira/REST/latest/#api/2/issue-createIssues">https://docs.atlassian.com/jira/REST/latest/#api/2/issue-createIssues</a>
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="IssueService.DoTransition">func (*IssueService) <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=18860:18945#L545">DoTransition</a></h3>
+				<pre>func (s *<a href="index.html#IssueService">IssueService</a>) DoTransition(ticketID, transitionID <a href="../../../builtin/index.html#string">string</a>) (*<a href="index.html#Response">Response</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+DoTransition performs a transition on an issue.
+When performing the transition you can update or set other issue fields.
+</p>
+<p>
+JIRA API docs: <a href="https://docs.atlassian.com/jira/REST/latest/#api/2/issue-doTransition">https://docs.atlassian.com/jira/REST/latest/#api/2/issue-doTransition</a>
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="IssueService.DownloadAttachment">func (*IssueService) <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=13418:13499#L366">DownloadAttachment</a></h3>
+				<pre>func (s *<a href="index.html#IssueService">IssueService</a>) DownloadAttachment(attachmentID <a href="../../../builtin/index.html#string">string</a>) (*<a href="index.html#Response">Response</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+DownloadAttachment returns a Response of an attachment for a given attachmentID.
+The attachment is in the Response.Body of the response.
+This is an io.ReadCloser.
+The caller should close the resp.Body.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="IssueService.Get">func (*IssueService) <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=12838:12907#L346">Get</a></h3>
+				<pre>func (s *<a href="index.html#IssueService">IssueService</a>) Get(issueID <a href="../../../builtin/index.html#string">string</a>) (*<a href="index.html#Issue">Issue</a>, *<a href="index.html#Response">Response</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Get returns a full representation of the issue for the given issue key.
+JIRA will attempt to identify the issue by the issueIdOrKey path parameter.
+This can be an issue id, or an issue key.
+If the issue cannot be found via an exact match, JIRA will also look for the issue in a case-insensitive way, or by looking to see if the issue was moved.
+</p>
+<p>
+JIRA API docs: <a href="https://docs.atlassian.com/jira/REST/latest/#api/2/issue-getIssue">https://docs.atlassian.com/jira/REST/latest/#api/2/issue-getIssue</a>
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="IssueService.GetCustomFields">func (*IssueService) <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=17345:17432#L495">GetCustomFields</a></h3>
+				<pre>func (s *<a href="index.html#IssueService">IssueService</a>) GetCustomFields(issueID <a href="../../../builtin/index.html#string">string</a>) (<a href="index.html#CustomFields">CustomFields</a>, *<a href="index.html#Response">Response</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+GetCustomFields returns a map of customfield_* keys with string values
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="IssueService.GetTransitions">func (*IssueService) <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=18250:18331#L529">GetTransitions</a></h3>
+				<pre>func (s *<a href="index.html#IssueService">IssueService</a>) GetTransitions(id <a href="../../../builtin/index.html#string">string</a>) ([]<a href="index.html#Transition">Transition</a>, *<a href="index.html#Response">Response</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+GetTransitions gets a list of the transitions possible for this issue by the current user,
+along with fields that are required and their types.
+</p>
+<p>
+JIRA API docs: <a href="https://docs.atlassian.com/jira/REST/latest/#api/2/issue-getTransitions">https://docs.atlassian.com/jira/REST/latest/#api/2/issue-getTransitions</a>
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="IssueService.PostAttachment">func (*IssueService) <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=13844:13972#L382">PostAttachment</a></h3>
+				<pre>func (s *<a href="index.html#IssueService">IssueService</a>) PostAttachment(attachmentID <a href="../../../builtin/index.html#string">string</a>, r <a href="../../../io/index.html">io</a>.<a href="../../../io/index.html#Reader">Reader</a>, attachmentName <a href="../../../builtin/index.html#string">string</a>) (*[]<a href="index.html#Attachment">Attachment</a>, *<a href="index.html#Response">Response</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+PostAttachment uploads r (io.Reader) as an attachment to a given attachmentID
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="IssueService.Search">func (*IssueService) <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=16738:16831#L475">Search</a></h3>
+				<pre>func (s *<a href="index.html#IssueService">IssueService</a>) Search(jql <a href="../../../builtin/index.html#string">string</a>, options *<a href="index.html#SearchOptions">SearchOptions</a>) ([]<a href="index.html#Issue">Issue</a>, *<a href="index.html#Response">Response</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Search will search for tickets according to the jql
+</p>
+<p>
+JIRA API docs: <a href="https://developer.atlassian.com/jiradev/jira-apis/jira-rest-apis/jira-rest-api-tutorials/jira-rest-api-example-query-issues">https://developer.atlassian.com/jiradev/jira-apis/jira-rest-apis/jira-rest-api-tutorials/jira-rest-api-example-query-issues</a>
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="IssueType">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=3586:3934#L92">IssueType</a></h2>
+			<pre>type IssueType struct {
+    Self        <a href="../../../builtin/index.html#string">string</a> `json:&#34;self,omitempty&#34;`
+    ID          <a href="../../../builtin/index.html#string">string</a> `json:&#34;id,omitempty&#34;`
+    Description <a href="../../../builtin/index.html#string">string</a> `json:&#34;description,omitempty&#34;`
+    IconURL     <a href="../../../builtin/index.html#string">string</a> `json:&#34;iconUrl,omitempty&#34;`
+    Name        <a href="../../../builtin/index.html#string">string</a> `json:&#34;name,omitempty&#34;`
+    Subtask     <a href="../../../builtin/index.html#bool">bool</a>   `json:&#34;subtask,omitempty&#34;`
+    AvatarID    <a href="../../../builtin/index.html#int">int</a>    `json:&#34;avatarId,omitempty&#34;`
+}</pre>
+			<p>
+IssueType represents a type of a JIRA issue.
+Typical types are &#34;Request&#34;, &#34;Bug&#34;, &#34;Story&#34;, ...
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="IssuesInSprintResult">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/sprint.go?s=399:467#L9">IssuesInSprintResult</a></h2>
+			<pre>type IssuesInSprintResult struct {
+    Issues []<a href="index.html#Issue">Issue</a> `json:&#34;issues&#34;`
+}</pre>
+			<p>
+IssuesInSprintResult represents a wrapper struct for search result
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="IssuesWrapper">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/sprint.go?s=265:327#L4">IssuesWrapper</a></h2>
+			<pre>type IssuesWrapper struct {
+    Issues []<a href="../../../builtin/index.html#string">string</a> `json:&#34;issues&#34;`
+}</pre>
+			<p>
+IssuesWrapper represents a wrapper struct for moving issues to sprint
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Priority">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=4328:4513#L113">Priority</a></h2>
+			<pre>type Priority struct {
+    Self    <a href="../../../builtin/index.html#string">string</a> `json:&#34;self,omitempty&#34;`
+    IconURL <a href="../../../builtin/index.html#string">string</a> `json:&#34;iconUrl,omitempty&#34;`
+    Name    <a href="../../../builtin/index.html#string">string</a> `json:&#34;name,omitempty&#34;`
+    ID      <a href="../../../builtin/index.html#string">string</a> `json:&#34;id,omitempty&#34;`
+}</pre>
+			<p>
+Priority represents a priority of a JIRA issue.
+Typical types are &#34;Normal&#34;, &#34;Moderate&#34;, &#34;Urgent&#34;, ...
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Progress">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=6660:6745#L178">Progress</a></h2>
+			<pre>type Progress struct {
+    Progress <a href="../../../builtin/index.html#int">int</a> `json:&#34;progress&#34;`
+    Total    <a href="../../../builtin/index.html#int">int</a> `json:&#34;total&#34;`
+}</pre>
+			<p>
+Progress represents the progress of a JIRA issue.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Project">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/project.go?s=980:2006#L25">Project</a></h2>
+			<pre>type Project struct {
+    Expand       <a href="../../../builtin/index.html#string">string</a>             `json:&#34;expand,omitempty&#34;`
+    Self         <a href="../../../builtin/index.html#string">string</a>             `json:&#34;self,omitempty&#34;`
+    ID           <a href="../../../builtin/index.html#string">string</a>             `json:&#34;id,omitempty&#34;`
+    Key          <a href="../../../builtin/index.html#string">string</a>             `json:&#34;key,omitempty&#34;`
+    Description  <a href="../../../builtin/index.html#string">string</a>             `json:&#34;description,omitempty&#34;`
+    Lead         <a href="index.html#User">User</a>               `json:&#34;lead,omitempty&#34;`
+    Components   []<a href="index.html#ProjectComponent">ProjectComponent</a> `json:&#34;components,omitempty&#34;`
+    IssueTypes   []<a href="index.html#IssueType">IssueType</a>        `json:&#34;issueTypes,omitempty&#34;`
+    URL          <a href="../../../builtin/index.html#string">string</a>             `json:&#34;url,omitempty&#34;`
+    Email        <a href="../../../builtin/index.html#string">string</a>             `json:&#34;email,omitempty&#34;`
+    AssigneeType <a href="../../../builtin/index.html#string">string</a>             `json:&#34;assigneeType,omitempty&#34;`
+    Versions     []<a href="index.html#Version">Version</a>          `json:&#34;versions,omitempty&#34;`
+    Name         <a href="../../../builtin/index.html#string">string</a>             `json:&#34;name,omitempty&#34;`
+    Roles        struct {
+        Developers <a href="../../../builtin/index.html#string">string</a> `json:&#34;Developers,omitempty&#34;`
+    } `json:&#34;roles,omitempty&#34;`
+    AvatarUrls      <a href="index.html#AvatarUrls">AvatarUrls</a>      `json:&#34;avatarUrls,omitempty&#34;`
+    ProjectCategory <a href="index.html#ProjectCategory">ProjectCategory</a> `json:&#34;projectCategory,omitempty&#34;`
+}</pre>
+			<p>
+Project represents a JIRA Project.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ProjectCategory">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/project.go?s=768:940#L17">ProjectCategory</a></h2>
+			<pre>type ProjectCategory struct {
+    Self        <a href="../../../builtin/index.html#string">string</a> `json:&#34;self&#34;`
+    ID          <a href="../../../builtin/index.html#string">string</a> `json:&#34;id&#34;`
+    Name        <a href="../../../builtin/index.html#string">string</a> `json:&#34;name&#34;`
+    Description <a href="../../../builtin/index.html#string">string</a> `json:&#34;description&#34;`
+}</pre>
+			<p>
+ProjectCategory represents a single project category
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ProjectComponent">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/project.go?s=2540:3136#L59">ProjectComponent</a></h2>
+			<pre>type ProjectComponent struct {
+    Self                <a href="../../../builtin/index.html#string">string</a> `json:&#34;self&#34;`
+    ID                  <a href="../../../builtin/index.html#string">string</a> `json:&#34;id&#34;`
+    Name                <a href="../../../builtin/index.html#string">string</a> `json:&#34;name&#34;`
+    Description         <a href="../../../builtin/index.html#string">string</a> `json:&#34;description&#34;`
+    Lead                <a href="index.html#User">User</a>   `json:&#34;lead&#34;`
+    AssigneeType        <a href="../../../builtin/index.html#string">string</a> `json:&#34;assigneeType&#34;`
+    Assignee            <a href="index.html#User">User</a>   `json:&#34;assignee&#34;`
+    RealAssigneeType    <a href="../../../builtin/index.html#string">string</a> `json:&#34;realAssigneeType&#34;`
+    RealAssignee        <a href="index.html#User">User</a>   `json:&#34;realAssignee&#34;`
+    IsAssigneeTypeValid <a href="../../../builtin/index.html#bool">bool</a>   `json:&#34;isAssigneeTypeValid&#34;`
+    Project             <a href="../../../builtin/index.html#string">string</a> `json:&#34;project&#34;`
+    ProjectID           <a href="../../../builtin/index.html#int">int</a>    `json:&#34;projectId&#34;`
+}</pre>
+			<p>
+ProjectComponent represents a single component of a project
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ProjectList">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/project.go?s=269:710#L5">ProjectList</a></h2>
+			<pre>type ProjectList []struct {
+    Expand          <a href="../../../builtin/index.html#string">string</a>          `json:&#34;expand&#34;`
+    Self            <a href="../../../builtin/index.html#string">string</a>          `json:&#34;self&#34;`
+    ID              <a href="../../../builtin/index.html#string">string</a>          `json:&#34;id&#34;`
+    Key             <a href="../../../builtin/index.html#string">string</a>          `json:&#34;key&#34;`
+    Name            <a href="../../../builtin/index.html#string">string</a>          `json:&#34;name&#34;`
+    AvatarUrls      <a href="index.html#AvatarUrls">AvatarUrls</a>      `json:&#34;avatarUrls&#34;`
+    ProjectTypeKey  <a href="../../../builtin/index.html#string">string</a>          `json:&#34;projectTypeKey&#34;`
+    ProjectCategory <a href="index.html#ProjectCategory">ProjectCategory</a> `json:&#34;projectCategory,omitempty&#34;`
+}</pre>
+			<p>
+ProjectList represent a list of Projects
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ProjectService">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/project.go?s=177:223#L1">ProjectService</a></h2>
+			<pre>type ProjectService struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+ProjectService handles projects for the JIRA instance / API.
+</p>
+<p>
+JIRA API docs: <a href="https://docs.atlassian.com/jira/REST/latest/#api/2/project">https://docs.atlassian.com/jira/REST/latest/#api/2/project</a>
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ProjectService.Get">func (*ProjectService) <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/project.go?s=3936:4011#L97">Get</a></h3>
+				<pre>func (s *<a href="index.html#ProjectService">ProjectService</a>) Get(projectID <a href="../../../builtin/index.html#string">string</a>) (*<a href="index.html#Project">Project</a>, *<a href="index.html#Response">Response</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Get returns a full representation of the project for the given issue key.
+JIRA will attempt to identify the project by the projectIdOrKey path parameter.
+This can be an project id, or an project key.
+</p>
+<p>
+JIRA API docs: <a href="https://docs.atlassian.com/jira/REST/latest/#api/2/project-getProject">https://docs.atlassian.com/jira/REST/latest/#api/2/project-getProject</a>
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ProjectService.GetList">func (*ProjectService) <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/project.go?s=3272:3339#L77">GetList</a></h3>
+				<pre>func (s *<a href="index.html#ProjectService">ProjectService</a>) GetList() (*<a href="index.html#ProjectList">ProjectList</a>, *<a href="index.html#Response">Response</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+GetList gets all projects form JIRA
+</p>
+<p>
+JIRA API docs: <a href="https://docs.atlassian.com/jira/REST/latest/#api/2/project-getAllProjects">https://docs.atlassian.com/jira/REST/latest/#api/2/project-getAllProjects</a>
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Resolution">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=4051:4218#L104">Resolution</a></h2>
+			<pre>type Resolution struct {
+    Self        <a href="../../../builtin/index.html#string">string</a> `json:&#34;self&#34;`
+    ID          <a href="../../../builtin/index.html#string">string</a> `json:&#34;id&#34;`
+    Description <a href="../../../builtin/index.html#string">string</a> `json:&#34;description&#34;`
+    Name        <a href="../../../builtin/index.html#string">string</a> `json:&#34;name&#34;`
+}</pre>
+			<p>
+Resolution represents a resolution of a JIRA issue.
+Typical types are &#34;Fixed&#34;, &#34;Suspended&#34;, &#34;Won&#39;t Fix&#34;, ...
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Response">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/jira.go?s=5768:5857#L190">Response</a></h2>
+			<pre>type Response struct {
+    *<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Response">Response</a>
+
+    StartAt    <a href="../../../builtin/index.html#int">int</a>
+    MaxResults <a href="../../../builtin/index.html#int">int</a>
+    Total      <a href="../../../builtin/index.html#int">int</a>
+}</pre>
+			<p>
+Response represents JIRA API response. It wraps http.Response returned from
+API and provides information about paging.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="SearchOptions">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=11700:11966#L320">SearchOptions</a></h2>
+			<pre>type SearchOptions struct {
+    <span class="comment">// StartAt: The starting index of the returned projects. Base index: 0.</span>
+    StartAt <a href="../../../builtin/index.html#int">int</a> `url:&#34;startAt,omitempty&#34;`
+    <span class="comment">// MaxResults: The maximum number of projects to return per page. Default: 50.</span>
+    MaxResults <a href="../../../builtin/index.html#int">int</a> `url:&#34;maxResults,omitempty&#34;`
+}</pre>
+			<p>
+SearchOptions specifies the optional parameters to various List methods that
+support pagination.
+Pagination is used for the JIRA REST APIs to conserve server resources and limit
+response size for resources that return potentially large collection of items.
+A request to a pages API will result in a values array wrapped in a JSON object with some paging metadata
+Default Pagination options
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Session">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/authentication.go?s=321:815#L6">Session</a></h2>
+			<pre>type Session struct {
+    Self    <a href="../../../builtin/index.html#string">string</a> `json:&#34;self,omitempty&#34;`
+    Name    <a href="../../../builtin/index.html#string">string</a> `json:&#34;name,omitempty&#34;`
+    Session struct {
+        Name  <a href="../../../builtin/index.html#string">string</a> `json:&#34;name&#34;`
+        Value <a href="../../../builtin/index.html#string">string</a> `json:&#34;value&#34;`
+    } `json:&#34;session,omitempty&#34;`
+    LoginInfo struct {
+        FailedLoginCount    <a href="../../../builtin/index.html#int">int</a>    `json:&#34;failedLoginCount&#34;`
+        LoginCount          <a href="../../../builtin/index.html#int">int</a>    `json:&#34;loginCount&#34;`
+        LastFailedLoginTime <a href="../../../builtin/index.html#string">string</a> `json:&#34;lastFailedLoginTime&#34;`
+        PreviousLoginTime   <a href="../../../builtin/index.html#string">string</a> `json:&#34;previousLoginTime&#34;`
+    } `json:&#34;loginInfo&#34;`
+    Cookies []*<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Cookie">Cookie</a>
+}</pre>
+			<p>
+Session represents a Session JSON response by the JIRA API.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Sprint">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/board.go?s=1528:1894#L43">Sprint</a></h2>
+			<pre>type Sprint struct {
+    ID            <a href="../../../builtin/index.html#int">int</a>        `json:&#34;id&#34;`
+    Name          <a href="../../../builtin/index.html#string">string</a>     `json:&#34;name&#34;`
+    CompleteDate  *<a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Time">Time</a> `json:&#34;completeDate&#34;`
+    EndDate       *<a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Time">Time</a> `json:&#34;endDate&#34;`
+    StartDate     *<a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Time">Time</a> `json:&#34;startDate&#34;`
+    OriginBoardID <a href="../../../builtin/index.html#int">int</a>        `json:&#34;originBoardId&#34;`
+    Self          <a href="../../../builtin/index.html#string">string</a>     `json:&#34;self&#34;`
+    State         <a href="../../../builtin/index.html#string">string</a>     `json:&#34;state&#34;`
+}</pre>
+			<p>
+Sprint represents a sprint on JIRA agile board
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="SprintService">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/sprint.go?s=145:190#L1">SprintService</a></h2>
+			<pre>type SprintService struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+SprintService handles sprints in JIRA Agile API.
+See <a href="https://docs.atlassian.com/jira-software/REST/cloud/">https://docs.atlassian.com/jira-software/REST/cloud/</a>
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="SprintService.GetIssuesForSprint">func (*SprintService) <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/sprint.go?s=1465:1549#L38">GetIssuesForSprint</a></h3>
+				<pre>func (s *<a href="index.html#SprintService">SprintService</a>) GetIssuesForSprint(sprintID <a href="../../../builtin/index.html#int">int</a>) ([]<a href="index.html#Issue">Issue</a>, *<a href="index.html#Response">Response</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+GetIssuesForSprint returns all issues in a sprint, for a given sprint Id.
+This only includes issues that the user has permission to view.
+By default, the returned issues are ordered by rank.
+</p>
+<pre>JIRA API Docs: <a href="https://docs.atlassian.com/jira-software/REST/cloud/#agile/1.0/sprint-getIssuesForSprint">https://docs.atlassian.com/jira-software/REST/cloud/#agile/1.0/sprint-getIssuesForSprint</a>
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="SprintService.MoveIssuesToSprint">func (*SprintService) <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/sprint.go?s=779:873#L18">MoveIssuesToSprint</a></h3>
+				<pre>func (s *<a href="index.html#SprintService">SprintService</a>) MoveIssuesToSprint(sprintID <a href="../../../builtin/index.html#int">int</a>, issueIDs []<a href="../../../builtin/index.html#string">string</a>) (*<a href="index.html#Response">Response</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+MoveIssuesToSprint moves issues to a sprint, for a given sprint Id.
+Issues can only be moved to open or active sprints.
+The maximum number of issues that can be moved in one operation is 50.
+</p>
+<p>
+JIRA API docs: <a href="https://docs.atlassian.com/jira-software/REST/cloud/#agile/1.0/sprint-moveIssuesToSprint">https://docs.atlassian.com/jira-software/REST/cloud/#agile/1.0/sprint-moveIssuesToSprint</a>
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Status">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=5974:6284#L158">Status</a></h2>
+			<pre>type Status struct {
+    Self           <a href="../../../builtin/index.html#string">string</a>         `json:&#34;self&#34;`
+    Description    <a href="../../../builtin/index.html#string">string</a>         `json:&#34;description&#34;`
+    IconURL        <a href="../../../builtin/index.html#string">string</a>         `json:&#34;iconUrl&#34;`
+    Name           <a href="../../../builtin/index.html#string">string</a>         `json:&#34;name&#34;`
+    ID             <a href="../../../builtin/index.html#string">string</a>         `json:&#34;id&#34;`
+    StatusCategory <a href="index.html#StatusCategory">StatusCategory</a> `json:&#34;statusCategory&#34;`
+}</pre>
+			<p>
+Status represents the current status of a JIRA issue.
+Typical status are &#34;Open&#34;, &#34;In Progress&#34;, &#34;Closed&#34;, ...
+Status can be user defined in every JIRA instance.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="StatusCategory">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=6413:6605#L169">StatusCategory</a></h2>
+			<pre>type StatusCategory struct {
+    Self      <a href="../../../builtin/index.html#string">string</a> `json:&#34;self&#34;`
+    ID        <a href="../../../builtin/index.html#int">int</a>    `json:&#34;id&#34;`
+    Name      <a href="../../../builtin/index.html#string">string</a> `json:&#34;name&#34;`
+    Key       <a href="../../../builtin/index.html#string">string</a> `json:&#34;key&#34;`
+    ColorName <a href="../../../builtin/index.html#string">string</a> `json:&#34;colorName&#34;`
+}</pre>
+			<p>
+StatusCategory represents the category a status belongs to.
+Those categories can be user defined in every JIRA instance.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Subtasks">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=8918:9077#L250">Subtasks</a></h2>
+			<pre>type Subtasks struct {
+    ID     <a href="../../../builtin/index.html#string">string</a>      `json:&#34;id&#34;`
+    Key    <a href="../../../builtin/index.html#string">string</a>      `json:&#34;key&#34;`
+    Self   <a href="../../../builtin/index.html#string">string</a>      `json:&#34;self&#34;`
+    Fields <a href="index.html#IssueFields">IssueFields</a> `json:&#34;fields&#34;`
+}</pre>
+			<p>
+Subtasks represents all issues of a parent issue.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Time">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=6815:6834#L184">Time</a></h2>
+			<pre>type Time <a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Time">Time</a></pre>
+			<p>
+Time represents the Time definition of JIRA as a time.Time of go
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Time.UnmarshalJSON">func (*Time) <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=7734:7778#L215">UnmarshalJSON</a></h3>
+				<pre>func (t *<a href="index.html#Time">Time</a>) UnmarshalJSON(b []<a href="../../../builtin/index.html#byte">byte</a>) <a href="../../../builtin/index.html#error">error</a></pre>
+				<p>
+UnmarshalJSON will transform the JIRA time into a time.Time
+during the transformation of the JIRA JSON response
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Transition">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=7006:7179#L192">Transition</a></h2>
+			<pre>type Transition struct {
+    ID     <a href="../../../builtin/index.html#string">string</a>                     `json:&#34;id&#34;`
+    Name   <a href="../../../builtin/index.html#string">string</a>                     `json:&#34;name&#34;`
+    Fields map[<a href="../../../builtin/index.html#string">string</a>]<a href="index.html#TransitionField">TransitionField</a> `json:&#34;fields&#34;`
+}</pre>
+			<p>
+Transition represents an issue transition in JIRA
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="TransitionField">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=7240:7304#L199">TransitionField</a></h2>
+			<pre>type TransitionField struct {
+    Required <a href="../../../builtin/index.html#bool">bool</a> `json:&#34;required&#34;`
+}</pre>
+			<p>
+TransitionField represents the value of one Transistion
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="TransitionPayload">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=7558:7614#L209">TransitionPayload</a></h2>
+			<pre>type TransitionPayload struct {
+    ID <a href="../../../builtin/index.html#string">string</a> `json:&#34;id&#34;`
+}</pre>
+			<p>
+TransitionPayload represents the request payload of Transistion calls like DoTransition
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="User">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=4849:5287#L128">User</a></h2>
+			<pre>type User struct {
+    Self         <a href="../../../builtin/index.html#string">string</a>     `json:&#34;self,omitempty&#34;`
+    Name         <a href="../../../builtin/index.html#string">string</a>     `json:&#34;name,omitempty&#34;`
+    Key          <a href="../../../builtin/index.html#string">string</a>     `json:&#34;key,omitempty&#34;`
+    EmailAddress <a href="../../../builtin/index.html#string">string</a>     `json:&#34;emailAddress,omitempty&#34;`
+    AvatarUrls   <a href="index.html#AvatarUrls">AvatarUrls</a> `json:&#34;avatarUrls,omitempty&#34;`
+    DisplayName  <a href="../../../builtin/index.html#string">string</a>     `json:&#34;displayName,omitempty&#34;`
+    Active       <a href="../../../builtin/index.html#bool">bool</a>       `json:&#34;active,omitempty&#34;`
+    TimeZone     <a href="../../../builtin/index.html#string">string</a>     `json:&#34;timeZone,omitempty&#34;`
+}</pre>
+			<p>
+User represents a user who is this JIRA issue assigned to.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Version">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/project.go?s=2068:2475#L47">Version</a></h2>
+			<pre>type Version struct {
+    Self            <a href="../../../builtin/index.html#string">string</a> `json:&#34;self&#34;`
+    ID              <a href="../../../builtin/index.html#string">string</a> `json:&#34;id&#34;`
+    Name            <a href="../../../builtin/index.html#string">string</a> `json:&#34;name&#34;`
+    Archived        <a href="../../../builtin/index.html#bool">bool</a>   `json:&#34;archived&#34;`
+    Released        <a href="../../../builtin/index.html#bool">bool</a>   `json:&#34;released&#34;`
+    ReleaseDate     <a href="../../../builtin/index.html#string">string</a> `json:&#34;releaseDate&#34;`
+    UserReleaseDate <a href="../../../builtin/index.html#string">string</a> `json:&#34;userReleaseDate&#34;`
+    ProjectID       <a href="../../../builtin/index.html#int">int</a>    `json:&#34;projectId&#34;` <span class="comment">// Unlike other IDs, this is returned as a number</span>
+}</pre>
+			<p>
+Version represents a single release version of a project
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Watches">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=4621:4785#L121">Watches</a></h2>
+			<pre>type Watches struct {
+    Self       <a href="../../../builtin/index.html#string">string</a> `json:&#34;self,omitempty&#34;`
+    WatchCount <a href="../../../builtin/index.html#int">int</a>    `json:&#34;watchCount,omitempty&#34;`
+    IsWatching <a href="../../../builtin/index.html#bool">bool</a>   `json:&#34;isWatching,omitempty&#34;`
+}</pre>
+			<p>
+Watches represents a type of how many user are &#34;observing&#34; a JIRA issue to track the status / updates.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Worklog">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=8107:8312#L227">Worklog</a></h2>
+			<pre>type Worklog struct {
+    StartAt    <a href="../../../builtin/index.html#int">int</a>             `json:&#34;startAt&#34;`
+    MaxResults <a href="../../../builtin/index.html#int">int</a>             `json:&#34;maxResults&#34;`
+    Total      <a href="../../../builtin/index.html#int">int</a>             `json:&#34;total&#34;`
+    Worklogs   []<a href="index.html#WorklogRecord">WorklogRecord</a> `json:&#34;worklogs&#34;`
+}</pre>
+			<p>
+Worklog represents the work log of a JIRA issue.
+One Worklog contains zero or n WorklogRecords
+JIRA Wiki: <a href="https://confluence.atlassian.com/jira/logging-work-on-an-issue-185729605.html">https://confluence.atlassian.com/jira/logging-work-on-an-issue-185729605.html</a>
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="WorklogRecord">type <a href="http://localhost:6060/src/github.com/andygrunwald/go-jira/issue.go?s=8365:8863#L235">WorklogRecord</a></h2>
+			<pre>type WorklogRecord struct {
+    Self             <a href="../../../builtin/index.html#string">string</a> `json:&#34;self&#34;`
+    Author           <a href="index.html#User">User</a>   `json:&#34;author&#34;`
+    UpdateAuthor     <a href="index.html#User">User</a>   `json:&#34;updateAuthor&#34;`
+    Comment          <a href="../../../builtin/index.html#string">string</a> `json:&#34;comment&#34;`
+    Created          <a href="index.html#Time">Time</a>   `json:&#34;created&#34;`
+    Updated          <a href="index.html#Time">Time</a>   `json:&#34;updated&#34;`
+    Started          <a href="index.html#Time">Time</a>   `json:&#34;started&#34;`
+    TimeSpent        <a href="../../../builtin/index.html#string">string</a> `json:&#34;timeSpent&#34;`
+    TimeSpentSeconds <a href="../../../builtin/index.html#int">int</a>    `json:&#34;timeSpentSeconds&#34;`
+    ID               <a href="../../../builtin/index.html#string">string</a> `json:&#34;id&#34;`
+    IssueID          <a href="../../../builtin/index.html#string">string</a> `json:&#34;issueId&#34;`
+}</pre>
+			<p>
+WorklogRecord represents one entry of a Worklog
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

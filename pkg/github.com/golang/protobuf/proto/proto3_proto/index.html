@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>proto3_proto - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package proto3_proto</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/golang/protobuf/proto/proto3_proto"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package proto3_proto is a generated protocol buffer package.
+</p>
+<p>
+It is generated from these files:
+</p>
+<pre>proto3_proto/proto3.proto
+</pre>
+<p>
+It has these top-level messages:
+</p>
+<pre>Message
+Nested
+MessageWithMap
+</pre>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+			
+				
+				<dd><a href="index.html#Message">type Message</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Message.Descriptor">func (*Message) Descriptor() ([]byte, []int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Message.GetAnything">func (m *Message) GetAnything() *google_protobuf.Any</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Message.GetChildren">func (m *Message) GetChildren() []*Message</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Message.GetManyThings">func (m *Message) GetManyThings() []*google_protobuf.Any</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Message.GetNested">func (m *Message) GetNested() *Nested</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Message.GetProto2Field">func (m *Message) GetProto2Field() *testdata.SubDefaults</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Message.GetProto2Value">func (m *Message) GetProto2Value() map[string]*testdata.SubDefaults</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Message.GetSubmessage">func (m *Message) GetSubmessage() *Message</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Message.GetTerrain">func (m *Message) GetTerrain() map[string]*Nested</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Message.ProtoMessage">func (*Message) ProtoMessage()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Message.Reset">func (m *Message) Reset()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Message.String">func (m *Message) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#MessageWithMap">type MessageWithMap</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MessageWithMap.Descriptor">func (*MessageWithMap) Descriptor() ([]byte, []int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MessageWithMap.GetByteMapping">func (m *MessageWithMap) GetByteMapping() map[bool][]byte</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MessageWithMap.ProtoMessage">func (*MessageWithMap) ProtoMessage()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MessageWithMap.Reset">func (m *MessageWithMap) Reset()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MessageWithMap.String">func (m *MessageWithMap) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Message_Humour">type Message_Humour</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Message_Humour.EnumDescriptor">func (Message_Humour) EnumDescriptor() ([]byte, []int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Message_Humour.String">func (x Message_Humour) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Nested">type Nested</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Nested.Descriptor">func (*Nested) Descriptor() ([]byte, []int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Nested.ProtoMessage">func (*Nested) ProtoMessage()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Nested.Reset">func (m *Nested) Reset()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Nested.String">func (m *Nested) String() string</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/golang/protobuf/proto/proto3_proto/proto3.pb.go">proto3.pb.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var <span id="Message_Humour_name">Message_Humour_name</span> = map[<a href="../../../../../builtin/index.html#int32">int32</a>]<a href="../../../../../builtin/index.html#string">string</a>{
+    0: &#34;UNKNOWN&#34;,
+    1: &#34;PUNS&#34;,
+    2: &#34;SLAPSTICK&#34;,
+    3: &#34;BILL_BAILEY&#34;,
+}</pre>
+				
+			
+				<pre>var <span id="Message_Humour_value">Message_Humour_value</span> = map[<a href="../../../../../builtin/index.html#string">string</a>]<a href="../../../../../builtin/index.html#int32">int32</a>{
+    &#34;UNKNOWN&#34;:     0,
+    &#34;PUNS&#34;:        1,
+    &#34;SLAPSTICK&#34;:   2,
+    &#34;BILL_BAILEY&#34;: 3,
+}</pre>
+				
+			
+		
+		
+		
+			
+			
+			<h2 id="Message">type <a href="http://localhost:6060/src/github.com/golang/protobuf/proto/proto3_proto/proto3.pb.go?s=1453:3872#L50">Message</a></h2>
+			<pre>type Message struct {
+    Name         <a href="../../../../../builtin/index.html#string">string</a>                           `protobuf:&#34;bytes,1,opt,name=name&#34; json:&#34;name,omitempty&#34;`
+    Hilarity     <a href="index.html#Message_Humour">Message_Humour</a>                   `protobuf:&#34;varint,2,opt,name=hilarity,enum=proto3_proto.Message_Humour&#34; json:&#34;hilarity,omitempty&#34;`
+    HeightInCm   <a href="../../../../../builtin/index.html#uint32">uint32</a>                           `protobuf:&#34;varint,3,opt,name=height_in_cm,json=heightInCm&#34; json:&#34;height_in_cm,omitempty&#34;`
+    Data         []<a href="../../../../../builtin/index.html#byte">byte</a>                           `protobuf:&#34;bytes,4,opt,name=data,proto3&#34; json:&#34;data,omitempty&#34;`
+    ResultCount  <a href="../../../../../builtin/index.html#int64">int64</a>                            `protobuf:&#34;varint,7,opt,name=result_count,json=resultCount&#34; json:&#34;result_count,omitempty&#34;`
+    TrueScotsman <a href="../../../../../builtin/index.html#bool">bool</a>                             `protobuf:&#34;varint,8,opt,name=true_scotsman,json=trueScotsman&#34; json:&#34;true_scotsman,omitempty&#34;`
+    Score        <a href="../../../../../builtin/index.html#float32">float32</a>                          `protobuf:&#34;fixed32,9,opt,name=score&#34; json:&#34;score,omitempty&#34;`
+    Key          []<a href="../../../../../builtin/index.html#uint64">uint64</a>                         `protobuf:&#34;varint,5,rep,name=key&#34; json:&#34;key,omitempty&#34;`
+    ShortKey     []<a href="../../../../../builtin/index.html#int32">int32</a>                          `protobuf:&#34;varint,19,rep,name=short_key,json=shortKey&#34; json:&#34;short_key,omitempty&#34;`
+    Nested       *<a href="index.html#Nested">Nested</a>                          `protobuf:&#34;bytes,6,opt,name=nested&#34; json:&#34;nested,omitempty&#34;`
+    RFunny       []<a href="index.html#Message_Humour">Message_Humour</a>                 `protobuf:&#34;varint,16,rep,name=r_funny,json=rFunny,enum=proto3_proto.Message_Humour&#34; json:&#34;r_funny,omitempty&#34;`
+    Terrain      map[<a href="../../../../../builtin/index.html#string">string</a>]*<a href="index.html#Nested">Nested</a>               `protobuf:&#34;bytes,10,rep,name=terrain&#34; json:&#34;terrain,omitempty&#34; protobuf_key:&#34;bytes,1,opt,name=key&#34; protobuf_val:&#34;bytes,2,opt,name=value&#34;`
+    Proto2Field  *<a href="../testdata/index.html">testdata</a>.<a href="../testdata/index.html#SubDefaults">SubDefaults</a>            `protobuf:&#34;bytes,11,opt,name=proto2_field,json=proto2Field&#34; json:&#34;proto2_field,omitempty&#34;`
+    Proto2Value  map[<a href="../../../../../builtin/index.html#string">string</a>]*<a href="../testdata/index.html">testdata</a>.<a href="../testdata/index.html#SubDefaults">SubDefaults</a> `protobuf:&#34;bytes,13,rep,name=proto2_value,json=proto2Value&#34; json:&#34;proto2_value,omitempty&#34; protobuf_key:&#34;bytes,1,opt,name=key&#34; protobuf_val:&#34;bytes,2,opt,name=value&#34;`
+    Anything     *<a href="http://localhost:6060/pkg/github.com/golang/protobuf/ptypes/any/">google_protobuf</a>.<a href="http://localhost:6060/pkg/github.com/golang/protobuf/ptypes/any/#Any">Any</a>             `protobuf:&#34;bytes,14,opt,name=anything&#34; json:&#34;anything,omitempty&#34;`
+    ManyThings   []*<a href="http://localhost:6060/pkg/github.com/golang/protobuf/ptypes/any/">google_protobuf</a>.<a href="http://localhost:6060/pkg/github.com/golang/protobuf/ptypes/any/#Any">Any</a>           `protobuf:&#34;bytes,15,rep,name=many_things,json=manyThings&#34; json:&#34;many_things,omitempty&#34;`
+    Submessage   *<a href="index.html#Message">Message</a>                         `protobuf:&#34;bytes,17,opt,name=submessage&#34; json:&#34;submessage,omitempty&#34;`
+    Children     []*<a href="index.html#Message">Message</a>                       `protobuf:&#34;bytes,18,rep,name=children&#34; json:&#34;children,omitempty&#34;`
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Message.Descriptor">func (*Message) <a href="http://localhost:6060/src/github.com/golang/protobuf/proto/proto3_proto/proto3.pb.go?s=4069:4113#L74">Descriptor</a></h3>
+				<pre>func (*<a href="index.html#Message">Message</a>) Descriptor() ([]<a href="../../../../../builtin/index.html#byte">byte</a>, []<a href="../../../../../builtin/index.html#int">int</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Message.GetAnything">func (*Message) <a href="http://localhost:6060/src/github.com/golang/protobuf/proto/proto3_proto/proto3.pb.go?s=4588:4640#L104">GetAnything</a></h3>
+				<pre>func (m *<a href="index.html#Message">Message</a>) GetAnything() *<a href="http://localhost:6060/pkg/github.com/golang/protobuf/ptypes/any/">google_protobuf</a>.<a href="http://localhost:6060/pkg/github.com/golang/protobuf/ptypes/any/#Any">Any</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Message.GetChildren">func (*Message) <a href="http://localhost:6060/src/github.com/golang/protobuf/proto/proto3_proto/proto3.pb.go?s=4910:4952#L125">GetChildren</a></h3>
+				<pre>func (m *<a href="index.html#Message">Message</a>) GetChildren() []*<a href="index.html#Message">Message</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Message.GetManyThings">func (*Message) <a href="http://localhost:6060/src/github.com/golang/protobuf/proto/proto3_proto/proto3.pb.go?s=4696:4752#L111">GetManyThings</a></h3>
+				<pre>func (m *<a href="index.html#Message">Message</a>) GetManyThings() []*<a href="http://localhost:6060/pkg/github.com/golang/protobuf/ptypes/any/">google_protobuf</a>.<a href="http://localhost:6060/pkg/github.com/golang/protobuf/ptypes/any/#Any">Any</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Message.GetNested">func (*Message) <a href="http://localhost:6060/src/github.com/golang/protobuf/proto/proto3_proto/proto3.pb.go?s=4152:4189#L76">GetNested</a></h3>
+				<pre>func (m *<a href="index.html#Message">Message</a>) GetNested() *<a href="index.html#Nested">Nested</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Message.GetProto2Field">func (*Message) <a href="http://localhost:6060/src/github.com/golang/protobuf/proto/proto3_proto/proto3.pb.go?s=4347:4403#L90">GetProto2Field</a></h3>
+				<pre>func (m *<a href="index.html#Message">Message</a>) GetProto2Field() *<a href="../testdata/index.html">testdata</a>.<a href="../testdata/index.html#SubDefaults">SubDefaults</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Message.GetProto2Value">func (*Message) <a href="http://localhost:6060/src/github.com/golang/protobuf/proto/proto3_proto/proto3.pb.go?s=4462:4529#L97">GetProto2Value</a></h3>
+				<pre>func (m *<a href="index.html#Message">Message</a>) GetProto2Value() map[<a href="../../../../../builtin/index.html#string">string</a>]*<a href="../testdata/index.html">testdata</a>.<a href="../testdata/index.html#SubDefaults">SubDefaults</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Message.GetSubmessage">func (*Message) <a href="http://localhost:6060/src/github.com/golang/protobuf/proto/proto3_proto/proto3.pb.go?s=4810:4852#L118">GetSubmessage</a></h3>
+				<pre>func (m *<a href="index.html#Message">Message</a>) GetSubmessage() *<a href="index.html#Message">Message</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Message.GetTerrain">func (*Message) <a href="http://localhost:6060/src/github.com/golang/protobuf/proto/proto3_proto/proto3.pb.go?s=4243:4292#L83">GetTerrain</a></h3>
+				<pre>func (m *<a href="index.html#Message">Message</a>) GetTerrain() map[<a href="../../../../../builtin/index.html#string">string</a>]*<a href="index.html#Nested">Nested</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Message.ProtoMessage">func (*Message) <a href="http://localhost:6060/src/github.com/golang/protobuf/proto/proto3_proto/proto3.pb.go?s=4021:4051#L73">ProtoMessage</a></h3>
+				<pre>func (*<a href="index.html#Message">Message</a>) ProtoMessage()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Message.Reset">func (*Message) <a href="http://localhost:6060/src/github.com/golang/protobuf/proto/proto3_proto/proto3.pb.go?s=3874:3899#L71">Reset</a></h3>
+				<pre>func (m *<a href="index.html#Message">Message</a>) Reset()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Message.String">func (*Message) <a href="http://localhost:6060/src/github.com/golang/protobuf/proto/proto3_proto/proto3.pb.go?s=3938:3971#L72">String</a></h3>
+				<pre>func (m *<a href="index.html#Message">Message</a>) String() <a href="../../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="MessageWithMap">type <a href="http://localhost:6060/src/github.com/golang/protobuf/proto/proto3_proto/proto3.pb.go?s=5450:5681#L142">MessageWithMap</a></h2>
+			<pre>type MessageWithMap struct {
+    ByteMapping map[<a href="../../../../../builtin/index.html#bool">bool</a>][]<a href="../../../../../builtin/index.html#byte">byte</a> `protobuf:&#34;bytes,1,rep,name=byte_mapping,json=byteMapping&#34; json:&#34;byte_mapping,omitempty&#34; protobuf_key:&#34;varint,1,opt,name=key&#34; protobuf_val:&#34;bytes,2,opt,name=value,proto3&#34;`
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="MessageWithMap.Descriptor">func (*MessageWithMap) <a href="http://localhost:6060/src/github.com/golang/protobuf/proto/proto3_proto/proto3.pb.go?s=5906:5957#L149">Descriptor</a></h3>
+				<pre>func (*<a href="index.html#MessageWithMap">MessageWithMap</a>) Descriptor() ([]<a href="../../../../../builtin/index.html#byte">byte</a>, []<a href="../../../../../builtin/index.html#int">int</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="MessageWithMap.GetByteMapping">func (*MessageWithMap) <a href="http://localhost:6060/src/github.com/golang/protobuf/proto/proto3_proto/proto3.pb.go?s=5996:6053#L151">GetByteMapping</a></h3>
+				<pre>func (m *<a href="index.html#MessageWithMap">MessageWithMap</a>) GetByteMapping() map[<a href="../../../../../builtin/index.html#bool">bool</a>][]<a href="../../../../../builtin/index.html#byte">byte</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="MessageWithMap.ProtoMessage">func (*MessageWithMap) <a href="http://localhost:6060/src/github.com/golang/protobuf/proto/proto3_proto/proto3.pb.go?s=5851:5888#L148">ProtoMessage</a></h3>
+				<pre>func (*<a href="index.html#MessageWithMap">MessageWithMap</a>) ProtoMessage()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="MessageWithMap.Reset">func (*MessageWithMap) <a href="http://localhost:6060/src/github.com/golang/protobuf/proto/proto3_proto/proto3.pb.go?s=5683:5715#L146">Reset</a></h3>
+				<pre>func (m *<a href="index.html#MessageWithMap">MessageWithMap</a>) Reset()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="MessageWithMap.String">func (*MessageWithMap) <a href="http://localhost:6060/src/github.com/golang/protobuf/proto/proto3_proto/proto3.pb.go?s=5761:5801#L147">String</a></h3>
+				<pre>func (m *<a href="index.html#MessageWithMap">MessageWithMap</a>) String() <a href="../../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Message_Humour">type <a href="http://localhost:6060/src/github.com/golang/protobuf/proto/proto3_proto/proto3.pb.go?s=828:853#L23">Message_Humour</a></h2>
+			<pre>type Message_Humour <a href="../../../../../builtin/index.html#int32">int32</a></pre>
+			
+
+			
+				<pre>const (
+    <span id="Message_UNKNOWN">Message_UNKNOWN</span>     <a href="index.html#Message_Humour">Message_Humour</a> = 0
+    <span id="Message_PUNS">Message_PUNS</span>        <a href="index.html#Message_Humour">Message_Humour</a> = 1
+    <span id="Message_SLAPSTICK">Message_SLAPSTICK</span>   <a href="index.html#Message_Humour">Message_Humour</a> = 2
+    <span id="Message_BILL_BAILEY">Message_BILL_BAILEY</span> <a href="index.html#Message_Humour">Message_Humour</a> = 3
+)</pre>
+				
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Message_Humour.EnumDescriptor">func (Message_Humour) <a href="http://localhost:6060/src/github.com/golang/protobuf/proto/proto3_proto/proto3.pb.go?s=1357:1411#L48">EnumDescriptor</a></h3>
+				<pre>func (<a href="index.html#Message_Humour">Message_Humour</a>) EnumDescriptor() ([]<a href="../../../../../builtin/index.html#byte">byte</a>, []<a href="../../../../../builtin/index.html#int">int</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Message_Humour.String">func (Message_Humour) <a href="http://localhost:6060/src/github.com/golang/protobuf/proto/proto3_proto/proto3.pb.go?s=1259:1298#L45">String</a></h3>
+				<pre>func (x <a href="index.html#Message_Humour">Message_Humour</a>) String() <a href="../../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Nested">type <a href="http://localhost:6060/src/github.com/golang/protobuf/proto/proto3_proto/proto3.pb.go?s=5008:5175#L132">Nested</a></h2>
+			<pre>type Nested struct {
+    Bunny <a href="../../../../../builtin/index.html#string">string</a> `protobuf:&#34;bytes,1,opt,name=bunny&#34; json:&#34;bunny,omitempty&#34;`
+    Cute  <a href="../../../../../builtin/index.html#bool">bool</a>   `protobuf:&#34;varint,2,opt,name=cute&#34; json:&#34;cute,omitempty&#34;`
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Nested.Descriptor">func (*Nested) <a href="http://localhost:6060/src/github.com/golang/protobuf/proto/proto3_proto/proto3.pb.go?s=5368:5411#L140">Descriptor</a></h3>
+				<pre>func (*<a href="index.html#Nested">Nested</a>) Descriptor() ([]<a href="../../../../../builtin/index.html#byte">byte</a>, []<a href="../../../../../builtin/index.html#int">int</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Nested.ProtoMessage">func (*Nested) <a href="http://localhost:6060/src/github.com/golang/protobuf/proto/proto3_proto/proto3.pb.go?s=5321:5350#L139">ProtoMessage</a></h3>
+				<pre>func (*<a href="index.html#Nested">Nested</a>) ProtoMessage()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Nested.Reset">func (*Nested) <a href="http://localhost:6060/src/github.com/golang/protobuf/proto/proto3_proto/proto3.pb.go?s=5177:5201#L137">Reset</a></h3>
+				<pre>func (m *<a href="index.html#Nested">Nested</a>) Reset()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Nested.String">func (*Nested) <a href="http://localhost:6060/src/github.com/golang/protobuf/proto/proto3_proto/proto3.pb.go?s=5239:5271#L138">String</a></h3>
+				<pre>func (m *<a href="index.html#Nested">Nested</a>) String() <a href="../../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

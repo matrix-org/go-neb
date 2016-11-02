@@ -1,0 +1,1864 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>testutil - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package testutil</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/syndtr/goleveldb/leveldb/testutil"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+				
+				<dd><a href="index.html#AllKeyValueTesting">func AllKeyValueTesting(rnd *rand.Rand, body, setup func(KeyValue) DB, teardown func(DB))</a></dd>
+			
+				
+				<dd><a href="index.html#BytesAfter">func BytesAfter(b []byte) []byte</a></dd>
+			
+				
+				<dd><a href="index.html#BytesSeparator">func BytesSeparator(a, b []byte) []byte</a></dd>
+			
+				
+				<dd><a href="index.html#Defer">func Defer(args ...interface{}) bool</a></dd>
+			
+				
+				<dd><a href="index.html#DoDBTesting">func DoDBTesting(t *DBTesting)</a></dd>
+			
+				
+				<dd><a href="index.html#DoIteratorTesting">func DoIteratorTesting(t *IteratorTesting)</a></dd>
+			
+				
+				<dd><a href="index.html#KeyValueTesting">func KeyValueTesting(rnd *rand.Rand, kv KeyValue, p DB, setup func(KeyValue) DB, teardown func(DB))</a></dd>
+			
+				
+				<dd><a href="index.html#Max">func Max(x, y int) int</a></dd>
+			
+				
+				<dd><a href="index.html#Min">func Min(x, y int) int</a></dd>
+			
+				
+				<dd><a href="index.html#NewRand">func NewRand() *rand.Rand</a></dd>
+			
+				
+				<dd><a href="index.html#RandomIndex">func RandomIndex(rnd *rand.Rand, n, round int, fn func(i int))</a></dd>
+			
+				
+				<dd><a href="index.html#RandomRange">func RandomRange(rnd *rand.Rand, n, round int, fn func(start, limit int))</a></dd>
+			
+				
+				<dd><a href="index.html#RandomSeed">func RandomSeed() int64</a></dd>
+			
+				
+				<dd><a href="index.html#RunDefer">func RunDefer(groups ...string) bool</a></dd>
+			
+				
+				<dd><a href="index.html#RunSuite">func RunSuite(t GinkgoTestingT, name string)</a></dd>
+			
+				
+				<dd><a href="index.html#ShuffledIndex">func ShuffledIndex(rnd *rand.Rand, n, round int, fn func(i int))</a></dd>
+			
+				
+				<dd><a href="index.html#TestFind">func TestFind(db Find, kv KeyValue)</a></dd>
+			
+				
+				<dd><a href="index.html#TestFindAfterLast">func TestFindAfterLast(db Find, kv KeyValue)</a></dd>
+			
+				
+				<dd><a href="index.html#TestGet">func TestGet(db Get, kv KeyValue)</a></dd>
+			
+				
+				<dd><a href="index.html#TestHas">func TestHas(db Has, kv KeyValue)</a></dd>
+			
+				
+				<dd><a href="index.html#TestIter">func TestIter(db NewIterator, r *util.Range, kv KeyValue)</a></dd>
+			
+			
+				
+				<dd><a href="index.html#DB">type DB</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#DBAct">type DBAct</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DBAct.String">func (a DBAct) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#DBTesting">type DBTesting</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DBTesting.Delete">func (t *DBTesting) Delete(key []byte)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DBTesting.DeleteRandom">func (t *DBTesting) DeleteRandom() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DBTesting.Put">func (t *DBTesting) Put(key, value []byte)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DBTesting.PutRandom">func (t *DBTesting) PutRandom() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DBTesting.RandomAct">func (t *DBTesting) RandomAct(round int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DBTesting.TestAll">func (t *DBTesting) TestAll()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DBTesting.TestAllDeleted">func (t *DBTesting) TestAllDeleted()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DBTesting.TestAllPresent">func (t *DBTesting) TestAllPresent()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DBTesting.TestDeletedKey">func (t *DBTesting) TestDeletedKey(key []byte)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DBTesting.TestPresentKV">func (t *DBTesting) TestPresentKV(key, value []byte)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DBTesting.Text">func (t *DBTesting) Text() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Delete">type Delete</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Find">type Find</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Get">type Get</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Has">type Has</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#IterAct">type IterAct</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IterAct.String">func (a IterAct) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#IteratorTesting">type IteratorTesting</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IteratorTesting.EOI">func (t *IteratorTesting) EOI()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IteratorTesting.First">func (t *IteratorTesting) First()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IteratorTesting.IsFirst">func (t *IteratorTesting) IsFirst() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IteratorTesting.IsLast">func (t *IteratorTesting) IsLast() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IteratorTesting.Last">func (t *IteratorTesting) Last()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IteratorTesting.Next">func (t *IteratorTesting) Next()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IteratorTesting.NextAll">func (t *IteratorTesting) NextAll()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IteratorTesting.Prev">func (t *IteratorTesting) Prev()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IteratorTesting.PrevAll">func (t *IteratorTesting) PrevAll()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IteratorTesting.SOI">func (t *IteratorTesting) SOI()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IteratorTesting.Seek">func (t *IteratorTesting) Seek(i int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IteratorTesting.SeekInexact">func (t *IteratorTesting) SeekInexact(i int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IteratorTesting.SeekKey">func (t *IteratorTesting) SeekKey(key []byte)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IteratorTesting.TestKV">func (t *IteratorTesting) TestKV()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IteratorTesting.Text">func (t *IteratorTesting) Text() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IteratorTesting.WalkNext">func (t *IteratorTesting) WalkNext(fn func(t *IteratorTesting))</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IteratorTesting.WalkPrev">func (t *IteratorTesting) WalkPrev(fn func(t *IteratorTesting))</a></dd>
+				
+			
+				
+				<dd><a href="index.html#KeyValue">type KeyValue</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue_BigValue">func KeyValue_BigValue() *KeyValue</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue_EmptyKey">func KeyValue_EmptyKey() *KeyValue</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue_EmptyValue">func KeyValue_EmptyValue() *KeyValue</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue_Generate">func KeyValue_Generate(rnd *rand.Rand, n, incr, minlen, maxlen, vminlen, vmaxlen int) *KeyValue</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue_MultipleKeyValue">func KeyValue_MultipleKeyValue() *KeyValue</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue_OneKeyValue">func KeyValue_OneKeyValue() *KeyValue</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue_SpecialKey">func KeyValue_SpecialKey() *KeyValue</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue.Clone">func (kv KeyValue) Clone() KeyValue</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue.Delete">func (kv *KeyValue) Delete(key []byte) (exist bool, value []byte)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue.DeleteIndex">func (kv *KeyValue) DeleteIndex(i int) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue.Get">func (kv KeyValue) Get(key []byte) (i int, exist bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue.GetString">func (kv KeyValue) GetString(key string) (i int, exist bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue.Index">func (kv KeyValue) Index(i int) (key, value []byte)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue.IndexInexact">func (kv KeyValue) IndexInexact(i int) (key_, key, value []byte)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue.IndexOrNil">func (kv KeyValue) IndexOrNil(i int) (key, value []byte)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue.IndexString">func (kv KeyValue) IndexString(i int) (key, value string)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue.Iterate">func (kv KeyValue) Iterate(fn func(i int, key, value []byte))</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue.IterateInexact">func (kv KeyValue) IterateInexact(fn func(i int, key_, key, value []byte))</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue.IterateInexactString">func (kv KeyValue) IterateInexactString(fn func(i int, key_, key, value string))</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue.IterateShuffled">func (kv KeyValue) IterateShuffled(rnd *rand.Rand, fn func(i int, key, value []byte))</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue.IterateShuffledString">func (kv KeyValue) IterateShuffledString(rnd *rand.Rand, fn func(i int, key, value string))</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue.IterateString">func (kv KeyValue) IterateString(fn func(i int, key, value string))</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue.KeyAt">func (kv KeyValue) KeyAt(i int) []byte</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue.Len">func (kv KeyValue) Len() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue.Put">func (kv *KeyValue) Put(key, value []byte)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue.PutString">func (kv *KeyValue) PutString(key, value string)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue.PutU">func (kv *KeyValue) PutU(key, value []byte) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue.PutUString">func (kv *KeyValue) PutUString(key, value string) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue.Range">func (kv KeyValue) Range(start, limit int) (r util.Range)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue.Search">func (kv KeyValue) Search(key []byte) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue.SearchString">func (kv KeyValue) SearchString(key string) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue.Size">func (kv *KeyValue) Size() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue.Slice">func (kv KeyValue) Slice(start, limit int) KeyValue</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue.SliceKey">func (kv KeyValue) SliceKey(start, limit []byte) KeyValue</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue.SliceKeyString">func (kv KeyValue) SliceKeyString(start, limit string) KeyValue</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue.SliceRange">func (kv KeyValue) SliceRange(r *util.Range) KeyValue</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#KeyValue.ValueAt">func (kv KeyValue) ValueAt(i int) []byte</a></dd>
+				
+			
+				
+				<dd><a href="index.html#KeyValueEntry">type KeyValueEntry</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#NewIterator">type NewIterator</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Put">type Put</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Storage">type Storage</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewStorage">func NewStorage() *Storage</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Storage.Close">func (s *Storage) Close() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Storage.CloseCheck">func (s *Storage) CloseCheck()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Storage.Counter">func (s *Storage) Counter(m StorageMode, t storage.FileType) (count int, bytes int64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Storage.Create">func (s *Storage) Create(fd storage.FileDesc) (w storage.Writer, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Storage.EmulateError">func (s *Storage) EmulateError(m StorageMode, t storage.FileType, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Storage.EmulateErrorOnce">func (s *Storage) EmulateErrorOnce(m StorageMode, t storage.FileType, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Storage.EmulateRandomError">func (s *Storage) EmulateRandomError(m StorageMode, t storage.FileType, prob float64, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Storage.ForceRemove">func (s *Storage) ForceRemove(fd storage.FileDesc) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Storage.ForceRename">func (s *Storage) ForceRename(oldfd, newfd storage.FileDesc) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Storage.GetMeta">func (s *Storage) GetMeta() (fd storage.FileDesc, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Storage.List">func (s *Storage) List(t storage.FileType) (fds []storage.FileDesc, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Storage.Lock">func (s *Storage) Lock() (l storage.Locker, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Storage.Log">func (s *Storage) Log(str string)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Storage.OnClose">func (s *Storage) OnClose(onClose func() (preserve bool, err error))</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Storage.OnLog">func (s *Storage) OnLog(onLog func(log string))</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Storage.Open">func (s *Storage) Open(fd storage.FileDesc) (r storage.Reader, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Storage.Release">func (s *Storage) Release(m StorageMode, t storage.FileType)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Storage.Remove">func (s *Storage) Remove(fd storage.FileDesc) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Storage.Rename">func (s *Storage) Rename(oldfd, newfd storage.FileDesc) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Storage.ResetCounter">func (s *Storage) ResetCounter(m StorageMode, t storage.FileType)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Storage.SetMeta">func (s *Storage) SetMeta(fd storage.FileDesc) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Storage.Stall">func (s *Storage) Stall(m StorageMode, t storage.FileType)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#StorageMode">type StorageMode</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/db.go">db.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/ginkgo.go">ginkgo.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/iter.go">iter.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go">kv.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kvtest.go">kvtest.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/storage.go">storage.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/util.go">util.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+			
+			
+			<h2 id="AllKeyValueTesting">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kvtest.go?s=4528:4617#L170">AllKeyValueTesting</a></h2>
+			<pre>func AllKeyValueTesting(rnd *<a href="../../../../../math/rand/index.html">rand</a>.<a href="../../../../../math/rand/index.html#Rand">Rand</a>, body, setup func(<a href="index.html#KeyValue">KeyValue</a>) <a href="index.html#DB">DB</a>, teardown func(<a href="index.html#DB">DB</a>))</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="BytesAfter">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/util.go?s=1867:1899#L100">BytesAfter</a></h2>
+			<pre>func BytesAfter(b []<a href="../../../../../builtin/index.html#byte">byte</a>) []<a href="../../../../../builtin/index.html#byte">byte</a></pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="BytesSeparator">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/util.go?s=1360:1399#L69">BytesSeparator</a></h2>
+			<pre>func BytesSeparator(a, b []<a href="../../../../../builtin/index.html#byte">byte</a>) []<a href="../../../../../builtin/index.html#byte">byte</a></pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Defer">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/util.go?s=419:455#L16">Defer</a></h2>
+			<pre>func Defer(args ...interface{}) <a href="../../../../../builtin/index.html#bool">bool</a></pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="DoDBTesting">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/db.go?s=3894:3924#L185">DoDBTesting</a></h2>
+			<pre>func DoDBTesting(t *<a href="index.html#DBTesting">DBTesting</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="DoIteratorTesting">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/iter.go?s=5387:5429#L270">DoIteratorTesting</a></h2>
+			<pre>func DoIteratorTesting(t *<a href="index.html#IteratorTesting">IteratorTesting</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="KeyValueTesting">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kvtest.go?s=2644:2743#L88">KeyValueTesting</a></h2>
+			<pre>func KeyValueTesting(rnd *<a href="../../../../../math/rand/index.html">rand</a>.<a href="../../../../../math/rand/index.html#Rand">Rand</a>, kv <a href="index.html#KeyValue">KeyValue</a>, p <a href="index.html#DB">DB</a>, setup func(<a href="index.html#KeyValue">KeyValue</a>) <a href="index.html#DB">DB</a>, teardown func(<a href="index.html#DB">DB</a>))</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Max">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/util.go?s=2683:2705#L149">Max</a></h2>
+			<pre>func Max(x, y <a href="../../../../../builtin/index.html#int">int</a>) <a href="../../../../../builtin/index.html#int">int</a></pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Min">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/util.go?s=2747:2769#L156">Min</a></h2>
+			<pre>func Min(x, y <a href="../../../../../builtin/index.html#int">int</a>) <a href="../../../../../builtin/index.html#int">int</a></pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="NewRand">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/util.go?s=1246:1271#L63">NewRand</a></h2>
+			<pre>func NewRand() *<a href="../../../../../math/rand/index.html">rand</a>.<a href="../../../../../math/rand/index.html#Rand">Rand</a></pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="RandomIndex">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/util.go?s=2044:2106#L112">RandomIndex</a></h2>
+			<pre>func RandomIndex(rnd *<a href="../../../../../math/rand/index.html">rand</a>.<a href="../../../../../math/rand/index.html#Rand">Rand</a>, n, round <a href="../../../../../builtin/index.html#int">int</a>, fn func(i <a href="../../../../../builtin/index.html#int">int</a>))</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="RandomRange">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/util.go?s=2405:2478#L134">RandomRange</a></h2>
+			<pre>func RandomRange(rnd *<a href="../../../../../math/rand/index.html">rand</a>.<a href="../../../../../math/rand/index.html#Rand">Rand</a>, n, round <a href="../../../../../builtin/index.html#int">int</a>, fn func(start, limit <a href="../../../../../builtin/index.html#int">int</a>))</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="RandomSeed">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/util.go?s=1115:1138#L56">RandomSeed</a></h2>
+			<pre>func RandomSeed() <a href="../../../../../builtin/index.html#int64">int64</a></pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="RunDefer">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/util.go?s=804:840#L39">RunDefer</a></h2>
+			<pre>func RunDefer(groups ...<a href="../../../../../builtin/index.html#string">string</a>) <a href="../../../../../builtin/index.html#bool">bool</a></pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="RunSuite">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/ginkgo.go?s=86:130#L1">RunSuite</a></h2>
+			<pre>func RunSuite(t <a href="index.html#GinkgoTestingT">GinkgoTestingT</a>, name <a href="../../../../../builtin/index.html#string">string</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="ShuffledIndex">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/util.go?s=2209:2273#L122">ShuffledIndex</a></h2>
+			<pre>func ShuffledIndex(rnd *<a href="../../../../../math/rand/index.html">rand</a>.<a href="../../../../../math/rand/index.html#Rand">Rand</a>, n, round <a href="../../../../../builtin/index.html#int">int</a>, fn func(i <a href="../../../../../builtin/index.html#int">int</a>))</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="TestFind">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kvtest.go?s=393:428#L10">TestFind</a></h2>
+			<pre>func TestFind(db <a href="index.html#Find">Find</a>, kv <a href="index.html#KeyValue">KeyValue</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="TestFindAfterLast">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kvtest.go?s=1077:1121#L28">TestFindAfterLast</a></h2>
+			<pre>func TestFindAfterLast(db <a href="index.html#Find">Find</a>, kv <a href="index.html#KeyValue">KeyValue</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="TestGet">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kvtest.go?s=1386:1419#L39">TestGet</a></h2>
+			<pre>func TestGet(db <a href="index.html#Get">Get</a>, kv <a href="index.html#KeyValue">KeyValue</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="TestHas">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kvtest.go?s=1893:1926#L57">TestHas</a></h2>
+			<pre>func TestHas(db <a href="index.html#Has">Has</a>, kv <a href="index.html#KeyValue">KeyValue</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="TestIter">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kvtest.go?s=2401:2458#L75">TestIter</a></h2>
+			<pre>func TestIter(db <a href="index.html#NewIterator">NewIterator</a>, r *<a href="../util/index.html">util</a>.<a href="../util/index.html#Range">Range</a>, kv <a href="index.html#KeyValue">KeyValue</a>)</pre>
+			
+			
+			
+
+		
+		
+			
+			
+			<h2 id="DB">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/db.go?s=413:432#L10">DB</a></h2>
+			<pre>type DB interface{}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="DBAct">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/db.go?s=860:874#L36">DBAct</a></h2>
+			<pre>type DBAct <a href="../../../../../builtin/index.html#int">int</a></pre>
+			
+
+			
+				<pre>const (
+    <span id="DBNone">DBNone</span> <a href="index.html#DBAct">DBAct</a> = <a href="../../../../../builtin/index.html#iota">iota</a>
+    <span id="DBPut">DBPut</span>
+    <span id="DBOverwrite">DBOverwrite</span>
+    <span id="DBDelete">DBDelete</span>
+    <span id="DBDeleteNA">DBDeleteNA</span>
+)</pre>
+				
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="DBAct.String">func (DBAct) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/db.go?s=876:906#L38">String</a></h3>
+				<pre>func (a <a href="index.html#DBAct">DBAct</a>) String() <a href="../../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="DBTesting">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/db.go?s=1190:1395#L62">DBTesting</a></h2>
+			<pre>type DBTesting struct {
+    Rand *<a href="../../../../../math/rand/index.html">rand</a>.<a href="../../../../../math/rand/index.html#Rand">Rand</a>
+    DB   interface {
+        <a href="index.html#Get">Get</a>
+        <a href="index.html#Put">Put</a>
+        <a href="index.html#Delete">Delete</a>
+    }
+    PostFn             func(t *<a href="index.html#DBTesting">DBTesting</a>)
+    Deleted, Present   <a href="index.html#KeyValue">KeyValue</a>
+    Act, LastAct       <a href="index.html#DBAct">DBAct</a>
+    ActKey, LastActKey []<a href="../../../../../builtin/index.html#byte">byte</a>
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="DBTesting.Delete">func (*DBTesting) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/db.go?s=3265:3303#L153">Delete</a></h3>
+				<pre>func (t *<a href="index.html#DBTesting">DBTesting</a>) Delete(key []<a href="../../../../../builtin/index.html#byte">byte</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="DBTesting.DeleteRandom">func (*DBTesting) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/db.go?s=3567:3606#L166">DeleteRandom</a></h3>
+				<pre>func (t *<a href="index.html#DBTesting">DBTesting</a>) DeleteRandom() <a href="../../../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="DBTesting.Put">func (*DBTesting) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/db.go?s=2773:2815#L130">Put</a></h3>
+				<pre>func (t *<a href="index.html#DBTesting">DBTesting</a>) Put(key, value []<a href="../../../../../builtin/index.html#byte">byte</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="DBTesting.PutRandom">func (*DBTesting) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/db.go?s=3075:3111#L143">PutRandom</a></h3>
+				<pre>func (t *<a href="index.html#DBTesting">DBTesting</a>) PutRandom() <a href="../../../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="DBTesting.RandomAct">func (*DBTesting) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/db.go?s=3736:3776#L175">RandomAct</a></h3>
+				<pre>func (t *<a href="index.html#DBTesting">DBTesting</a>) RandomAct(round <a href="../../../../../builtin/index.html#int">int</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="DBTesting.TestAll">func (*DBTesting) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/db.go?s=2499:2528#L117">TestAll</a></h3>
+				<pre>func (t *<a href="index.html#DBTesting">DBTesting</a>) TestAll()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="DBTesting.TestAllDeleted">func (*DBTesting) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/db.go?s=2361:2397#L111">TestAllDeleted</a></h3>
+				<pre>func (t *<a href="index.html#DBTesting">DBTesting</a>) TestAllDeleted()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="DBTesting.TestAllPresent">func (*DBTesting) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/db.go?s=2045:2081#L100">TestAllPresent</a></h3>
+				<pre>func (t *<a href="index.html#DBTesting">DBTesting</a>) TestAllPresent()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="DBTesting.TestDeletedKey">func (*DBTesting) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/db.go?s=2189:2235#L106">TestDeletedKey</a></h3>
+				<pre>func (t *<a href="index.html#DBTesting">DBTesting</a>) TestDeletedKey(key []<a href="../../../../../builtin/index.html#byte">byte</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="DBTesting.TestPresentKV">func (*DBTesting) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/db.go?s=1802:1854#L94">TestPresentKV</a></h3>
+				<pre>func (t *<a href="index.html#DBTesting">DBTesting</a>) TestPresentKV(key, value []<a href="../../../../../builtin/index.html#byte">byte</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="DBTesting.Text">func (*DBTesting) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/db.go?s=1731:1764#L90">Text</a></h3>
+				<pre>func (t *<a href="index.html#DBTesting">DBTesting</a>) Text() <a href="../../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Delete">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/db.go?s=499:554#L16">Delete</a></h2>
+			<pre>type Delete interface {
+    TestDelete(key []<a href="../../../../../builtin/index.html#byte">byte</a>) <a href="../../../../../builtin/index.html#error">error</a>
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Find">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/db.go?s=556:634#L20">Find</a></h2>
+			<pre>type Find interface {
+    TestFind(key []<a href="../../../../../builtin/index.html#byte">byte</a>) (rkey, rvalue []<a href="../../../../../builtin/index.html#byte">byte</a>, err <a href="../../../../../builtin/index.html#error">error</a>)
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Get">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/db.go?s=636:705#L24">Get</a></h2>
+			<pre>type Get interface {
+    TestGet(key []<a href="../../../../../builtin/index.html#byte">byte</a>) (value []<a href="../../../../../builtin/index.html#byte">byte</a>, err <a href="../../../../../builtin/index.html#error">error</a>)
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Has">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/db.go?s=707:772#L28">Has</a></h2>
+			<pre>type Has interface {
+    TestHas(key []<a href="../../../../../builtin/index.html#byte">byte</a>) (ret <a href="../../../../../builtin/index.html#bool">bool</a>, err <a href="../../../../../builtin/index.html#error">error</a>)
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="IterAct">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/iter.go?s=323:339#L8">IterAct</a></h2>
+			<pre>type IterAct <a href="../../../../../builtin/index.html#int">int</a></pre>
+			
+
+			
+				<pre>const (
+    <span id="IterNone">IterNone</span> <a href="index.html#IterAct">IterAct</a> = <a href="../../../../../builtin/index.html#iota">iota</a>
+    <span id="IterFirst">IterFirst</span>
+    <span id="IterLast">IterLast</span>
+    <span id="IterPrev">IterPrev</span>
+    <span id="IterNext">IterNext</span>
+    <span id="IterSeek">IterSeek</span>
+    <span id="IterSOI">IterSOI</span>
+    <span id="IterEOI">IterEOI</span>
+)</pre>
+				
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="IterAct.String">func (IterAct) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/iter.go?s=341:373#L10">String</a></h3>
+				<pre>func (a <a href="index.html#IterAct">IterAct</a>) String() <a href="../../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="IteratorTesting">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/iter.go?s=771:960#L43">IteratorTesting</a></h2>
+			<pre>type IteratorTesting struct {
+    <a href="index.html#KeyValue">KeyValue</a>
+    Iter         <a href="../iterator/index.html">iterator</a>.<a href="../iterator/index.html#Iterator">Iterator</a>
+    Rand         *<a href="../../../../../math/rand/index.html">rand</a>.<a href="../../../../../math/rand/index.html#Rand">Rand</a>
+    PostFn       func(t *<a href="index.html#IteratorTesting">IteratorTesting</a>)
+    Pos          <a href="../../../../../builtin/index.html#int">int</a>
+    Act, LastAct <a href="index.html#IterAct">IterAct</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="IteratorTesting.EOI">func (*IteratorTesting) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/iter.go?s=4625:4656#L232">EOI</a></h3>
+				<pre>func (t *<a href="index.html#IteratorTesting">IteratorTesting</a>) EOI()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="IteratorTesting.First">func (*IteratorTesting) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/iter.go?s=1888:1921#L97">First</a></h3>
+				<pre>func (t *<a href="index.html#IteratorTesting">IteratorTesting</a>) First()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="IteratorTesting.IsFirst">func (*IteratorTesting) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/iter.go?s=1427:1467#L79">IsFirst</a></h3>
+				<pre>func (t *<a href="index.html#IteratorTesting">IteratorTesting</a>) IsFirst() <a href="../../../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="IteratorTesting.IsLast">func (*IteratorTesting) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/iter.go?s=1517:1556#L84">IsLast</a></h3>
+				<pre>func (t *<a href="index.html#IteratorTesting">IteratorTesting</a>) IsLast() <a href="../../../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="IteratorTesting.Last">func (*IteratorTesting) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/iter.go?s=2193:2225#L114">Last</a></h3>
+				<pre>func (t *<a href="index.html#IteratorTesting">IteratorTesting</a>) Last()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="IteratorTesting.Next">func (*IteratorTesting) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/iter.go?s=2504:2536#L131">Next</a></h3>
+				<pre>func (t *<a href="index.html#IteratorTesting">IteratorTesting</a>) Next()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="IteratorTesting.NextAll">func (*IteratorTesting) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/iter.go?s=5292:5327#L264">NextAll</a></h3>
+				<pre>func (t *<a href="index.html#IteratorTesting">IteratorTesting</a>) NextAll()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="IteratorTesting.Prev">func (*IteratorTesting) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/iter.go?s=2815:2847#L148">Prev</a></h3>
+				<pre>func (t *<a href="index.html#IteratorTesting">IteratorTesting</a>) Prev()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="IteratorTesting.PrevAll">func (*IteratorTesting) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/iter.go?s=5197:5232#L258">PrevAll</a></h3>
+				<pre>func (t *<a href="index.html#IteratorTesting">IteratorTesting</a>) PrevAll()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="IteratorTesting.SOI">func (*IteratorTesting) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/iter.go?s=4453:4484#L222">SOI</a></h3>
+				<pre>func (t *<a href="index.html#IteratorTesting">IteratorTesting</a>) SOI()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="IteratorTesting.Seek">func (*IteratorTesting) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/iter.go?s=3113:3150#L165">Seek</a></h3>
+				<pre>func (t *<a href="index.html#IteratorTesting">IteratorTesting</a>) Seek(i <a href="../../../../../builtin/index.html#int">int</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="IteratorTesting.SeekInexact">func (*IteratorTesting) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/iter.go?s=3461:3505#L181">SeekInexact</a></h3>
+				<pre>func (t *<a href="index.html#IteratorTesting">IteratorTesting</a>) SeekInexact(i <a href="../../../../../builtin/index.html#int">int</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="IteratorTesting.SeekKey">func (*IteratorTesting) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/iter.go?s=3921:3966#L201">SeekKey</a></h3>
+				<pre>func (t *<a href="index.html#IteratorTesting">IteratorTesting</a>) SeekKey(key []<a href="../../../../../builtin/index.html#byte">byte</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="IteratorTesting.TestKV">func (*IteratorTesting) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/iter.go?s=1614:1648#L89">TestKV</a></h3>
+				<pre>func (t *<a href="index.html#IteratorTesting">IteratorTesting</a>) TestKV()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="IteratorTesting.Text">func (*IteratorTesting) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/iter.go?s=1341:1380#L75">Text</a></h3>
+				<pre>func (t *<a href="index.html#IteratorTesting">IteratorTesting</a>) Text() <a href="../../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="IteratorTesting.WalkNext">func (*IteratorTesting) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/iter.go?s=4997:5060#L250">WalkNext</a></h3>
+				<pre>func (t *<a href="index.html#IteratorTesting">IteratorTesting</a>) WalkNext(fn func(t *<a href="index.html#IteratorTesting">IteratorTesting</a>))</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="IteratorTesting.WalkPrev">func (*IteratorTesting) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/iter.go?s=4805:4868#L242">WalkPrev</a></h3>
+				<pre>func (t *<a href="index.html#IteratorTesting">IteratorTesting</a>) WalkPrev(fn func(t *<a href="index.html#IteratorTesting">IteratorTesting</a>))</pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="KeyValue">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=359:421#L12">KeyValue</a></h2>
+			<pre>type KeyValue struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="KeyValue_BigValue">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=5776:5810#L242">KeyValue_BigValue</a></h3>
+				<pre>func KeyValue_BigValue() *<a href="index.html#KeyValue">KeyValue</a></pre>
+				
+				
+				
+			
+				
+				<h3 id="KeyValue_EmptyKey">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=5461:5495#L223">KeyValue_EmptyKey</a></h3>
+				<pre>func KeyValue_EmptyKey() *<a href="index.html#KeyValue">KeyValue</a></pre>
+				
+				
+				
+			
+				
+				<h3 id="KeyValue_EmptyValue">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=5554:5590#L229">KeyValue_EmptyValue</a></h3>
+				<pre>func KeyValue_EmptyValue() *<a href="index.html#KeyValue">KeyValue</a></pre>
+				
+				
+				
+			
+				
+				<h3 id="KeyValue_Generate">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=6916:7011#L285">KeyValue_Generate</a></h3>
+				<pre>func KeyValue_Generate(rnd *<a href="../../../../../math/rand/index.html">rand</a>.<a href="../../../../../math/rand/index.html#Rand">Rand</a>, n, incr, minlen, maxlen, vminlen, vmaxlen <a href="../../../../../builtin/index.html#int">int</a>) *<a href="index.html#KeyValue">KeyValue</a></pre>
+				
+				
+				
+			
+				
+				<h3 id="KeyValue_MultipleKeyValue">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=6001:6043#L254">KeyValue_MultipleKeyValue</a></h3>
+				<pre>func KeyValue_MultipleKeyValue() *<a href="index.html#KeyValue">KeyValue</a></pre>
+				
+				
+				
+			
+				
+				<h3 id="KeyValue_OneKeyValue">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=5677:5714#L236">KeyValue_OneKeyValue</a></h3>
+				<pre>func KeyValue_OneKeyValue() *<a href="index.html#KeyValue">KeyValue</a></pre>
+				
+				
+				
+			
+				
+				<h3 id="KeyValue_SpecialKey">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=5897:5933#L248">KeyValue_SpecialKey</a></h3>
+				<pre>func KeyValue_SpecialKey() *<a href="index.html#KeyValue">KeyValue</a></pre>
+				
+				
+				
+			
+
+			
+				
+				<h3 id="KeyValue.Clone">func (KeyValue) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=4265:4300#L173">Clone</a></h3>
+				<pre>func (kv <a href="index.html#KeyValue">KeyValue</a>) Clone() <a href="index.html#KeyValue">KeyValue</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="KeyValue.Delete">func (*KeyValue) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=1389:1454#L50">Delete</a></h3>
+				<pre>func (kv *<a href="index.html#KeyValue">KeyValue</a>) Delete(key []<a href="../../../../../builtin/index.html#byte">byte</a>) (exist <a href="../../../../../builtin/index.html#bool">bool</a>, value []<a href="../../../../../builtin/index.html#byte">byte</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="KeyValue.DeleteIndex">func (*KeyValue) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=1558:1601#L59">DeleteIndex</a></h3>
+				<pre>func (kv *<a href="index.html#KeyValue">KeyValue</a>) DeleteIndex(i <a href="../../../../../builtin/index.html#int">int</a>) <a href="../../../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="KeyValue.Get">func (KeyValue) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=2962:3016#L124">Get</a></h3>
+				<pre>func (kv <a href="index.html#KeyValue">KeyValue</a>) Get(key []<a href="../../../../../builtin/index.html#byte">byte</a>) (i <a href="../../../../../builtin/index.html#int">int</a>, exist <a href="../../../../../builtin/index.html#bool">bool</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="KeyValue.GetString">func (KeyValue) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=3125:3185#L132">GetString</a></h3>
+				<pre>func (kv <a href="index.html#KeyValue">KeyValue</a>) GetString(key <a href="../../../../../builtin/index.html#string">string</a>) (i <a href="../../../../../builtin/index.html#int">int</a>, exist <a href="../../../../../builtin/index.html#bool">bool</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="KeyValue.Index">func (KeyValue) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=2025:2076#L84">Index</a></h3>
+				<pre>func (kv <a href="index.html#KeyValue">KeyValue</a>) Index(i <a href="../../../../../builtin/index.html#int">int</a>) (key, value []<a href="../../../../../builtin/index.html#byte">byte</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="KeyValue.IndexInexact">func (KeyValue) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=2219:2283#L91">IndexInexact</a></h3>
+				<pre>func (kv <a href="index.html#KeyValue">KeyValue</a>) IndexInexact(i <a href="../../../../../builtin/index.html#int">int</a>) (key_, key, value []<a href="../../../../../builtin/index.html#byte">byte</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="KeyValue.IndexOrNil">func (KeyValue) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=2439:2495#L102">IndexOrNil</a></h3>
+				<pre>func (kv <a href="index.html#KeyValue">KeyValue</a>) IndexOrNil(i <a href="../../../../../builtin/index.html#int">int</a>) (key, value []<a href="../../../../../builtin/index.html#byte">byte</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="KeyValue.IndexString">func (KeyValue) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=2605:2662#L109">IndexString</a></h3>
+				<pre>func (kv <a href="index.html#KeyValue">KeyValue</a>) IndexString(i <a href="../../../../../builtin/index.html#int">int</a>) (key, value <a href="../../../../../builtin/index.html#string">string</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="KeyValue.Iterate">func (KeyValue) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=3219:3280#L136">Iterate</a></h3>
+				<pre>func (kv <a href="index.html#KeyValue">KeyValue</a>) Iterate(fn func(i <a href="../../../../../builtin/index.html#int">int</a>, key, value []<a href="../../../../../builtin/index.html#byte">byte</a>))</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="KeyValue.IterateInexact">func (KeyValue) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=3888:3962#L160">IterateInexact</a></h3>
+				<pre>func (kv <a href="index.html#KeyValue">KeyValue</a>) IterateInexact(fn func(i <a href="../../../../../builtin/index.html#int">int</a>, key_, key, value []<a href="../../../../../builtin/index.html#byte">byte</a>))</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="KeyValue.IterateInexactString">func (KeyValue) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=4067:4147#L167">IterateInexactString</a></h3>
+				<pre>func (kv <a href="index.html#KeyValue">KeyValue</a>) IterateInexactString(fn func(i <a href="../../../../../builtin/index.html#int">int</a>, key_, key, value <a href="../../../../../builtin/index.html#string">string</a>))</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="KeyValue.IterateShuffled">func (KeyValue) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=3503:3588#L148">IterateShuffled</a></h3>
+				<pre>func (kv <a href="index.html#KeyValue">KeyValue</a>) IterateShuffled(rnd *<a href="../../../../../math/rand/index.html">rand</a>.<a href="../../../../../math/rand/index.html#Rand">Rand</a>, fn func(i <a href="../../../../../builtin/index.html#int">int</a>, key, value []<a href="../../../../../builtin/index.html#byte">byte</a>))</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="KeyValue.IterateShuffledString">func (KeyValue) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=3693:3784#L154">IterateShuffledString</a></h3>
+				<pre>func (kv <a href="index.html#KeyValue">KeyValue</a>) IterateShuffledString(rnd *<a href="../../../../../math/rand/index.html">rand</a>.<a href="../../../../../math/rand/index.html#Rand">Rand</a>, fn func(i <a href="../../../../../builtin/index.html#int">int</a>, key, value <a href="../../../../../builtin/index.html#string">string</a>))</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="KeyValue.IterateString">func (KeyValue) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=3345:3412#L142">IterateString</a></h3>
+				<pre>func (kv <a href="index.html#KeyValue">KeyValue</a>) IterateString(fn func(i <a href="../../../../../builtin/index.html#int">int</a>, key, value <a href="../../../../../builtin/index.html#string">string</a>))</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="KeyValue.KeyAt">func (KeyValue) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=1881:1919#L76">KeyAt</a></h3>
+				<pre>func (kv <a href="index.html#KeyValue">KeyValue</a>) KeyAt(i <a href="../../../../../builtin/index.html#int">int</a>) []<a href="../../../../../builtin/index.html#byte">byte</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="KeyValue.Len">func (KeyValue) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=1769:1797#L68">Len</a></h3>
+				<pre>func (kv <a href="index.html#KeyValue">KeyValue</a>) Len() <a href="../../../../../builtin/index.html#int">int</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="KeyValue.Put">func (*KeyValue) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=423:465#L17">Put</a></h3>
+				<pre>func (kv *<a href="index.html#KeyValue">KeyValue</a>) Put(key, value []<a href="../../../../../builtin/index.html#byte">byte</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="KeyValue.PutString">func (*KeyValue) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=746:794#L25">PutString</a></h3>
+				<pre>func (kv *<a href="index.html#KeyValue">KeyValue</a>) PutString(key, value <a href="../../../../../builtin/index.html#string">string</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="KeyValue.PutU">func (*KeyValue) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=836:884#L29">PutU</a></h3>
+				<pre>func (kv *<a href="index.html#KeyValue">KeyValue</a>) PutU(key, value []<a href="../../../../../builtin/index.html#byte">byte</a>) <a href="../../../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="KeyValue.PutUString">func (*KeyValue) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=1285:1339#L46">PutUString</a></h3>
+				<pre>func (kv *<a href="index.html#KeyValue">KeyValue</a>) PutUString(key, value <a href="../../../../../builtin/index.html#string">string</a>) <a href="../../../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="KeyValue.Range">func (KeyValue) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=5200:5257#L209">Range</a></h3>
+				<pre>func (kv <a href="index.html#KeyValue">KeyValue</a>) Range(start, limit <a href="../../../../../builtin/index.html#int">int</a>) (r <a href="../util/index.html">util</a>.<a href="../util/index.html#Range">Range</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="KeyValue.Search">func (KeyValue) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=2734:2775#L114">Search</a></h3>
+				<pre>func (kv <a href="index.html#KeyValue">KeyValue</a>) Search(key []<a href="../../../../../builtin/index.html#byte">byte</a>) <a href="../../../../../builtin/index.html#int">int</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="KeyValue.SearchString">func (KeyValue) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=2878:2925#L120">SearchString</a></h3>
+				<pre>func (kv <a href="index.html#KeyValue">KeyValue</a>) SearchString(key <a href="../../../../../builtin/index.html#string">string</a>) <a href="../../../../../builtin/index.html#int">int</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="KeyValue.Size">func (*KeyValue) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=1827:1857#L72">Size</a></h3>
+				<pre>func (kv *<a href="index.html#KeyValue">KeyValue</a>) Size() <a href="../../../../../builtin/index.html#int">int</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="KeyValue.Slice">func (KeyValue) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=4376:4427#L177">Slice</a></h3>
+				<pre>func (kv <a href="index.html#KeyValue">KeyValue</a>) Slice(start, limit <a href="../../../../../builtin/index.html#int">int</a>) <a href="index.html#KeyValue">KeyValue</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="KeyValue.SliceKey">func (KeyValue) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=4717:4774#L186">SliceKey</a></h3>
+				<pre>func (kv <a href="index.html#KeyValue">KeyValue</a>) SliceKey(start, limit []<a href="../../../../../builtin/index.html#byte">byte</a>) <a href="index.html#KeyValue">KeyValue</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="KeyValue.SliceKeyString">func (KeyValue) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=4946:5009#L198">SliceKeyString</a></h3>
+				<pre>func (kv <a href="index.html#KeyValue">KeyValue</a>) SliceKeyString(start, limit <a href="../../../../../builtin/index.html#string">string</a>) <a href="index.html#KeyValue">KeyValue</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="KeyValue.SliceRange">func (KeyValue) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=5065:5118#L202">SliceRange</a></h3>
+				<pre>func (kv <a href="index.html#KeyValue">KeyValue</a>) SliceRange(r *<a href="../util/index.html">util</a>.<a href="../util/index.html#Range">Range</a>) <a href="index.html#KeyValue">KeyValue</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="KeyValue.ValueAt">func (KeyValue) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=1951:1991#L80">ValueAt</a></h3>
+				<pre>func (kv <a href="index.html#KeyValue">KeyValue</a>) ValueAt(i <a href="../../../../../builtin/index.html#int">int</a>) []<a href="../../../../../builtin/index.html#byte">byte</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="KeyValueEntry">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/kv.go?s=309:357#L8">KeyValueEntry</a></h2>
+			<pre>type KeyValueEntry struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="NewIterator">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/db.go?s=774:858#L32">NewIterator</a></h2>
+			<pre>type NewIterator interface {
+    TestNewIterator(slice *<a href="../util/index.html">util</a>.<a href="../util/index.html#Range">Range</a>) <a href="../iterator/index.html">iterator</a>.<a href="../iterator/index.html#Iterator">Iterator</a>
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Put">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/db.go?s=434:497#L12">Put</a></h2>
+			<pre>type Put interface {
+    TestPut(key []<a href="../../../../../builtin/index.html#byte">byte</a>, value []<a href="../../../../../builtin/index.html#byte">byte</a>) <a href="../../../../../builtin/index.html#error">error</a>
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Storage">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/storage.go?s=4494:5120#L233">Storage</a></h2>
+			<pre>type Storage struct {
+    <a href="../storage/index.html">storage</a>.<a href="../storage/index.html#Storage">Storage</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewStorage">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/storage.go?s=14349:14375#L648">NewStorage</a></h3>
+				<pre>func NewStorage() *<a href="index.html#Storage">Storage</a></pre>
+				
+				
+				
+			
+
+			
+				
+				<h3 id="Storage.Close">func (*Storage) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/storage.go?s=11363:11394#L522">Close</a></h3>
+				<pre>func (s *<a href="index.html#Storage">Storage</a>) Close() <a href="../../../../../builtin/index.html#error">error</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Storage.CloseCheck">func (*Storage) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/storage.go?s=11111:11141#L510">CloseCheck</a></h3>
+				<pre>func (s *<a href="index.html#Storage">Storage</a>) CloseCheck()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Storage.Counter">func (*Storage) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/storage.go?s=12508:12593#L571">Counter</a></h3>
+				<pre>func (s *<a href="index.html#Storage">Storage</a>) Counter(m <a href="index.html#StorageMode">StorageMode</a>, t <a href="../storage/index.html">storage</a>.<a href="../storage/index.html#FileType">FileType</a>) (count <a href="../../../../../builtin/index.html#int">int</a>, bytes <a href="../../../../../builtin/index.html#int64">int64</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Storage.Create">func (*Storage) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/storage.go?s=8854:8929#L418">Create</a></h3>
+				<pre>func (s *<a href="index.html#Storage">Storage</a>) Create(fd <a href="../storage/index.html">storage</a>.<a href="../storage/index.html#FileDesc">FileDesc</a>) (w <a href="../storage/index.html">storage</a>.<a href="../storage/index.html#Writer">Writer</a>, err <a href="../../../../../builtin/index.html#error">error</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Storage.EmulateError">func (*Storage) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/storage.go?s=13123:13199#L595">EmulateError</a></h3>
+				<pre>func (s *<a href="index.html#Storage">Storage</a>) EmulateError(m <a href="index.html#StorageMode">StorageMode</a>, t <a href="../storage/index.html">storage</a>.<a href="../storage/index.html#FileType">FileType</a>, err <a href="../../../../../builtin/index.html#error">error</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Storage.EmulateErrorOnce">func (*Storage) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/storage.go?s=13345:13425#L604">EmulateErrorOnce</a></h3>
+				<pre>func (s *<a href="index.html#Storage">Storage</a>) EmulateErrorOnce(m <a href="index.html#StorageMode">StorageMode</a>, t <a href="../storage/index.html">storage</a>.<a href="../storage/index.html#FileType">FileType</a>, err <a href="../../../../../builtin/index.html#error">error</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Storage.EmulateRandomError">func (*Storage) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/storage.go?s=13570:13666#L613">EmulateRandomError</a></h3>
+				<pre>func (s *<a href="index.html#Storage">Storage</a>) EmulateRandomError(m <a href="index.html#StorageMode">StorageMode</a>, t <a href="../storage/index.html">storage</a>.<a href="../storage/index.html#FileType">FileType</a>, prob <a href="../../../../../builtin/index.html#float64">float64</a>, err <a href="../../../../../builtin/index.html#error">error</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Storage.ForceRemove">func (*Storage) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/storage.go?s=9776:9838#L460">ForceRemove</a></h3>
+				<pre>func (s *<a href="index.html#Storage">Storage</a>) ForceRemove(fd <a href="../storage/index.html">storage</a>.<a href="../storage/index.html#FileDesc">FileDesc</a>) (err <a href="../../../../../builtin/index.html#error">error</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Storage.ForceRename">func (*Storage) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/storage.go?s=10574:10646#L491">ForceRename</a></h3>
+				<pre>func (s *<a href="index.html#Storage">Storage</a>) ForceRename(oldfd, newfd <a href="../storage/index.html">storage</a>.<a href="../storage/index.html#FileDesc">FileDesc</a>) (err <a href="../../../../../builtin/index.html#error">error</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Storage.GetMeta">func (*Storage) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/storage.go?s=7089:7149#L345">GetMeta</a></h3>
+				<pre>func (s *<a href="index.html#Storage">Storage</a>) GetMeta() (fd <a href="../storage/index.html">storage</a>.<a href="../storage/index.html#FileDesc">FileDesc</a>, err <a href="../../../../../builtin/index.html#error">error</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Storage.List">func (*Storage) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/storage.go?s=6847:6925#L335">List</a></h3>
+				<pre>func (s *<a href="index.html#Storage">Storage</a>) List(t <a href="../storage/index.html">storage</a>.<a href="../storage/index.html#FileType">FileType</a>) (fds []<a href="../storage/index.html">storage</a>.<a href="../storage/index.html#FileDesc">FileDesc</a>, err <a href="../../../../../builtin/index.html#error">error</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Storage.Lock">func (*Storage) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/storage.go?s=6623:6677#L324">Lock</a></h3>
+				<pre>func (s *<a href="index.html#Storage">Storage</a>) Lock() (l <a href="../storage/index.html">storage</a>.<a href="../storage/index.html#Locker">Locker</a>, err <a href="../../../../../builtin/index.html#error">error</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Storage.Log">func (*Storage) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/storage.go?s=6541:6574#L319">Log</a></h3>
+				<pre>func (s *<a href="index.html#Storage">Storage</a>) Log(str <a href="../../../../../builtin/index.html#string">string</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Storage.OnClose">func (*Storage) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/storage.go?s=11240:11308#L516">OnClose</a></h3>
+				<pre>func (s *<a href="index.html#Storage">Storage</a>) OnClose(onClose func() (preserve <a href="../../../../../builtin/index.html#bool">bool</a>, err <a href="../../../../../builtin/index.html#error">error</a>))</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Storage.OnLog">func (*Storage) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/storage.go?s=6350:6397#L308">OnLog</a></h3>
+				<pre>func (s *<a href="index.html#Storage">Storage</a>) OnLog(onLog func(log <a href="../../../../../builtin/index.html#string">string</a>))</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Storage.Open">func (*Storage) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/storage.go?s=8367:8440#L396">Open</a></h3>
+				<pre>func (s *<a href="index.html#Storage">Storage</a>) Open(fd <a href="../storage/index.html">storage</a>.<a href="../storage/index.html#FileDesc">FileDesc</a>) (r <a href="../storage/index.html">storage</a>.<a href="../storage/index.html#Reader">Reader</a>, err <a href="../../../../../builtin/index.html#error">error</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Storage.Release">func (*Storage) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/storage.go?s=14155:14215#L639">Release</a></h3>
+				<pre>func (s *<a href="index.html#Storage">Storage</a>) Release(m <a href="index.html#StorageMode">StorageMode</a>, t <a href="../storage/index.html">storage</a>.<a href="../storage/index.html#FileType">FileType</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Storage.Remove">func (*Storage) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/storage.go?s=9353:9410#L440">Remove</a></h3>
+				<pre>func (s *<a href="index.html#Storage">Storage</a>) Remove(fd <a href="../storage/index.html">storage</a>.<a href="../storage/index.html#FileDesc">FileDesc</a>) (err <a href="../../../../../builtin/index.html#error">error</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Storage.Rename">func (*Storage) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/storage.go?s=10053:10120#L470">Rename</a></h3>
+				<pre>func (s *<a href="index.html#Storage">Storage</a>) Rename(oldfd, newfd <a href="../storage/index.html">storage</a>.<a href="../storage/index.html#FileDesc">FileDesc</a>) (err <a href="../../../../../builtin/index.html#error">error</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Storage.ResetCounter">func (*Storage) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/storage.go?s=12347:12412#L564">ResetCounter</a></h3>
+				<pre>func (s *<a href="index.html#Storage">Storage</a>) ResetCounter(m <a href="index.html#StorageMode">StorageMode</a>, t <a href="../storage/index.html">storage</a>.<a href="../storage/index.html#FileType">FileType</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Storage.SetMeta">func (*Storage) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/storage.go?s=7327:7379#L357">SetMeta</a></h3>
+				<pre>func (s *<a href="index.html#Storage">Storage</a>) SetMeta(fd <a href="../storage/index.html">storage</a>.<a href="../storage/index.html#FileDesc">FileDesc</a>) <a href="../../../../../builtin/index.html#error">error</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Storage.Stall">func (*Storage) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/storage.go?s=13989:14047#L631">Stall</a></h3>
+				<pre>func (s *<a href="index.html#Storage">Storage</a>) Stall(m <a href="index.html#StorageMode">StorageMode</a>, t <a href="../storage/index.html">storage</a>.<a href="../storage/index.html#FileType">FileType</a>)</pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="StorageMode">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/testutil/storage.go?s=489:509#L22">StorageMode</a></h2>
+			<pre>type StorageMode <a href="../../../../../builtin/index.html#int">int</a></pre>
+			
+
+			
+				<pre>const (
+    <span id="ModeOpen">ModeOpen</span> <a href="index.html#StorageMode">StorageMode</a> = 1 &lt;&lt; <a href="../../../../../builtin/index.html#iota">iota</a>
+    <span id="ModeCreate">ModeCreate</span>
+    <span id="ModeRemove">ModeRemove</span>
+    <span id="ModeRename">ModeRename</span>
+    <span id="ModeRead">ModeRead</span>
+    <span id="ModeWrite">ModeWrite</span>
+    <span id="ModeSync">ModeSync</span>
+    <span id="ModeClose">ModeClose</span>
+)</pre>
+				
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

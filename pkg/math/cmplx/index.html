@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>cmplx - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package cmplx</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "math/cmplx"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package cmplx provides basic constants and mathematical functions for
+complex numbers.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+				
+				<dd><a href="index.html#Abs">func Abs(x complex128) float64</a></dd>
+			
+				
+				<dd><a href="index.html#Acos">func Acos(x complex128) complex128</a></dd>
+			
+				
+				<dd><a href="index.html#Acosh">func Acosh(x complex128) complex128</a></dd>
+			
+				
+				<dd><a href="index.html#Asin">func Asin(x complex128) complex128</a></dd>
+			
+				
+				<dd><a href="index.html#Asinh">func Asinh(x complex128) complex128</a></dd>
+			
+				
+				<dd><a href="index.html#Atan">func Atan(x complex128) complex128</a></dd>
+			
+				
+				<dd><a href="index.html#Atanh">func Atanh(x complex128) complex128</a></dd>
+			
+				
+				<dd><a href="index.html#Conj">func Conj(x complex128) complex128</a></dd>
+			
+				
+				<dd><a href="index.html#Cos">func Cos(x complex128) complex128</a></dd>
+			
+				
+				<dd><a href="index.html#Cosh">func Cosh(x complex128) complex128</a></dd>
+			
+				
+				<dd><a href="index.html#Cot">func Cot(x complex128) complex128</a></dd>
+			
+				
+				<dd><a href="index.html#Exp">func Exp(x complex128) complex128</a></dd>
+			
+				
+				<dd><a href="index.html#Inf">func Inf() complex128</a></dd>
+			
+				
+				<dd><a href="index.html#IsInf">func IsInf(x complex128) bool</a></dd>
+			
+				
+				<dd><a href="index.html#IsNaN">func IsNaN(x complex128) bool</a></dd>
+			
+				
+				<dd><a href="index.html#Log">func Log(x complex128) complex128</a></dd>
+			
+				
+				<dd><a href="index.html#Log10">func Log10(x complex128) complex128</a></dd>
+			
+				
+				<dd><a href="index.html#NaN">func NaN() complex128</a></dd>
+			
+				
+				<dd><a href="index.html#Phase">func Phase(x complex128) float64</a></dd>
+			
+				
+				<dd><a href="index.html#Polar">func Polar(x complex128) (r, θ float64)</a></dd>
+			
+				
+				<dd><a href="index.html#Pow">func Pow(x, y complex128) complex128</a></dd>
+			
+				
+				<dd><a href="index.html#Rect">func Rect(r, θ float64) complex128</a></dd>
+			
+				
+				<dd><a href="index.html#Sin">func Sin(x complex128) complex128</a></dd>
+			
+				
+				<dd><a href="index.html#Sinh">func Sinh(x complex128) complex128</a></dd>
+			
+				
+				<dd><a href="index.html#Sqrt">func Sqrt(x complex128) complex128</a></dd>
+			
+				
+				<dd><a href="index.html#Tan">func Tan(x complex128) complex128</a></dd>
+			
+				
+				<dd><a href="index.html#Tanh">func Tanh(x complex128) complex128</a></dd>
+			
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/math/cmplx/abs.go">abs.go</a>
+			
+				<a href="http://localhost:6060/src/math/cmplx/asin.go">asin.go</a>
+			
+				<a href="http://localhost:6060/src/math/cmplx/conj.go">conj.go</a>
+			
+				<a href="http://localhost:6060/src/math/cmplx/exp.go">exp.go</a>
+			
+				<a href="http://localhost:6060/src/math/cmplx/isinf.go">isinf.go</a>
+			
+				<a href="http://localhost:6060/src/math/cmplx/isnan.go">isnan.go</a>
+			
+				<a href="http://localhost:6060/src/math/cmplx/log.go">log.go</a>
+			
+				<a href="http://localhost:6060/src/math/cmplx/phase.go">phase.go</a>
+			
+				<a href="http://localhost:6060/src/math/cmplx/polar.go">polar.go</a>
+			
+				<a href="http://localhost:6060/src/math/cmplx/pow.go">pow.go</a>
+			
+				<a href="http://localhost:6060/src/math/cmplx/rect.go">rect.go</a>
+			
+				<a href="http://localhost:6060/src/math/cmplx/sin.go">sin.go</a>
+			
+				<a href="http://localhost:6060/src/math/cmplx/sqrt.go">sqrt.go</a>
+			
+				<a href="http://localhost:6060/src/math/cmplx/tan.go">tan.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+			
+			
+			<h2 id="Abs">func <a href="http://localhost:6060/src/math/cmplx/abs.go?s=349:379#L2">Abs</a></h2>
+			<pre>func Abs(x <a href="../../builtin/index.html#complex128">complex128</a>) <a href="../../builtin/index.html#float64">float64</a></pre>
+			<p>
+Abs returns the absolute value (also called the modulus) of x.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Acos">func <a href="http://localhost:6060/src/math/cmplx/asin.go?s=2849:2883#L84">Acos</a></h2>
+			<pre>func Acos(x <a href="../../builtin/index.html#complex128">complex128</a>) <a href="../../builtin/index.html#complex128">complex128</a></pre>
+			<p>
+Acos returns the inverse cosine of x.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Acosh">func <a href="http://localhost:6060/src/math/cmplx/asin.go?s=3001:3036#L90">Acosh</a></h2>
+			<pre>func Acosh(x <a href="../../builtin/index.html#complex128">complex128</a>) <a href="../../builtin/index.html#complex128">complex128</a></pre>
+			<p>
+Acosh returns the inverse hyperbolic cosine of x.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Asin">func <a href="http://localhost:6060/src/math/cmplx/asin.go?s=1687:1721#L41">Asin</a></h2>
+			<pre>func Asin(x <a href="../../builtin/index.html#complex128">complex128</a>) <a href="../../builtin/index.html#complex128">complex128</a></pre>
+			<p>
+Asin returns the inverse sine of x.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Asinh">func <a href="http://localhost:6060/src/math/cmplx/asin.go?s=2150:2185#L57">Asinh</a></h2>
+			<pre>func Asinh(x <a href="../../builtin/index.html#complex128">complex128</a>) <a href="../../builtin/index.html#complex128">complex128</a></pre>
+			<p>
+Asinh returns the inverse hyperbolic sine of x.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Atan">func <a href="http://localhost:6060/src/math/cmplx/asin.go?s=4064:4098#L132">Atan</a></h2>
+			<pre>func Atan(x <a href="../../builtin/index.html#complex128">complex128</a>) <a href="../../builtin/index.html#complex128">complex128</a></pre>
+			<p>
+Atan returns the inverse tangent of x.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Atanh">func <a href="http://localhost:6060/src/math/cmplx/asin.go?s=4492:4527#L156">Atanh</a></h2>
+			<pre>func Atanh(x <a href="../../builtin/index.html#complex128">complex128</a>) <a href="../../builtin/index.html#complex128">complex128</a></pre>
+			<p>
+Atanh returns the inverse hyperbolic tangent of x.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Conj">func <a href="http://localhost:6060/src/math/cmplx/conj.go?s=219:253#L1">Conj</a></h2>
+			<pre>func Conj(x <a href="../../builtin/index.html#complex128">complex128</a>) <a href="../../builtin/index.html#complex128">complex128</a></pre>
+			<p>
+Conj returns the complex conjugate of x.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Cos">func <a href="http://localhost:6060/src/math/cmplx/sin.go?s=2612:2645#L88">Cos</a></h2>
+			<pre>func Cos(x <a href="../../builtin/index.html#complex128">complex128</a>) <a href="../../builtin/index.html#complex128">complex128</a></pre>
+			<p>
+Cos returns the cosine of x.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Cosh">func <a href="http://localhost:6060/src/math/cmplx/sin.go?s=3059:3093#L107">Cosh</a></h2>
+			<pre>func Cosh(x <a href="../../builtin/index.html#complex128">complex128</a>) <a href="../../builtin/index.html#complex128">complex128</a></pre>
+			<p>
+Cosh returns the hyperbolic cosine of x.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Cot">func <a href="http://localhost:6060/src/math/cmplx/tan.go?s=4220:4253#L165">Cot</a></h2>
+			<pre>func Cot(x <a href="../../builtin/index.html#complex128">complex128</a>) <a href="../../builtin/index.html#complex128">complex128</a></pre>
+			<p>
+Cot returns the cotangent of x.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Exp">func <a href="http://localhost:6060/src/math/cmplx/exp.go?s=1624:1657#L41">Exp</a></h2>
+			<pre>func Exp(x <a href="../../builtin/index.html#complex128">complex128</a>) <a href="../../builtin/index.html#complex128">complex128</a></pre>
+			<p>
+Exp returns e**x, the base-e exponential of x.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Inf">func <a href="http://localhost:6060/src/math/cmplx/isinf.go?s=434:455#L8">Inf</a></h2>
+			<pre>func Inf() <a href="../../builtin/index.html#complex128">complex128</a></pre>
+			<p>
+Inf returns a complex infinity, complex(+Inf, +Inf).
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="IsInf">func <a href="http://localhost:6060/src/math/cmplx/isinf.go?s=257:286#L1">IsInf</a></h2>
+			<pre>func IsInf(x <a href="../../builtin/index.html#complex128">complex128</a>) <a href="../../builtin/index.html#bool">bool</a></pre>
+			<p>
+IsInf returns true if either real(x) or imag(x) is an infinity.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="IsNaN">func <a href="http://localhost:6060/src/math/cmplx/isnan.go?s=279:308#L1">IsNaN</a></h2>
+			<pre>func IsNaN(x <a href="../../builtin/index.html#complex128">complex128</a>) <a href="../../builtin/index.html#bool">bool</a></pre>
+			<p>
+IsNaN returns true if either real(x) or imag(x) is NaN
+and neither is an infinity.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Log">func <a href="http://localhost:6060/src/math/cmplx/log.go?s=1845:1878#L47">Log</a></h2>
+			<pre>func Log(x <a href="../../builtin/index.html#complex128">complex128</a>) <a href="../../builtin/index.html#complex128">complex128</a></pre>
+			<p>
+Log returns the natural logarithm of x.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Log10">func <a href="http://localhost:6060/src/math/cmplx/log.go?s=1973:2008#L52">Log10</a></h2>
+			<pre>func Log10(x <a href="../../builtin/index.html#complex128">complex128</a>) <a href="../../builtin/index.html#complex128">complex128</a></pre>
+			<p>
+Log10 returns the decimal logarithm of x.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="NaN">func <a href="http://localhost:6060/src/math/cmplx/isnan.go?s=525:546#L12">NaN</a></h2>
+			<pre>func NaN() <a href="../../builtin/index.html#complex128">complex128</a></pre>
+			<p>
+NaN returns a complex &ldquo;not-a-number&rdquo; value.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Phase">func <a href="http://localhost:6060/src/math/cmplx/phase.go?s=299:331#L1">Phase</a></h2>
+			<pre>func Phase(x <a href="../../builtin/index.html#complex128">complex128</a>) <a href="../../builtin/index.html#float64">float64</a></pre>
+			<p>
+Phase returns the phase (also called the argument) of x.
+The returned value is in the range [-Pi, Pi].
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Polar">func <a href="http://localhost:6060/src/math/cmplx/polar.go?s=301:341#L1">Polar</a></h2>
+			<pre>func Polar(x <a href="../../builtin/index.html#complex128">complex128</a>) (r, θ <a href="../../builtin/index.html#float64">float64</a>)</pre>
+			<p>
+Polar returns the absolute value r and phase θ of x,
+such that x = r * e**θi.
+The phase is in the range [-Pi, Pi].
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Pow">func <a href="http://localhost:6060/src/math/cmplx/pow.go?s=1709:1745#L39">Pow</a></h2>
+			<pre>func Pow(x, y <a href="../../builtin/index.html#complex128">complex128</a>) <a href="../../builtin/index.html#complex128">complex128</a></pre>
+			<p>
+Pow returns x**y, the base-x exponential of y.
+For generalized compatibility with math.Pow:
+</p>
+<pre>Pow(0, ±0) returns 1+0i
+Pow(0, c) for real(c)&lt;0 returns Inf+0i if imag(c) is zero, otherwise Inf+Inf i.
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Rect">func <a href="http://localhost:6060/src/math/cmplx/rect.go?s=257:292#L1">Rect</a></h2>
+			<pre>func Rect(r, θ <a href="../../builtin/index.html#float64">float64</a>) <a href="../../builtin/index.html#complex128">complex128</a></pre>
+			<p>
+Rect returns the complex number x with polar coordinates r, θ.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Sin">func <a href="http://localhost:6060/src/math/cmplx/sin.go?s=1600:1633#L43">Sin</a></h2>
+			<pre>func Sin(x <a href="../../builtin/index.html#complex128">complex128</a>) <a href="../../builtin/index.html#complex128">complex128</a></pre>
+			<p>
+Sin returns the sine of x.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Sinh">func <a href="http://localhost:6060/src/math/cmplx/sin.go?s=2082:2116#L63">Sinh</a></h2>
+			<pre>func Sinh(x <a href="../../builtin/index.html#complex128">complex128</a>) <a href="../../builtin/index.html#complex128">complex128</a></pre>
+			<p>
+Sinh returns the hyperbolic sine of x.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Sqrt">func <a href="http://localhost:6060/src/math/cmplx/sqrt.go?s=1929:1963#L48">Sqrt</a></h2>
+			<pre>func Sqrt(x <a href="../../builtin/index.html#complex128">complex128</a>) <a href="../../builtin/index.html#complex128">complex128</a></pre>
+			<p>
+Sqrt returns the square root of x.
+The result r is chosen so that real(r) ≥ 0 and imag(r) has the same sign as imag(x).
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Tan">func <a href="http://localhost:6060/src/math/cmplx/tan.go?s=1834:1867#L49">Tan</a></h2>
+			<pre>func Tan(x <a href="../../builtin/index.html#complex128">complex128</a>) <a href="../../builtin/index.html#complex128">complex128</a></pre>
+			<p>
+Tan returns the tangent of x.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Tanh">func <a href="http://localhost:6060/src/math/cmplx/tan.go?s=2396:2430#L73">Tanh</a></h2>
+			<pre>func Tanh(x <a href="../../builtin/index.html#complex128">complex128</a>) <a href="../../builtin/index.html#complex128">complex128</a></pre>
+			<p>
+Tanh returns the hyperbolic tangent of x.
+</p>
+
+			
+			
+
+		
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

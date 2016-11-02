@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>types - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package types</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/matrix-org/go-neb/types"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+				
+				<dd><a href="index.html#BaseURL">func BaseURL(u string) error</a></dd>
+			
+				
+				<dd><a href="index.html#PollingServiceTypes">func PollingServiceTypes() (types []string)</a></dd>
+			
+				
+				<dd><a href="index.html#RegisterAuthRealm">func RegisterAuthRealm(factory func(string, string) AuthRealm)</a></dd>
+			
+				
+				<dd><a href="index.html#RegisterService">func RegisterService(factory func(string, string, string) Service)</a></dd>
+			
+			
+				
+				<dd><a href="index.html#AuthRealm">type AuthRealm</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CreateAuthRealm">func CreateAuthRealm(realmID, realmType string, realmJSON []byte) (AuthRealm, error)</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#AuthSession">type AuthSession</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#BotOptions">type BotOptions</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#DefaultService">type DefaultService</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DefaultService.OnReceiveWebhook">func (s *DefaultService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DefaultService.Plugin">func (s *DefaultService) Plugin(cli *matrix.Client, roomID string) plugin.Plugin</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DefaultService.PostRegister">func (s *DefaultService) PostRegister(oldService Service)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DefaultService.Register">func (s *DefaultService) Register(oldService Service, client *matrix.Client) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Poller">type Poller</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Service">type Service</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CreateService">func CreateService(serviceID, serviceType, serviceUserID string, serviceJSON []byte) (Service, error)</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/types.go">types.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+			
+			
+			<h2 id="BaseURL">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/types.go?s=2904:2932#L64">BaseURL</a></h2>
+			<pre>func BaseURL(u <a href="../../../../builtin/index.html#string">string</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+			<p>
+BaseURL sets the base URL of NEB to the url given. This URL must be accessible from the
+public internet.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="PollingServiceTypes">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/types.go?s=3709:3752#L92">PollingServiceTypes</a></h2>
+			<pre>func PollingServiceTypes() (types []<a href="../../../../builtin/index.html#string">string</a>)</pre>
+			<p>
+PollingServiceTypes returns a list of service types which meet the Poller interface
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="RegisterAuthRealm">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/types.go?s=5063:5125#L131">RegisterAuthRealm</a></h2>
+			<pre>func RegisterAuthRealm(factory func(<a href="../../../../builtin/index.html#string">string</a>, <a href="../../../../builtin/index.html#string">string</a>) <a href="index.html#AuthRealm">AuthRealm</a>)</pre>
+			<p>
+RegisterAuthRealm registers a factory for creating AuthRealm instances.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="RegisterService">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/types.go?s=3399:3465#L82">RegisterService</a></h2>
+			<pre>func RegisterService(factory func(<a href="../../../../builtin/index.html#string">string</a>, <a href="../../../../builtin/index.html#string">string</a>, <a href="../../../../builtin/index.html#string">string</a>) <a href="index.html#Service">Service</a>)</pre>
+			<p>
+RegisterService registers a factory for creating Service instances.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="AuthRealm">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/types.go?s=4649:4922#L118">AuthRealm</a></h2>
+			<pre>type AuthRealm interface {
+    ID() <a href="../../../../builtin/index.html#string">string</a>
+    Type() <a href="../../../../builtin/index.html#string">string</a>
+    Init() <a href="../../../../builtin/index.html#error">error</a>
+    Register() <a href="../../../../builtin/index.html#error">error</a>
+    OnReceiveRedirect(w <a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#ResponseWriter">ResponseWriter</a>, req *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Request">Request</a>)
+    AuthSession(id, userID, realmID <a href="../../../../builtin/index.html#string">string</a>) <a href="index.html#AuthSession">AuthSession</a>
+    RequestAuthSession(userID <a href="../../../../builtin/index.html#string">string</a>, config <a href="../../../../encoding/json/index.html">json</a>.<a href="../../../../encoding/json/index.html#RawMessage">RawMessage</a>) interface{}
+}</pre>
+			<p>
+AuthRealm represents a place where a user can authenticate themselves.
+This may static (like github.com) or a specific domain (like matrix.org/jira)
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="CreateAuthRealm">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/types.go?s=5340:5424#L137">CreateAuthRealm</a></h3>
+				<pre>func CreateAuthRealm(realmID, realmType <a href="../../../../builtin/index.html#string">string</a>, realmJSON []<a href="../../../../builtin/index.html#byte">byte</a>) (<a href="index.html#AuthRealm">AuthRealm</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+CreateAuthRealm creates an AuthRealm of the given type and realm ID.
+Returns an error if the realm couldn&#39;t be created or the JSON cannot be unmarshalled.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="AuthSession">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/types.go?s=5943:6063#L156">AuthSession</a></h2>
+			<pre>type AuthSession interface {
+    ID() <a href="../../../../builtin/index.html#string">string</a>
+    UserID() <a href="../../../../builtin/index.html#string">string</a>
+    RealmID() <a href="../../../../builtin/index.html#string">string</a>
+    Authenticated() <a href="../../../../builtin/index.html#bool">bool</a>
+    Info() interface{}
+}</pre>
+			<p>
+AuthSession represents a single authentication session between a user and
+an auth realm.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="BotOptions">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/types.go?s=233:355#L5">BotOptions</a></h2>
+			<pre>type BotOptions struct {
+    RoomID      <a href="../../../../builtin/index.html#string">string</a>
+    UserID      <a href="../../../../builtin/index.html#string">string</a>
+    SetByUserID <a href="../../../../builtin/index.html#string">string</a>
+    Options     map[<a href="../../../../builtin/index.html#string">string</a>]interface{}
+}</pre>
+			<p>
+BotOptions for a given bot user in a given room
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="DefaultService">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/types.go?s=2167:2195#L42">DefaultService</a></h2>
+			<pre>type DefaultService struct{}</pre>
+			<p>
+DefaultService NO-OPs the implementation of optional Service interface methods. Feel free to override them.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="DefaultService.OnReceiveWebhook">func (*DefaultService) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/types.go?s=2632:2735#L56">OnReceiveWebhook</a></h3>
+				<pre>func (s *<a href="index.html#DefaultService">DefaultService</a>) OnReceiveWebhook(w <a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#ResponseWriter">ResponseWriter</a>, req *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Request">Request</a>, cli *<a href="../matrix/index.html">matrix</a>.<a href="../matrix/index.html#Client">Client</a>)</pre>
+				<p>
+OnReceiveWebhook does nothing but 200 OK the request.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DefaultService.Plugin">func (*DefaultService) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/types.go?s=2227:2307#L45">Plugin</a></h3>
+				<pre>func (s *<a href="index.html#DefaultService">DefaultService</a>) Plugin(cli *<a href="../matrix/index.html">matrix</a>.<a href="../matrix/index.html#Client">Client</a>, roomID <a href="../../../../builtin/index.html#string">string</a>) <a href="../plugin/index.html">plugin</a>.<a href="../plugin/index.html#Plugin">Plugin</a></pre>
+				<p>
+Plugin returns no plugins.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DefaultService.PostRegister">func (*DefaultService) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/types.go?s=2513:2570#L53">PostRegister</a></h3>
+				<pre>func (s *<a href="index.html#DefaultService">DefaultService</a>) PostRegister(oldService <a href="index.html#Service">Service</a>)</pre>
+				<p>
+PostRegister does nothing.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DefaultService.Register">func (*DefaultService) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/types.go?s=2384:2466#L50">Register</a></h3>
+				<pre>func (s *<a href="index.html#DefaultService">DefaultService</a>) Register(oldService <a href="index.html#Service">Service</a>, client *<a href="../matrix/index.html">matrix</a>.<a href="../matrix/index.html#Client">Client</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Register does nothing and returns no error.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Poller">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/types.go?s=470:680#L13">Poller</a></h2>
+			<pre>type Poller interface {
+    <span class="comment">// OnPoll is called when the poller should poll. Return the timestamp when you want to be polled again.</span>
+    <span class="comment">// Return 0 to never be polled again.</span>
+    OnPoll(client *<a href="../matrix/index.html">matrix</a>.<a href="../matrix/index.html#Client">Client</a>) <a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Time">Time</a>
+}</pre>
+			<p>
+Poller represents a thing which can poll. Services should implement this method signature to support polling.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Service">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/types.go?s=735:2054#L20">Service</a></h2>
+			<pre>type Service interface {
+    <span class="comment">// Return the user ID of this service.</span>
+    ServiceUserID() <a href="../../../../builtin/index.html#string">string</a>
+    <span class="comment">// Return an opaque ID used to identify this service.</span>
+    ServiceID() <a href="../../../../builtin/index.html#string">string</a>
+    <span class="comment">// Return the type of service. This string MUST NOT change.</span>
+    ServiceType() <a href="../../../../builtin/index.html#string">string</a>
+    Plugin(cli *<a href="../matrix/index.html">matrix</a>.<a href="../matrix/index.html#Client">Client</a>, roomID <a href="../../../../builtin/index.html#string">string</a>) <a href="../plugin/index.html">plugin</a>.<a href="../plugin/index.html#Plugin">Plugin</a>
+    OnReceiveWebhook(w <a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#ResponseWriter">ResponseWriter</a>, req *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Request">Request</a>, cli *<a href="../matrix/index.html">matrix</a>.<a href="../matrix/index.html#Client">Client</a>)
+    <span class="comment">// A lifecycle function which is invoked when the service is being registered. The old service, if one exists, is provided,</span>
+    <span class="comment">// along with a Client instance for ServiceUserID(). If this function returns an error, the service will not be registered</span>
+    <span class="comment">// or persisted to the database, and the user&#39;s request will fail. This can be useful if you depend on external factors</span>
+    <span class="comment">// such as registering webhooks.</span>
+    Register(oldService <a href="index.html#Service">Service</a>, client *<a href="../matrix/index.html">matrix</a>.<a href="../matrix/index.html#Client">Client</a>) <a href="../../../../builtin/index.html#error">error</a>
+    <span class="comment">// A lifecycle function which is invoked after the service has been successfully registered and persisted to the database.</span>
+    <span class="comment">// This function is invoked within the critical section for configuring services, guaranteeing that there will not be</span>
+    <span class="comment">// concurrent modifications to this service whilst this function executes. This lifecycle hook should be used to clean</span>
+    <span class="comment">// up resources which are no longer needed (e.g. removing old webhooks).</span>
+    PostRegister(oldService <a href="index.html#Service">Service</a>)
+}</pre>
+			<p>
+A Service is the configuration for a bot service.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="CreateService">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/types.go?s=3960:4061#L101">CreateService</a></h3>
+				<pre>func CreateService(serviceID, serviceType, serviceUserID <a href="../../../../builtin/index.html#string">string</a>, serviceJSON []<a href="../../../../builtin/index.html#byte">byte</a>) (<a href="index.html#Service">Service</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+CreateService creates a Service of the given type and serviceID.
+Returns an error if the Service couldn&#39;t be created.
+</p>
+
+				
+				
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>iterator - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package iterator</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/syndtr/goleveldb/leveldb/iterator"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package iterator provides interface and implementation to traverse over
+contents of a database.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+			
+				
+				<dd><a href="index.html#Array">type Array</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ArrayIndexer">type ArrayIndexer</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#BasicArray">type BasicArray</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#CommonIterator">type CommonIterator</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ErrorCallbackSetter">type ErrorCallbackSetter</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Iterator">type Iterator</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewArrayIterator">func NewArrayIterator(array Array) Iterator</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewEmptyIterator">func NewEmptyIterator(err error) Iterator</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewIndexedIterator">func NewIndexedIterator(index IteratorIndexer, strict bool) Iterator</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewMergedIterator">func NewMergedIterator(iters []Iterator, cmp comparer.Comparer, strict bool) Iterator</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#IteratorIndexer">type IteratorIndexer</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewArrayIndexer">func NewArrayIndexer(array ArrayIndexer) IteratorIndexer</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#IteratorSeeker">type IteratorSeeker</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/iterator/array_iter.go">array_iter.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/iterator/indexed_iter.go">indexed_iter.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/iterator/iter.go">iter.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/iterator/merged_iter.go">merged_iter.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var (
+    <span id="ErrIterReleased">ErrIterReleased</span> = <a href="../../../../../errors/index.html">errors</a>.<a href="../../../../../errors/index.html#New">New</a>(&#34;leveldb/iterator: iterator released&#34;)
+)</pre>
+				
+			
+		
+		
+		
+			
+			
+			<h2 id="Array">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/iterator/array_iter.go?s=620:741#L14">Array</a></h2>
+			<pre>type Array interface {
+    <a href="index.html#BasicArray">BasicArray</a>
+
+    <span class="comment">// Index returns key/value pair with index of i.</span>
+    Index(i <a href="../../../../../builtin/index.html#int">int</a>) (key, value []<a href="../../../../../builtin/index.html#byte">byte</a>)
+}</pre>
+			<p>
+Array is the interface that wraps BasicArray and basic Index method.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ArrayIndexer">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/iterator/array_iter.go?s=813:931#L22">ArrayIndexer</a></h2>
+			<pre>type ArrayIndexer interface {
+    <a href="index.html#BasicArray">BasicArray</a>
+
+    <span class="comment">// Get returns a new data iterator with index of i.</span>
+    Get(i <a href="../../../../../builtin/index.html#int">int</a>) <a href="index.html#Iterator">Iterator</a>
+}</pre>
+			<p>
+Array is the interface that wraps BasicArray and basic Get method.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="BasicArray">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/iterator/array_iter.go?s=340:546#L4">BasicArray</a></h2>
+			<pre>type BasicArray interface {
+    <span class="comment">// Len returns length of the array.</span>
+    Len() <a href="../../../../../builtin/index.html#int">int</a>
+
+    <span class="comment">// Search finds smallest index that point to a key that is greater</span>
+    <span class="comment">// than or equal to the given key.</span>
+    Search(key []<a href="../../../../../builtin/index.html#byte">byte</a>) <a href="../../../../../builtin/index.html#int">int</a>
+}</pre>
+			<p>
+BasicArray is the interface that wraps basic Len and Search method.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="CommonIterator">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/iterator/iter.go?s=1587:2091#L42">CommonIterator</a></h2>
+			<pre>type CommonIterator interface {
+    <a href="index.html#IteratorSeeker">IteratorSeeker</a>
+
+    <span class="comment">// util.Releaser is the interface that wraps basic Release method.</span>
+    <span class="comment">// When called Release will releases any resources associated with the</span>
+    <span class="comment">// iterator.</span>
+    <a href="../util/index.html">util</a>.<a href="../util/index.html#Releaser">Releaser</a>
+
+    <span class="comment">// util.ReleaseSetter is the interface that wraps the basic SetReleaser</span>
+    <span class="comment">// method.</span>
+    <a href="../util/index.html">util</a>.<a href="../util/index.html#ReleaseSetter">ReleaseSetter</a>
+
+    <span class="comment">// TODO: Remove this when ready.</span>
+    Valid() <a href="../../../../../builtin/index.html#bool">bool</a>
+
+    <span class="comment">// Error returns any accumulated error. Exhausting all the key/value pairs</span>
+    <span class="comment">// is not considered to be an error.</span>
+    Error() <a href="../../../../../builtin/index.html#error">error</a>
+}</pre>
+			<p>
+CommonIterator is the interface that wraps common iterator methods.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ErrorCallbackSetter">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/iterator/iter.go?s=3285:3476#L91">ErrorCallbackSetter</a></h2>
+			<pre>type ErrorCallbackSetter interface {
+    <span class="comment">// SetErrorCallback allows set an error callback of the corresponding</span>
+    <span class="comment">// iterator. Use nil to clear the callback.</span>
+    SetErrorCallback(f func(err <a href="../../../../../builtin/index.html#error">error</a>))
+}</pre>
+			<p>
+ErrorCallbackSetter is the interface that wraps basic SetErrorCallback
+method.
+</p>
+<p>
+ErrorCallbackSetter implemented by indexed and merged iterator.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Iterator">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/iterator/iter.go?s=2627:3128#L73">Iterator</a></h2>
+			<pre>type Iterator interface {
+    <a href="index.html#CommonIterator">CommonIterator</a>
+
+    <span class="comment">// Key returns the key of the current key/value pair, or nil if done.</span>
+    <span class="comment">// The caller should not modify the contents of the returned slice, and</span>
+    <span class="comment">// its contents may change on the next call to any &#39;seeks method&#39;.</span>
+    Key() []<a href="../../../../../builtin/index.html#byte">byte</a>
+
+    <span class="comment">// Value returns the key of the current key/value pair, or nil if done.</span>
+    <span class="comment">// The caller should not modify the contents of the returned slice, and</span>
+    <span class="comment">// its contents may change on the next call to any &#39;seeks method&#39;.</span>
+    Value() []<a href="../../../../../builtin/index.html#byte">byte</a>
+}</pre>
+			<p>
+Iterator iterates over a DB&#39;s key/value pairs in key order.
+</p>
+<p>
+When encounter an error any &#39;seeks method&#39; will return false and will
+yield no key/value pairs. The error can be queried by calling the Error
+method. Calling Release is still necessary.
+</p>
+<p>
+An iterator must be released after use, but it is not necessary to read
+an iterator until exhaustion.
+Also, an iterator is not necessarily safe for concurrent use, but it is
+safe to use multiple iterators concurrently, with each in a dedicated
+goroutine.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewArrayIterator">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/iterator/array_iter.go?s=2972:3015#L160">NewArrayIterator</a></h3>
+				<pre>func NewArrayIterator(array <a href="index.html#Array">Array</a>) <a href="index.html#Iterator">Iterator</a></pre>
+				<p>
+NewArrayIterator returns an iterator from the given array.
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewEmptyIterator">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/iterator/iter.go?s=4397:4438#L120">NewEmptyIterator</a></h3>
+				<pre>func NewEmptyIterator(err <a href="../../../../../builtin/index.html#error">error</a>) <a href="index.html#Iterator">Iterator</a></pre>
+				<p>
+NewEmptyIterator creates an empty iterator. The err parameter can be
+nil, but if not nil the given err will be returned by Error method.
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewIndexedIterator">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/iterator/indexed_iter.go?s=4276:4344#L230">NewIndexedIterator</a></h3>
+				<pre>func NewIndexedIterator(index <a href="index.html#IteratorIndexer">IteratorIndexer</a>, strict <a href="../../../../../builtin/index.html#bool">bool</a>) <a href="index.html#Iterator">Iterator</a></pre>
+				<p>
+NewIndexedIterator returns an &#39;indexed iterator&#39;. An index is iterator
+that returns another iterator, a &#39;data iterator&#39;. A &#39;data iterator&#39; is the
+iterator that contains actual key/value pairs.
+</p>
+<p>
+If strict is true the any &#39;corruption errors&#39; (i.e errors.IsCorrupted(err) == true)
+won&#39;t be ignored and will halt &#39;indexed iterator&#39;, otherwise the iterator will
+continue to the next &#39;data iterator&#39;. Corruption on &#39;index iterator&#39; will not be
+ignored and will halt the iterator.
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewMergedIterator">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/iterator/merged_iter.go?s=5622:5707#L287">NewMergedIterator</a></h3>
+				<pre>func NewMergedIterator(iters []<a href="index.html#Iterator">Iterator</a>, cmp <a href="../comparer/index.html">comparer</a>.<a href="../comparer/index.html#Comparer">Comparer</a>, strict <a href="../../../../../builtin/index.html#bool">bool</a>) <a href="index.html#Iterator">Iterator</a></pre>
+				<p>
+NewMergedIterator returns an iterator that merges its input. Walking the
+resultant iterator will return all key/value pairs of all input iterators
+in strictly increasing key order, as defined by cmp.
+The input&#39;s key ranges may overlap, but there are assumed to be no duplicate
+keys: if iters[i] contains a key k then iters[j] will not contain that key k.
+None of the iters may be nil.
+</p>
+<p>
+If strict is true the any &#39;corruption errors&#39; (i.e errors.IsCorrupted(err) == true)
+won&#39;t be ignored and will halt &#39;merged iterator&#39;, otherwise the iterator will
+continue to the next &#39;input iterator&#39;.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="IteratorIndexer">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/iterator/indexed_iter.go?s=455:604#L6">IteratorIndexer</a></h2>
+			<pre>type IteratorIndexer interface {
+    <a href="index.html#CommonIterator">CommonIterator</a>
+
+    <span class="comment">// Get returns a new data iterator for the current position, or nil if</span>
+    <span class="comment">// done.</span>
+    Get() <a href="index.html#Iterator">Iterator</a>
+}</pre>
+			<p>
+IteratorIndexer is the interface that wraps CommonIterator and basic Get
+method. IteratorIndexer provides index for indexed iterator.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewArrayIndexer">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/iterator/array_iter.go?s=3235:3291#L169">NewArrayIndexer</a></h3>
+				<pre>func NewArrayIndexer(array <a href="index.html#ArrayIndexer">ArrayIndexer</a>) <a href="index.html#IteratorIndexer">IteratorIndexer</a></pre>
+				<p>
+NewArrayIndexer returns an index iterator from the given array.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="IteratorSeeker">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/iterator/iter.go?s=526:1514#L12">IteratorSeeker</a></h2>
+			<pre>type IteratorSeeker interface {
+    <span class="comment">// First moves the iterator to the first key/value pair. If the iterator</span>
+    <span class="comment">// only contains one key/value pair then First and Last would moves</span>
+    <span class="comment">// to the same key/value pair.</span>
+    <span class="comment">// It returns whether such pair exist.</span>
+    First() <a href="../../../../../builtin/index.html#bool">bool</a>
+
+    <span class="comment">// Last moves the iterator to the last key/value pair. If the iterator</span>
+    <span class="comment">// only contains one key/value pair then First and Last would moves</span>
+    <span class="comment">// to the same key/value pair.</span>
+    <span class="comment">// It returns whether such pair exist.</span>
+    Last() <a href="../../../../../builtin/index.html#bool">bool</a>
+
+    <span class="comment">// Seek moves the iterator to the first key/value pair whose key is greater</span>
+    <span class="comment">// than or equal to the given key.</span>
+    <span class="comment">// It returns whether such pair exist.</span>
+    <span class="comment">//</span>
+    <span class="comment">// It is safe to modify the contents of the argument after Seek returns.</span>
+    Seek(key []<a href="../../../../../builtin/index.html#byte">byte</a>) <a href="../../../../../builtin/index.html#bool">bool</a>
+
+    <span class="comment">// Next moves the iterator to the next key/value pair.</span>
+    <span class="comment">// It returns whether the iterator is exhausted.</span>
+    Next() <a href="../../../../../builtin/index.html#bool">bool</a>
+
+    <span class="comment">// Prev moves the iterator to the previous key/value pair.</span>
+    <span class="comment">// It returns whether the iterator is exhausted.</span>
+    Prev() <a href="../../../../../builtin/index.html#bool">bool</a>
+}</pre>
+			<p>
+IteratorSeeker is the interface that wraps the &#39;seeks method&#39;.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

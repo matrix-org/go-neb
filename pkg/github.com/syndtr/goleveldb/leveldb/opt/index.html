@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>opt - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package opt</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/syndtr/goleveldb/leveldb/opt"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package opt provides sets of options used by LevelDB.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="index.html#pkg-constants">Constants</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+				
+				<dd><a href="index.html#GetStrict">func GetStrict(o *Options, ro *ReadOptions, strict Strict) bool</a></dd>
+			
+			
+				
+				<dd><a href="index.html#Cacher">type Cacher</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#CacherFunc">type CacherFunc</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CacherFunc.New">func (f *CacherFunc) New(capacity int) cache.Cacher</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Compression">type Compression</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Compression.String">func (c Compression) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Options">type Options</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Options.GetAltFilters">func (o *Options) GetAltFilters() []filter.Filter</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Options.GetBlockCacheCapacity">func (o *Options) GetBlockCacheCapacity() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Options.GetBlockCacher">func (o *Options) GetBlockCacher() Cacher</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Options.GetBlockRestartInterval">func (o *Options) GetBlockRestartInterval() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Options.GetBlockSize">func (o *Options) GetBlockSize() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Options.GetCompactionExpandLimit">func (o *Options) GetCompactionExpandLimit(level int) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Options.GetCompactionGPOverlaps">func (o *Options) GetCompactionGPOverlaps(level int) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Options.GetCompactionL0Trigger">func (o *Options) GetCompactionL0Trigger() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Options.GetCompactionSourceLimit">func (o *Options) GetCompactionSourceLimit(level int) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Options.GetCompactionTableSize">func (o *Options) GetCompactionTableSize(level int) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Options.GetCompactionTotalSize">func (o *Options) GetCompactionTotalSize(level int) int64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Options.GetComparer">func (o *Options) GetComparer() comparer.Comparer</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Options.GetCompression">func (o *Options) GetCompression() Compression</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Options.GetDisableBlockCache">func (o *Options) GetDisableBlockCache() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Options.GetDisableBufferPool">func (o *Options) GetDisableBufferPool() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Options.GetDisableCompactionBackoff">func (o *Options) GetDisableCompactionBackoff() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Options.GetDisableLargeBatchTransaction">func (o *Options) GetDisableLargeBatchTransaction() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Options.GetErrorIfExist">func (o *Options) GetErrorIfExist() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Options.GetErrorIfMissing">func (o *Options) GetErrorIfMissing() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Options.GetFilter">func (o *Options) GetFilter() filter.Filter</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Options.GetIteratorSamplingRate">func (o *Options) GetIteratorSamplingRate() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Options.GetNoSync">func (o *Options) GetNoSync() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Options.GetNoWriteMerge">func (o *Options) GetNoWriteMerge() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Options.GetOpenFilesCacheCapacity">func (o *Options) GetOpenFilesCacheCapacity() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Options.GetOpenFilesCacher">func (o *Options) GetOpenFilesCacher() Cacher</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Options.GetReadOnly">func (o *Options) GetReadOnly() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Options.GetStrict">func (o *Options) GetStrict(strict Strict) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Options.GetWriteBuffer">func (o *Options) GetWriteBuffer() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Options.GetWriteL0PauseTrigger">func (o *Options) GetWriteL0PauseTrigger() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Options.GetWriteL0SlowdownTrigger">func (o *Options) GetWriteL0SlowdownTrigger() int</a></dd>
+				
+			
+				
+				<dd><a href="index.html#ReadOptions">type ReadOptions</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ReadOptions.GetDontFillCache">func (ro *ReadOptions) GetDontFillCache() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ReadOptions.GetStrict">func (ro *ReadOptions) GetStrict(strict Strict) bool</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Strict">type Strict</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#WriteOptions">type WriteOptions</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#WriteOptions.GetNoWriteMerge">func (wo *WriteOptions) GetNoWriteMerge() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#WriteOptions.GetSync">func (wo *WriteOptions) GetSync() bool</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go">options.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const (
+    <span id="KiB">KiB</span> = 1024
+    <span id="MiB">MiB</span> = <a href="index.html#KiB">KiB</a> * 1024
+    <span id="GiB">GiB</span> = <a href="index.html#MiB">MiB</a> * 1024
+)</pre>
+				
+			
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var (
+    <span id="DefaultBlockCacher">DefaultBlockCacher</span>                   = <a href="index.html#LRUCacher">LRUCacher</a>
+    <span id="DefaultBlockCacheCapacity">DefaultBlockCacheCapacity</span>            = 8 * <a href="index.html#MiB">MiB</a>
+    <span id="DefaultBlockRestartInterval">DefaultBlockRestartInterval</span>          = 16
+    <span id="DefaultBlockSize">DefaultBlockSize</span>                     = 4 * <a href="index.html#KiB">KiB</a>
+    <span id="DefaultCompactionExpandLimitFactor">DefaultCompactionExpandLimitFactor</span>   = 25
+    <span id="DefaultCompactionGPOverlapsFactor">DefaultCompactionGPOverlapsFactor</span>    = 10
+    <span id="DefaultCompactionL0Trigger">DefaultCompactionL0Trigger</span>           = 4
+    <span id="DefaultCompactionSourceLimitFactor">DefaultCompactionSourceLimitFactor</span>   = 1
+    <span id="DefaultCompactionTableSize">DefaultCompactionTableSize</span>           = 2 * <a href="index.html#MiB">MiB</a>
+    <span id="DefaultCompactionTableSizeMultiplier">DefaultCompactionTableSizeMultiplier</span> = 1.0
+    <span id="DefaultCompactionTotalSize">DefaultCompactionTotalSize</span>           = 10 * <a href="index.html#MiB">MiB</a>
+    <span id="DefaultCompactionTotalSizeMultiplier">DefaultCompactionTotalSizeMultiplier</span> = 10.0
+    <span id="DefaultCompressionType">DefaultCompressionType</span>               = <a href="index.html#SnappyCompression">SnappyCompression</a>
+    <span id="DefaultIteratorSamplingRate">DefaultIteratorSamplingRate</span>          = 1 * <a href="index.html#MiB">MiB</a>
+    <span id="DefaultOpenFilesCacher">DefaultOpenFilesCacher</span>               = <a href="index.html#LRUCacher">LRUCacher</a>
+    <span id="DefaultOpenFilesCacheCapacity">DefaultOpenFilesCacheCapacity</span>        = 500
+    <span id="DefaultWriteBuffer">DefaultWriteBuffer</span>                   = 4 * <a href="index.html#MiB">MiB</a>
+    <span id="DefaultWriteL0PauseTrigger">DefaultWriteL0PauseTrigger</span>           = 12
+    <span id="DefaultWriteL0SlowdownTrigger">DefaultWriteL0SlowdownTrigger</span>        = 8
+)</pre>
+				
+			
+				<pre>var (
+    <span class="comment">// LRUCacher is the LRU-cache algorithm.</span>
+    <span id="LRUCacher">LRUCacher</span> = &amp;<a href="index.html#CacherFunc">CacherFunc</a>{<a href="../cache/index.html">cache</a>.<a href="../cache/index.html#NewLRU">NewLRU</a>}
+
+    <span class="comment">// NoCacher is the value to disable caching algorithm.</span>
+    <span id="NoCacher">NoCacher</span> = &amp;<a href="index.html#CacherFunc">CacherFunc</a>{}
+)</pre>
+				
+			
+		
+		
+			
+			
+			<h2 id="GetStrict">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=18476:18539#L668">GetStrict</a></h2>
+			<pre>func GetStrict(o *<a href="index.html#Options">Options</a>, ro *<a href="index.html#ReadOptions">ReadOptions</a>, strict <a href="index.html#Strict">Strict</a>) <a href="../../../../../builtin/index.html#bool">bool</a></pre>
+			
+			
+			
+
+		
+		
+			
+			
+			<h2 id="Cacher">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=1405:1462#L37">Cacher</a></h2>
+			<pre>type Cacher interface {
+    New(capacity <a href="../../../../../builtin/index.html#int">int</a>) <a href="../cache/index.html">cache</a>.<a href="../cache/index.html#Cacher">Cacher</a>
+}</pre>
+			<p>
+Cacher is a caching algorithm.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="CacherFunc">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=1464:1531#L41">CacherFunc</a></h2>
+			<pre>type CacherFunc struct {
+    NewFunc func(capacity <a href="../../../../../builtin/index.html#int">int</a>) <a href="../cache/index.html">cache</a>.<a href="../cache/index.html#Cacher">Cacher</a>
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="CacherFunc.New">func (*CacherFunc) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=1533:1584#L45">New</a></h3>
+				<pre>func (f *<a href="index.html#CacherFunc">CacherFunc</a>) New(capacity <a href="../../../../../builtin/index.html#int">int</a>) <a href="../cache/index.html">cache</a>.<a href="../cache/index.html#Cacher">Cacher</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Compression">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=1951:1972#L63">Compression</a></h2>
+			<pre>type Compression <a href="../../../../../builtin/index.html#uint">uint</a></pre>
+			<p>
+Compression is the &#39;sorted table&#39; block compression algorithm to use.
+</p>
+
+
+			
+				<pre>const (
+    <span id="DefaultCompression">DefaultCompression</span> <a href="index.html#Compression">Compression</a> = <a href="../../../../../builtin/index.html#iota">iota</a>
+    <span id="NoCompression">NoCompression</span>
+    <span id="SnappyCompression">SnappyCompression</span>
+)</pre>
+				
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Compression.String">func (Compression) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=1974:2010#L65">String</a></h3>
+				<pre>func (c <a href="index.html#Compression">Compression</a>) String() <a href="../../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Options">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=4032:11043#L131">Options</a></h2>
+			<pre>type Options struct {
+    <span class="comment">// AltFilters defines one or more &#39;alternative filters&#39;.</span>
+    <span class="comment">// &#39;alternative filters&#39; will be used during reads if a filter block</span>
+    <span class="comment">// does not match with the &#39;effective filter&#39;.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default value is nil</span>
+    AltFilters []<a href="../filter/index.html">filter</a>.<a href="../filter/index.html#Filter">Filter</a>
+
+    <span class="comment">// BlockCacher provides cache algorithm for LevelDB &#39;sorted table&#39; block caching.</span>
+    <span class="comment">// Specify NoCacher to disable caching algorithm.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default value is LRUCacher.</span>
+    BlockCacher <a href="index.html#Cacher">Cacher</a>
+
+    <span class="comment">// BlockCacheCapacity defines the capacity of the &#39;sorted table&#39; block caching.</span>
+    <span class="comment">// Use -1 for zero, this has same effect as specifying NoCacher to BlockCacher.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default value is 8MiB.</span>
+    BlockCacheCapacity <a href="../../../../../builtin/index.html#int">int</a>
+
+    <span class="comment">// BlockRestartInterval is the number of keys between restart points for</span>
+    <span class="comment">// delta encoding of keys.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default value is 16.</span>
+    BlockRestartInterval <a href="../../../../../builtin/index.html#int">int</a>
+
+    <span class="comment">// BlockSize is the minimum uncompressed size in bytes of each &#39;sorted table&#39;</span>
+    <span class="comment">// block.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default value is 4KiB.</span>
+    BlockSize <a href="../../../../../builtin/index.html#int">int</a>
+
+    <span class="comment">// CompactionExpandLimitFactor limits compaction size after expanded.</span>
+    <span class="comment">// This will be multiplied by table size limit at compaction target level.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default value is 25.</span>
+    CompactionExpandLimitFactor <a href="../../../../../builtin/index.html#int">int</a>
+
+    <span class="comment">// CompactionGPOverlapsFactor limits overlaps in grandparent (Level + 2) that a</span>
+    <span class="comment">// single &#39;sorted table&#39; generates.</span>
+    <span class="comment">// This will be multiplied by table size limit at grandparent level.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default value is 10.</span>
+    CompactionGPOverlapsFactor <a href="../../../../../builtin/index.html#int">int</a>
+
+    <span class="comment">// CompactionL0Trigger defines number of &#39;sorted table&#39; at level-0 that will</span>
+    <span class="comment">// trigger compaction.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default value is 4.</span>
+    CompactionL0Trigger <a href="../../../../../builtin/index.html#int">int</a>
+
+    <span class="comment">// CompactionSourceLimitFactor limits compaction source size. This doesn&#39;t apply to</span>
+    <span class="comment">// level-0.</span>
+    <span class="comment">// This will be multiplied by table size limit at compaction target level.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default value is 1.</span>
+    CompactionSourceLimitFactor <a href="../../../../../builtin/index.html#int">int</a>
+
+    <span class="comment">// CompactionTableSize limits size of &#39;sorted table&#39; that compaction generates.</span>
+    <span class="comment">// The limits for each level will be calculated as:</span>
+    <span class="comment">//   CompactionTableSize * (CompactionTableSizeMultiplier ^ Level)</span>
+    <span class="comment">// The multiplier for each level can also fine-tuned using CompactionTableSizeMultiplierPerLevel.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default value is 2MiB.</span>
+    CompactionTableSize <a href="../../../../../builtin/index.html#int">int</a>
+
+    <span class="comment">// CompactionTableSizeMultiplier defines multiplier for CompactionTableSize.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default value is 1.</span>
+    CompactionTableSizeMultiplier <a href="../../../../../builtin/index.html#float64">float64</a>
+
+    <span class="comment">// CompactionTableSizeMultiplierPerLevel defines per-level multiplier for</span>
+    <span class="comment">// CompactionTableSize.</span>
+    <span class="comment">// Use zero to skip a level.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default value is nil.</span>
+    CompactionTableSizeMultiplierPerLevel []<a href="../../../../../builtin/index.html#float64">float64</a>
+
+    <span class="comment">// CompactionTotalSize limits total size of &#39;sorted table&#39; for each level.</span>
+    <span class="comment">// The limits for each level will be calculated as:</span>
+    <span class="comment">//   CompactionTotalSize * (CompactionTotalSizeMultiplier ^ Level)</span>
+    <span class="comment">// The multiplier for each level can also fine-tuned using</span>
+    <span class="comment">// CompactionTotalSizeMultiplierPerLevel.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default value is 10MiB.</span>
+    CompactionTotalSize <a href="../../../../../builtin/index.html#int">int</a>
+
+    <span class="comment">// CompactionTotalSizeMultiplier defines multiplier for CompactionTotalSize.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default value is 10.</span>
+    CompactionTotalSizeMultiplier <a href="../../../../../builtin/index.html#float64">float64</a>
+
+    <span class="comment">// CompactionTotalSizeMultiplierPerLevel defines per-level multiplier for</span>
+    <span class="comment">// CompactionTotalSize.</span>
+    <span class="comment">// Use zero to skip a level.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default value is nil.</span>
+    CompactionTotalSizeMultiplierPerLevel []<a href="../../../../../builtin/index.html#float64">float64</a>
+
+    <span class="comment">// Comparer defines a total ordering over the space of []byte keys: a &#39;less</span>
+    <span class="comment">// than&#39; relationship. The same comparison algorithm must be used for reads</span>
+    <span class="comment">// and writes over the lifetime of the DB.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default value uses the same ordering as bytes.Compare.</span>
+    Comparer <a href="../comparer/index.html">comparer</a>.<a href="../comparer/index.html#Comparer">Comparer</a>
+
+    <span class="comment">// Compression defines the &#39;sorted table&#39; block compression to use.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default value (DefaultCompression) uses snappy compression.</span>
+    Compression <a href="index.html#Compression">Compression</a>
+
+    <span class="comment">// DisableBufferPool allows disable use of util.BufferPool functionality.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default value is false.</span>
+    DisableBufferPool <a href="../../../../../builtin/index.html#bool">bool</a>
+
+    <span class="comment">// DisableBlockCache allows disable use of cache.Cache functionality on</span>
+    <span class="comment">// &#39;sorted table&#39; block.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default value is false.</span>
+    DisableBlockCache <a href="../../../../../builtin/index.html#bool">bool</a>
+
+    <span class="comment">// DisableCompactionBackoff allows disable compaction retry backoff.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default value is false.</span>
+    DisableCompactionBackoff <a href="../../../../../builtin/index.html#bool">bool</a>
+
+    <span class="comment">// DisableLargeBatchTransaction allows disabling switch-to-transaction mode</span>
+    <span class="comment">// on large batch write. If enable batch writes large than WriteBuffer will</span>
+    <span class="comment">// use transaction.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default is false.</span>
+    DisableLargeBatchTransaction <a href="../../../../../builtin/index.html#bool">bool</a>
+
+    <span class="comment">// ErrorIfExist defines whether an error should returned if the DB already</span>
+    <span class="comment">// exist.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default value is false.</span>
+    ErrorIfExist <a href="../../../../../builtin/index.html#bool">bool</a>
+
+    <span class="comment">// ErrorIfMissing defines whether an error should returned if the DB is</span>
+    <span class="comment">// missing. If false then the database will be created if missing, otherwise</span>
+    <span class="comment">// an error will be returned.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default value is false.</span>
+    ErrorIfMissing <a href="../../../../../builtin/index.html#bool">bool</a>
+
+    <span class="comment">// Filter defines an &#39;effective filter&#39; to use. An &#39;effective filter&#39;</span>
+    <span class="comment">// if defined will be used to generate per-table filter block.</span>
+    <span class="comment">// The filter name will be stored on disk.</span>
+    <span class="comment">// During reads LevelDB will try to find matching filter from</span>
+    <span class="comment">// &#39;effective filter&#39; and &#39;alternative filters&#39;.</span>
+    <span class="comment">//</span>
+    <span class="comment">// Filter can be changed after a DB has been created. It is recommended</span>
+    <span class="comment">// to put old filter to the &#39;alternative filters&#39; to mitigate lack of</span>
+    <span class="comment">// filter during transition period.</span>
+    <span class="comment">//</span>
+    <span class="comment">// A filter is used to reduce disk reads when looking for a specific key.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default value is nil.</span>
+    Filter <a href="../filter/index.html">filter</a>.<a href="../filter/index.html#Filter">Filter</a>
+
+    <span class="comment">// IteratorSamplingRate defines approximate gap (in bytes) between read</span>
+    <span class="comment">// sampling of an iterator. The samples will be used to determine when</span>
+    <span class="comment">// compaction should be triggered.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default is 1MiB.</span>
+    IteratorSamplingRate <a href="../../../../../builtin/index.html#int">int</a>
+
+    <span class="comment">// NoSync allows completely disable fsync.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default is false.</span>
+    NoSync <a href="../../../../../builtin/index.html#bool">bool</a>
+
+    <span class="comment">// NoWriteMerge allows disabling write merge.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default is false.</span>
+    NoWriteMerge <a href="../../../../../builtin/index.html#bool">bool</a>
+
+    <span class="comment">// OpenFilesCacher provides cache algorithm for open files caching.</span>
+    <span class="comment">// Specify NoCacher to disable caching algorithm.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default value is LRUCacher.</span>
+    OpenFilesCacher <a href="index.html#Cacher">Cacher</a>
+
+    <span class="comment">// OpenFilesCacheCapacity defines the capacity of the open files caching.</span>
+    <span class="comment">// Use -1 for zero, this has same effect as specifying NoCacher to OpenFilesCacher.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default value is 500.</span>
+    OpenFilesCacheCapacity <a href="../../../../../builtin/index.html#int">int</a>
+
+    <span class="comment">// If true then opens DB in read-only mode.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default value is false.</span>
+    ReadOnly <a href="../../../../../builtin/index.html#bool">bool</a>
+
+    <span class="comment">// Strict defines the DB strict level.</span>
+    Strict <a href="index.html#Strict">Strict</a>
+
+    <span class="comment">// WriteBuffer defines maximum size of a &#39;memdb&#39; before flushed to</span>
+    <span class="comment">// &#39;sorted table&#39;. &#39;memdb&#39; is an in-memory DB backed by an on-disk</span>
+    <span class="comment">// unsorted journal.</span>
+    <span class="comment">//</span>
+    <span class="comment">// LevelDB may held up to two &#39;memdb&#39; at the same time.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default value is 4MiB.</span>
+    WriteBuffer <a href="../../../../../builtin/index.html#int">int</a>
+
+    <span class="comment">// WriteL0StopTrigger defines number of &#39;sorted table&#39; at level-0 that will</span>
+    <span class="comment">// pause write.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default value is 12.</span>
+    WriteL0PauseTrigger <a href="../../../../../builtin/index.html#int">int</a>
+
+    <span class="comment">// WriteL0SlowdownTrigger defines number of &#39;sorted table&#39; at level-0 that</span>
+    <span class="comment">// will trigger write slowdown.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default value is 8.</span>
+    WriteL0SlowdownTrigger <a href="../../../../../builtin/index.html#int">int</a>
+}</pre>
+			<p>
+Options holds the optional parameters for the DB at large.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Options.GetAltFilters">func (*Options) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=11045:11094#L352">GetAltFilters</a></h3>
+				<pre>func (o *<a href="index.html#Options">Options</a>) GetAltFilters() []<a href="../filter/index.html">filter</a>.<a href="../filter/index.html#Filter">Filter</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Options.GetBlockCacheCapacity">func (*Options) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=11343:11388#L368">GetBlockCacheCapacity</a></h3>
+				<pre>func (o *<a href="index.html#Options">Options</a>) GetBlockCacheCapacity() <a href="../../../../../builtin/index.html#int">int</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Options.GetBlockCacher">func (*Options) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=11152:11193#L359">GetBlockCacher</a></h3>
+				<pre>func (o *<a href="index.html#Options">Options</a>) GetBlockCacher() <a href="index.html#Cacher">Cacher</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Options.GetBlockRestartInterval">func (*Options) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=11554:11601#L377">GetBlockRestartInterval</a></h3>
+				<pre>func (o *<a href="index.html#Options">Options</a>) GetBlockRestartInterval() <a href="../../../../../builtin/index.html#int">int</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Options.GetBlockSize">func (*Options) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=11724:11760#L384">GetBlockSize</a></h3>
+				<pre>func (o *<a href="index.html#Options">Options</a>) GetBlockSize() <a href="../../../../../builtin/index.html#int">int</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Options.GetCompactionExpandLimit">func (*Options) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=11850:11907#L391">GetCompactionExpandLimit</a></h3>
+				<pre>func (o *<a href="index.html#Options">Options</a>) GetCompactionExpandLimit(level <a href="../../../../../builtin/index.html#int">int</a>) <a href="../../../../../builtin/index.html#int">int</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Options.GetCompactionGPOverlaps">func (*Options) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=12106:12162#L399">GetCompactionGPOverlaps</a></h3>
+				<pre>func (o *<a href="index.html#Options">Options</a>) GetCompactionGPOverlaps(level <a href="../../../../../builtin/index.html#int">int</a>) <a href="../../../../../builtin/index.html#int">int</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Options.GetCompactionL0Trigger">func (*Options) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=12358:12404#L407">GetCompactionL0Trigger</a></h3>
+				<pre>func (o *<a href="index.html#Options">Options</a>) GetCompactionL0Trigger() <a href="../../../../../builtin/index.html#int">int</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Options.GetCompactionSourceLimit">func (*Options) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=12524:12581#L414">GetCompactionSourceLimit</a></h3>
+				<pre>func (o *<a href="index.html#Options">Options</a>) GetCompactionSourceLimit(level <a href="../../../../../builtin/index.html#int">int</a>) <a href="../../../../../builtin/index.html#int">int</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Options.GetCompactionTableSize">func (*Options) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=12780:12835#L422">GetCompactionTableSize</a></h3>
+				<pre>func (o *<a href="index.html#Options">Options</a>) GetCompactionTableSize(level <a href="../../../../../builtin/index.html#int">int</a>) <a href="../../../../../builtin/index.html#int">int</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Options.GetCompactionTotalSize">func (*Options) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=13407:13464#L443">GetCompactionTotalSize</a></h3>
+				<pre>func (o *<a href="index.html#Options">Options</a>) GetCompactionTotalSize(level <a href="../../../../../builtin/index.html#int">int</a>) <a href="../../../../../builtin/index.html#int64">int64</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Options.GetComparer">func (*Options) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=14038:14087#L464">GetComparer</a></h3>
+				<pre>func (o *<a href="index.html#Options">Options</a>) GetComparer() <a href="../comparer/index.html">comparer</a>.<a href="../comparer/index.html#Comparer">Comparer</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Options.GetCompression">func (*Options) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=14185:14231#L471">GetCompression</a></h3>
+				<pre>func (o *<a href="index.html#Options">Options</a>) GetCompression() <a href="index.html#Compression">Compression</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Options.GetDisableBlockCache">func (*Options) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=14493:14538#L485">GetDisableBlockCache</a></h3>
+				<pre>func (o *<a href="index.html#Options">Options</a>) GetDisableBlockCache() <a href="../../../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Options.GetDisableBufferPool">func (*Options) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=14381:14426#L478">GetDisableBufferPool</a></h3>
+				<pre>func (o *<a href="index.html#Options">Options</a>) GetDisableBufferPool() <a href="../../../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Options.GetDisableCompactionBackoff">func (*Options) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=14605:14657#L492">GetDisableCompactionBackoff</a></h3>
+				<pre>func (o *<a href="index.html#Options">Options</a>) GetDisableCompactionBackoff() <a href="../../../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Options.GetDisableLargeBatchTransaction">func (*Options) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=14731:14787#L499">GetDisableLargeBatchTransaction</a></h3>
+				<pre>func (o *<a href="index.html#Options">Options</a>) GetDisableLargeBatchTransaction() <a href="../../../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Options.GetErrorIfExist">func (*Options) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=14865:14905#L506">GetErrorIfExist</a></h3>
+				<pre>func (o *<a href="index.html#Options">Options</a>) GetErrorIfExist() <a href="../../../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Options.GetErrorIfMissing">func (*Options) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=14967:15009#L513">GetErrorIfMissing</a></h3>
+				<pre>func (o *<a href="index.html#Options">Options</a>) GetErrorIfMissing() <a href="../../../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Options.GetFilter">func (*Options) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=15073:15116#L520">GetFilter</a></h3>
+				<pre>func (o *<a href="index.html#Options">Options</a>) GetFilter() <a href="../filter/index.html">filter</a>.<a href="../filter/index.html#Filter">Filter</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Options.GetIteratorSamplingRate">func (*Options) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=15170:15217#L527">GetIteratorSamplingRate</a></h3>
+				<pre>func (o *<a href="index.html#Options">Options</a>) GetIteratorSamplingRate() <a href="../../../../../builtin/index.html#int">int</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Options.GetNoSync">func (*Options) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=15340:15374#L534">GetNoSync</a></h3>
+				<pre>func (o *<a href="index.html#Options">Options</a>) GetNoSync() <a href="../../../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Options.GetNoWriteMerge">func (*Options) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=15430:15470#L541">GetNoWriteMerge</a></h3>
+				<pre>func (o *<a href="index.html#Options">Options</a>) GetNoWriteMerge() <a href="../../../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Options.GetOpenFilesCacheCapacity">func (*Options) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=15739:15788#L558">GetOpenFilesCacheCapacity</a></h3>
+				<pre>func (o *<a href="index.html#Options">Options</a>) GetOpenFilesCacheCapacity() <a href="../../../../../builtin/index.html#int">int</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Options.GetOpenFilesCacher">func (*Options) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=15532:15577#L548">GetOpenFilesCacher</a></h3>
+				<pre>func (o *<a href="index.html#Options">Options</a>) GetOpenFilesCacher() <a href="index.html#Cacher">Cacher</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Options.GetReadOnly">func (*Options) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=15970:16006#L567">GetReadOnly</a></h3>
+				<pre>func (o *<a href="index.html#Options">Options</a>) GetReadOnly() <a href="../../../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Options.GetStrict">func (*Options) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=16064:16111#L574">GetStrict</a></h3>
+				<pre>func (o *<a href="index.html#Options">Options</a>) GetStrict(strict <a href="index.html#Strict">Strict</a>) <a href="../../../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Options.GetWriteBuffer">func (*Options) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=16216:16254#L581">GetWriteBuffer</a></h3>
+				<pre>func (o *<a href="index.html#Options">Options</a>) GetWriteBuffer() <a href="../../../../../builtin/index.html#int">int</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Options.GetWriteL0PauseTrigger">func (*Options) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=16350:16396#L588">GetWriteL0PauseTrigger</a></h3>
+				<pre>func (o *<a href="index.html#Options">Options</a>) GetWriteL0PauseTrigger() <a href="../../../../../builtin/index.html#int">int</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Options.GetWriteL0SlowdownTrigger">func (*Options) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=16516:16565#L595">GetWriteL0SlowdownTrigger</a></h3>
+				<pre>func (o *<a href="index.html#Options">Options</a>) GetWriteL0SlowdownTrigger() <a href="../../../../../builtin/index.html#int">int</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ReadOptions">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=16821:17245#L604">ReadOptions</a></h2>
+			<pre>type ReadOptions struct {
+    <span class="comment">// DontFillCache defines whether block reads for this &#39;read operation&#39;</span>
+    <span class="comment">// should be cached. If false then the block will be cached. This does</span>
+    <span class="comment">// not affects already cached block.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default value is false.</span>
+    DontFillCache <a href="../../../../../builtin/index.html#bool">bool</a>
+
+    <span class="comment">// Strict will be OR&#39;ed with global DB &#39;strict level&#39; unless StrictOverride</span>
+    <span class="comment">// is present. Currently only StrictReader that has effect here.</span>
+    Strict <a href="index.html#Strict">Strict</a>
+}</pre>
+			<p>
+ReadOptions holds the optional parameters for &#39;read operation&#39;. The
+&#39;read operation&#39; includes Get, Find and NewIterator.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ReadOptions.GetDontFillCache">func (*ReadOptions) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=17247:17293#L617">GetDontFillCache</a></h3>
+				<pre>func (ro *<a href="index.html#ReadOptions">ReadOptions</a>) GetDontFillCache() <a href="../../../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="ReadOptions.GetStrict">func (*ReadOptions) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=17358:17410#L624">GetStrict</a></h3>
+				<pre>func (ro *<a href="index.html#ReadOptions">ReadOptions</a>) GetStrict(strict <a href="index.html#Strict">Strict</a>) <a href="../../../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Strict">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=2308:2324#L85">Strict</a></h2>
+			<pre>type Strict <a href="../../../../../builtin/index.html#uint">uint</a></pre>
+			<p>
+Strict is the DB &#39;strict level&#39;.
+</p>
+
+
+			
+				<pre>const (
+    <span class="comment">// If present then a corrupted or invalid chunk or block in manifest</span>
+    <span class="comment">// journal will cause an error instead of being dropped.</span>
+    <span class="comment">// This will prevent database with corrupted manifest to be opened.</span>
+    <span id="StrictManifest">StrictManifest</span> <a href="index.html#Strict">Strict</a> = 1 &lt;&lt; <a href="../../../../../builtin/index.html#iota">iota</a>
+
+    <span class="comment">// If present then journal chunk checksum will be verified.</span>
+    <span id="StrictJournalChecksum">StrictJournalChecksum</span>
+
+    <span class="comment">// If present then a corrupted or invalid chunk or block in journal</span>
+    <span class="comment">// will cause an error instead of being dropped.</span>
+    <span class="comment">// This will prevent database with corrupted journal to be opened.</span>
+    <span id="StrictJournal">StrictJournal</span>
+
+    <span class="comment">// If present then &#39;sorted table&#39; block checksum will be verified.</span>
+    <span class="comment">// This has effect on both &#39;read operation&#39; and compaction.</span>
+    <span id="StrictBlockChecksum">StrictBlockChecksum</span>
+
+    <span class="comment">// If present then a corrupted &#39;sorted table&#39; will fails compaction.</span>
+    <span class="comment">// The database will enter read-only mode.</span>
+    <span id="StrictCompaction">StrictCompaction</span>
+
+    <span class="comment">// If present then a corrupted &#39;sorted table&#39; will halts &#39;read operation&#39;.</span>
+    <span id="StrictReader">StrictReader</span>
+
+    <span class="comment">// If present then leveldb.Recover will drop corrupted &#39;sorted table&#39;.</span>
+    <span id="StrictRecovery">StrictRecovery</span>
+
+    <span class="comment">// This only applicable for ReadOptions, if present then this ReadOptions</span>
+    <span class="comment">// &#39;strict level&#39; will override global ones.</span>
+    <span id="StrictOverride">StrictOverride</span>
+
+    <span class="comment">// StrictAll enables all strict flags.</span>
+    <span id="StrictAll">StrictAll</span> = <a href="index.html#StrictManifest">StrictManifest</a> | <a href="index.html#StrictJournalChecksum">StrictJournalChecksum</a> | <a href="index.html#StrictJournal">StrictJournal</a> | <a href="index.html#StrictBlockChecksum">StrictBlockChecksum</a> | <a href="index.html#StrictCompaction">StrictCompaction</a> | <a href="index.html#StrictReader">StrictReader</a> | <a href="index.html#StrictRecovery">StrictRecovery</a>
+
+    <span class="comment">// DefaultStrict is the default strict flags. Specify any strict flags</span>
+    <span class="comment">// will override default strict flags as whole (i.e. not OR&#39;ed).</span>
+    <span id="DefaultStrict">DefaultStrict</span> = <a href="index.html#StrictJournalChecksum">StrictJournalChecksum</a> | <a href="index.html#StrictBlockChecksum">StrictBlockChecksum</a> | <a href="index.html#StrictCompaction">StrictCompaction</a> | <a href="index.html#StrictReader">StrictReader</a>
+
+    <span class="comment">// NoStrict disables all strict flags. Override default strict flags.</span>
+    <span id="NoStrict">NoStrict</span> = ^<a href="index.html#StrictAll">StrictAll</a>
+)</pre>
+				
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="WriteOptions">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=17606:18270#L633">WriteOptions</a></h2>
+			<pre>type WriteOptions struct {
+    <span class="comment">// NoWriteMerge allows disabling write merge.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default is false.</span>
+    NoWriteMerge <a href="../../../../../builtin/index.html#bool">bool</a>
+
+    <span class="comment">// Sync is whether to sync underlying writes from the OS buffer cache</span>
+    <span class="comment">// through to actual disk, if applicable. Setting Sync can result in</span>
+    <span class="comment">// slower writes.</span>
+    <span class="comment">//</span>
+    <span class="comment">// If false, and the machine crashes, then some recent writes may be lost.</span>
+    <span class="comment">// Note that if it is just the process that crashes (and the machine does</span>
+    <span class="comment">// not) then no writes will be lost.</span>
+    <span class="comment">//</span>
+    <span class="comment">// In other words, Sync being false has the same semantics as a write</span>
+    <span class="comment">// system call. Sync being true means write followed by fsync.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The default value is false.</span>
+    Sync <a href="../../../../../builtin/index.html#bool">bool</a>
+}</pre>
+			<p>
+WriteOptions holds the optional parameters for &#39;write operation&#39;. The
+&#39;write operation&#39; includes Write, Put and Delete.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="WriteOptions.GetNoWriteMerge">func (*WriteOptions) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=18272:18318#L654">GetNoWriteMerge</a></h3>
+				<pre>func (wo *<a href="index.html#WriteOptions">WriteOptions</a>) GetNoWriteMerge() <a href="../../../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="WriteOptions.GetSync">func (*WriteOptions) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/opt/options.go?s=18382:18420#L661">GetSync</a></h3>
+				<pre>func (wo *<a href="index.html#WriteOptions">WriteOptions</a>) GetSync() <a href="../../../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

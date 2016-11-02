@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>oauth1 - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package oauth1</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/dghubble/oauth1"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-subdirectories">Subdirectories</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package oauth1 is a Go implementation of the OAuth1 spec RFC 5849.
+</p>
+<p>
+It allows end-users to authorize a client (consumer) to access protected
+resources on their behalf (e.g. login) and allows clients to make signed and
+authorized requests on behalf of a user (e.g. API calls).
+</p>
+<p>
+It takes design cues from golang.org/x/oauth2, providing an http.Client which
+handles request signing and authorization.
+</p>
+<h3 id="hdr-Usage">Usage</h3>
+<p>
+Package oauth1 implements the OAuth1 authorization flow and provides an
+http.Client which can sign and authorize OAuth1 requests.
+</p>
+<p>
+To implement &#34;Login with X&#34;, use the <a href="https://github.com/dghubble/gologin">https://github.com/dghubble/gologin</a>
+packages which provide login handlers for OAuth1 and OAuth2 providers.
+</p>
+<p>
+To call the Twitter, Digits, or Tumblr OAuth1 APIs, use the higher level Go API
+clients.
+</p>
+<p>
+* <a href="https://github.com/dghubble/go-twitter">https://github.com/dghubble/go-twitter</a>
+* <a href="https://github.com/dghubble/go-digits">https://github.com/dghubble/go-digits</a>
+* <a href="https://github.com/benfb/go-tumblr">https://github.com/benfb/go-tumblr</a>
+</p>
+<h3 id="hdr-Authorization_Flow">Authorization Flow</h3>
+<p>
+Perform the OAuth 1 authorization flow to ask a user to grant an application
+access to his/her resources via an access token.
+</p>
+<pre>import (
+	&#34;github.com/dghubble/oauth1&#34;
+	&#34;github.com/dghubble/oauth1/twitter&#34;&#34;
+)
+...
+
+config := oauth1.Config{
+	ConsumerKey:    &#34;consumerKey&#34;,
+	ConsumerSecret: &#34;consumerSecret&#34;,
+	CallbackURL:    &#34;<a href="http://mysite.com/oauth/twitter/callback">http://mysite.com/oauth/twitter/callback</a>&#34;,
+	Endpoint:       twitter.AuthorizeEndpoint,
+}
+</pre>
+<p>
+1. When a user performs an action (e.g. &#34;Login with X&#34; button calls &#34;/login&#34;
+route) get an OAuth1 request token (temporary credentials).
+</p>
+<pre>requestToken, requestSecret, err = config.RequestToken()
+// handle err
+</pre>
+<p>
+2. Obtain authorization from the user by redirecting them to the OAuth1
+provider&#39;s authorization URL to grant the application access.
+</p>
+<pre>authorizationURL, err := config.AuthorizationURL(requestToken)
+// handle err
+http.Redirect(w, req, authorizationURL.String(), htt.StatusFound)
+</pre>
+<p>
+Receive the callback from the OAuth1 provider in a handler.
+</p>
+<pre>requestToken, verifier, err := oauth1.ParseAuthorizationCallback(req)
+// handle err
+</pre>
+<p>
+3. Acquire the access token (token credentials) which can later be used
+to make requests on behalf of the user.
+</p>
+<pre>accessToken, accessSecret, err := config.AccessToken(requestToken, requestSecret, verifier)
+// handle error
+token := NewToken(accessToken, accessSecret)
+</pre>
+<p>
+Check the examples to see this authorization flow in action from the command
+line, with Twitter PIN-based login and Tumblr login.
+</p>
+<h3 id="hdr-Authorized_Requests">Authorized Requests</h3>
+<p>
+Use an access Token to make authorized requests on behalf of a user.
+</p>
+<pre>import (
+	&#34;github.com/dghubble/oauth1&#34;
+)
+
+func main() {
+    config := oauth1.NewConfig(&#34;consumerKey&#34;, &#34;consumerSecret&#34;)
+    token := oauth1.NewToken(&#34;token&#34;, &#34;tokenSecret&#34;)
+
+    // httpClient will automatically authorize http.Request&#39;s
+    httpClient := config.Client(token)
+
+    // example Twitter API request
+    path := &#34;<a href="https://api.twitter.com/1.1/statuses/home_timeline.json?count=2">https://api.twitter.com/1.1/statuses/home_timeline.json?count=2</a>&#34;
+    resp, _ := httpClient.Get(path)
+    defer resp.Body.Close()
+    body, _ := ioutil.ReadAll(resp.Body)
+    fmt.Printf(&#34;Raw Response Body:\n%v\n&#34;, string(body))
+}
+</pre>
+<p>
+Check the examples to see Twitter and Tumblr requests in action.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+				
+				<dd><a href="index.html#NewClient">func NewClient(ctx context.Context, config *Config, token *Token) *http.Client</a></dd>
+			
+				
+				<dd><a href="index.html#ParseAuthorizationCallback">func ParseAuthorizationCallback(req *http.Request) (requestToken, verifier string, err error)</a></dd>
+			
+				
+				<dd><a href="index.html#PercentEncode">func PercentEncode(input string) string</a></dd>
+			
+			
+				
+				<dd><a href="index.html#Config">type Config</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewConfig">func NewConfig(consumerKey, consumerSecret string) *Config</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Config.AccessToken">func (c *Config) AccessToken(requestToken, requestSecret, verifier string) (accessToken, accessSecret string, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Config.AuthorizationURL">func (c *Config) AuthorizationURL(requestToken string) (*url.URL, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Config.Client">func (c *Config) Client(ctx context.Context, t *Token) *http.Client</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Config.RequestToken">func (c *Config) RequestToken() (requestToken, requestSecret string, err error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Endpoint">type Endpoint</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#HMACSigner">type HMACSigner</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#HMACSigner.Name">func (s *HMACSigner) Name() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#HMACSigner.Sign">func (s *HMACSigner) Sign(tokenSecret, message string) (string, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#RSASigner">type RSASigner</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#RSASigner.Name">func (s *RSASigner) Name() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#RSASigner.Sign">func (s *RSASigner) Sign(tokenSecret, message string) (string, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Signer">type Signer</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Token">type Token</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewToken">func NewToken(token, tokenSecret string) *Token</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#TokenSource">type TokenSource</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#StaticTokenSource">func StaticTokenSource(token *Token) TokenSource</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Transport">type Transport</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Transport.RoundTrip">func (t *Transport) RoundTrip(req *http.Request) (*http.Response, error)</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/dghubble/oauth1/auther.go">auther.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/dghubble/oauth1/config.go">config.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/dghubble/oauth1/context.go">context.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/dghubble/oauth1/doc.go">doc.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/dghubble/oauth1/encode.go">encode.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/dghubble/oauth1/endpoint.go">endpoint.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/dghubble/oauth1/signer.go">signer.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/dghubble/oauth1/token.go">token.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/dghubble/oauth1/transport.go">transport.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var <span id="HTTPClient">HTTPClient</span> contextKey</pre>
+				<p>
+HTTPClient is the context key to associate an *http.Client value with
+a context.
+</p>
+
+			
+				<pre>var <span id="NoContext">NoContext</span> = <a href="../../../golang.org/x/net/context/index.html">context</a>.<a href="../../../golang.org/x/net/context/index.html#TODO">TODO</a>()</pre>
+				<p>
+NoContext is the default context to use in most cases.
+</p>
+
+			
+		
+		
+			
+			
+			<h2 id="NewClient">func <a href="http://localhost:6060/src/github.com/dghubble/oauth1/config.go?s=1165:1243#L36">NewClient</a></h2>
+			<pre>func NewClient(ctx <a href="../../../golang.org/x/net/context/index.html">context</a>.<a href="../../../golang.org/x/net/context/index.html#Context">Context</a>, config *<a href="index.html#Config">Config</a>, token *<a href="index.html#Token">Token</a>) *<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Client">Client</a></pre>
+			<p>
+NewClient returns a new http Client which signs requests via OAuth1.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ParseAuthorizationCallback">func <a href="http://localhost:6060/src/github.com/dghubble/oauth1/config.go?s=3797:3890#L106">ParseAuthorizationCallback</a></h2>
+			<pre>func ParseAuthorizationCallback(req *<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Request">Request</a>) (requestToken, verifier <a href="../../../builtin/index.html#string">string</a>, err <a href="../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+ParseAuthorizationCallback parses an OAuth1 authorization callback request
+from a provider server. The oauth_token and oauth_verifier parameters are
+parsed to return the request token from earlier in the flow and the
+verifier string.
+See RFC 5849 2.2 Resource Owner Authorization.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="PercentEncode">func <a href="http://localhost:6060/src/github.com/dghubble/oauth1/encode.go?s=113:152#L1">PercentEncode</a></h2>
+			<pre>func PercentEncode(input <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#string">string</a></pre>
+			<p>
+PercentEncode percent encodes a string according to RFC 3986 2.1.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="Config">type <a href="http://localhost:6060/src/github.com/dghubble/oauth1/config.go?s=375:687#L9">Config</a></h2>
+			<pre>type Config struct {
+    <span class="comment">// Consumer Key (Client Identifier)</span>
+    ConsumerKey <a href="../../../builtin/index.html#string">string</a>
+    <span class="comment">// Consumer Secret (Client Shared-Secret)</span>
+    ConsumerSecret <a href="../../../builtin/index.html#string">string</a>
+    <span class="comment">// Callback URL</span>
+    CallbackURL <a href="../../../builtin/index.html#string">string</a>
+    <span class="comment">// Provider Endpoint specifying OAuth1 endpoint URLs</span>
+    Endpoint <a href="index.html#Endpoint">Endpoint</a>
+    <span class="comment">// OAuth1 Signer (defaults to HMAC-SHA1)</span>
+    Signer <a href="index.html#Signer">Signer</a>
+}</pre>
+			<p>
+Config represents an OAuth1 consumer&#39;s (client&#39;s) key and secret, the
+callback URL, and the provider Endpoint to which the consumer corresponds.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewConfig">func <a href="http://localhost:6060/src/github.com/dghubble/oauth1/config.go?s=763:821#L23">NewConfig</a></h3>
+				<pre>func NewConfig(consumerKey, consumerSecret <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Config">Config</a></pre>
+				<p>
+NewConfig returns a new Config with the given consumer key and secret.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Config.AccessToken">func (*Config) <a href="http://localhost:6060/src/github.com/dghubble/oauth1/config.go?s=4542:4662#L125">AccessToken</a></h3>
+				<pre>func (c *<a href="index.html#Config">Config</a>) AccessToken(requestToken, requestSecret, verifier <a href="../../../builtin/index.html#string">string</a>) (accessToken, accessSecret <a href="../../../builtin/index.html#string">string</a>, err <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+AccessToken obtains an access token (token credential) by POSTing a
+request (with oauth_token and oauth_verifier in the auth header) to the
+Endpoint AccessTokenURL. Returns the access token and secret (token
+credentials).
+See RFC 5849 2.3 Token Credentials.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Config.AuthorizationURL">func (*Config) <a href="http://localhost:6060/src/github.com/dghubble/oauth1/config.go?s=3170:3242#L90">AuthorizationURL</a></h3>
+				<pre>func (c *<a href="index.html#Config">Config</a>) AuthorizationURL(requestToken <a href="../../../builtin/index.html#string">string</a>) (*<a href="../../../net/url/index.html">url</a>.<a href="../../../net/url/index.html#URL">URL</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+AuthorizationURL accepts a request token and returns the *url.URL to the
+Endpoint&#39;s authorization page that asks the user (resource owner) for to
+authorize the consumer to act on his/her/its behalf.
+See RFC 5849 2.2 Resource Owner Authorization.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Config.Client">func (*Config) <a href="http://localhost:6060/src/github.com/dghubble/oauth1/config.go?s=991:1058#L31">Client</a></h3>
+				<pre>func (c *<a href="index.html#Config">Config</a>) Client(ctx <a href="../../../golang.org/x/net/context/index.html">context</a>.<a href="../../../golang.org/x/net/context/index.html#Context">Context</a>, t *<a href="index.html#Token">Token</a>) *<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Client">Client</a></pre>
+				<p>
+Client returns an HTTP client which uses the provided ctx and access Token.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Config.RequestToken">func (*Config) <a href="http://localhost:6060/src/github.com/dghubble/oauth1/config.go?s=1785:1864#L51">RequestToken</a></h3>
+				<pre>func (c *<a href="index.html#Config">Config</a>) RequestToken() (requestToken, requestSecret <a href="../../../builtin/index.html#string">string</a>, err <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+RequestToken obtains a Request token and secret (temporary credential) by
+POSTing a request (with oauth_callback in the auth header) to the Endpoint
+RequestTokenURL. The response body form is validated to ensure
+oauth_callback_confirmed is true. Returns the request token and secret
+(temporary credentials).
+See RFC 5849 2.1 Temporary Credentials.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Endpoint">type <a href="http://localhost:6060/src/github.com/dghubble/oauth1/endpoint.go?s=141:378#L1">Endpoint</a></h2>
+			<pre>type Endpoint struct {
+    <span class="comment">// Request URL (Temporary Credential Request URI)</span>
+    RequestTokenURL <a href="../../../builtin/index.html#string">string</a>
+    <span class="comment">// Authorize URL (Resource Owner Authorization URI)</span>
+    AuthorizeURL <a href="../../../builtin/index.html#string">string</a>
+    <span class="comment">// Access Token URL (Token Request URI)</span>
+    AccessTokenURL <a href="../../../builtin/index.html#string">string</a>
+}</pre>
+			<p>
+Endpoint represents an OAuth1 provider&#39;s (server&#39;s) request token,
+owner authorization, and access token request URLs.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="HMACSigner">type <a href="http://localhost:6060/src/github.com/dghubble/oauth1/signer.go?s=510:559#L13">HMACSigner</a></h2>
+			<pre>type HMACSigner struct {
+    ConsumerSecret <a href="../../../builtin/index.html#string">string</a>
+}</pre>
+			<p>
+HMACSigner signs messages with an HMAC SHA1 digest, using the concatenated
+consumer secret and token secret as the key.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="HMACSigner.Name">func (*HMACSigner) <a href="http://localhost:6060/src/github.com/dghubble/oauth1/signer.go?s=599:633#L18">Name</a></h3>
+				<pre>func (s *<a href="index.html#HMACSigner">HMACSigner</a>) Name() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+Name returns the HMAC-SHA1 method.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="HMACSigner.Sign">func (*HMACSigner) <a href="http://localhost:6060/src/github.com/dghubble/oauth1/signer.go?s=811:881#L24">Sign</a></h3>
+				<pre>func (s *<a href="index.html#HMACSigner">HMACSigner</a>) Sign(tokenSecret, message <a href="../../../builtin/index.html#string">string</a>) (<a href="../../../builtin/index.html#string">string</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Sign creates a concatenated consumer and token secret key and calculates
+the HMAC digest of the message. Returns the base64 encoded digest bytes.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="RSASigner">type <a href="http://localhost:6060/src/github.com/dghubble/oauth1/signer.go?s=1226:1279#L34">RSASigner</a></h2>
+			<pre>type RSASigner struct {
+    PrivateKey *<a href="../../../crypto/rsa/index.html">rsa</a>.<a href="../../../crypto/rsa/index.html#PrivateKey">PrivateKey</a>
+}</pre>
+			<p>
+RSASigner RSA PKCS1-v1_5 signs SHA1 digests of messages using the given
+RSA private key.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="RSASigner.Name">func (*RSASigner) <a href="http://localhost:6060/src/github.com/dghubble/oauth1/signer.go?s=1318:1351#L39">Name</a></h3>
+				<pre>func (s *<a href="index.html#RSASigner">RSASigner</a>) Name() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+Name returns the RSA-SHA1 method.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="RSASigner.Sign">func (*RSASigner) <a href="http://localhost:6060/src/github.com/dghubble/oauth1/signer.go?s=1505:1574#L45">Sign</a></h3>
+				<pre>func (s *<a href="index.html#RSASigner">RSASigner</a>) Sign(tokenSecret, message <a href="../../../builtin/index.html#string">string</a>) (<a href="../../../builtin/index.html#string">string</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Sign uses RSA PKCS1-v1_5 to sign a SHA1 digest of the given message. The
+tokenSecret is not used with this signing scheme.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Signer">type <a href="http://localhost:6060/src/github.com/dghubble/oauth1/signer.go?s=188:382#L4">Signer</a></h2>
+			<pre>type Signer interface {
+    <span class="comment">// Name returns the name of the signing method.</span>
+    Name() <a href="../../../builtin/index.html#string">string</a>
+    <span class="comment">// Sign signs the message using the given secret key.</span>
+    Sign(key <a href="../../../builtin/index.html#string">string</a>, message <a href="../../../builtin/index.html#string">string</a>) (<a href="../../../builtin/index.html#string">string</a>, <a href="../../../builtin/index.html#error">error</a>)
+}</pre>
+			<p>
+A Signer signs messages to create signed OAuth1 Requests.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Token">type <a href="http://localhost:6060/src/github.com/dghubble/oauth1/token.go?s=266:327#L4">Token</a></h2>
+			<pre>type Token struct {
+    Token       <a href="../../../builtin/index.html#string">string</a>
+    TokenSecret <a href="../../../builtin/index.html#string">string</a>
+}</pre>
+			<p>
+Token is an AccessToken (token credential) which allows a consumer (client)
+to access resources from an OAuth1 provider server.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewToken">func <a href="http://localhost:6060/src/github.com/dghubble/oauth1/token.go?s=400:447#L10">NewToken</a></h3>
+				<pre>func NewToken(token, tokenSecret <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Token">Token</a></pre>
+				<p>
+NewToken returns a new Token with the given token and token secret.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="TokenSource">type <a href="http://localhost:6060/src/github.com/dghubble/oauth1/token.go?s=75:130#L1">TokenSource</a></h2>
+			<pre>type TokenSource interface {
+    Token() (*<a href="index.html#Token">Token</a>, <a href="../../../builtin/index.html#error">error</a>)
+}</pre>
+			<p>
+A TokenSource can return a Token.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="StaticTokenSource">func <a href="http://localhost:6060/src/github.com/dghubble/oauth1/token.go?s=673:721#L19">StaticTokenSource</a></h3>
+				<pre>func StaticTokenSource(token *<a href="index.html#Token">Token</a>) <a href="index.html#TokenSource">TokenSource</a></pre>
+				<p>
+StaticTokenSource returns a TokenSource which always returns the same Token.
+This is appropriate for tokens which do not have a time expiration.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="Transport">type <a href="http://localhost:6060/src/github.com/dghubble/oauth1/transport.go?s=330:641#L4">Transport</a></h2>
+			<pre>type Transport struct {
+    <span class="comment">// Base is the base RoundTripper used to make HTTP requests. If nil, then</span>
+    <span class="comment">// http.DefaultTransport is used</span>
+    Base <a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#RoundTripper">RoundTripper</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Transport is an http.RoundTripper which makes OAuth1 HTTP requests. It
+wraps a base RoundTripper and adds an Authorization header using the
+token from a TokenSource.
+</p>
+<p>
+Transport is a low-level component, most users should use Config to create
+an http.Client instead.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Transport.RoundTrip">func (*Transport) <a href="http://localhost:6060/src/github.com/dghubble/oauth1/transport.go?s=758:830#L16">RoundTrip</a></h3>
+				<pre>func (t *<a href="index.html#Transport">Transport</a>) RoundTrip(req *<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Request">Request</a>) (*<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Response">Response</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+RoundTrip authorizes the request with a signed OAuth1 Authorization header
+using the auther and TokenSource.
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+
+
+	<div class="pkg-dir">
+		<table>
+			<tr>
+				<th class="pkg-name">Name</th>
+				<th class="pkg-synopsis">Synopsis</th>
+			</tr>
+
+			
+			<tr>
+				<td colspan="2"><a href="../index.html">..</a></td>
+			</tr>
+			
+
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="dropbox/index.html">dropbox</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package dropbox provides constants for using OAuth1 to access Dropbox.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="examples/index.html">examples</a>
+						</td>
+						<td class="pkg-synopsis">
+							
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="tumblr/index.html">tumblr</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package tumblr provides constants for using OAuth 1 to access Tumblr.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="twitter/index.html">twitter</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package twitter provides constants for using OAuth1 to access Twitter.
+						</td>
+					</tr>
+				
+			
+		</table>
+	</div>
+
+
+	
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>display - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package display</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "golang.org/x/text/language/display"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+				<dd><a href="index.html#pkg-examples" class="examplesLink">Examples</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package display provides display names for languages, scripts and regions in
+a requested language.
+</p>
+<p>
+The data is based on CLDR&#39;s localeDisplayNames. It includes the names of the
+draft level &#34;contributed&#34; or &#34;approved&#34;. The resulting tables are quite
+large. The display package is designed so that users can reduce the linked-in
+table sizes by cherry picking the languages one wishes to support. There is a
+Dictionary defined for a selected set of common languages for this purpose.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="index.html#pkg-constants">Constants</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+			
+				
+				<dd><a href="index.html#Dictionary">type Dictionary</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Dictionary.Languages">func (d *Dictionary) Languages() Namer</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Dictionary.Regions">func (d *Dictionary) Regions() Namer</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Dictionary.Scripts">func (d *Dictionary) Scripts() Namer</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Dictionary.Tags">func (d *Dictionary) Tags() Namer</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Namer">type Namer</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Languages">func Languages(t language.Tag) Namer</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Regions">func Regions(t language.Tag) Namer</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Scripts">func Scripts(t language.Tag) Namer</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Tags">func Tags(t language.Tag) Namer</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#SelfNamer">type SelfNamer</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SelfNamer.Name">func (n SelfNamer) Name(x interface{}) string</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+		<div id="pkg-examples">
+			<h4>Examples</h4>
+			<dl>
+			
+			<dd><a class="exampleLink" href="index.html#example_Dictionary">Dictionary</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Namer">Namer</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Tags">Tags</a></dd>
+			
+			</dl>
+		</div>
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/golang.org/x/text/language/display/dict.go">dict.go</a>
+			
+				<a href="http://localhost:6060/src/golang.org/x/text/language/display/display.go">display.go</a>
+			
+				<a href="http://localhost:6060/src/golang.org/x/text/language/display/lookup.go">lookup.go</a>
+			
+				<a href="http://localhost:6060/src/golang.org/x/text/language/display/tables.go">tables.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const <span id="CLDRVersion">CLDRVersion</span> = &#34;29&#34;</pre>
+				<p>
+CLDRVersion is the CLDR version from which the tables in this package are derived.
+</p>
+
+			
+				<pre>const <span id="Version">Version</span> = &#34;29&#34;</pre>
+				<p>
+Version is deprecated. Use CLDRVersion.
+</p>
+
+			
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var (
+    <span class="comment">// Supported lists the languages for which names are defined.</span>
+    <span id="Supported">Supported</span> <a href="../index.html">language</a>.<a href="../index.html#Coverage">Coverage</a>
+
+    <span class="comment">// The set of all possible values for which names are defined. Note that not</span>
+    <span class="comment">// all Namer implementations will cover all the values of a given type.</span>
+    <span class="comment">// A Namer will return the empty string for unsupported values.</span>
+    <span id="Values">Values</span> <a href="../index.html">language</a>.<a href="../index.html#Coverage">Coverage</a>
+)</pre>
+				
+			
+		
+		
+		
+			
+			
+			<h2 id="Dictionary">type <a href="http://localhost:6060/src/golang.org/x/text/language/display/display.go?s=6209:6300#L176">Dictionary</a></h2>
+			<pre>type Dictionary struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+A Dictionary holds a collection of Namers for a single language. One can
+reduce the amount of data linked in to a binary by only referencing
+Dictionaries for the languages one needs to support instead of using the
+generic Namer factories.
+</p>
+
+
+			
+
+			
+				<pre>var (
+    <span id="Afrikaans">Afrikaans</span>            *<a href="index.html#Dictionary">Dictionary</a> = &amp;af        <span class="comment">// af</span>
+    <span id="Amharic">Amharic</span>              *<a href="index.html#Dictionary">Dictionary</a> = &amp;am        <span class="comment">// am</span>
+    <span id="Arabic">Arabic</span>               *<a href="index.html#Dictionary">Dictionary</a> = &amp;ar        <span class="comment">// ar</span>
+    <span id="ModernStandardArabic">ModernStandardArabic</span> *<a href="index.html#Dictionary">Dictionary</a> = <a href="index.html#Arabic">Arabic</a>     <span class="comment">// ar-001</span>
+    <span id="Azerbaijani">Azerbaijani</span>          *<a href="index.html#Dictionary">Dictionary</a> = &amp;az        <span class="comment">// az</span>
+    <span id="Bulgarian">Bulgarian</span>            *<a href="index.html#Dictionary">Dictionary</a> = &amp;bg        <span class="comment">// bg</span>
+    <span id="Bengali">Bengali</span>              *<a href="index.html#Dictionary">Dictionary</a> = &amp;bn        <span class="comment">// bn</span>
+    <span id="Catalan">Catalan</span>              *<a href="index.html#Dictionary">Dictionary</a> = &amp;ca        <span class="comment">// ca</span>
+    <span id="Czech">Czech</span>                *<a href="index.html#Dictionary">Dictionary</a> = &amp;cs        <span class="comment">// cs</span>
+    <span id="Danish">Danish</span>               *<a href="index.html#Dictionary">Dictionary</a> = &amp;da        <span class="comment">// da</span>
+    <span id="German">German</span>               *<a href="index.html#Dictionary">Dictionary</a> = &amp;de        <span class="comment">// de</span>
+    <span id="Greek">Greek</span>                *<a href="index.html#Dictionary">Dictionary</a> = &amp;el        <span class="comment">// el</span>
+    <span id="English">English</span>              *<a href="index.html#Dictionary">Dictionary</a> = &amp;en        <span class="comment">// en</span>
+    <span id="AmericanEnglish">AmericanEnglish</span>      *<a href="index.html#Dictionary">Dictionary</a> = <a href="index.html#English">English</a>    <span class="comment">// en-US</span>
+    <span id="BritishEnglish">BritishEnglish</span>       *<a href="index.html#Dictionary">Dictionary</a> = <a href="index.html#English">English</a>    <span class="comment">// en-GB</span>
+    <span id="Spanish">Spanish</span>              *<a href="index.html#Dictionary">Dictionary</a> = &amp;es        <span class="comment">// es</span>
+    <span id="EuropeanSpanish">EuropeanSpanish</span>      *<a href="index.html#Dictionary">Dictionary</a> = <a href="index.html#Spanish">Spanish</a>    <span class="comment">// es-ES</span>
+    <span id="LatinAmericanSpanish">LatinAmericanSpanish</span> *<a href="index.html#Dictionary">Dictionary</a> = <a href="index.html#Spanish">Spanish</a>    <span class="comment">// es-419</span>
+    <span id="Estonian">Estonian</span>             *<a href="index.html#Dictionary">Dictionary</a> = &amp;et        <span class="comment">// et</span>
+    <span id="Persian">Persian</span>              *<a href="index.html#Dictionary">Dictionary</a> = &amp;fa        <span class="comment">// fa</span>
+    <span id="Finnish">Finnish</span>              *<a href="index.html#Dictionary">Dictionary</a> = &amp;fi        <span class="comment">// fi</span>
+    <span id="Filipino">Filipino</span>             *<a href="index.html#Dictionary">Dictionary</a> = &amp;fil       <span class="comment">// fil</span>
+    <span id="French">French</span>               *<a href="index.html#Dictionary">Dictionary</a> = &amp;fr        <span class="comment">// fr</span>
+    <span id="Gujarati">Gujarati</span>             *<a href="index.html#Dictionary">Dictionary</a> = &amp;gu        <span class="comment">// gu</span>
+    <span id="Hebrew">Hebrew</span>               *<a href="index.html#Dictionary">Dictionary</a> = &amp;he        <span class="comment">// he</span>
+    <span id="Hindi">Hindi</span>                *<a href="index.html#Dictionary">Dictionary</a> = &amp;hi        <span class="comment">// hi</span>
+    <span id="Croatian">Croatian</span>             *<a href="index.html#Dictionary">Dictionary</a> = &amp;hr        <span class="comment">// hr</span>
+    <span id="Hungarian">Hungarian</span>            *<a href="index.html#Dictionary">Dictionary</a> = &amp;hu        <span class="comment">// hu</span>
+    <span id="Armenian">Armenian</span>             *<a href="index.html#Dictionary">Dictionary</a> = &amp;hy        <span class="comment">// hy</span>
+    <span id="Indonesian">Indonesian</span>           *<a href="index.html#Dictionary">Dictionary</a> = &amp;id        <span class="comment">// id</span>
+    <span id="Icelandic">Icelandic</span>            *<a href="index.html#Dictionary">Dictionary</a> = &amp;is        <span class="comment">// is</span>
+    <span id="Italian">Italian</span>              *<a href="index.html#Dictionary">Dictionary</a> = &amp;it        <span class="comment">// it</span>
+    <span id="Japanese">Japanese</span>             *<a href="index.html#Dictionary">Dictionary</a> = &amp;ja        <span class="comment">// ja</span>
+    <span id="Georgian">Georgian</span>             *<a href="index.html#Dictionary">Dictionary</a> = &amp;ka        <span class="comment">// ka</span>
+    <span id="Kazakh">Kazakh</span>               *<a href="index.html#Dictionary">Dictionary</a> = &amp;kk        <span class="comment">// kk</span>
+    <span id="Khmer">Khmer</span>                *<a href="index.html#Dictionary">Dictionary</a> = &amp;km        <span class="comment">// km</span>
+    <span id="Kannada">Kannada</span>              *<a href="index.html#Dictionary">Dictionary</a> = &amp;kn        <span class="comment">// kn</span>
+    <span id="Korean">Korean</span>               *<a href="index.html#Dictionary">Dictionary</a> = &amp;ko        <span class="comment">// ko</span>
+    <span id="Kirghiz">Kirghiz</span>              *<a href="index.html#Dictionary">Dictionary</a> = &amp;ky        <span class="comment">// ky</span>
+    <span id="Lao">Lao</span>                  *<a href="index.html#Dictionary">Dictionary</a> = &amp;lo        <span class="comment">// lo</span>
+    <span id="Lithuanian">Lithuanian</span>           *<a href="index.html#Dictionary">Dictionary</a> = &amp;lt        <span class="comment">// lt</span>
+    <span id="Latvian">Latvian</span>              *<a href="index.html#Dictionary">Dictionary</a> = &amp;lv        <span class="comment">// lv</span>
+    <span id="Macedonian">Macedonian</span>           *<a href="index.html#Dictionary">Dictionary</a> = &amp;mk        <span class="comment">// mk</span>
+    <span id="Malayalam">Malayalam</span>            *<a href="index.html#Dictionary">Dictionary</a> = &amp;ml        <span class="comment">// ml</span>
+    <span id="Mongolian">Mongolian</span>            *<a href="index.html#Dictionary">Dictionary</a> = &amp;mn        <span class="comment">// mn</span>
+    <span id="Marathi">Marathi</span>              *<a href="index.html#Dictionary">Dictionary</a> = &amp;mr        <span class="comment">// mr</span>
+    <span id="Malay">Malay</span>                *<a href="index.html#Dictionary">Dictionary</a> = &amp;ms        <span class="comment">// ms</span>
+    <span id="Burmese">Burmese</span>              *<a href="index.html#Dictionary">Dictionary</a> = &amp;my        <span class="comment">// my</span>
+    <span id="Nepali">Nepali</span>               *<a href="index.html#Dictionary">Dictionary</a> = &amp;ne        <span class="comment">// ne</span>
+    <span id="Dutch">Dutch</span>                *<a href="index.html#Dictionary">Dictionary</a> = &amp;nl        <span class="comment">// nl</span>
+    <span id="Norwegian">Norwegian</span>            *<a href="index.html#Dictionary">Dictionary</a> = &amp;no        <span class="comment">// no</span>
+    <span id="Punjabi">Punjabi</span>              *<a href="index.html#Dictionary">Dictionary</a> = &amp;pa        <span class="comment">// pa</span>
+    <span id="Polish">Polish</span>               *<a href="index.html#Dictionary">Dictionary</a> = &amp;pl        <span class="comment">// pl</span>
+    <span id="Portuguese">Portuguese</span>           *<a href="index.html#Dictionary">Dictionary</a> = &amp;pt        <span class="comment">// pt</span>
+    <span id="BrazilianPortuguese">BrazilianPortuguese</span>  *<a href="index.html#Dictionary">Dictionary</a> = <a href="index.html#Portuguese">Portuguese</a> <span class="comment">// pt-BR</span>
+    <span id="EuropeanPortuguese">EuropeanPortuguese</span>   *<a href="index.html#Dictionary">Dictionary</a> = &amp;ptPT      <span class="comment">// pt-PT</span>
+    <span id="Romanian">Romanian</span>             *<a href="index.html#Dictionary">Dictionary</a> = &amp;ro        <span class="comment">// ro</span>
+    <span id="Russian">Russian</span>              *<a href="index.html#Dictionary">Dictionary</a> = &amp;ru        <span class="comment">// ru</span>
+    <span id="Sinhala">Sinhala</span>              *<a href="index.html#Dictionary">Dictionary</a> = &amp;si        <span class="comment">// si</span>
+    <span id="Slovak">Slovak</span>               *<a href="index.html#Dictionary">Dictionary</a> = &amp;sk        <span class="comment">// sk</span>
+    <span id="Slovenian">Slovenian</span>            *<a href="index.html#Dictionary">Dictionary</a> = &amp;sl        <span class="comment">// sl</span>
+    <span id="Albanian">Albanian</span>             *<a href="index.html#Dictionary">Dictionary</a> = &amp;sq        <span class="comment">// sq</span>
+    <span id="Serbian">Serbian</span>              *<a href="index.html#Dictionary">Dictionary</a> = &amp;sr        <span class="comment">// sr</span>
+    <span id="SerbianLatin">SerbianLatin</span>         *<a href="index.html#Dictionary">Dictionary</a> = &amp;srLatn    <span class="comment">// sr</span>
+    <span id="Swedish">Swedish</span>              *<a href="index.html#Dictionary">Dictionary</a> = &amp;sv        <span class="comment">// sv</span>
+    <span id="Swahili">Swahili</span>              *<a href="index.html#Dictionary">Dictionary</a> = &amp;sw        <span class="comment">// sw</span>
+    <span id="Tamil">Tamil</span>                *<a href="index.html#Dictionary">Dictionary</a> = &amp;ta        <span class="comment">// ta</span>
+    <span id="Telugu">Telugu</span>               *<a href="index.html#Dictionary">Dictionary</a> = &amp;te        <span class="comment">// te</span>
+    <span id="Thai">Thai</span>                 *<a href="index.html#Dictionary">Dictionary</a> = &amp;th        <span class="comment">// th</span>
+    <span id="Turkish">Turkish</span>              *<a href="index.html#Dictionary">Dictionary</a> = &amp;tr        <span class="comment">// tr</span>
+    <span id="Ukrainian">Ukrainian</span>            *<a href="index.html#Dictionary">Dictionary</a> = &amp;uk        <span class="comment">// uk</span>
+    <span id="Urdu">Urdu</span>                 *<a href="index.html#Dictionary">Dictionary</a> = &amp;ur        <span class="comment">// ur</span>
+    <span id="Uzbek">Uzbek</span>                *<a href="index.html#Dictionary">Dictionary</a> = &amp;uz        <span class="comment">// uz</span>
+    <span id="Vietnamese">Vietnamese</span>           *<a href="index.html#Dictionary">Dictionary</a> = &amp;vi        <span class="comment">// vi</span>
+    <span id="Chinese">Chinese</span>              *<a href="index.html#Dictionary">Dictionary</a> = &amp;zh        <span class="comment">// zh</span>
+    <span id="SimplifiedChinese">SimplifiedChinese</span>    *<a href="index.html#Dictionary">Dictionary</a> = <a href="index.html#Chinese">Chinese</a>    <span class="comment">// zh-Hans</span>
+    <span id="TraditionalChinese">TraditionalChinese</span>   *<a href="index.html#Dictionary">Dictionary</a> = &amp;zhHant    <span class="comment">// zh-Hant</span>
+    <span id="Zulu">Zulu</span>                 *<a href="index.html#Dictionary">Dictionary</a> = &amp;zu        <span class="comment">// zu</span>
+)</pre>
+				
+			
+
+			<div id="example_Dictionary" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		<p>ExampleDictionary shows how to reduce the amount of data linked into your
+binary by only using the predefined Dictionary variables of the languages you
+wish to support.
+</p>
+		
+		
+			<p>Code:</p>
+			<pre class="code">tags := []language.Tag{
+    language.English,
+    language.German,
+    language.Japanese,
+    language.Russian,
+}
+dicts := []*display.Dictionary{
+    display.English,
+    display.German,
+    display.Japanese,
+    display.Russian,
+}
+
+m := language.NewMatcher(tags)
+
+getDict := func(t language.Tag) *display.Dictionary {
+    _, i, confidence := m.Match(t)
+    <span class="comment">// Skip this check if you want to support a fall-back language, which</span>
+    <span class="comment">// will be the first one passed to NewMatcher.</span>
+    if confidence == language.No {
+        return nil
+    }
+    return dicts[i]
+}
+
+<span class="comment">// The matcher will match Swiss German to German.</span>
+n := getDict(language.Make(&#34;gsw&#34;)).Languages()
+fmt.Println(n.Name(language.German))
+fmt.Println(n.Name(language.Make(&#34;de-CH&#34;)))
+fmt.Println(n.Name(language.Make(&#34;gsw&#34;)))
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">Deutsch
+Schweizer Hochdeutsch
+Schweizerdeutsch
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+			
+
+			
+
+			
+				
+				<h3 id="Dictionary.Languages">func (*Dictionary) <a href="http://localhost:6060/src/golang.org/x/text/language/display/display.go?s=7232:7270#L205">Languages</a></h3>
+				<pre>func (d *<a href="index.html#Dictionary">Dictionary</a>) Languages() <a href="index.html#Namer">Namer</a></pre>
+				<p>
+Languages returns a Namer for naming languages. It returns nil if there is no
+data for the given tag. The type passed to Name must be either language.Base
+or language.Tag. Note that the result may differ between passing a tag or its
+base language. For example, for English, passing &#34;nl-BE&#34; would return Flemish
+whereas passing &#34;nl&#34; returns &#34;Dutch&#34;.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Dictionary.Regions">func (*Dictionary) <a href="http://localhost:6060/src/golang.org/x/text/language/display/display.go?s=8560:8596#L257">Regions</a></h3>
+				<pre>func (d *<a href="index.html#Dictionary">Dictionary</a>) Regions() <a href="index.html#Namer">Namer</a></pre>
+				<p>
+Regions returns a Namer for naming regions. It returns nil if there is no
+data for the given tag. The type passed to Name must be either a
+language.Region or a language.Tag. It will not attempt to infer a region for
+tags with an unspecified region.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Dictionary.Scripts">func (*Dictionary) <a href="http://localhost:6060/src/golang.org/x/text/language/display/display.go?s=7902:7938#L231">Scripts</a></h3>
+				<pre>func (d *<a href="index.html#Dictionary">Dictionary</a>) Scripts() <a href="index.html#Namer">Namer</a></pre>
+				<p>
+Scripts returns a Namer for naming scripts. It returns nil if there is no
+data for the given tag. The type passed to Name must be either a
+language.Script or a language.Tag. It will not attempt to infer a script for
+tags with an unspecified script.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Dictionary.Tags">func (*Dictionary) <a href="http://localhost:6060/src/golang.org/x/text/language/display/display.go?s=6589:6622#L187">Tags</a></h3>
+				<pre>func (d *<a href="index.html#Dictionary">Dictionary</a>) Tags() <a href="index.html#Namer">Namer</a></pre>
+				<p>
+Tags returns a Namer for giving a full description of a tag. The names of
+scripts and regions that are not already implied by the language name will
+in appended within parentheses. It returns nil if there is not data for the
+given tag. The type passed to Name must be a tag.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Namer">type <a href="http://localhost:6060/src/golang.org/x/text/language/display/display.go?s=1367:1855#L27">Namer</a></h2>
+			<pre>type Namer interface {
+    <span class="comment">// Name returns a display string for the given value. A Namer returns an</span>
+    <span class="comment">// empty string for values it does not support. A Namer may support naming</span>
+    <span class="comment">// an unspecified value. For example, when getting the name for a region for</span>
+    <span class="comment">// a tag that does not have a defined Region, it may return the name for an</span>
+    <span class="comment">// unknown region. It is up to the user to filter calls to Name for values</span>
+    <span class="comment">// for which one does not want to have a name string.</span>
+    Name(x interface{}) <a href="../../../../../builtin/index.html#string">string</a>
+}</pre>
+			<p>
+A Namer is used to get the name for a given value, such as a Tag, Language,
+Script or Region.
+</p>
+
+
+			
+
+			
+
+			<div id="example_Namer" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">supported := []string{
+    &#34;en-US&#34;, &#34;en-GB&#34;, &#34;ja&#34;, &#34;zh&#34;, &#34;zh-Hans&#34;, &#34;zh-Hant&#34;, &#34;pt&#34;, &#34;pt-PT&#34;, &#34;ko&#34;, &#34;ar&#34;, &#34;el&#34;, &#34;ru&#34;, &#34;uk&#34;, &#34;pa&#34;,
+}
+
+en := display.English.Languages()
+
+for _, s := range supported {
+    t := language.MustParse(s)
+    fmt.Printf(&#34;%-20s (%s)\n&#34;, en.Name(t), display.Self.Name(t))
+}
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">American English     (American English)
+British English      (British English)
+Japanese             (日本語)
+Chinese              (中文)
+Simplified Chinese   (简体中文)
+Traditional Chinese  (繁體中文)
+Portuguese           (português)
+European Portuguese  (português europeu)
+Korean               (한국어)
+Arabic               (العربية)
+Greek                (Ελληνικά)
+Russian              (русский)
+Ukrainian            (українська)
+Punjabi              (ਪੰਜਾਬੀ)
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+			
+
+			
+				
+				<h3 id="Languages">func <a href="http://localhost:6060/src/golang.org/x/text/language/display/display.go?s=2941:2977#L68">Languages</a></h3>
+				<pre>func Languages(t <a href="../index.html">language</a>.<a href="../index.html#Tag">Tag</a>) <a href="index.html#Namer">Namer</a></pre>
+				<p>
+Languages returns a Namer for naming languages. It returns nil if there is no
+data for the given tag. The type passed to Name must be either language.Base
+or language.Tag. Note that the result may differ between passing a tag or its
+base language. For example, for English, passing &#34;nl-BE&#34; would return Flemish
+whereas passing &#34;nl&#34; returns &#34;Dutch&#34;.
+</p>
+
+				
+				
+			
+				
+				<h3 id="Regions">func <a href="http://localhost:6060/src/golang.org/x/text/language/display/display.go?s=4593:4627#L122">Regions</a></h3>
+				<pre>func Regions(t <a href="../index.html">language</a>.<a href="../index.html#Tag">Tag</a>) <a href="index.html#Namer">Namer</a></pre>
+				<p>
+Regions returns a Namer for naming regions. It returns nil if there is no
+data for the given tag. The type passed to Name must be either a
+language.Region or a language.Tag. It will not attempt to infer a region for
+tags with an unspecified region.
+</p>
+
+				
+				
+			
+				
+				<h3 id="Scripts">func <a href="http://localhost:6060/src/golang.org/x/text/language/display/display.go?s=3869:3903#L98">Scripts</a></h3>
+				<pre>func Scripts(t <a href="../index.html">language</a>.<a href="../index.html#Tag">Tag</a>) <a href="index.html#Namer">Namer</a></pre>
+				<p>
+Scripts returns a Namer for naming scripts. It returns nil if there is no
+data for the given tag. The type passed to Name must be either a
+language.Script or a language.Tag. It will not attempt to infer a script for
+tags with an unspecified script.
+</p>
+
+				
+				
+			
+				
+				<h3 id="Tags">func <a href="http://localhost:6060/src/golang.org/x/text/language/display/display.go?s=5343:5374#L146">Tags</a></h3>
+				<pre>func Tags(t <a href="../index.html">language</a>.<a href="../index.html#Tag">Tag</a>) <a href="index.html#Namer">Namer</a></pre>
+				<p>
+Tags returns a Namer for giving a full description of a tag. The names of
+scripts and regions that are not already implied by the language name will
+in appended within parentheses. It returns nil if there is not data for the
+given tag. The type passed to Name must be a tag.
+</p>
+
+				<div id="example_Tags" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">n := display.Tags(language.English)
+fmt.Println(n.Name(language.Make(&#34;nl&#34;)))
+fmt.Println(n.Name(language.Make(&#34;nl-BE&#34;)))
+fmt.Println(n.Name(language.Make(&#34;nl-CW&#34;)))
+fmt.Println(n.Name(language.Make(&#34;nl-Arab&#34;)))
+fmt.Println(n.Name(language.Make(&#34;nl-Cyrl-RU&#34;)))
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">Dutch
+Flemish
+Dutch (Curaçao)
+Dutch (Arabic)
+Dutch (Cyrillic, Russia)
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+
+			
+		
+			
+			
+			<h2 id="SelfNamer">type <a href="http://localhost:6060/src/golang.org/x/text/language/display/display.go?s=9171:9283#L282">SelfNamer</a></h2>
+			<pre>type SelfNamer struct {
+    <span class="comment">// Supported defines the values supported by this Namer.</span>
+    Supported <a href="../index.html">language</a>.<a href="../index.html#Coverage">Coverage</a>
+}</pre>
+			<p>
+A SelfNamer implements a Namer that returns the name of language in this same
+language. It provides a very compact mechanism to provide a comprehensive
+list of languages to users in their native language.
+</p>
+
+
+			
+
+			
+				<pre>var (
+    <span class="comment">// Self is a shared instance of a SelfNamer.</span>
+    <span id="Self">Self</span> *<a href="index.html#SelfNamer">SelfNamer</a> = &amp;self
+)</pre>
+				
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="SelfNamer.Name">func (SelfNamer) <a href="http://localhost:6060/src/golang.org/x/text/language/display/display.go?s=9574:9619#L296">Name</a></h3>
+				<pre>func (n <a href="index.html#SelfNamer">SelfNamer</a>) Name(x interface{}) <a href="../../../../../builtin/index.html#string">string</a></pre>
+				<p>
+Name returns the name of a given language tag in the language identified by
+this tag. It supports both the language.Base and language.Tag types.
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

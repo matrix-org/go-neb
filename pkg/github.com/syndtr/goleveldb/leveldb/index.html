@@ -1,0 +1,1598 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>leveldb - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package leveldb</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/syndtr/goleveldb/leveldb"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-subdirectories">Subdirectories</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package leveldb provides implementation of LevelDB key/value database.
+</p>
+<p>
+Create or open a database:
+</p>
+<pre>db, err := leveldb.OpenFile(&#34;path/to/db&#34;, nil)
+...
+defer db.Close()
+...
+</pre>
+<p>
+Read or modify the database content:
+</p>
+<pre>// Remember that the contents of the returned slice should not be modified.
+data, err := db.Get([]byte(&#34;key&#34;), nil)
+...
+err = db.Put([]byte(&#34;key&#34;), []byte(&#34;value&#34;), nil)
+...
+err = db.Delete([]byte(&#34;key&#34;), nil)
+...
+</pre>
+<p>
+Iterate over database content:
+</p>
+<pre>iter := db.NewIterator(nil, nil)
+for iter.Next() {
+	// Remember that the contents of the returned slice should not be modified, and
+	// only valid until the next call to Next.
+	key := iter.Key()
+	value := iter.Value()
+	...
+}
+iter.Release()
+err = iter.Error()
+...
+</pre>
+<p>
+Iterate over subset of database content with a particular prefix:
+</p>
+<pre>iter := db.NewIterator(util.BytesPrefix([]byte(&#34;foo-&#34;)), nil)
+for iter.Next() {
+	// Use key/value.
+	...
+}
+iter.Release()
+err = iter.Error()
+...
+</pre>
+<p>
+Seek-then-Iterate:
+</p>
+<pre>iter := db.NewIterator(nil, nil)
+for ok := iter.Seek(key); ok; ok = iter.Next() {
+	// Use key/value.
+	...
+}
+iter.Release()
+err = iter.Error()
+...
+</pre>
+<p>
+Iterate over subset of database content:
+</p>
+<pre>iter := db.NewIterator(&amp;util.Range{Start: []byte(&#34;foo&#34;), Limit: []byte(&#34;xoo&#34;)}, nil)
+for iter.Next() {
+	// Use key/value.
+	...
+}
+iter.Release()
+err = iter.Error()
+...
+</pre>
+<p>
+Batch writes:
+</p>
+<pre>batch := new(leveldb.Batch)
+batch.Put([]byte(&#34;foo&#34;), []byte(&#34;value&#34;))
+batch.Put([]byte(&#34;bar&#34;), []byte(&#34;another value&#34;))
+batch.Delete([]byte(&#34;baz&#34;))
+err = db.Write(batch, nil)
+...
+</pre>
+<p>
+Use bloom filter:
+</p>
+<pre>o := &amp;opt.Options{
+	Filter: filter.NewBloomFilter(10),
+}
+db, err := leveldb.OpenFile(&#34;path/to/db&#34;, o)
+...
+defer db.Close()
+...
+</pre>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+			
+				
+				<dd><a href="index.html#Batch">type Batch</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Batch.Delete">func (b *Batch) Delete(key []byte)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Batch.Dump">func (b *Batch) Dump() []byte</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Batch.Len">func (b *Batch) Len() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Batch.Load">func (b *Batch) Load(data []byte) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Batch.Put">func (b *Batch) Put(key, value []byte)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Batch.Replay">func (b *Batch) Replay(r BatchReplay) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Batch.Reset">func (b *Batch) Reset()</a></dd>
+				
+			
+				
+				<dd><a href="index.html#BatchReplay">type BatchReplay</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#DB">type DB</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Open">func Open(stor storage.Storage, o *opt.Options) (db *DB, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#OpenFile">func OpenFile(path string, o *opt.Options) (db *DB, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Recover">func Recover(stor storage.Storage, o *opt.Options) (db *DB, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#RecoverFile">func RecoverFile(path string, o *opt.Options) (db *DB, err error)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DB.Close">func (db *DB) Close() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DB.CompactRange">func (db *DB) CompactRange(r util.Range) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DB.Delete">func (db *DB) Delete(key []byte, wo *opt.WriteOptions) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DB.Get">func (db *DB) Get(key []byte, ro *opt.ReadOptions) (value []byte, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DB.GetProperty">func (db *DB) GetProperty(name string) (value string, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DB.GetSnapshot">func (db *DB) GetSnapshot() (*Snapshot, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DB.Has">func (db *DB) Has(key []byte, ro *opt.ReadOptions) (ret bool, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DB.NewIterator">func (db *DB) NewIterator(slice *util.Range, ro *opt.ReadOptions) iterator.Iterator</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DB.OpenTransaction">func (db *DB) OpenTransaction() (*Transaction, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DB.Put">func (db *DB) Put(key, value []byte, wo *opt.WriteOptions) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DB.SetReadOnly">func (db *DB) SetReadOnly() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DB.SizeOf">func (db *DB) SizeOf(ranges []util.Range) (Sizes, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DB.Write">func (db *DB) Write(batch *Batch, wo *opt.WriteOptions) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#ErrBatchCorrupted">type ErrBatchCorrupted</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ErrBatchCorrupted.Error">func (e *ErrBatchCorrupted) Error() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#ErrInternalKeyCorrupted">type ErrInternalKeyCorrupted</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ErrInternalKeyCorrupted.Error">func (e *ErrInternalKeyCorrupted) Error() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#ErrManifestCorrupted">type ErrManifestCorrupted</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ErrManifestCorrupted.Error">func (e *ErrManifestCorrupted) Error() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Reader">type Reader</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Sizes">type Sizes</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Sizes.Sum">func (sizes Sizes) Sum() int64</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Snapshot">type Snapshot</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Snapshot.Get">func (snap *Snapshot) Get(key []byte, ro *opt.ReadOptions) (value []byte, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Snapshot.Has">func (snap *Snapshot) Has(key []byte, ro *opt.ReadOptions) (ret bool, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Snapshot.NewIterator">func (snap *Snapshot) NewIterator(slice *util.Range, ro *opt.ReadOptions) iterator.Iterator</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Snapshot.Release">func (snap *Snapshot) Release()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Snapshot.String">func (snap *Snapshot) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Transaction">type Transaction</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Transaction.Commit">func (tr *Transaction) Commit() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Transaction.Delete">func (tr *Transaction) Delete(key []byte, wo *opt.WriteOptions) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Transaction.Discard">func (tr *Transaction) Discard()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Transaction.Get">func (tr *Transaction) Get(key []byte, ro *opt.ReadOptions) ([]byte, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Transaction.Has">func (tr *Transaction) Has(key []byte, ro *opt.ReadOptions) (bool, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Transaction.NewIterator">func (tr *Transaction) NewIterator(slice *util.Range, ro *opt.ReadOptions) iterator.Iterator</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Transaction.Put">func (tr *Transaction) Put(key, value []byte, wo *opt.WriteOptions) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Transaction.Write">func (tr *Transaction) Write(b *Batch, wo *opt.WriteOptions) error</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/batch.go">batch.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/comparer.go">comparer.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db.go">db.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db_compaction.go">db_compaction.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db_iter.go">db_iter.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db_snapshot.go">db_snapshot.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db_state.go">db_state.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db_transaction.go">db_transaction.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db_util.go">db_util.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db_write.go">db_write.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/doc.go">doc.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/errors.go">errors.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/filter.go">filter.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/key.go">key.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/options.go">options.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/session.go">session.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/session_compaction.go">session_compaction.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/session_record.go">session_record.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/session_util.go">session_util.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/table.go">table.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util.go">util.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/version.go">version.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var (
+    <span id="ErrNotFound">ErrNotFound</span>         = <a href="errors/index.html">errors</a>.<a href="errors/index.html#ErrNotFound">ErrNotFound</a>
+    <span id="ErrReadOnly">ErrReadOnly</span>         = <a href="errors/index.html">errors</a>.<a href="errors/index.html#New">New</a>(&#34;leveldb: read-only mode&#34;)
+    <span id="ErrSnapshotReleased">ErrSnapshotReleased</span> = <a href="errors/index.html">errors</a>.<a href="errors/index.html#New">New</a>(&#34;leveldb: snapshot released&#34;)
+    <span id="ErrIterReleased">ErrIterReleased</span>     = <a href="errors/index.html">errors</a>.<a href="errors/index.html#New">New</a>(&#34;leveldb: iterator released&#34;)
+    <span id="ErrClosed">ErrClosed</span>           = <a href="errors/index.html">errors</a>.<a href="errors/index.html#New">New</a>(&#34;leveldb: closed&#34;)
+)</pre>
+				<p>
+Common errors.
+</p>
+
+			
+		
+		
+		
+			
+			
+			<h2 id="Batch">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/batch.go?s=1492:1641#L57">Batch</a></h2>
+			<pre>type Batch struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Batch is a write batch.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Batch.Delete">func (*Batch) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/batch.go?s=2960:2994#L114">Delete</a></h3>
+				<pre>func (b *<a href="index.html#Batch">Batch</a>) Delete(key []<a href="../../../../builtin/index.html#byte">byte</a>)</pre>
+				<p>
+Delete appends &#39;delete operation&#39; of the given key to the batch.
+It is safe to modify the contents of the argument after Delete returns but
+not before.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Batch.Dump">func (*Batch) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/batch.go?s=3221:3250#L122">Dump</a></h3>
+				<pre>func (b *<a href="index.html#Batch">Batch</a>) Dump() []<a href="../../../../builtin/index.html#byte">byte</a></pre>
+				<p>
+Dump dumps batch contents. The returned slice can be loaded into the
+batch using Load method.
+The returned slice is not its own copy, so the contents should not be
+modified.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Batch.Len">func (*Batch) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/batch.go?s=3885:3910#L148">Len</a></h3>
+				<pre>func (b *<a href="index.html#Batch">Batch</a>) Len() <a href="../../../../builtin/index.html#int">int</a></pre>
+				<p>
+Len returns number of records in the batch.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Batch.Load">func (*Batch) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/batch.go?s=3496:3535#L130">Load</a></h3>
+				<pre>func (b *<a href="index.html#Batch">Batch</a>) Load(data []<a href="../../../../builtin/index.html#byte">byte</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Load loads given slice into the batch. Previous contents of the batch
+will be discarded.
+The given slice will not be copied and will be used as batch buffer, so
+it is not safe to modify the contents of the slice.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Batch.Put">func (*Batch) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/batch.go?s=2718:2756#L107">Put</a></h3>
+				<pre>func (b *<a href="index.html#Batch">Batch</a>) Put(key, value []<a href="../../../../builtin/index.html#byte">byte</a>)</pre>
+				<p>
+Put appends &#39;put operation&#39; of the given key/value pair to the batch.
+It is safe to modify the contents of the argument after Put returns but not
+before.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Batch.Replay">func (*Batch) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/batch.go?s=3602:3645#L135">Replay</a></h3>
+				<pre>func (b *<a href="index.html#Batch">Batch</a>) Replay(r <a href="index.html#BatchReplay">BatchReplay</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Replay replays batch contents.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Batch.Reset">func (*Batch) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/batch.go?s=3964:3987#L153">Reset</a></h3>
+				<pre>func (b *<a href="index.html#Batch">Batch</a>) Reset()</pre>
+				<p>
+Reset resets the batch.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="BatchReplay">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/batch.go?s=923:997#L30">BatchReplay</a></h2>
+			<pre>type BatchReplay interface {
+    Put(key, value []<a href="../../../../builtin/index.html#byte">byte</a>)
+    Delete(key []<a href="../../../../builtin/index.html#byte">byte</a>)
+}</pre>
+			<p>
+BatchReplay wraps basic batch operations.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="DB">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db.go?s=709:1768#L21">DB</a></h2>
+			<pre>type DB struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+DB is a LevelDB database.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="Open">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db.go?s=3857:3924#L158">Open</a></h3>
+				<pre>func Open(stor <a href="storage/index.html">storage</a>.<a href="storage/index.html#Storage">Storage</a>, o *<a href="opt/index.html">opt</a>.<a href="opt/index.html#Options">Options</a>) (db *<a href="index.html#DB">DB</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Open opens or creates a DB for the given storage.
+The DB will be created if not exist, unless ErrorIfMissing is true.
+Also, if ErrorIfExist is true and the DB exist Open will returns
+os.ErrExist error.
+</p>
+<p>
+Open will return an error with type of ErrCorrupted if corruption
+detected in the DB. Use errors.IsCorrupted to test whether an error is
+due to corruption. Corrupted DB can be recovered with Recover function.
+</p>
+<p>
+The returned DB instance is safe for concurrent use.
+The DB must be closed after use, by calling Close method.
+</p>
+
+				
+				
+			
+				
+				<h3 id="OpenFile">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db.go?s=4986:5048#L201">OpenFile</a></h3>
+				<pre>func OpenFile(path <a href="../../../../builtin/index.html#string">string</a>, o *<a href="opt/index.html">opt</a>.<a href="opt/index.html#Options">Options</a>) (db *<a href="index.html#DB">DB</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+OpenFile opens or creates a DB for the given path.
+The DB will be created if not exist, unless ErrorIfMissing is true.
+Also, if ErrorIfExist is true and the DB exist OpenFile will returns
+os.ErrExist error.
+</p>
+<p>
+OpenFile uses standard file-system backed storage implementation as
+described in the leveldb/storage package.
+</p>
+<p>
+OpenFile will return an error with type of ErrCorrupted if corruption
+detected in the DB. Use errors.IsCorrupted to test whether an error is
+due to corruption. Corrupted DB can be recovered with Recover function.
+</p>
+<p>
+The returned DB instance is safe for concurrent use.
+The DB must be closed after use, by calling Close method.
+</p>
+
+				
+				
+			
+				
+				<h3 id="Recover">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db.go?s=5633:5703#L222">Recover</a></h3>
+				<pre>func Recover(stor <a href="storage/index.html">storage</a>.<a href="storage/index.html#Storage">Storage</a>, o *<a href="opt/index.html">opt</a>.<a href="opt/index.html#Options">Options</a>) (db *<a href="index.html#DB">DB</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Recover recovers and opens a DB with missing or corrupted manifest files
+for the given storage. It will ignore any manifest files, valid or not.
+The DB must already exist or it will returns an error.
+Also, Recover will ignore ErrorIfMissing and ErrorIfExist options.
+</p>
+<p>
+The returned DB instance is safe for concurrent use.
+The DB must be closed after use, by calling Close method.
+</p>
+
+				
+				
+			
+				
+				<h3 id="RecoverFile">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db.go?s=6436:6501#L251">RecoverFile</a></h3>
+				<pre>func RecoverFile(path <a href="../../../../builtin/index.html#string">string</a>, o *<a href="opt/index.html">opt</a>.<a href="opt/index.html#Options">Options</a>) (db *<a href="index.html#DB">DB</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+RecoverFile recovers and opens a DB with missing or corrupted manifest files
+for the given path. It will ignore any manifest files, valid or not.
+The DB must already exist or it will returns an error.
+Also, Recover will ignore ErrorIfMissing and ErrorIfExist options.
+</p>
+<p>
+RecoverFile uses standard file-system backed storage implementation as described
+in the leveldb/storage package.
+</p>
+<p>
+The returned DB instance is safe for concurrent use.
+The DB must be closed after use, by calling Close method.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="DB.Close">func (*DB) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db.go?s=24875:24902#L1018">Close</a></h3>
+				<pre>func (db *<a href="index.html#DB">DB</a>) Close() <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Close closes the DB. This will also releases any outstanding snapshot,
+abort any in-flight compaction and discard open transaction.
+</p>
+<p>
+It is not safe to close a DB until all outstanding iterators are released.
+It is valid to call Close multiple times. Other methods should not be
+called after the DB has been closed.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DB.CompactRange">func (*DB) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db_write.go?s=9507:9553#L369">CompactRange</a></h3>
+				<pre>func (db *<a href="index.html#DB">DB</a>) CompactRange(r <a href="util/index.html">util</a>.<a href="util/index.html#Range">Range</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+CompactRange compacts the underlying DB for the given key range.
+In particular, deleted and overwritten versions are discarded,
+and the data is rearranged to reduce the cost of operations
+needed to access the data. This operation should typically only
+be invoked by users who understand the underlying implementation.
+</p>
+<p>
+A nil Range.Start is treated as a key before all keys in the DB.
+And a nil Range.Limit is treated as a key after all keys in the DB.
+Therefore if both is nil then it will compact entire DB.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DB.Delete">func (*DB) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db_write.go?s=8540:8600#L349">Delete</a></h3>
+				<pre>func (db *<a href="index.html#DB">DB</a>) Delete(key []<a href="../../../../builtin/index.html#byte">byte</a>, wo *<a href="opt/index.html">opt</a>.<a href="opt/index.html#WriteOptions">WriteOptions</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Delete deletes the value for the given key. Delete will not returns error if
+key doesn&#39;t exist. Write merge also applies for Delete, see Write.
+</p>
+<p>
+It is safe to modify the contents of the arguments after Delete returns but
+not before.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DB.Get">func (*DB) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db.go?s=18885:18961#L824">Get</a></h3>
+				<pre>func (db *<a href="index.html#DB">DB</a>) Get(key []<a href="../../../../builtin/index.html#byte">byte</a>, ro *<a href="opt/index.html">opt</a>.<a href="opt/index.html#ReadOptions">ReadOptions</a>) (value []<a href="../../../../builtin/index.html#byte">byte</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Get gets the value for the given key. It returns ErrNotFound if the
+DB does not contains the key.
+</p>
+<p>
+The returned slice is its own copy, it is safe to modify the contents
+of the returned slice.
+It is safe to modify the contents of the argument after Get returns.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DB.GetProperty">func (*DB) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db.go?s=21605:21669#L909">GetProperty</a></h3>
+				<pre>func (db *<a href="index.html#DB">DB</a>) GetProperty(name <a href="../../../../builtin/index.html#string">string</a>) (value <a href="../../../../builtin/index.html#string">string</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+GetProperty returns value of the given property name.
+</p>
+<p>
+Property names:
+</p>
+<pre>leveldb.num-files-at-level{n}
+	Returns the number of files at level &#39;n&#39;.
+leveldb.stats
+	Returns statistics of the underlying DB.
+leveldb.sstables
+	Returns sstables list for each level.
+leveldb.blockpool
+	Returns block pool stats.
+leveldb.cachedblock
+	Returns size of cached block.
+leveldb.openedtables
+	Returns number of opened tables.
+leveldb.alivesnaps
+	Returns number of alive snapshots.
+leveldb.aliveiters
+	Returns number of alive iterators.
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="DB.GetSnapshot">func (*DB) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db.go?s=20895:20941#L882">GetSnapshot</a></h3>
+				<pre>func (db *<a href="index.html#DB">DB</a>) GetSnapshot() (*<a href="index.html#Snapshot">Snapshot</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+GetSnapshot returns a latest snapshot of the underlying DB. A snapshot
+is a frozen snapshot of a DB state at a particular point in time. The
+content of snapshot are guaranteed to be consistent.
+</p>
+<p>
+The snapshot must be released after use, by calling Release method.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DB.Has">func (*DB) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db.go?s=19246:19318#L838">Has</a></h3>
+				<pre>func (db *<a href="index.html#DB">DB</a>) Has(key []<a href="../../../../builtin/index.html#byte">byte</a>, ro *<a href="opt/index.html">opt</a>.<a href="opt/index.html#ReadOptions">ReadOptions</a>) (ret <a href="../../../../builtin/index.html#bool">bool</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Has returns true if the DB does contains the given key.
+</p>
+<p>
+It is safe to modify the contents of the argument after Get returns.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DB.NewIterator">func (*DB) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db.go?s=20228:20311#L865">NewIterator</a></h3>
+				<pre>func (db *<a href="index.html#DB">DB</a>) NewIterator(slice *<a href="util/index.html">util</a>.<a href="util/index.html#Range">Range</a>, ro *<a href="opt/index.html">opt</a>.<a href="opt/index.html#ReadOptions">ReadOptions</a>) <a href="iterator/index.html">iterator</a>.<a href="iterator/index.html#Iterator">Iterator</a></pre>
+				<p>
+NewIterator returns an iterator for the latest snapshot of the
+underlying DB.
+The returned iterator is not safe for concurrent use, but it is safe to use
+multiple iterators concurrently, with each in a dedicated goroutine.
+It is also safe to use an iterator concurrently with modifying its
+underlying DB. The resultant key/value pairs are guaranteed to be
+consistent.
+</p>
+<p>
+Slice allows slicing the iterator to only contains keys in the given
+range. A nil Range.Start is treated as a key before all keys in the
+DB. And a nil Range.Limit is treated as a key after all keys in
+the DB.
+</p>
+<p>
+The iterator must be released after use, by calling Release method.
+</p>
+<p>
+Also read Iterator documentation of the leveldb/iterator package.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DB.OpenTransaction">func (*DB) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db_transaction.go?s=8230:8283#L277">OpenTransaction</a></h3>
+				<pre>func (db *<a href="index.html#DB">DB</a>) OpenTransaction() (*<a href="index.html#Transaction">Transaction</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+OpenTransaction opens an atomic DB transaction. Only one transaction can be
+opened at a time. Subsequent call to Write and OpenTransaction will be blocked
+until in-flight transaction is committed or discarded.
+The returned transaction handle is safe for concurrent use.
+</p>
+<p>
+Transaction is expensive and can overwhelm compaction, especially if
+transaction size is small. Use with caution.
+</p>
+<p>
+The transaction must be closed once done, either by committing or discarding
+the transaction.
+Closing the DB will discard open transaction.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DB.Put">func (*DB) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db_write.go?s=8177:8241#L340">Put</a></h3>
+				<pre>func (db *<a href="index.html#DB">DB</a>) Put(key, value []<a href="../../../../builtin/index.html#byte">byte</a>, wo *<a href="opt/index.html">opt</a>.<a href="opt/index.html#WriteOptions">WriteOptions</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Put sets the value for the given key. It overwrites any previous value
+for that key; a DB is not a multi-map. Write merge also applies for Put, see
+Write.
+</p>
+<p>
+It is safe to modify the contents of the arguments after Put returns but not
+before.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DB.SetReadOnly">func (*DB) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db_write.go?s=10334:10367#L408">SetReadOnly</a></h3>
+				<pre>func (db *<a href="index.html#DB">DB</a>) SetReadOnly() <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+SetReadOnly makes DB read-only. It will stay read-only until reopened.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DB.SizeOf">func (*DB) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db.go?s=23923:23979#L982">SizeOf</a></h3>
+				<pre>func (db *<a href="index.html#DB">DB</a>) SizeOf(ranges []<a href="util/index.html">util</a>.<a href="util/index.html#Range">Range</a>) (<a href="index.html#Sizes">Sizes</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+SizeOf calculates approximate sizes of the given key ranges.
+The length of the returned sizes are equal with the length of the given
+ranges. The returned sizes measure storage space usage, so if the user
+data compresses by a factor of ten, the returned sizes will be one-tenth
+the size of the corresponding user data size.
+The results may not include the sizes of recently written data.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DB.Write">func (*DB) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db_write.go?s=5407:5468#L232">Write</a></h3>
+				<pre>func (db *<a href="index.html#DB">DB</a>) Write(batch *<a href="index.html#Batch">Batch</a>, wo *<a href="opt/index.html">opt</a>.<a href="opt/index.html#WriteOptions">WriteOptions</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Write apply the given batch to the DB. The batch records will be applied
+sequentially. Write might be used concurrently, when used concurrently and
+batch is small enough, write will try to merge the batches. Set NoWriteMerge
+option to true to disable write merge.
+</p>
+<p>
+It is safe to modify the contents of the arguments after Write returns but
+not before. Write will not modify content of the batch.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ErrBatchCorrupted">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/batch.go?s=508:556#L11">ErrBatchCorrupted</a></h2>
+			<pre>type ErrBatchCorrupted struct {
+    Reason <a href="../../../../builtin/index.html#string">string</a>
+}</pre>
+			<p>
+ErrBatchCorrupted records reason of batch corruption. This error will be
+wrapped with errors.ErrCorrupted.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ErrBatchCorrupted.Error">func (*ErrBatchCorrupted) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/batch.go?s=558:600#L15">Error</a></h3>
+				<pre>func (e *<a href="index.html#ErrBatchCorrupted">ErrBatchCorrupted</a>) Error() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ErrInternalKeyCorrupted">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/key.go?s=404:473#L8">ErrInternalKeyCorrupted</a></h2>
+			<pre>type ErrInternalKeyCorrupted struct {
+    Ikey   []<a href="../../../../builtin/index.html#byte">byte</a>
+    Reason <a href="../../../../builtin/index.html#string">string</a>
+}</pre>
+			<p>
+ErrInternalKeyCorrupted records internal key corruption.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ErrInternalKeyCorrupted.Error">func (*ErrInternalKeyCorrupted) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/key.go?s=475:523#L13">Error</a></h3>
+				<pre>func (e *<a href="index.html#ErrInternalKeyCorrupted">ErrInternalKeyCorrupted</a>) Error() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ErrManifestCorrupted">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/session.go?s=544:610#L13">ErrManifestCorrupted</a></h2>
+			<pre>type ErrManifestCorrupted struct {
+    Field  <a href="../../../../builtin/index.html#string">string</a>
+    Reason <a href="../../../../builtin/index.html#string">string</a>
+}</pre>
+			<p>
+ErrManifestCorrupted records manifest corruption. This error will be
+wrapped with errors.ErrCorrupted.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ErrManifestCorrupted.Error">func (*ErrManifestCorrupted) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/session.go?s=612:657#L18">Error</a></h3>
+				<pre>func (e *<a href="index.html#ErrManifestCorrupted">ErrManifestCorrupted</a>) Error() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Reader">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db_util.go?s=580:740#L9">Reader</a></h2>
+			<pre>type Reader interface {
+    Get(key []<a href="../../../../builtin/index.html#byte">byte</a>, ro *<a href="opt/index.html">opt</a>.<a href="opt/index.html#ReadOptions">ReadOptions</a>) (value []<a href="../../../../builtin/index.html#byte">byte</a>, err <a href="../../../../builtin/index.html#error">error</a>)
+    NewIterator(slice *<a href="util/index.html">util</a>.<a href="util/index.html#Range">Range</a>, ro *<a href="opt/index.html">opt</a>.<a href="opt/index.html#ReadOptions">ReadOptions</a>) <a href="iterator/index.html">iterator</a>.<a href="iterator/index.html#Iterator">Iterator</a>
+}</pre>
+			<p>
+Reader is the interface that wraps basic Get and NewIterator methods.
+This interface implemented by both DB and Snapshot.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Sizes">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db_util.go?s=768:786#L15">Sizes</a></h2>
+			<pre>type Sizes []<a href="../../../../builtin/index.html#int64">int64</a></pre>
+			<p>
+Sizes is list of size.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Sizes.Sum">func (Sizes) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db_util.go?s=821:851#L18">Sum</a></h3>
+				<pre>func (sizes <a href="index.html#Sizes">Sizes</a>) Sum() <a href="../../../../builtin/index.html#int64">int64</a></pre>
+				<p>
+Sum returns sum of the sizes.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Snapshot">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db_snapshot.go?s=1525:1628#L65">Snapshot</a></h2>
+			<pre>type Snapshot struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Snapshot is a DB snapshot.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Snapshot.Get">func (*Snapshot) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db_snapshot.go?s=2221:2305#L92">Get</a></h3>
+				<pre>func (snap *<a href="index.html#Snapshot">Snapshot</a>) Get(key []<a href="../../../../builtin/index.html#byte">byte</a>, ro *<a href="opt/index.html">opt</a>.<a href="opt/index.html#ReadOptions">ReadOptions</a>) (value []<a href="../../../../builtin/index.html#byte">byte</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Get gets the value for the given key. It returns ErrNotFound if
+the DB does not contains the key.
+</p>
+<p>
+The caller should not modify the contents of the returned slice, but
+it is safe to modify the contents of the argument after Get returns.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Snapshot.Has">func (*Snapshot) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db_snapshot.go?s=2650:2730#L109">Has</a></h3>
+				<pre>func (snap *<a href="index.html#Snapshot">Snapshot</a>) Has(key []<a href="../../../../builtin/index.html#byte">byte</a>, ro *<a href="opt/index.html">opt</a>.<a href="opt/index.html#ReadOptions">ReadOptions</a>) (ret <a href="../../../../builtin/index.html#bool">bool</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Has returns true if the DB does contains the given key.
+</p>
+<p>
+It is safe to modify the contents of the argument after Get returns.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Snapshot.NewIterator">func (*Snapshot) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db_snapshot.go?s=3810:3901#L140">NewIterator</a></h3>
+				<pre>func (snap *<a href="index.html#Snapshot">Snapshot</a>) NewIterator(slice *<a href="util/index.html">util</a>.<a href="util/index.html#Range">Range</a>, ro *<a href="opt/index.html">opt</a>.<a href="opt/index.html#ReadOptions">ReadOptions</a>) <a href="iterator/index.html">iterator</a>.<a href="iterator/index.html#Iterator">Iterator</a></pre>
+				<p>
+NewIterator returns an iterator for the snapshot of the underlying DB.
+The returned iterator is not safe for concurrent use, but it is safe to use
+multiple iterators concurrently, with each in a dedicated goroutine.
+It is also safe to use an iterator concurrently with modifying its
+underlying DB. The resultant key/value pairs are guaranteed to be
+consistent.
+</p>
+<p>
+Slice allows slicing the iterator to only contains keys in the given
+range. A nil Range.Start is treated as a key before all keys in the
+DB. And a nil Range.Limit is treated as a key after all keys in
+the DB.
+</p>
+<p>
+The iterator must be released after use, by calling Release method.
+Releasing the snapshot doesn&#39;t mean releasing the iterator too, the
+iterator would be still valid until released.
+</p>
+<p>
+Also read Iterator documentation of the leveldb/iterator package.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Snapshot.Release">func (*Snapshot) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db_snapshot.go?s=4505:4536#L159">Release</a></h3>
+				<pre>func (snap *<a href="index.html#Snapshot">Snapshot</a>) Release()</pre>
+				<p>
+Release releases the snapshot. This will not release any returned
+iterators, the iterators would still be valid until released or the
+underlying DB is closed.
+</p>
+<p>
+Other methods should not be called after the snapshot has been released.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Snapshot.String">func (*Snapshot) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db_snapshot.go?s=1868:1905#L83">String</a></h3>
+				<pre>func (snap *<a href="index.html#Snapshot">Snapshot</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Transaction">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db_transaction.go?s=504:707#L12">Transaction</a></h2>
+			<pre>type Transaction struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Transaction is the transaction handle.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Transaction.Commit">func (*Transaction) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db_transaction.go?s=5545:5582#L176">Commit</a></h3>
+				<pre>func (tr *<a href="index.html#Transaction">Transaction</a>) Commit() <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Commit commits the transaction. If error is not nil, then the transaction is
+not committed, it can then either be retried or discarded.
+</p>
+<p>
+Other methods should not be called after transaction has been committed.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Transaction.Delete">func (*Transaction) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db_transaction.go?s=4393:4462#L135">Delete</a></h3>
+				<pre>func (tr *<a href="index.html#Transaction">Transaction</a>) Delete(key []<a href="../../../../builtin/index.html#byte">byte</a>, wo *<a href="opt/index.html">opt</a>.<a href="opt/index.html#WriteOptions">WriteOptions</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Delete deletes the value for the given key.
+Please note that the transaction is not compacted until committed, so if you
+writes 10 same keys, then those 10 same keys are in the transaction.
+</p>
+<p>
+It is safe to modify the contents of the arguments after Delete returns.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Transaction.Discard">func (*Transaction) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db_transaction.go?s=7402:7434#L250">Discard</a></h3>
+				<pre>func (tr *<a href="index.html#Transaction">Transaction</a>) Discard()</pre>
+				<p>
+Discard discards the transaction.
+</p>
+<p>
+Other methods should not be called after transaction has been discarded.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Transaction.Get">func (*Transaction) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db_transaction.go?s=987:1062#L30">Get</a></h3>
+				<pre>func (tr *<a href="index.html#Transaction">Transaction</a>) Get(key []<a href="../../../../builtin/index.html#byte">byte</a>, ro *<a href="opt/index.html">opt</a>.<a href="opt/index.html#ReadOptions">ReadOptions</a>) ([]<a href="../../../../builtin/index.html#byte">byte</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Get gets the value for the given key. It returns ErrNotFound if the
+DB does not contains the key.
+</p>
+<p>
+The returned slice is its own copy, it is safe to modify the contents
+of the returned slice.
+It is safe to modify the contents of the argument after Get returns.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Transaction.Has">func (*Transaction) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db_transaction.go?s=1349:1422#L42">Has</a></h3>
+				<pre>func (tr *<a href="index.html#Transaction">Transaction</a>) Has(key []<a href="../../../../builtin/index.html#byte">byte</a>, ro *<a href="opt/index.html">opt</a>.<a href="opt/index.html#ReadOptions">ReadOptions</a>) (<a href="../../../../builtin/index.html#bool">bool</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Has returns true if the DB does contains the given key.
+</p>
+<p>
+It is safe to modify the contents of the argument after Has returns.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Transaction.NewIterator">func (*Transaction) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db_transaction.go?s=2327:2419#L65">NewIterator</a></h3>
+				<pre>func (tr *<a href="index.html#Transaction">Transaction</a>) NewIterator(slice *<a href="util/index.html">util</a>.<a href="util/index.html#Range">Range</a>, ro *<a href="opt/index.html">opt</a>.<a href="opt/index.html#ReadOptions">ReadOptions</a>) <a href="iterator/index.html">iterator</a>.<a href="iterator/index.html#Iterator">Iterator</a></pre>
+				<p>
+NewIterator returns an iterator for the latest snapshot of the transaction.
+The returned iterator is not safe for concurrent use, but it is safe to use
+multiple iterators concurrently, with each in a dedicated goroutine.
+It is also safe to use an iterator concurrently while writes to the
+transaction. The resultant key/value pairs are guaranteed to be consistent.
+</p>
+<p>
+Slice allows slicing the iterator to only contains keys in the given
+range. A nil Range.Start is treated as a key before all keys in the
+DB. And a nil Range.Limit is treated as a key after all keys in
+the DB.
+</p>
+<p>
+The iterator must be released after use, by calling Release method.
+</p>
+<p>
+Also read Iterator documentation of the leveldb/iterator package.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Transaction.Put">func (*Transaction) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db_transaction.go?s=3914:3987#L121">Put</a></h3>
+				<pre>func (tr *<a href="index.html#Transaction">Transaction</a>) Put(key, value []<a href="../../../../builtin/index.html#byte">byte</a>, wo *<a href="opt/index.html">opt</a>.<a href="opt/index.html#WriteOptions">WriteOptions</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Put sets the value for the given key. It overwrites any previous value
+for that key; a DB is not a multi-map.
+Please note that the transaction is not compacted until committed, so if you
+writes 10 same keys, then those 10 same keys are in the transaction.
+</p>
+<p>
+It is safe to modify the contents of the arguments after Put returns.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Transaction.Write">func (*Transaction) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/db_transaction.go?s=4912:4978#L150">Write</a></h3>
+				<pre>func (tr *<a href="index.html#Transaction">Transaction</a>) Write(b *<a href="index.html#Batch">Batch</a>, wo *<a href="opt/index.html">opt</a>.<a href="opt/index.html#WriteOptions">WriteOptions</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Write apply the given batch to the transaction. The batch will be applied
+sequentially.
+Please note that the transaction is not compacted until committed, so if you
+writes 10 same keys, then those 10 same keys are in the transaction.
+</p>
+<p>
+It is safe to modify the contents of the arguments after Write returns.
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+
+
+	<div class="pkg-dir">
+		<table>
+			<tr>
+				<th class="pkg-name">Name</th>
+				<th class="pkg-synopsis">Synopsis</th>
+			</tr>
+
+			
+			<tr>
+				<td colspan="2"><a href="../index.html">..</a></td>
+			</tr>
+			
+
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="cache/index.html">cache</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package cache provides interface and implementation of a cache algorithms.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="comparer/index.html">comparer</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package comparer provides interface and implementation for ordering sets of data.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="errors/index.html">errors</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package errors provides common error types used throughout leveldb.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="filter/index.html">filter</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package filter provides interface and implementation of probabilistic data structure.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="iterator/index.html">iterator</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package iterator provides interface and implementation to traverse over contents of a database.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="journal/index.html">journal</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package journal reads and writes sequences of journals.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="memdb/index.html">memdb</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package memdb provides in-memory key/value database implementation.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="opt/index.html">opt</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package opt provides sets of options used by LevelDB.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="storage/index.html">storage</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package storage provides storage abstraction for LevelDB.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="table/index.html">table</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package table allows read and write sorted key/value.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="testutil/index.html">testutil</a>
+						</td>
+						<td class="pkg-synopsis">
+							
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="util/index.html">util</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package util provides utilities used throughout leveldb.
+						</td>
+					</tr>
+				
+			
+		</table>
+	</div>
+
+
+	
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

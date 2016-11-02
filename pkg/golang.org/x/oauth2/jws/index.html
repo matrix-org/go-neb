@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>jws - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package jws</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "golang.org/x/oauth2/jws"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package jws provides encoding and decoding utilities for
+signed JWS messages.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+				
+				<dd><a href="index.html#Encode">func Encode(header *Header, c *ClaimSet, key *rsa.PrivateKey) (string, error)</a></dd>
+			
+				
+				<dd><a href="index.html#EncodeWithSigner">func EncodeWithSigner(header *Header, c *ClaimSet, sg Signer) (string, error)</a></dd>
+			
+				
+				<dd><a href="index.html#Verify">func Verify(token string, key *rsa.PublicKey) error</a></dd>
+			
+			
+				
+				<dd><a href="index.html#ClaimSet">type ClaimSet</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Decode">func Decode(payload string) (*ClaimSet, error)</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Header">type Header</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Signer">type Signer</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/golang.org/x/oauth2/jws/jws.go">jws.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+			
+			
+			<h2 id="Encode">func <a href="http://localhost:6060/src/golang.org/x/oauth2/jws/jws.go?s=4731:4808#L138">Encode</a></h2>
+			<pre>func Encode(header *<a href="index.html#Header">Header</a>, c *<a href="index.html#ClaimSet">ClaimSet</a>, key *<a href="../../../../crypto/rsa/index.html">rsa</a>.<a href="../../../../crypto/rsa/index.html#PrivateKey">PrivateKey</a>) (<a href="../../../../builtin/index.html#string">string</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+Encode encodes a signed JWS with provided header and claim set.
+This invokes EncodeWithSigner using crypto/rsa.SignPKCS1v15 with the given RSA private key.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="EncodeWithSigner">func <a href="http://localhost:6060/src/golang.org/x/oauth2/jws/jws.go?s=4175:4252#L119">EncodeWithSigner</a></h2>
+			<pre>func EncodeWithSigner(header *<a href="index.html#Header">Header</a>, c *<a href="index.html#ClaimSet">ClaimSet</a>, sg <a href="index.html#Signer">Signer</a>) (<a href="../../../../builtin/index.html#string">string</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+EncodeWithSigner encodes a header and claim set with the provided signer.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Verify">func <a href="http://localhost:6060/src/golang.org/x/oauth2/jws/jws.go?s=5150:5201#L149">Verify</a></h2>
+			<pre>func Verify(token <a href="../../../../builtin/index.html#string">string</a>, key *<a href="../../../../crypto/rsa/index.html">rsa</a>.<a href="../../../../crypto/rsa/index.html#PublicKey">PublicKey</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+			<p>
+Verify tests whether the provided JWT token&#39;s signature was produced by the private key
+associated with the supplied public key.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="ClaimSet">type <a href="http://localhost:6060/src/golang.org/x/oauth2/jws/jws.go?s=656:1759#L16">ClaimSet</a></h2>
+			<pre>type ClaimSet struct {
+    Iss   <a href="../../../../builtin/index.html#string">string</a> `json:&#34;iss&#34;`             <span class="comment">// email address of the client_id of the application making the access token request</span>
+    Scope <a href="../../../../builtin/index.html#string">string</a> `json:&#34;scope,omitempty&#34;` <span class="comment">// space-delimited list of the permissions the application requests</span>
+    Aud   <a href="../../../../builtin/index.html#string">string</a> `json:&#34;aud&#34;`             <span class="comment">// descriptor of the intended target of the assertion (Optional).</span>
+    Exp   <a href="../../../../builtin/index.html#int64">int64</a>  `json:&#34;exp&#34;`             <span class="comment">// the expiration time of the assertion (seconds since Unix epoch)</span>
+    Iat   <a href="../../../../builtin/index.html#int64">int64</a>  `json:&#34;iat&#34;`             <span class="comment">// the time the assertion was issued (seconds since Unix epoch)</span>
+    Typ   <a href="../../../../builtin/index.html#string">string</a> `json:&#34;typ,omitempty&#34;`   <span class="comment">// token type (Optional).</span>
+
+    <span class="comment">// Email for which the application is requesting delegated access (Optional).</span>
+    Sub <a href="../../../../builtin/index.html#string">string</a> `json:&#34;sub,omitempty&#34;`
+
+    <span class="comment">// The old name of Sub. Client keeps setting Prn to be</span>
+    <span class="comment">// complaint with legacy OAuth 2.0 providers. (Optional)</span>
+    Prn <a href="../../../../builtin/index.html#string">string</a> `json:&#34;prn,omitempty&#34;`
+
+    <span class="comment">// See http://tools.ietf.org/html/draft-jones-json-web-token-10#section-4.3</span>
+    <span class="comment">// This array is marshalled using custom code (see (c *ClaimSet) encode()).</span>
+    PrivateClaims map[<a href="../../../../builtin/index.html#string">string</a>]interface{} `json:&#34;-&#34;`
+}</pre>
+			<p>
+ClaimSet contains information about the JWT signature including the
+permissions being requested (scopes), the target of the token, the issuer,
+the time the token was issued, and the lifetime of the token.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="Decode">func <a href="http://localhost:6060/src/golang.org/x/oauth2/jws/jws.go?s=3546:3592#L99">Decode</a></h3>
+				<pre>func Decode(payload <a href="../../../../builtin/index.html#string">string</a>) (*<a href="index.html#ClaimSet">ClaimSet</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Decode decodes a claim set from a JWS payload.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="Header">type <a href="http://localhost:6060/src/golang.org/x/oauth2/jws/jws.go?s=3094:3330#L79">Header</a></h2>
+			<pre>type Header struct {
+    <span class="comment">// The algorithm used for signature.</span>
+    Algorithm <a href="../../../../builtin/index.html#string">string</a> `json:&#34;alg&#34;`
+
+    <span class="comment">// Represents the token type.</span>
+    Typ <a href="../../../../builtin/index.html#string">string</a> `json:&#34;typ&#34;`
+
+    <span class="comment">// The optional hint of which key is being used.</span>
+    KeyID <a href="../../../../builtin/index.html#string">string</a> `json:&#34;kid,omitempty&#34;`
+}</pre>
+			<p>
+Header represents the header for the signed JWS payloads.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Signer">type <a href="http://localhost:6060/src/golang.org/x/oauth2/jws/jws.go?s=4043:4096#L116">Signer</a></h2>
+			<pre>type Signer func(data []<a href="../../../../builtin/index.html#byte">byte</a>) (sig []<a href="../../../../builtin/index.html#byte">byte</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+Signer returns a signature for the given data.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

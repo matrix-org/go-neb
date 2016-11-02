@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>gofeed - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package gofeed</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/mmcdole/gofeed"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+				<dd><a href="index.html#pkg-examples" class="examplesLink">Examples</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-subdirectories">Subdirectories</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+			
+				
+				<dd><a href="index.html#DefaultAtomTranslator">type DefaultAtomTranslator</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DefaultAtomTranslator.Translate">func (t *DefaultAtomTranslator) Translate(feed interface{}) (*Feed, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#DefaultRSSTranslator">type DefaultRSSTranslator</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DefaultRSSTranslator.Translate">func (t *DefaultRSSTranslator) Translate(feed interface{}) (*Feed, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Enclosure">type Enclosure</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Feed">type Feed</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Feed.String">func (f Feed) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#FeedType">type FeedType</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DetectFeedType">func DetectFeedType(feed io.Reader) FeedType</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#HTTPError">type HTTPError</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#HTTPError.Error">func (err HTTPError) Error() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Image">type Image</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Item">type Item</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Parser">type Parser</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewParser">func NewParser() *Parser</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Parser.Parse">func (f *Parser) Parse(feed io.Reader) (*Feed, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Parser.ParseString">func (f *Parser) ParseString(feed string) (*Feed, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Parser.ParseURL">func (f *Parser) ParseURL(feedURL string) (feed *Feed, err error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Person">type Person</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Translator">type Translator</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+		<div id="pkg-examples">
+			<h4>Examples</h4>
+			<dl>
+			
+			<dd><a class="exampleLink" href="index.html#example_DetectFeedType">DetectFeedType</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Parser_Parse">Parser.Parse</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Parser_ParseString">Parser.ParseString</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Parser_ParseURL">Parser.ParseURL</a></dd>
+			
+			</dl>
+		</div>
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/mmcdole/gofeed/detector.go">detector.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/mmcdole/gofeed/feed.go">feed.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/mmcdole/gofeed/parser.go">parser.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/mmcdole/gofeed/translator.go">translator.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+		
+			
+			
+			<h2 id="DefaultAtomTranslator">type <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/translator.go?s=11953:11988#L403">DefaultAtomTranslator</a></h2>
+			<pre>type DefaultAtomTranslator struct{}</pre>
+			<p>
+DefaultAtomTranslator converts an atom.Feed struct
+into the generic Feed struct.
+</p>
+<p>
+This default implementation defines a set of
+mapping rules between atom.Feed -&gt; Feed
+for each of the fields in Feed.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="DefaultAtomTranslator.Translate">func (*DefaultAtomTranslator) <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/translator.go?s=12058:12132#L407">Translate</a></h3>
+				<pre>func (t *<a href="index.html#DefaultAtomTranslator">DefaultAtomTranslator</a>) Translate(feed interface{}) (*<a href="index.html#Feed">Feed</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Translate converts an Atom feed into the universal
+feed type.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="DefaultRSSTranslator">type <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/translator.go?s=592:626#L16">DefaultRSSTranslator</a></h2>
+			<pre>type DefaultRSSTranslator struct{}</pre>
+			<p>
+DefaultRSSTranslator converts an rss.Feed struct
+into the generic Feed struct.
+</p>
+<p>
+This default implementation defines a set of
+mapping rules between rss.Feed -&gt; Feed
+for each of the fields in Feed.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="DefaultRSSTranslator.Translate">func (*DefaultRSSTranslator) <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/translator.go?s=695:768#L20">Translate</a></h3>
+				<pre>func (t *<a href="index.html#DefaultRSSTranslator">DefaultRSSTranslator</a>) Translate(feed interface{}) (*<a href="index.html#Feed">Feed</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Translate converts an RSS feed into the universal
+feed type.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Enclosure">type <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/feed.go?s=3003:3146#L66">Enclosure</a></h2>
+			<pre>type Enclosure struct {
+    URL    <a href="../../../builtin/index.html#string">string</a> `json:&#34;url,omitempty&#34;`
+    Length <a href="../../../builtin/index.html#string">string</a> `json:&#34;length,omitempty&#34;`
+    Type   <a href="../../../builtin/index.html#string">string</a> `json:&#34;type,omitempty&#34;`
+}</pre>
+			<p>
+Enclosure is a file associated with a given Item.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Feed">type <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/feed.go?s=209:1403#L3">Feed</a></h2>
+			<pre>type Feed struct {
+    Title           <a href="../../../builtin/index.html#string">string</a>            `json:&#34;title,omitempty&#34;`
+    Description     <a href="../../../builtin/index.html#string">string</a>            `json:&#34;description,omitempty&#34;`
+    Link            <a href="../../../builtin/index.html#string">string</a>            `json:&#34;link,omitempty&#34;`
+    FeedLink        <a href="../../../builtin/index.html#string">string</a>            `json:&#34;feedLink,omitempty&#34;`
+    Updated         <a href="../../../builtin/index.html#string">string</a>            `json:&#34;updated,omitempty&#34;`
+    UpdatedParsed   *<a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Time">Time</a>        `json:&#34;updatedParsed,omitempty&#34;`
+    Published       <a href="../../../builtin/index.html#string">string</a>            `json:&#34;published,omitempty&#34;`
+    PublishedParsed *<a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Time">Time</a>        `json:&#34;publishedParsed,omitempty&#34;`
+    Author          *<a href="index.html#Person">Person</a>           `json:&#34;author,omitempty&#34;`
+    Language        <a href="../../../builtin/index.html#string">string</a>            `json:&#34;language,omitempty&#34;`
+    Image           *<a href="index.html#Image">Image</a>            `json:&#34;image,omitempty&#34;`
+    Copyright       <a href="../../../builtin/index.html#string">string</a>            `json:&#34;copyright,omitempty&#34;`
+    Generator       <a href="../../../builtin/index.html#string">string</a>            `json:&#34;generator,omitempty&#34;`
+    Categories      []<a href="../../../builtin/index.html#string">string</a>          `json:&#34;categories,omitempty&#34;`
+    Extensions      ext.<a href="index.html#Extensions">Extensions</a>    `json:&#34;extensions,omitempty&#34;`
+    Custom          map[<a href="../../../builtin/index.html#string">string</a>]<a href="../../../builtin/index.html#string">string</a> `json:&#34;custom,omitempty&#34;`
+    Items           []*<a href="index.html#Item">Item</a>           `json:&#34;items&#34;`
+    FeedType        <a href="../../../builtin/index.html#string">string</a>            `json:&#34;feedType&#34;`
+    FeedVersion     <a href="../../../builtin/index.html#string">string</a>            `json:&#34;feedVersion&#34;`
+}</pre>
+			<p>
+Feed is the universal Feed type that atom.Feed
+and rss.Feed gets translated to. It represents
+a web feed.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Feed.String">func (Feed) <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/feed.go?s=1405:1434#L25">String</a></h3>
+				<pre>func (f <a href="index.html#Feed">Feed</a>) String() <a href="../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="FeedType">type <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/detector.go?s=196:213#L3">FeedType</a></h2>
+			<pre>type FeedType <a href="../../../builtin/index.html#int">int</a></pre>
+			<p>
+FeedType represents one of the possible feed
+types that we can detect.
+</p>
+
+
+			
+				<pre>const (
+    <span class="comment">// FeedTypeUnknown represents a feed that could not have its</span>
+    <span class="comment">// type determiend.</span>
+    <span id="FeedTypeUnknown">FeedTypeUnknown</span> <a href="index.html#FeedType">FeedType</a> = <a href="../../../builtin/index.html#iota">iota</a>
+    <span class="comment">// FeedTypeAtom repesents an Atom feed</span>
+    <span id="FeedTypeAtom">FeedTypeAtom</span>
+    <span class="comment">// FeedTypeRSS represents an RSS feed</span>
+    <span id="FeedTypeRSS">FeedTypeRSS</span>
+)</pre>
+				
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="DetectFeedType">func <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/detector.go?s=582:626#L18">DetectFeedType</a></h3>
+				<pre>func DetectFeedType(feed <a href="../../../io/index.html">io</a>.<a href="../../../io/index.html#Reader">Reader</a>) <a href="index.html#FeedType">FeedType</a></pre>
+				<p>
+DetectFeedType attempts to determine the type of feed
+by looking for specific xml elements unique to the
+various feed types.
+</p>
+
+				<div id="example_DetectFeedType" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+feedData := `&lt;rss version=&#34;2.0&#34;&gt;
+&lt;channel&gt;
+&lt;title&gt;Sample Feed&lt;/title&gt;
+&lt;/channel&gt;
+&lt;/rss&gt;`
+feedType := gofeed.DetectFeedType(strings.NewReader(feedData))
+if feedType == gofeed.FeedTypeRSS {
+    fmt.Println(&#34;Wow! This is an RSS feed!&#34;)
+}
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+
+			
+		
+			
+			
+			<h2 id="HTTPError">type <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/parser.go?s=211:271#L6">HTTPError</a></h2>
+			<pre>type HTTPError struct {
+    StatusCode <a href="../../../builtin/index.html#int">int</a>
+    Status     <a href="../../../builtin/index.html#string">string</a>
+}</pre>
+			<p>
+HTTPError represents an HTTP error returned by a server.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="HTTPError.Error">func (HTTPError) <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/parser.go?s=273:308#L11">Error</a></h3>
+				<pre>func (err <a href="index.html#HTTPError">HTTPError</a>) Error() <a href="../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Image">type <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/feed.go?s=2851:2948#L60">Image</a></h2>
+			<pre>type Image struct {
+    URL   <a href="../../../builtin/index.html#string">string</a> `json:&#34;url,omitempty&#34;`
+    Title <a href="../../../builtin/index.html#string">string</a> `json:&#34;title,omitempty&#34;`
+}</pre>
+			<p>
+Image is an image that is the artwork for a given
+feed or item.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Item">type <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/feed.go?s=1644:2611#L33">Item</a></h2>
+			<pre>type Item struct {
+    Title           <a href="../../../builtin/index.html#string">string</a>            `json:&#34;title,omitempty&#34;`
+    Description     <a href="../../../builtin/index.html#string">string</a>            `json:&#34;description,omitempty&#34;`
+    Content         <a href="../../../builtin/index.html#string">string</a>            `json:&#34;content,omitempty&#34;`
+    Link            <a href="../../../builtin/index.html#string">string</a>            `json:&#34;link,omitempty&#34;`
+    Updated         <a href="../../../builtin/index.html#string">string</a>            `json:&#34;updated,omitempty&#34;`
+    UpdatedParsed   *<a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Time">Time</a>        `json:&#34;updatedParsed,omitempty&#34;`
+    Published       <a href="../../../builtin/index.html#string">string</a>            `json:&#34;published,omitempty&#34;`
+    PublishedParsed *<a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Time">Time</a>        `json:&#34;publishedParsed,omitempty&#34;`
+    Author          *<a href="index.html#Person">Person</a>           `json:&#34;author,omitempty&#34;`
+    GUID            <a href="../../../builtin/index.html#string">string</a>            `json:&#34;guid,omitempty&#34;`
+    Image           *<a href="index.html#Image">Image</a>            `json:&#34;image,omitempty&#34;`
+    Categories      []<a href="../../../builtin/index.html#string">string</a>          `json:&#34;categories,omitempty&#34;`
+    Enclosures      []*<a href="index.html#Enclosure">Enclosure</a>      `json:&#34;enclosures,omitempty&#34;`
+    Extensions      ext.<a href="index.html#Extensions">Extensions</a>    `json:&#34;extensions,omitempty&#34;`
+    Custom          map[<a href="../../../builtin/index.html#string">string</a>]<a href="../../../builtin/index.html#string">string</a> `json:&#34;custom,omitempty&#34;`
+}</pre>
+			<p>
+Item is the universal Item type that atom.Entry
+and rss.Item gets translated to.  It represents
+a single entry in a given feed.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Parser">type <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/parser.go?s=497:659#L18">Parser</a></h2>
+			<pre>type Parser struct {
+    AtomTranslator <a href="index.html#Translator">Translator</a>
+    RSSTranslator  <a href="index.html#Translator">Translator</a>
+    Client         *<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Client">Client</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Parser is a universal feed parser that detects
+a given feed type, parsers it, and translates it
+to the universal feed type.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewParser">func <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/parser.go?s=707:731#L27">NewParser</a></h3>
+				<pre>func NewParser() *<a href="index.html#Parser">Parser</a></pre>
+				<p>
+NewParser creates a universal feed parser.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Parser.Parse">func (*Parser) <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/parser.go?s=943:996#L38">Parse</a></h3>
+				<pre>func (f *<a href="index.html#Parser">Parser</a>) Parse(feed <a href="../../../io/index.html">io</a>.<a href="../../../io/index.html#Reader">Reader</a>) (*<a href="index.html#Feed">Feed</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Parse parses a RSS or Atom feed into
+the universal gofeed.Feed.  It takes an
+io.Reader which should return the xml content.
+</p>
+
+				
+				<div id="example_Parser_Parse" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+feedData := `&lt;rss version=&#34;2.0&#34;&gt;
+&lt;channel&gt;
+&lt;title&gt;Sample Feed&lt;/title&gt;
+&lt;/channel&gt;
+&lt;/rss&gt;`
+fp := gofeed.NewParser()
+feed, err := fp.Parse(strings.NewReader(feedData))
+if err != nil {
+    panic(err)
+}
+fmt.Println(feed.Title)
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+				
+				<h3 id="Parser.ParseString">func (*Parser) <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/parser.go?s=2209:2265#L88">ParseString</a></h3>
+				<pre>func (f *<a href="index.html#Parser">Parser</a>) ParseString(feed <a href="../../../builtin/index.html#string">string</a>) (*<a href="index.html#Feed">Feed</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+ParseString parses a feed XML string and into the
+universal feed type.
+</p>
+
+				
+				<div id="example_Parser_ParseString" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+feedData := `&lt;rss version=&#34;2.0&#34;&gt;
+&lt;channel&gt;
+&lt;title&gt;Sample Feed&lt;/title&gt;
+&lt;/channel&gt;
+&lt;/rss&gt;`
+fp := gofeed.NewParser()
+feed, err := fp.ParseString(feedData)
+if err != nil {
+    panic(err)
+}
+fmt.Println(feed.Title)
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+				
+				<h3 id="Parser.ParseURL">func (*Parser) <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/parser.go?s=1708:1773#L63">ParseURL</a></h3>
+				<pre>func (f *<a href="index.html#Parser">Parser</a>) ParseURL(feedURL <a href="../../../builtin/index.html#string">string</a>) (feed *<a href="index.html#Feed">Feed</a>, err <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+ParseURL fetches the contents of a given url and
+attempts to parse the response into the universal feed type.
+</p>
+
+				
+				<div id="example_Parser_ParseURL" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+fp := gofeed.NewParser()
+feed, err := fp.ParseURL(&#34;http://feeds.twit.tv/twit.xml&#34;)
+if err != nil {
+    panic(err)
+}
+fmt.Println(feed.Title)
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+		
+			
+			
+			<h2 id="Person">type <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/feed.go?s=2680:2779#L53">Person</a></h2>
+			<pre>type Person struct {
+    Name  <a href="../../../builtin/index.html#string">string</a> `json:&#34;name,omitempty&#34;`
+    Email <a href="../../../builtin/index.html#string">string</a> `json:&#34;email,omitempty&#34;`
+}</pre>
+			<p>
+Person is an individual specified in a feed
+(e.g. an author)
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Translator">type <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/translator.go?s=304:377#L6">Translator</a></h2>
+			<pre>type Translator interface {
+    Translate(feed interface{}) (*<a href="index.html#Feed">Feed</a>, <a href="../../../builtin/index.html#error">error</a>)
+}</pre>
+			<p>
+Translator converts a particular feed (atom.Feed or rss.Feed)
+into the generic Feed struct
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+
+
+	<div class="pkg-dir">
+		<table>
+			<tr>
+				<th class="pkg-name">Name</th>
+				<th class="pkg-synopsis">Synopsis</th>
+			</tr>
+
+			
+			<tr>
+				<td colspan="2"><a href="../index.html">..</a></td>
+			</tr>
+			
+
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="atom/index.html">atom</a>
+						</td>
+						<td class="pkg-synopsis">
+							
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="cmd/index.html">cmd</a>
+						</td>
+						<td class="pkg-synopsis">
+							
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 20px;">
+							<a href="cmd/ftest/index.html">ftest</a>
+						</td>
+						<td class="pkg-synopsis">
+							
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="extensions/index.html">extensions</a>
+						</td>
+						<td class="pkg-synopsis">
+							
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="rss/index.html">rss</a>
+						</td>
+						<td class="pkg-synopsis">
+							
+						</td>
+					</tr>
+				
+			
+		</table>
+	</div>
+
+
+	
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

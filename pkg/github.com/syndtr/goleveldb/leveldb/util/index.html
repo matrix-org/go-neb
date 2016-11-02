@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>util - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package util</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/syndtr/goleveldb/leveldb/util"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package util provides utilities used throughout leveldb.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="index.html#pkg-constants">Constants</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+				
+				<dd><a href="index.html#Hash">func Hash(data []byte, seed uint32) uint32</a></dd>
+			
+			
+				
+				<dd><a href="index.html#BasicReleaser">type BasicReleaser</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BasicReleaser.Release">func (r *BasicReleaser) Release()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BasicReleaser.Released">func (r *BasicReleaser) Released() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BasicReleaser.SetReleaser">func (r *BasicReleaser) SetReleaser(releaser Releaser)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Buffer">type Buffer</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewBuffer">func NewBuffer(buf []byte) *Buffer</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Buffer.Alloc">func (b *Buffer) Alloc(n int) []byte</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Buffer.Bytes">func (b *Buffer) Bytes() []byte</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Buffer.Grow">func (b *Buffer) Grow(n int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Buffer.Len">func (b *Buffer) Len() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Buffer.Next">func (b *Buffer) Next(n int) []byte</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Buffer.Read">func (b *Buffer) Read(p []byte) (n int, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Buffer.ReadByte">func (b *Buffer) ReadByte() (c byte, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Buffer.ReadBytes">func (b *Buffer) ReadBytes(delim byte) (line []byte, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Buffer.ReadFrom">func (b *Buffer) ReadFrom(r io.Reader) (n int64, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Buffer.Reset">func (b *Buffer) Reset()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Buffer.String">func (b *Buffer) String() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Buffer.Truncate">func (b *Buffer) Truncate(n int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Buffer.Write">func (b *Buffer) Write(p []byte) (n int, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Buffer.WriteByte">func (b *Buffer) WriteByte(c byte) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Buffer.WriteTo">func (b *Buffer) WriteTo(w io.Writer) (n int64, err error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#BufferPool">type BufferPool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewBufferPool">func NewBufferPool(baseline int) *BufferPool</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BufferPool.Close">func (p *BufferPool) Close()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BufferPool.Get">func (p *BufferPool) Get(n int) []byte</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BufferPool.Put">func (p *BufferPool) Put(b []byte)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BufferPool.String">func (p *BufferPool) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#CRC">type CRC</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewCRC">func NewCRC(b []byte) CRC</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CRC.Update">func (c CRC) Update(b []byte) CRC</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CRC.Value">func (c CRC) Value() uint32</a></dd>
+				
+			
+				
+				<dd><a href="index.html#NoopReleaser">type NoopReleaser</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NoopReleaser.Release">func (NoopReleaser) Release()</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Range">type Range</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BytesPrefix">func BytesPrefix(prefix []byte) *Range</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ReleaseSetter">type ReleaseSetter</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Releaser">type Releaser</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/buffer.go">buffer.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/buffer_pool.go">buffer_pool.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/crc32.go">crc32.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/hash.go">hash.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/range.go">range.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/util.go">util.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const <span id="MinRead">MinRead</span> = 512</pre>
+				<p>
+MinRead is the minimum slice size passed to a Read call by
+Buffer.ReadFrom.  As long as the Buffer has at least MinRead bytes beyond
+what is required to hold the contents of r, ReadFrom will not grow the
+underlying buffer.
+</p>
+
+			
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var (
+    <span id="ErrReleased">ErrReleased</span>    = <a href="../../../../../errors/index.html">errors</a>.<a href="../../../../../errors/index.html#New">New</a>(&#34;leveldb: resource already relesed&#34;)
+    <span id="ErrHasReleaser">ErrHasReleaser</span> = <a href="../../../../../errors/index.html">errors</a>.<a href="../../../../../errors/index.html#New">New</a>(&#34;leveldb: releaser already defined&#34;)
+)</pre>
+				
+			
+		
+		
+			
+			
+			<h2 id="Hash">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/hash.go?s=279:321#L4">Hash</a></h2>
+			<pre>func Hash(data []<a href="../../../../../builtin/index.html#byte">byte</a>, seed <a href="../../../../../builtin/index.html#uint32">uint32</a>) <a href="../../../../../builtin/index.html#uint32">uint32</a></pre>
+			<p>
+Hash return hash of the given data.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="BasicReleaser">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/util.go?s=1249:1312#L29">BasicReleaser</a></h2>
+			<pre>type BasicReleaser struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+BasicReleaser provides basic implementation of Releaser and ReleaseSetter.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="BasicReleaser.Release">func (*BasicReleaser) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/util.go?s=1477:1510#L40">Release</a></h3>
+				<pre>func (r *<a href="index.html#BasicReleaser">BasicReleaser</a>) Release()</pre>
+				<p>
+Release implements Releaser.Release.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BasicReleaser.Released">func (*BasicReleaser) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/util.go?s=1373:1412#L35">Released</a></h3>
+				<pre>func (r *<a href="index.html#BasicReleaser">BasicReleaser</a>) Released() <a href="../../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Released returns whether Release method already called.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BasicReleaser.SetReleaser">func (*BasicReleaser) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/util.go?s=1683:1737#L51">SetReleaser</a></h3>
+				<pre>func (r *<a href="index.html#BasicReleaser">BasicReleaser</a>) SetReleaser(releaser <a href="index.html#Releaser">Releaser</a>)</pre>
+				<p>
+SetReleaser implements ReleaseSetter.SetReleaser.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Buffer">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/buffer.go?s=433:685#L7">Buffer</a></h2>
+			<pre>type Buffer struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+A Buffer is a variable-sized buffer of bytes with Read and Write methods.
+The zero value for Buffer is an empty buffer ready to use.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewBuffer">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/buffer.go?s=9217:9251#L283">NewBuffer</a></h3>
+				<pre>func NewBuffer(buf []<a href="../../../../../builtin/index.html#byte">byte</a>) *<a href="index.html#Buffer">Buffer</a></pre>
+				<p>
+NewBuffer creates and initializes a new Buffer using buf as its initial
+contents.  It is intended to prepare a Buffer to read existing data.  It
+can also be used to size the internal buffer for writing. To do that,
+buf should have the desired capacity but a length of zero.
+</p>
+<p>
+In most cases, new(Buffer) (or just declaring a Buffer variable) is
+sufficient to initialize a Buffer.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Buffer.Alloc">func (*Buffer) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/buffer.go?s=3071:3107#L85">Alloc</a></h3>
+				<pre>func (b *<a href="index.html#Buffer">Buffer</a>) Alloc(n <a href="../../../../../builtin/index.html#int">int</a>) []<a href="../../../../../builtin/index.html#byte">byte</a></pre>
+				<p>
+Alloc allocs n bytes of slice from the buffer, growing the buffer as
+needed. If n is negative, Alloc will panic.
+If the buffer can&#39;t grow it will panic with bytes.ErrTooLarge.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Buffer.Bytes">func (*Buffer) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/buffer.go?s=961:992#L17">Bytes</a></h3>
+				<pre>func (b *<a href="index.html#Buffer">Buffer</a>) Bytes() []<a href="../../../../../builtin/index.html#byte">byte</a></pre>
+				<p>
+Bytes returns a slice of the contents of the unread portion of the buffer;
+len(b.Bytes()) == b.Len().  If the caller changes the contents of the
+returned slice, the contents of the buffer will change provided there
+are no intervening method calls on the Buffer.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Buffer.Grow">func (*Buffer) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/buffer.go?s=3505:3533#L98">Grow</a></h3>
+				<pre>func (b *<a href="index.html#Buffer">Buffer</a>) Grow(n <a href="../../../../../builtin/index.html#int">int</a>)</pre>
+				<p>
+Grow grows the buffer&#39;s capacity, if necessary, to guarantee space for
+another n bytes. After Grow(n), at least n bytes can be written to the
+buffer without another allocation.
+If n is negative, Grow will panic.
+If the buffer can&#39;t grow it will panic with bytes.ErrTooLarge.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Buffer.Len">func (*Buffer) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/buffer.go?s=1400:1426#L31">Len</a></h3>
+				<pre>func (b *<a href="index.html#Buffer">Buffer</a>) Len() <a href="../../../../../builtin/index.html#int">int</a></pre>
+				<p>
+Len returns the number of bytes of the unread portion of the buffer;
+b.Len() == len(b.Bytes()).
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Buffer.Next">func (*Buffer) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/buffer.go?s=7427:7462#L226">Next</a></h3>
+				<pre>func (b *<a href="index.html#Buffer">Buffer</a>) Next(n <a href="../../../../../builtin/index.html#int">int</a>) []<a href="../../../../../builtin/index.html#byte">byte</a></pre>
+				<p>
+Next returns a slice containing the next n bytes from the buffer,
+advancing the buffer as if the bytes had been returned by Read.
+If there are fewer than n bytes in the buffer, Next returns the entire buffer.
+The slice is only valid until the next call to a read or write method.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Buffer.Read">func (*Buffer) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/buffer.go?s=6888:6938#L208">Read</a></h3>
+				<pre>func (b *<a href="index.html#Buffer">Buffer</a>) Read(p []<a href="../../../../../builtin/index.html#byte">byte</a>) (n <a href="../../../../../builtin/index.html#int">int</a>, err <a href="../../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Read reads the next len(p) bytes from the buffer or until the buffer
+is drained.  The return value n is the number of bytes read.  If the
+buffer has no data to return, err is io.EOF (unless len(p) is zero);
+otherwise it is nil.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Buffer.ReadByte">func (*Buffer) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/buffer.go?s=7676:7723#L238">ReadByte</a></h3>
+				<pre>func (b *<a href="index.html#Buffer">Buffer</a>) ReadByte() (c <a href="../../../../../builtin/index.html#byte">byte</a>, err <a href="../../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+ReadByte reads and returns the next byte from the buffer.
+If no byte is available, it returns error io.EOF.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Buffer.ReadBytes">func (*Buffer) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/buffer.go?s=8263:8326#L255">ReadBytes</a></h3>
+				<pre>func (b *<a href="index.html#Buffer">Buffer</a>) ReadBytes(delim <a href="../../../../../builtin/index.html#byte">byte</a>) (line []<a href="../../../../../builtin/index.html#byte">byte</a>, err <a href="../../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+ReadBytes reads until the first occurrence of delim in the input,
+returning a slice containing the data up to and including the delimiter.
+If ReadBytes encounters an error before finding a delimiter,
+it returns the data read before the error and the error itself (often io.EOF).
+ReadBytes returns err != nil if and only if the returned data does not end in
+delim.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Buffer.ReadFrom">func (*Buffer) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/buffer.go?s=4530:4589#L124">ReadFrom</a></h3>
+				<pre>func (b *<a href="index.html#Buffer">Buffer</a>) ReadFrom(r <a href="../../../../../io/index.html">io</a>.<a href="../../../../../io/index.html#Reader">Reader</a>) (n <a href="../../../../../builtin/index.html#int64">int64</a>, err <a href="../../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+ReadFrom reads data from r until EOF and appends it to the buffer, growing
+the buffer as needed. The return value n is the number of bytes read. Any
+error except io.EOF encountered during the read is also returned. If the
+buffer becomes too large, ReadFrom will panic with bytes.ErrTooLarge.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Buffer.Reset">func (*Buffer) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/buffer.go?s=1907:1931#L48">Reset</a></h3>
+				<pre>func (b *<a href="index.html#Buffer">Buffer</a>) Reset()</pre>
+				<p>
+Reset resets the buffer so it has no content.
+b.Reset() is the same as b.Truncate(0).
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Buffer.String">func (*Buffer) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/buffer.go?s=1155:1187#L21">String</a></h3>
+				<pre>func (b *<a href="index.html#Buffer">Buffer</a>) String() <a href="../../../../../builtin/index.html#string">string</a></pre>
+				<p>
+String returns the contents of the unread portion of the buffer
+as a string.  If the Buffer is a nil pointer, it returns &#34;&lt;nil&gt;&#34;.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Buffer.Truncate">func (*Buffer) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/buffer.go?s=1601:1633#L35">Truncate</a></h3>
+				<pre>func (b *<a href="index.html#Buffer">Buffer</a>) Truncate(n <a href="../../../../../builtin/index.html#int">int</a>)</pre>
+				<p>
+Truncate discards all but the first n unread bytes from the buffer.
+It panics if n is negative or greater than the length of the buffer.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Buffer.Write">func (*Buffer) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/buffer.go?s=3860:3911#L109">Write</a></h3>
+				<pre>func (b *<a href="index.html#Buffer">Buffer</a>) Write(p []<a href="../../../../../builtin/index.html#byte">byte</a>) (n <a href="../../../../../builtin/index.html#int">int</a>, err <a href="../../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Write appends the contents of p to the buffer, growing the buffer as
+needed. The return value n is the length of p; err is always nil. If the
+buffer becomes too large, Write will panic with bytes.ErrTooLarge.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Buffer.WriteByte">func (*Buffer) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/buffer.go?s=6560:6600#L198">WriteByte</a></h3>
+				<pre>func (b *<a href="index.html#Buffer">Buffer</a>) WriteByte(c <a href="../../../../../builtin/index.html#byte">byte</a>) <a href="../../../../../builtin/index.html#error">error</a></pre>
+				<p>
+WriteByte appends the byte c to the buffer, growing the buffer as needed.
+The returned error is always nil, but is included to match bufio.Writer&#39;s
+WriteByte. If the buffer becomes too large, WriteByte will panic with
+bytes.ErrTooLarge.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Buffer.WriteTo">func (*Buffer) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/buffer.go?s=5823:5881#L171">WriteTo</a></h3>
+				<pre>func (b *<a href="index.html#Buffer">Buffer</a>) WriteTo(w <a href="../../../../../io/index.html">io</a>.<a href="../../../../../io/index.html#Writer">Writer</a>) (n <a href="../../../../../builtin/index.html#int64">int64</a>, err <a href="../../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+WriteTo writes data to w until the buffer is drained or an error occurs.
+The return value n is the number of bytes written; it always fits into an
+int, but it is int64 to match the io.WriterTo interface. Any error
+encountered during the write is also returned.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="BufferPool">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/buffer_pool.go?s=340:658#L12">BufferPool</a></h2>
+			<pre>type BufferPool struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+BufferPool is a &#39;buffer pool&#39;.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewBufferPool">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/buffer_pool.go?s=3989:4033#L215">NewBufferPool</a></h3>
+				<pre>func NewBufferPool(baseline <a href="../../../../../builtin/index.html#int">int</a>) *<a href="index.html#BufferPool">BufferPool</a></pre>
+				<p>
+NewBufferPool creates a new initialized &#39;buffer pool&#39;.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="BufferPool.Close">func (*BufferPool) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/buffer_pool.go?s=3170:3198#L170">Close</a></h3>
+				<pre>func (p *<a href="index.html#BufferPool">BufferPool</a>) Close()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="BufferPool.Get">func (*BufferPool) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/buffer_pool.go?s=900:938#L46">Get</a></h3>
+				<pre>func (p *<a href="index.html#BufferPool">BufferPool</a>) Get(n <a href="../../../../../builtin/index.html#int">int</a>) []<a href="../../../../../builtin/index.html#byte">byte</a></pre>
+				<p>
+Get returns buffer with length of n.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BufferPool.Put">func (*BufferPool) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/buffer_pool.go?s=2931:2965#L148">Put</a></h3>
+				<pre>func (p *<a href="index.html#BufferPool">BufferPool</a>) Put(b []<a href="../../../../../builtin/index.html#byte">byte</a>)</pre>
+				<p>
+Put adds given buffer to the pool.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BufferPool.String">func (*BufferPool) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/buffer_pool.go?s=3322:3358#L183">String</a></h3>
+				<pre>func (p *<a href="index.html#BufferPool">BufferPool</a>) String() <a href="../../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="CRC">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/crc32.go?s=326:341#L5">CRC</a></h2>
+			<pre>type CRC <a href="../../../../../builtin/index.html#uint32">uint32</a></pre>
+			<p>
+CRC is a CRC-32 checksum computed using Castagnoli&#39;s polynomial.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewCRC">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/crc32.go?s=397:422#L8">NewCRC</a></h3>
+				<pre>func NewCRC(b []<a href="../../../../../builtin/index.html#byte">byte</a>) <a href="index.html#CRC">CRC</a></pre>
+				<p>
+NewCRC creates a new crc based on the given bytes.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="CRC.Update">func (CRC) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/crc32.go?s=501:534#L13">Update</a></h3>
+				<pre>func (c <a href="index.html#CRC">CRC</a>) Update(b []<a href="../../../../../builtin/index.html#byte">byte</a>) <a href="index.html#CRC">CRC</a></pre>
+				<p>
+Update updates the crc with the given bytes.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="CRC.Value">func (CRC) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/crc32.go?s=618:645#L18">Value</a></h3>
+				<pre>func (c <a href="index.html#CRC">CRC</a>) Value() <a href="../../../../../builtin/index.html#uint32">uint32</a></pre>
+				<p>
+Value returns a masked crc.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="NoopReleaser">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/util.go?s=1877:1903#L61">NoopReleaser</a></h2>
+			<pre>type NoopReleaser struct{}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="NoopReleaser.Release">func (NoopReleaser) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/util.go?s=1905:1934#L63">Release</a></h3>
+				<pre>func (<a href="index.html#NoopReleaser">NoopReleaser</a>) Release()</pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Range">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/range.go?s=234:388#L1">Range</a></h2>
+			<pre>type Range struct {
+    <span class="comment">// Start of the key range, include in the range.</span>
+    Start []<a href="../../../../../builtin/index.html#byte">byte</a>
+
+    <span class="comment">// Limit of the key range, not include in the range.</span>
+    Limit []<a href="../../../../../builtin/index.html#byte">byte</a>
+}</pre>
+			<p>
+Range is a key range.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="BytesPrefix">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/range.go?s=513:551#L10">BytesPrefix</a></h3>
+				<pre>func BytesPrefix(prefix []<a href="../../../../../builtin/index.html#byte">byte</a>) *<a href="index.html#Range">Range</a></pre>
+				<p>
+BytesPrefix returns key range that satisfy the given prefix.
+This only applicable for the standard &#39;bytes comparer&#39;.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="ReleaseSetter">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/util.go?s=745:1169#L17">ReleaseSetter</a></h2>
+			<pre>type ReleaseSetter interface {
+    <span class="comment">// SetReleaser associates the given releaser to the resources. The</span>
+    <span class="comment">// releaser will be called once coresponding resources released.</span>
+    <span class="comment">// Calling SetReleaser with nil will clear the releaser.</span>
+    <span class="comment">//</span>
+    <span class="comment">// This will panic if a releaser already present or coresponding</span>
+    <span class="comment">// resource is already released. Releaser should be cleared first</span>
+    <span class="comment">// before assigned a new one.</span>
+    SetReleaser(releaser <a href="index.html#Releaser">Releaser</a>)
+}</pre>
+			<p>
+ReleaseSetter is the interface that wraps the basic SetReleaser method.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Releaser">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/util/util.go?s=498:668#L10">Releaser</a></h2>
+			<pre>type Releaser interface {
+    <span class="comment">// Release releases associated resources. Release should always success</span>
+    <span class="comment">// and can be called multipe times without causing error.</span>
+    Release()
+}</pre>
+			<p>
+Releaser is the interface that wraps the basic Release method.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

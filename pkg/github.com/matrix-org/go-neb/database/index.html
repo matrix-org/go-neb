@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>database - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package database</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/matrix-org/go-neb/database"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+				
+				<dd><a href="index.html#SetServiceDB">func SetServiceDB(db Storer)</a></dd>
+			
+			
+				
+				<dd><a href="index.html#NopStorage">type NopStorage</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NopStorage.DeleteService">func (s *NopStorage) DeleteService(serviceID string) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NopStorage.InsertFromConfig">func (s *NopStorage) InsertFromConfig(cfg *api.ConfigFile) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NopStorage.LoadAuthRealm">func (s *NopStorage) LoadAuthRealm(realmID string) (realm types.AuthRealm, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NopStorage.LoadAuthRealmsByType">func (s *NopStorage) LoadAuthRealmsByType(realmType string) (realms []types.AuthRealm, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NopStorage.LoadAuthSessionByID">func (s *NopStorage) LoadAuthSessionByID(realmID, sessionID string) (session types.AuthSession, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NopStorage.LoadAuthSessionByUser">func (s *NopStorage) LoadAuthSessionByUser(realmID, userID string) (session types.AuthSession, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NopStorage.LoadBotOptions">func (s *NopStorage) LoadBotOptions(userID, roomID string) (opts types.BotOptions, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NopStorage.LoadMatrixClientConfig">func (s *NopStorage) LoadMatrixClientConfig(userID string) (config api.ClientConfig, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NopStorage.LoadMatrixClientConfigs">func (s *NopStorage) LoadMatrixClientConfigs() (configs []api.ClientConfig, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NopStorage.LoadNextBatch">func (s *NopStorage) LoadNextBatch(userID string) (nextBatch string, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NopStorage.LoadService">func (s *NopStorage) LoadService(serviceID string) (service types.Service, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NopStorage.LoadServicesByType">func (s *NopStorage) LoadServicesByType(serviceType string) (services []types.Service, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NopStorage.LoadServicesForUser">func (s *NopStorage) LoadServicesForUser(serviceUserID string) (services []types.Service, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NopStorage.RemoveAuthSession">func (s *NopStorage) RemoveAuthSession(realmID, userID string) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NopStorage.StoreAuthRealm">func (s *NopStorage) StoreAuthRealm(realm types.AuthRealm) (old types.AuthRealm, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NopStorage.StoreAuthSession">func (s *NopStorage) StoreAuthSession(session types.AuthSession) (old types.AuthSession, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NopStorage.StoreBotOptions">func (s *NopStorage) StoreBotOptions(opts types.BotOptions) (oldOpts types.BotOptions, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NopStorage.StoreMatrixClientConfig">func (s *NopStorage) StoreMatrixClientConfig(config api.ClientConfig) (oldConfig api.ClientConfig, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NopStorage.StoreService">func (s *NopStorage) StoreService(service types.Service) (oldService types.Service, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NopStorage.UpdateNextBatch">func (s *NopStorage) UpdateNextBatch(userID, nextBatch string) (err error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#ServiceDB">type ServiceDB</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Open">func Open(databaseType, databaseURL string) (serviceDB *ServiceDB, err error)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ServiceDB.DeleteService">func (d *ServiceDB) DeleteService(serviceID string) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ServiceDB.InsertFromConfig">func (d *ServiceDB) InsertFromConfig(cfg *api.ConfigFile) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ServiceDB.LoadAuthRealm">func (d *ServiceDB) LoadAuthRealm(realmID string) (realm types.AuthRealm, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ServiceDB.LoadAuthRealmsByType">func (d *ServiceDB) LoadAuthRealmsByType(realmType string) (realms []types.AuthRealm, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ServiceDB.LoadAuthSessionByID">func (d *ServiceDB) LoadAuthSessionByID(realmID, sessionID string) (session types.AuthSession, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ServiceDB.LoadAuthSessionByUser">func (d *ServiceDB) LoadAuthSessionByUser(realmID, userID string) (session types.AuthSession, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ServiceDB.LoadBotOptions">func (d *ServiceDB) LoadBotOptions(userID, roomID string) (opts types.BotOptions, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ServiceDB.LoadMatrixClientConfig">func (d *ServiceDB) LoadMatrixClientConfig(userID string) (config api.ClientConfig, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ServiceDB.LoadMatrixClientConfigs">func (d *ServiceDB) LoadMatrixClientConfigs() (configs []api.ClientConfig, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ServiceDB.LoadNextBatch">func (d *ServiceDB) LoadNextBatch(userID string) (nextBatch string, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ServiceDB.LoadService">func (d *ServiceDB) LoadService(serviceID string) (service types.Service, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ServiceDB.LoadServicesByType">func (d *ServiceDB) LoadServicesByType(serviceType string) (services []types.Service, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ServiceDB.LoadServicesForUser">func (d *ServiceDB) LoadServicesForUser(serviceUserID string) (services []types.Service, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ServiceDB.RemoveAuthSession">func (d *ServiceDB) RemoveAuthSession(realmID, userID string) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ServiceDB.StoreAuthRealm">func (d *ServiceDB) StoreAuthRealm(realm types.AuthRealm) (old types.AuthRealm, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ServiceDB.StoreAuthSession">func (d *ServiceDB) StoreAuthSession(session types.AuthSession) (old types.AuthSession, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ServiceDB.StoreBotOptions">func (d *ServiceDB) StoreBotOptions(opts types.BotOptions) (oldOpts types.BotOptions, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ServiceDB.StoreMatrixClientConfig">func (d *ServiceDB) StoreMatrixClientConfig(config api.ClientConfig) (oldConfig api.ClientConfig, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ServiceDB.StoreService">func (d *ServiceDB) StoreService(service types.Service) (oldService types.Service, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ServiceDB.UpdateNextBatch">func (d *ServiceDB) UpdateNextBatch(userID, nextBatch string) (err error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Storer">type Storer</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#GetServiceDB">func GetServiceDB() Storer</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/db.go">db.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/interface.go">interface.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/schema.go">schema.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+			
+			
+			<h2 id="SetServiceDB">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/db.go?s=376:404#L11">SetServiceDB</a></h2>
+			<pre>func SetServiceDB(db <a href="index.html#Storer">Storer</a>)</pre>
+			<p>
+SetServiceDB sets the global service DB instance.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="NopStorage">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/interface.go?s=1741:1765#L30">NopStorage</a></h2>
+			<pre>type NopStorage struct{}</pre>
+			<p>
+NopStorage nops every store API call. This is intended to be embedded into derived structs
+in tests
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="NopStorage.DeleteService">func (*NopStorage) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/interface.go?s=2579:2643#L63">DeleteService</a></h3>
+				<pre>func (s *<a href="index.html#NopStorage">NopStorage</a>) DeleteService(serviceID <a href="../../../../builtin/index.html#string">string</a>) (err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+DeleteService NOP
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="NopStorage.InsertFromConfig">func (*NopStorage) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/interface.go?s=4279:4343#L128">InsertFromConfig</a></h3>
+				<pre>func (s *<a href="index.html#NopStorage">NopStorage</a>) InsertFromConfig(cfg *<a href="../api/index.html">api</a>.<a href="../api/index.html#ConfigFile">ConfigFile</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+InsertFromConfig NOP
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="NopStorage.LoadAuthRealm">func (*NopStorage) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/interface.go?s=3084:3169#L83">LoadAuthRealm</a></h3>
+				<pre>func (s *<a href="index.html#NopStorage">NopStorage</a>) LoadAuthRealm(realmID <a href="../../../../builtin/index.html#string">string</a>) (realm <a href="../types/index.html">types</a>.<a href="../types/index.html#AuthRealm">AuthRealm</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+LoadAuthRealm NOP
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="NopStorage.LoadAuthRealmsByType">func (*NopStorage) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/interface.go?s=3211:3308#L88">LoadAuthRealmsByType</a></h3>
+				<pre>func (s *<a href="index.html#NopStorage">NopStorage</a>) LoadAuthRealmsByType(realmType <a href="../../../../builtin/index.html#string">string</a>) (realms []<a href="../types/index.html">types</a>.<a href="../types/index.html#AuthRealm">AuthRealm</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+LoadAuthRealmsByType NOP
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="NopStorage.LoadAuthSessionByID">func (*NopStorage) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/interface.go?s=3761:3867#L108">LoadAuthSessionByID</a></h3>
+				<pre>func (s *<a href="index.html#NopStorage">NopStorage</a>) LoadAuthSessionByID(realmID, sessionID <a href="../../../../builtin/index.html#string">string</a>) (session <a href="../types/index.html">types</a>.<a href="../types/index.html#AuthSession">AuthSession</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+LoadAuthSessionByID NOP
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="NopStorage.LoadAuthSessionByUser">func (*NopStorage) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/interface.go?s=3615:3720#L103">LoadAuthSessionByUser</a></h3>
+				<pre>func (s *<a href="index.html#NopStorage">NopStorage</a>) LoadAuthSessionByUser(realmID, userID <a href="../../../../builtin/index.html#string">string</a>) (session <a href="../types/index.html">types</a>.<a href="../types/index.html#AuthSession">AuthSession</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+LoadAuthSessionByUser NOP
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="NopStorage.LoadBotOptions">func (*NopStorage) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/interface.go?s=4014:4107#L118">LoadBotOptions</a></h3>
+				<pre>func (s *<a href="index.html#NopStorage">NopStorage</a>) LoadBotOptions(userID, roomID <a href="../../../../builtin/index.html#string">string</a>) (opts <a href="../types/index.html">types</a>.<a href="../types/index.html#BotOptions">BotOptions</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+LoadBotOptions NOP
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="NopStorage.LoadMatrixClientConfig">func (*NopStorage) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/interface.go?s=2106:2201#L43">LoadMatrixClientConfig</a></h3>
+				<pre>func (s *<a href="index.html#NopStorage">NopStorage</a>) LoadMatrixClientConfig(userID <a href="../../../../builtin/index.html#string">string</a>) (config <a href="../api/index.html">api</a>.<a href="../api/index.html#ClientConfig">ClientConfig</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+LoadMatrixClientConfig NOP
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="NopStorage.LoadMatrixClientConfigs">func (*NopStorage) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/interface.go?s=1976:2062#L38">LoadMatrixClientConfigs</a></h3>
+				<pre>func (s *<a href="index.html#NopStorage">NopStorage</a>) LoadMatrixClientConfigs() (configs []<a href="../api/index.html">api</a>.<a href="../api/index.html#ClientConfig">ClientConfig</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+LoadMatrixClientConfigs NOP
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="NopStorage.LoadNextBatch">func (*NopStorage) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/interface.go?s=2347:2426#L53">LoadNextBatch</a></h3>
+				<pre>func (s *<a href="index.html#NopStorage">NopStorage</a>) LoadNextBatch(userID <a href="../../../../builtin/index.html#string">string</a>) (nextBatch <a href="../../../../builtin/index.html#string">string</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+LoadNextBatch NOP
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="NopStorage.LoadService">func (*NopStorage) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/interface.go?s=2459:2544#L58">LoadService</a></h3>
+				<pre>func (s *<a href="index.html#NopStorage">NopStorage</a>) LoadService(serviceID <a href="../../../../builtin/index.html#string">string</a>) (service <a href="../types/index.html">types</a>.<a href="../types/index.html#Service">Service</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+LoadService NOP
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="NopStorage.LoadServicesByType">func (*NopStorage) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/interface.go?s=2824:2921#L73">LoadServicesByType</a></h3>
+				<pre>func (s *<a href="index.html#NopStorage">NopStorage</a>) LoadServicesByType(serviceType <a href="../../../../builtin/index.html#string">string</a>) (services []<a href="../types/index.html">types</a>.<a href="../types/index.html#Service">Service</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+LoadServicesByType NOP
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="NopStorage.LoadServicesForUser">func (*NopStorage) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/interface.go?s=2684:2784#L68">LoadServicesForUser</a></h3>
+				<pre>func (s *<a href="index.html#NopStorage">NopStorage</a>) LoadServicesForUser(serviceUserID <a href="../../../../builtin/index.html#string">string</a>) (services []<a href="../types/index.html">types</a>.<a href="../types/index.html#Service">Service</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+LoadServicesForUser NOP
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="NopStorage.RemoveAuthSession">func (*NopStorage) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/interface.go?s=3906:3974#L113">RemoveAuthSession</a></h3>
+				<pre>func (s *<a href="index.html#NopStorage">NopStorage</a>) RemoveAuthSession(realmID, userID <a href="../../../../builtin/index.html#string">string</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+RemoveAuthSession NOP
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="NopStorage.StoreAuthRealm">func (*NopStorage) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/interface.go?s=3344:3435#L93">StoreAuthRealm</a></h3>
+				<pre>func (s *<a href="index.html#NopStorage">NopStorage</a>) StoreAuthRealm(realm <a href="../types/index.html">types</a>.<a href="../types/index.html#AuthRealm">AuthRealm</a>) (old <a href="../types/index.html">types</a>.<a href="../types/index.html#AuthRealm">AuthRealm</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+StoreAuthRealm NOP
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="NopStorage.StoreAuthSession">func (*NopStorage) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/interface.go?s=3473:3572#L98">StoreAuthSession</a></h3>
+				<pre>func (s *<a href="index.html#NopStorage">NopStorage</a>) StoreAuthSession(session <a href="../types/index.html">types</a>.<a href="../types/index.html#AuthSession">AuthSession</a>) (old <a href="../types/index.html">types</a>.<a href="../types/index.html#AuthSession">AuthSession</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+StoreAuthSession NOP
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="NopStorage.StoreBotOptions">func (*NopStorage) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/interface.go?s=4144:4241#L123">StoreBotOptions</a></h3>
+				<pre>func (s *<a href="index.html#NopStorage">NopStorage</a>) StoreBotOptions(opts <a href="../types/index.html">types</a>.<a href="../types/index.html#BotOptions">BotOptions</a>) (oldOpts <a href="../types/index.html">types</a>.<a href="../types/index.html#BotOptions">BotOptions</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+StoreBotOptions NOP
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="NopStorage.StoreMatrixClientConfig">func (*NopStorage) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/interface.go?s=1798:1907#L33">StoreMatrixClientConfig</a></h3>
+				<pre>func (s *<a href="index.html#NopStorage">NopStorage</a>) StoreMatrixClientConfig(config <a href="../api/index.html">api</a>.<a href="../api/index.html#ClientConfig">ClientConfig</a>) (oldConfig <a href="../api/index.html">api</a>.<a href="../api/index.html#ClientConfig">ClientConfig</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+StoreMatrixClientConfig NOP
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="NopStorage.StoreService">func (*NopStorage) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/interface.go?s=2955:3049#L78">StoreService</a></h3>
+				<pre>func (s *<a href="index.html#NopStorage">NopStorage</a>) StoreService(service <a href="../types/index.html">types</a>.<a href="../types/index.html#Service">Service</a>) (oldService <a href="../types/index.html">types</a>.<a href="../types/index.html#Service">Service</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+StoreService NOP
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="NopStorage.UpdateNextBatch">func (*NopStorage) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/interface.go?s=2238:2312#L48">UpdateNextBatch</a></h3>
+				<pre>func (s *<a href="index.html#NopStorage">NopStorage</a>) UpdateNextBatch(userID, nextBatch <a href="../../../../builtin/index.html#string">string</a>) (err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+UpdateNextBatch NOP
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ServiceDB">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/db.go?s=209:246#L3">ServiceDB</a></h2>
+			<pre>type ServiceDB struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+A ServiceDB stores the configuration for the services
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="Open">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/db.go?s=683:760#L22">Open</a></h3>
+				<pre>func Open(databaseType, databaseURL <a href="../../../../builtin/index.html#string">string</a>) (serviceDB *<a href="index.html#ServiceDB">ServiceDB</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Open a SQL database to use as a ServiceDB. This will automatically create
+the necessary database tables if they aren&#39;t already present.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="ServiceDB.DeleteService">func (*ServiceDB) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/db.go?s=3372:3435#L104">DeleteService</a></h3>
+				<pre>func (d *<a href="index.html#ServiceDB">ServiceDB</a>) DeleteService(serviceID <a href="../../../../builtin/index.html#string">string</a>) (err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+DeleteService deletes the given service from the database.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ServiceDB.InsertFromConfig">func (*ServiceDB) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/db.go?s=9252:9315#L268">InsertFromConfig</a></h3>
+				<pre>func (d *<a href="index.html#ServiceDB">ServiceDB</a>) InsertFromConfig(cfg *<a href="../api/index.html">api</a>.<a href="../api/index.html#ConfigFile">ConfigFile</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+InsertFromConfig inserts entries from the config file into the database. This only really
+makes sense for in-memory databases.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ServiceDB.LoadAuthRealm">func (*ServiceDB) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/db.go?s=5096:5180#L156">LoadAuthRealm</a></h3>
+				<pre>func (d *<a href="index.html#ServiceDB">ServiceDB</a>) LoadAuthRealm(realmID <a href="../../../../builtin/index.html#string">string</a>) (realm <a href="../types/index.html">types</a>.<a href="../types/index.html#AuthRealm">AuthRealm</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+LoadAuthRealm loads an AuthRealm from the database.
+Returns sql.ErrNoRows if the realm isn&#39;t in the database.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ServiceDB.LoadAuthRealmsByType">func (*ServiceDB) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/db.go?s=5509:5605#L167">LoadAuthRealmsByType</a></h3>
+				<pre>func (d *<a href="index.html#ServiceDB">ServiceDB</a>) LoadAuthRealmsByType(realmType <a href="../../../../builtin/index.html#string">string</a>) (realms []<a href="../types/index.html">types</a>.<a href="../types/index.html#AuthRealm">AuthRealm</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+LoadAuthRealmsByType loads all auth realms with the given type from the database.
+The realms are ordered based on their realm ID.
+Returns an empty list if there are no realms with that type.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ServiceDB.LoadAuthSessionByID">func (*ServiceDB) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/db.go?s=7900:8005#L231">LoadAuthSessionByID</a></h3>
+				<pre>func (d *<a href="index.html#ServiceDB">ServiceDB</a>) LoadAuthSessionByID(realmID, sessionID <a href="../../../../builtin/index.html#string">string</a>) (session <a href="../types/index.html">types</a>.<a href="../types/index.html#AuthSession">AuthSession</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+LoadAuthSessionByID loads an AuthSession from the database based on the given
+realm and session ID.
+Returns sql.ErrNoRows if the session isn&#39;t in the database.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ServiceDB.LoadAuthSessionByUser">func (*ServiceDB) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/db.go?s=7476:7580#L220">LoadAuthSessionByUser</a></h3>
+				<pre>func (d *<a href="index.html#ServiceDB">ServiceDB</a>) LoadAuthSessionByUser(realmID, userID <a href="../../../../builtin/index.html#string">string</a>) (session <a href="../types/index.html">types</a>.<a href="../types/index.html#AuthSession">AuthSession</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+LoadAuthSessionByUser loads an AuthSession from the database based on the given
+realm and user ID.
+Returns sql.ErrNoRows if the session isn&#39;t in the database.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ServiceDB.LoadBotOptions">func (*ServiceDB) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/db.go?s=8279:8371#L241">LoadBotOptions</a></h3>
+				<pre>func (d *<a href="index.html#ServiceDB">ServiceDB</a>) LoadBotOptions(userID, roomID <a href="../../../../builtin/index.html#string">string</a>) (opts <a href="../types/index.html">types</a>.<a href="../types/index.html#BotOptions">BotOptions</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+LoadBotOptions loads bot options from the database.
+Returns sql.ErrNoRows if the bot options isn&#39;t in the database.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ServiceDB.LoadMatrixClientConfig">func (*ServiceDB) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/db.go?s=2199:2293#L68">LoadMatrixClientConfig</a></h3>
+				<pre>func (d *<a href="index.html#ServiceDB">ServiceDB</a>) LoadMatrixClientConfig(userID <a href="../../../../builtin/index.html#string">string</a>) (config <a href="../api/index.html">api</a>.<a href="../api/index.html#ClientConfig">ClientConfig</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+LoadMatrixClientConfig loads a Matrix client config from the database.
+Returns sql.ErrNoRows if the client isn&#39;t in the database.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ServiceDB.LoadMatrixClientConfigs">func (*ServiceDB) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/db.go?s=1842:1927#L58">LoadMatrixClientConfigs</a></h3>
+				<pre>func (d *<a href="index.html#ServiceDB">ServiceDB</a>) LoadMatrixClientConfigs() (configs []<a href="../api/index.html">api</a>.<a href="../api/index.html#ClientConfig">ClientConfig</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+LoadMatrixClientConfigs loads all Matrix client configs from the database.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ServiceDB.LoadNextBatch">func (*ServiceDB) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/db.go?s=2764:2842#L85">LoadNextBatch</a></h3>
+				<pre>func (d *<a href="index.html#ServiceDB">ServiceDB</a>) LoadNextBatch(userID <a href="../../../../builtin/index.html#string">string</a>) (nextBatch <a href="../../../../builtin/index.html#string">string</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+LoadNextBatch loads the next_batch token for the given user.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ServiceDB.LoadService">func (*ServiceDB) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/db.go?s=3091:3175#L95">LoadService</a></h3>
+				<pre>func (d *<a href="index.html#ServiceDB">ServiceDB</a>) LoadService(serviceID <a href="../../../../builtin/index.html#string">string</a>) (service <a href="../types/index.html">types</a>.<a href="../types/index.html#Service">Service</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+LoadService loads a service from the database.
+Returns sql.ErrNoRows if the service isn&#39;t in the database.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ServiceDB.LoadServicesByType">func (*ServiceDB) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/db.go?s=4121:4217#L126">LoadServicesByType</a></h3>
+				<pre>func (d *<a href="index.html#ServiceDB">ServiceDB</a>) LoadServicesByType(serviceType <a href="../../../../builtin/index.html#string">string</a>) (services []<a href="../types/index.html">types</a>.<a href="../types/index.html#Service">Service</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+LoadServicesByType loads all the bot services configured for a given type.
+Returns an empty list if there aren&#39;t any services configured.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ServiceDB.LoadServicesForUser">func (*ServiceDB) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/db.go?s=3694:3793#L113">LoadServicesForUser</a></h3>
+				<pre>func (d *<a href="index.html#ServiceDB">ServiceDB</a>) LoadServicesForUser(serviceUserID <a href="../../../../builtin/index.html#string">string</a>) (services []<a href="../types/index.html">types</a>.<a href="../types/index.html#Service">Service</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+LoadServicesForUser loads all the bot services configured for a given user.
+Returns an empty list if there aren&#39;t any services configured.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ServiceDB.RemoveAuthSession">func (*ServiceDB) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/db.go?s=7124:7191#L211">RemoveAuthSession</a></h3>
+				<pre>func (d *<a href="index.html#ServiceDB">ServiceDB</a>) RemoveAuthSession(realmID, userID <a href="../../../../builtin/index.html#string">string</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+RemoveAuthSession removes the auth session for the given user on the given realm.
+No error is returned if the session did not exist in the first place.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ServiceDB.StoreAuthRealm">func (*ServiceDB) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/db.go?s=5924:6014#L178">StoreAuthRealm</a></h3>
+				<pre>func (d *<a href="index.html#ServiceDB">ServiceDB</a>) StoreAuthRealm(realm <a href="../types/index.html">types</a>.<a href="../types/index.html#AuthRealm">AuthRealm</a>) (old <a href="../types/index.html">types</a>.<a href="../types/index.html#AuthRealm">AuthRealm</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+StoreAuthRealm stores the given AuthRealm, clobbering based on the realm ID.
+This function updates the time added/updated values. The previous realm, if any, is
+returned.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ServiceDB.StoreAuthSession">func (*ServiceDB) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/db.go?s=6518:6616#L195">StoreAuthSession</a></h3>
+				<pre>func (d *<a href="index.html#ServiceDB">ServiceDB</a>) StoreAuthSession(session <a href="../types/index.html">types</a>.<a href="../types/index.html#AuthSession">AuthSession</a>) (old <a href="../types/index.html">types</a>.<a href="../types/index.html#AuthSession">AuthSession</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+StoreAuthSession stores the given AuthSession, clobbering based on the tuple of
+user ID and realm ID. This function updates the time added/updated values.
+The previous session, if any, is returned.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ServiceDB.StoreBotOptions">func (*ServiceDB) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/db.go?s=8695:8791#L252">StoreBotOptions</a></h3>
+				<pre>func (d *<a href="index.html#ServiceDB">ServiceDB</a>) StoreBotOptions(opts <a href="../types/index.html">types</a>.<a href="../types/index.html#BotOptions">BotOptions</a>) (oldOpts <a href="../types/index.html">types</a>.<a href="../types/index.html#BotOptions">BotOptions</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+StoreBotOptions stores a BotOptions into the database either by inserting a new
+bot options or updating an existing bot options. Returns the old bot options if there
+was one.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ServiceDB.StoreMatrixClientConfig">func (*ServiceDB) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/db.go?s=1303:1411#L42">StoreMatrixClientConfig</a></h3>
+				<pre>func (d *<a href="index.html#ServiceDB">ServiceDB</a>) StoreMatrixClientConfig(config <a href="../api/index.html">api</a>.<a href="../api/index.html#ClientConfig">ClientConfig</a>) (oldConfig <a href="../api/index.html">api</a>.<a href="../api/index.html#ClientConfig">ClientConfig</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+StoreMatrixClientConfig stores the Matrix client config for a bot service.
+If a config already exists then it will be updated, otherwise a new config
+will be inserted. The previous config is returned.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ServiceDB.StoreService">func (*ServiceDB) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/db.go?s=4564:4657#L140">StoreService</a></h3>
+				<pre>func (d *<a href="index.html#ServiceDB">ServiceDB</a>) StoreService(service <a href="../types/index.html">types</a>.<a href="../types/index.html#Service">Service</a>) (oldService <a href="../types/index.html">types</a>.<a href="../types/index.html#Service">Service</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+StoreService stores a service into the database either by inserting a new
+service or updating an existing service. Returns the old service if there
+was one.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ServiceDB.UpdateNextBatch">func (*ServiceDB) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/db.go?s=2503:2576#L77">UpdateNextBatch</a></h3>
+				<pre>func (d *<a href="index.html#ServiceDB">ServiceDB</a>) UpdateNextBatch(userID, nextBatch <a href="../../../../builtin/index.html#string">string</a>) (err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+UpdateNextBatch updates the next_batch token for the given user.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Storer">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/interface.go?s=194:1633#L1">Storer</a></h2>
+			<pre>type Storer interface {
+    StoreMatrixClientConfig(config <a href="../api/index.html">api</a>.<a href="../api/index.html#ClientConfig">ClientConfig</a>) (oldConfig <a href="../api/index.html">api</a>.<a href="../api/index.html#ClientConfig">ClientConfig</a>, err <a href="../../../../builtin/index.html#error">error</a>)
+    LoadMatrixClientConfigs() (configs []<a href="../api/index.html">api</a>.<a href="../api/index.html#ClientConfig">ClientConfig</a>, err <a href="../../../../builtin/index.html#error">error</a>)
+    LoadMatrixClientConfig(userID <a href="../../../../builtin/index.html#string">string</a>) (config <a href="../api/index.html">api</a>.<a href="../api/index.html#ClientConfig">ClientConfig</a>, err <a href="../../../../builtin/index.html#error">error</a>)
+
+    UpdateNextBatch(userID, nextBatch <a href="../../../../builtin/index.html#string">string</a>) (err <a href="../../../../builtin/index.html#error">error</a>)
+    LoadNextBatch(userID <a href="../../../../builtin/index.html#string">string</a>) (nextBatch <a href="../../../../builtin/index.html#string">string</a>, err <a href="../../../../builtin/index.html#error">error</a>)
+
+    LoadService(serviceID <a href="../../../../builtin/index.html#string">string</a>) (service <a href="../types/index.html">types</a>.<a href="../types/index.html#Service">Service</a>, err <a href="../../../../builtin/index.html#error">error</a>)
+    DeleteService(serviceID <a href="../../../../builtin/index.html#string">string</a>) (err <a href="../../../../builtin/index.html#error">error</a>)
+    LoadServicesForUser(serviceUserID <a href="../../../../builtin/index.html#string">string</a>) (services []<a href="../types/index.html">types</a>.<a href="../types/index.html#Service">Service</a>, err <a href="../../../../builtin/index.html#error">error</a>)
+    LoadServicesByType(serviceType <a href="../../../../builtin/index.html#string">string</a>) (services []<a href="../types/index.html">types</a>.<a href="../types/index.html#Service">Service</a>, err <a href="../../../../builtin/index.html#error">error</a>)
+    StoreService(service <a href="../types/index.html">types</a>.<a href="../types/index.html#Service">Service</a>) (oldService <a href="../types/index.html">types</a>.<a href="../types/index.html#Service">Service</a>, err <a href="../../../../builtin/index.html#error">error</a>)
+
+    LoadAuthRealm(realmID <a href="../../../../builtin/index.html#string">string</a>) (realm <a href="../types/index.html">types</a>.<a href="../types/index.html#AuthRealm">AuthRealm</a>, err <a href="../../../../builtin/index.html#error">error</a>)
+    LoadAuthRealmsByType(realmType <a href="../../../../builtin/index.html#string">string</a>) (realms []<a href="../types/index.html">types</a>.<a href="../types/index.html#AuthRealm">AuthRealm</a>, err <a href="../../../../builtin/index.html#error">error</a>)
+    StoreAuthRealm(realm <a href="../types/index.html">types</a>.<a href="../types/index.html#AuthRealm">AuthRealm</a>) (old <a href="../types/index.html">types</a>.<a href="../types/index.html#AuthRealm">AuthRealm</a>, err <a href="../../../../builtin/index.html#error">error</a>)
+
+    StoreAuthSession(session <a href="../types/index.html">types</a>.<a href="../types/index.html#AuthSession">AuthSession</a>) (old <a href="../types/index.html">types</a>.<a href="../types/index.html#AuthSession">AuthSession</a>, err <a href="../../../../builtin/index.html#error">error</a>)
+    LoadAuthSessionByUser(realmID, userID <a href="../../../../builtin/index.html#string">string</a>) (session <a href="../types/index.html">types</a>.<a href="../types/index.html#AuthSession">AuthSession</a>, err <a href="../../../../builtin/index.html#error">error</a>)
+    LoadAuthSessionByID(realmID, sessionID <a href="../../../../builtin/index.html#string">string</a>) (session <a href="../types/index.html">types</a>.<a href="../types/index.html#AuthSession">AuthSession</a>, err <a href="../../../../builtin/index.html#error">error</a>)
+    RemoveAuthSession(realmID, userID <a href="../../../../builtin/index.html#string">string</a>) <a href="../../../../builtin/index.html#error">error</a>
+
+    LoadBotOptions(userID, roomID <a href="../../../../builtin/index.html#string">string</a>) (opts <a href="../types/index.html">types</a>.<a href="../types/index.html#BotOptions">BotOptions</a>, err <a href="../../../../builtin/index.html#error">error</a>)
+    StoreBotOptions(opts <a href="../types/index.html">types</a>.<a href="../types/index.html#BotOptions">BotOptions</a>) (oldOpts <a href="../types/index.html">types</a>.<a href="../types/index.html#BotOptions">BotOptions</a>, err <a href="../../../../builtin/index.html#error">error</a>)
+
+    InsertFromConfig(cfg *<a href="../api/index.html">api</a>.<a href="../api/index.html#ConfigFile">ConfigFile</a>) <a href="../../../../builtin/index.html#error">error</a>
+}</pre>
+			<p>
+Storer is the interface which needs to be conformed to in order to persist Go-NEB data
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="GetServiceDB">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/database/db.go?s=485:511#L16">GetServiceDB</a></h3>
+				<pre>func GetServiceDB() <a href="index.html#Storer">Storer</a></pre>
+				<p>
+GetServiceDB gets the global service DB instance.
+</p>
+
+				
+				
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

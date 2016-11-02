@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>sqlite3 - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package sqlite3</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/mattn/go-sqlite3"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-subdirectories">Subdirectories</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package sqlite3 provides interface to SQLite3 databases.
+</p>
+<p>
+This works as a driver for database/sql.
+</p>
+<p>
+Installation
+</p>
+<pre>go get github.com/mattn/go-sqlite3
+</pre>
+<h3 id="hdr-Supported_Types">Supported Types</h3>
+<p>
+Currently, go-sqlite3 supports the following data types.
+</p>
+<pre>+------------------------------+
+|go        | sqlite3           |
+|----------|-------------------|
+|nil       | null              |
+|int       | integer           |
+|int64     | integer           |
+|float64   | float             |
+|bool      | integer           |
+|[]byte    | blob              |
+|string    | text              |
+|time.Time | timestamp/datetime|
++------------------------------+
+</pre>
+<h3 id="hdr-SQLite3_Extension">SQLite3 Extension</h3>
+<p>
+You can write your own extension module for sqlite3. For example, below is an
+extension for a Regexp matcher operation.
+</p>
+<pre>#include &lt;pcre.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;sqlite3ext.h&gt;
+
+SQLITE_EXTENSION_INIT1
+static void regexp_func(sqlite3_context *context, int argc, sqlite3_value **argv) {
+  if (argc &gt;= 2) {
+    const char *target  = (const char *)sqlite3_value_text(argv[1]);
+    const char *pattern = (const char *)sqlite3_value_text(argv[0]);
+    const char* errstr = NULL;
+    int erroff = 0;
+    int vec[500];
+    int n, rc;
+    pcre* re = pcre_compile(pattern, 0, &amp;errstr, &amp;erroff, NULL);
+    rc = pcre_exec(re, NULL, target, strlen(target), 0, 0, vec, 500);
+    if (rc &lt;= 0) {
+      sqlite3_result_error(context, errstr, 0);
+      return;
+    }
+    sqlite3_result_int(context, 1);
+  }
+}
+
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
+int sqlite3_extension_init(sqlite3 *db, char **errmsg,
+      const sqlite3_api_routines *api) {
+  SQLITE_EXTENSION_INIT2(api);
+  return sqlite3_create_function(db, &#34;regexp&#34;, 2, SQLITE_UTF8,
+      (void*)db, regexp_func, NULL, NULL);
+}
+</pre>
+<p>
+It needs to be built as a so/dll shared library. And you need to register
+the extension module like below.
+</p>
+<pre>sql.Register(&#34;sqlite3_with_extensions&#34;,
+	&amp;sqlite3.SQLiteDriver{
+		Extensions: []string{
+			&#34;sqlite3_mod_regexp&#34;,
+		},
+	})
+</pre>
+<p>
+Then, you can use this extension.
+</p>
+<pre>rows, err := db.Query(&#34;select text from mytable where name regexp &#39;^golang&#39;&#34;)
+</pre>
+<h3 id="hdr-Connection_Hook">Connection Hook</h3>
+<p>
+You can hook and inject your code when the connection is established. database/sql
+doesn&#39;t provide a way to get native go-sqlite3 interfaces. So if you want,
+you need to set ConnectHook and get the SQLiteConn.
+</p>
+<pre>sql.Register(&#34;sqlite3_with_hook_example&#34;,
+		&amp;sqlite3.SQLiteDriver{
+				ConnectHook: func(conn *sqlite3.SQLiteConn) error {
+					sqlite3conn = append(sqlite3conn, conn)
+					return nil
+				},
+		})
+</pre>
+<h3 id="hdr-Go_SQlite3_Extensions">Go SQlite3 Extensions</h3>
+<p>
+If you want to register Go functions as SQLite extension functions,
+call RegisterFunction from ConnectHook.
+</p>
+<pre>regex = func(re, s string) (bool, error) {
+	return regexp.MatchString(re, s)
+}
+sql.Register(&#34;sqlite3_with_go_func&#34;,
+		&amp;sqlite3.SQLiteDriver{
+				ConnectHook: func(conn *sqlite3.SQLiteConn) error {
+					return conn.RegisterFunc(&#34;regexp&#34;, regex, true)
+				},
+		})
+</pre>
+<p>
+See the documentation of RegisterFunc for more details.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="index.html#pkg-constants">Constants</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+				
+				<dd><a href="index.html#Version">func Version() (libVersion string, libVersionNumber int, sourceId string)</a></dd>
+			
+			
+				
+				<dd><a href="index.html#ErrNo">type ErrNo</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ErrNo.Error">func (err ErrNo) Error() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ErrNo.Extend">func (err ErrNo) Extend(by int) ErrNoExtended</a></dd>
+				
+			
+				
+				<dd><a href="index.html#ErrNoExtended">type ErrNoExtended</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ErrNoExtended.Error">func (err ErrNoExtended) Error() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Error">type Error</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Error.Error">func (err Error) Error() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#SQLiteBackup">type SQLiteBackup</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SQLiteBackup.Close">func (b *SQLiteBackup) Close() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SQLiteBackup.Finish">func (b *SQLiteBackup) Finish() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SQLiteBackup.PageCount">func (b *SQLiteBackup) PageCount() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SQLiteBackup.Remaining">func (b *SQLiteBackup) Remaining() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SQLiteBackup.Step">func (b *SQLiteBackup) Step(p int) (bool, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#SQLiteConn">type SQLiteConn</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SQLiteConn.AutoCommit">func (c *SQLiteConn) AutoCommit() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SQLiteConn.Backup">func (c *SQLiteConn) Backup(dest string, conn *SQLiteConn, src string) (*SQLiteBackup, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SQLiteConn.Begin">func (c *SQLiteConn) Begin() (driver.Tx, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SQLiteConn.Close">func (c *SQLiteConn) Close() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SQLiteConn.Exec">func (c *SQLiteConn) Exec(query string, args []driver.Value) (driver.Result, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SQLiteConn.LoadExtension">func (c *SQLiteConn) LoadExtension(lib string, entry string) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SQLiteConn.Prepare">func (c *SQLiteConn) Prepare(query string) (driver.Stmt, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SQLiteConn.Query">func (c *SQLiteConn) Query(query string, args []driver.Value) (driver.Rows, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SQLiteConn.RegisterAggregator">func (c *SQLiteConn) RegisterAggregator(name string, impl interface{}, pure bool) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SQLiteConn.RegisterFunc">func (c *SQLiteConn) RegisterFunc(name string, impl interface{}, pure bool) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#SQLiteDriver">type SQLiteDriver</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SQLiteDriver.Open">func (d *SQLiteDriver) Open(dsn string) (driver.Conn, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#SQLiteResult">type SQLiteResult</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SQLiteResult.LastInsertId">func (r *SQLiteResult) LastInsertId() (int64, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SQLiteResult.RowsAffected">func (r *SQLiteResult) RowsAffected() (int64, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#SQLiteRows">type SQLiteRows</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SQLiteRows.Close">func (rc *SQLiteRows) Close() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SQLiteRows.Columns">func (rc *SQLiteRows) Columns() []string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SQLiteRows.DeclTypes">func (rc *SQLiteRows) DeclTypes() []string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SQLiteRows.Next">func (rc *SQLiteRows) Next(dest []driver.Value) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#SQLiteStmt">type SQLiteStmt</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SQLiteStmt.Close">func (s *SQLiteStmt) Close() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SQLiteStmt.Exec">func (s *SQLiteStmt) Exec(args []driver.Value) (driver.Result, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SQLiteStmt.NumInput">func (s *SQLiteStmt) NumInput() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SQLiteStmt.Query">func (s *SQLiteStmt) Query(args []driver.Value) (driver.Rows, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#SQLiteTx">type SQLiteTx</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SQLiteTx.Commit">func (tx *SQLiteTx) Commit() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SQLiteTx.Rollback">func (tx *SQLiteTx) Rollback() error</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/backup.go">backup.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/callback.go">callback.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/doc.go">doc.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/error.go">error.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3.go">sqlite3.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3_load_extension.go">sqlite3_load_extension.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3_other.go">sqlite3_other.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/tracecallback_noimpl.go">tracecallback_noimpl.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const <span id="ErrNoMask">ErrNoMask</span> <a href="../../../C/index.html">C</a>.<a href="../../../C/index.html#int">int</a> = 0xff</pre>
+				
+			
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var (
+    <span id="ErrError">ErrError</span>      = <a href="index.html#ErrNo">ErrNo</a>(1)  <span class="comment">/* SQL error or missing database */</span>
+    <span id="ErrInternal">ErrInternal</span>   = <a href="index.html#ErrNo">ErrNo</a>(2)  <span class="comment">/* Internal logic error in SQLite */</span>
+    <span id="ErrPerm">ErrPerm</span>       = <a href="index.html#ErrNo">ErrNo</a>(3)  <span class="comment">/* Access permission denied */</span>
+    <span id="ErrAbort">ErrAbort</span>      = <a href="index.html#ErrNo">ErrNo</a>(4)  <span class="comment">/* Callback routine requested an abort */</span>
+    <span id="ErrBusy">ErrBusy</span>       = <a href="index.html#ErrNo">ErrNo</a>(5)  <span class="comment">/* The database file is locked */</span>
+    <span id="ErrLocked">ErrLocked</span>     = <a href="index.html#ErrNo">ErrNo</a>(6)  <span class="comment">/* A table in the database is locked */</span>
+    <span id="ErrNomem">ErrNomem</span>      = <a href="index.html#ErrNo">ErrNo</a>(7)  <span class="comment">/* A malloc() failed */</span>
+    <span id="ErrReadonly">ErrReadonly</span>   = <a href="index.html#ErrNo">ErrNo</a>(8)  <span class="comment">/* Attempt to write a readonly database */</span>
+    <span id="ErrInterrupt">ErrInterrupt</span>  = <a href="index.html#ErrNo">ErrNo</a>(9)  <span class="comment">/* Operation terminated by sqlite3_interrupt() */</span>
+    <span id="ErrIoErr">ErrIoErr</span>      = <a href="index.html#ErrNo">ErrNo</a>(10) <span class="comment">/* Some kind of disk I/O error occurred */</span>
+    <span id="ErrCorrupt">ErrCorrupt</span>    = <a href="index.html#ErrNo">ErrNo</a>(11) <span class="comment">/* The database disk image is malformed */</span>
+    <span id="ErrNotFound">ErrNotFound</span>   = <a href="index.html#ErrNo">ErrNo</a>(12) <span class="comment">/* Unknown opcode in sqlite3_file_control() */</span>
+    <span id="ErrFull">ErrFull</span>       = <a href="index.html#ErrNo">ErrNo</a>(13) <span class="comment">/* Insertion failed because database is full */</span>
+    <span id="ErrCantOpen">ErrCantOpen</span>   = <a href="index.html#ErrNo">ErrNo</a>(14) <span class="comment">/* Unable to open the database file */</span>
+    <span id="ErrProtocol">ErrProtocol</span>   = <a href="index.html#ErrNo">ErrNo</a>(15) <span class="comment">/* Database lock protocol error */</span>
+    <span id="ErrEmpty">ErrEmpty</span>      = <a href="index.html#ErrNo">ErrNo</a>(16) <span class="comment">/* Database is empty */</span>
+    <span id="ErrSchema">ErrSchema</span>     = <a href="index.html#ErrNo">ErrNo</a>(17) <span class="comment">/* The database schema changed */</span>
+    <span id="ErrTooBig">ErrTooBig</span>     = <a href="index.html#ErrNo">ErrNo</a>(18) <span class="comment">/* String or BLOB exceeds size limit */</span>
+    <span id="ErrConstraint">ErrConstraint</span> = <a href="index.html#ErrNo">ErrNo</a>(19) <span class="comment">/* Abort due to constraint violation */</span>
+    <span id="ErrMismatch">ErrMismatch</span>   = <a href="index.html#ErrNo">ErrNo</a>(20) <span class="comment">/* Data type mismatch */</span>
+    <span id="ErrMisuse">ErrMisuse</span>     = <a href="index.html#ErrNo">ErrNo</a>(21) <span class="comment">/* Library used incorrectly */</span>
+    <span id="ErrNoLFS">ErrNoLFS</span>      = <a href="index.html#ErrNo">ErrNo</a>(22) <span class="comment">/* Uses OS features not supported on host */</span>
+    <span id="ErrAuth">ErrAuth</span>       = <a href="index.html#ErrNo">ErrNo</a>(23) <span class="comment">/* Authorization denied */</span>
+    <span id="ErrFormat">ErrFormat</span>     = <a href="index.html#ErrNo">ErrNo</a>(24) <span class="comment">/* Auxiliary database format error */</span>
+    <span id="ErrRange">ErrRange</span>      = <a href="index.html#ErrNo">ErrNo</a>(25) <span class="comment">/* 2nd parameter to sqlite3_bind out of range */</span>
+    <span id="ErrNotADB">ErrNotADB</span>     = <a href="index.html#ErrNo">ErrNo</a>(26) <span class="comment">/* File opened that is not a database file */</span>
+    <span id="ErrNotice">ErrNotice</span>     = <a href="index.html#ErrNo">ErrNo</a>(27) <span class="comment">/* Notifications from sqlite3_log() */</span>
+    <span id="ErrWarning">ErrWarning</span>    = <a href="index.html#ErrNo">ErrNo</a>(28) <span class="comment">/* Warnings from sqlite3_log() */</span>
+)</pre>
+				<p>
+result codes from <a href="http://www.sqlite.org/c3ref/c_abort.html">http://www.sqlite.org/c3ref/c_abort.html</a>
+</p>
+
+			
+				<pre>var (
+    <span id="ErrIoErrRead">ErrIoErrRead</span>              = <a href="index.html#ErrIoErr">ErrIoErr</a>.<a href="index.html#Extend">Extend</a>(1)
+    <span id="ErrIoErrShortRead">ErrIoErrShortRead</span>         = <a href="index.html#ErrIoErr">ErrIoErr</a>.<a href="index.html#Extend">Extend</a>(2)
+    <span id="ErrIoErrWrite">ErrIoErrWrite</span>             = <a href="index.html#ErrIoErr">ErrIoErr</a>.<a href="index.html#Extend">Extend</a>(3)
+    <span id="ErrIoErrFsync">ErrIoErrFsync</span>             = <a href="index.html#ErrIoErr">ErrIoErr</a>.<a href="index.html#Extend">Extend</a>(4)
+    <span id="ErrIoErrDirFsync">ErrIoErrDirFsync</span>          = <a href="index.html#ErrIoErr">ErrIoErr</a>.<a href="index.html#Extend">Extend</a>(5)
+    <span id="ErrIoErrTruncate">ErrIoErrTruncate</span>          = <a href="index.html#ErrIoErr">ErrIoErr</a>.<a href="index.html#Extend">Extend</a>(6)
+    <span id="ErrIoErrFstat">ErrIoErrFstat</span>             = <a href="index.html#ErrIoErr">ErrIoErr</a>.<a href="index.html#Extend">Extend</a>(7)
+    <span id="ErrIoErrUnlock">ErrIoErrUnlock</span>            = <a href="index.html#ErrIoErr">ErrIoErr</a>.<a href="index.html#Extend">Extend</a>(8)
+    <span id="ErrIoErrRDlock">ErrIoErrRDlock</span>            = <a href="index.html#ErrIoErr">ErrIoErr</a>.<a href="index.html#Extend">Extend</a>(9)
+    <span id="ErrIoErrDelete">ErrIoErrDelete</span>            = <a href="index.html#ErrIoErr">ErrIoErr</a>.<a href="index.html#Extend">Extend</a>(10)
+    <span id="ErrIoErrBlocked">ErrIoErrBlocked</span>           = <a href="index.html#ErrIoErr">ErrIoErr</a>.<a href="index.html#Extend">Extend</a>(11)
+    <span id="ErrIoErrNoMem">ErrIoErrNoMem</span>             = <a href="index.html#ErrIoErr">ErrIoErr</a>.<a href="index.html#Extend">Extend</a>(12)
+    <span id="ErrIoErrAccess">ErrIoErrAccess</span>            = <a href="index.html#ErrIoErr">ErrIoErr</a>.<a href="index.html#Extend">Extend</a>(13)
+    <span id="ErrIoErrCheckReservedLock">ErrIoErrCheckReservedLock</span> = <a href="index.html#ErrIoErr">ErrIoErr</a>.<a href="index.html#Extend">Extend</a>(14)
+    <span id="ErrIoErrLock">ErrIoErrLock</span>              = <a href="index.html#ErrIoErr">ErrIoErr</a>.<a href="index.html#Extend">Extend</a>(15)
+    <span id="ErrIoErrClose">ErrIoErrClose</span>             = <a href="index.html#ErrIoErr">ErrIoErr</a>.<a href="index.html#Extend">Extend</a>(16)
+    <span id="ErrIoErrDirClose">ErrIoErrDirClose</span>          = <a href="index.html#ErrIoErr">ErrIoErr</a>.<a href="index.html#Extend">Extend</a>(17)
+    <span id="ErrIoErrSHMOpen">ErrIoErrSHMOpen</span>           = <a href="index.html#ErrIoErr">ErrIoErr</a>.<a href="index.html#Extend">Extend</a>(18)
+    <span id="ErrIoErrSHMSize">ErrIoErrSHMSize</span>           = <a href="index.html#ErrIoErr">ErrIoErr</a>.<a href="index.html#Extend">Extend</a>(19)
+    <span id="ErrIoErrSHMLock">ErrIoErrSHMLock</span>           = <a href="index.html#ErrIoErr">ErrIoErr</a>.<a href="index.html#Extend">Extend</a>(20)
+    <span id="ErrIoErrSHMMap">ErrIoErrSHMMap</span>            = <a href="index.html#ErrIoErr">ErrIoErr</a>.<a href="index.html#Extend">Extend</a>(21)
+    <span id="ErrIoErrSeek">ErrIoErrSeek</span>              = <a href="index.html#ErrIoErr">ErrIoErr</a>.<a href="index.html#Extend">Extend</a>(22)
+    <span id="ErrIoErrDeleteNoent">ErrIoErrDeleteNoent</span>       = <a href="index.html#ErrIoErr">ErrIoErr</a>.<a href="index.html#Extend">Extend</a>(23)
+    <span id="ErrIoErrMMap">ErrIoErrMMap</span>              = <a href="index.html#ErrIoErr">ErrIoErr</a>.<a href="index.html#Extend">Extend</a>(24)
+    <span id="ErrIoErrGetTempPath">ErrIoErrGetTempPath</span>       = <a href="index.html#ErrIoErr">ErrIoErr</a>.<a href="index.html#Extend">Extend</a>(25)
+    <span id="ErrIoErrConvPath">ErrIoErrConvPath</span>          = <a href="index.html#ErrIoErr">ErrIoErr</a>.<a href="index.html#Extend">Extend</a>(26)
+    <span id="ErrLockedSharedCache">ErrLockedSharedCache</span>      = <a href="index.html#ErrLocked">ErrLocked</a>.<a href="index.html#Extend">Extend</a>(1)
+    <span id="ErrBusyRecovery">ErrBusyRecovery</span>           = <a href="index.html#ErrBusy">ErrBusy</a>.<a href="index.html#Extend">Extend</a>(1)
+    <span id="ErrBusySnapshot">ErrBusySnapshot</span>           = <a href="index.html#ErrBusy">ErrBusy</a>.<a href="index.html#Extend">Extend</a>(2)
+    <span id="ErrCantOpenNoTempDir">ErrCantOpenNoTempDir</span>      = <a href="index.html#ErrCantOpen">ErrCantOpen</a>.<a href="index.html#Extend">Extend</a>(1)
+    <span id="ErrCantOpenIsDir">ErrCantOpenIsDir</span>          = <a href="index.html#ErrCantOpen">ErrCantOpen</a>.<a href="index.html#Extend">Extend</a>(2)
+    <span id="ErrCantOpenFullPath">ErrCantOpenFullPath</span>       = <a href="index.html#ErrCantOpen">ErrCantOpen</a>.<a href="index.html#Extend">Extend</a>(3)
+    <span id="ErrCantOpenConvPath">ErrCantOpenConvPath</span>       = <a href="index.html#ErrCantOpen">ErrCantOpen</a>.<a href="index.html#Extend">Extend</a>(4)
+    <span id="ErrCorruptVTab">ErrCorruptVTab</span>            = <a href="index.html#ErrCorrupt">ErrCorrupt</a>.<a href="index.html#Extend">Extend</a>(1)
+    <span id="ErrReadonlyRecovery">ErrReadonlyRecovery</span>       = <a href="index.html#ErrReadonly">ErrReadonly</a>.<a href="index.html#Extend">Extend</a>(1)
+    <span id="ErrReadonlyCantLock">ErrReadonlyCantLock</span>       = <a href="index.html#ErrReadonly">ErrReadonly</a>.<a href="index.html#Extend">Extend</a>(2)
+    <span id="ErrReadonlyRollback">ErrReadonlyRollback</span>       = <a href="index.html#ErrReadonly">ErrReadonly</a>.<a href="index.html#Extend">Extend</a>(3)
+    <span id="ErrReadonlyDbMoved">ErrReadonlyDbMoved</span>        = <a href="index.html#ErrReadonly">ErrReadonly</a>.<a href="index.html#Extend">Extend</a>(4)
+    <span id="ErrAbortRollback">ErrAbortRollback</span>          = <a href="index.html#ErrAbort">ErrAbort</a>.<a href="index.html#Extend">Extend</a>(2)
+    <span id="ErrConstraintCheck">ErrConstraintCheck</span>        = <a href="index.html#ErrConstraint">ErrConstraint</a>.<a href="index.html#Extend">Extend</a>(1)
+    <span id="ErrConstraintCommitHook">ErrConstraintCommitHook</span>   = <a href="index.html#ErrConstraint">ErrConstraint</a>.<a href="index.html#Extend">Extend</a>(2)
+    <span id="ErrConstraintForeignKey">ErrConstraintForeignKey</span>   = <a href="index.html#ErrConstraint">ErrConstraint</a>.<a href="index.html#Extend">Extend</a>(3)
+    <span id="ErrConstraintFunction">ErrConstraintFunction</span>     = <a href="index.html#ErrConstraint">ErrConstraint</a>.<a href="index.html#Extend">Extend</a>(4)
+    <span id="ErrConstraintNotNull">ErrConstraintNotNull</span>      = <a href="index.html#ErrConstraint">ErrConstraint</a>.<a href="index.html#Extend">Extend</a>(5)
+    <span id="ErrConstraintPrimaryKey">ErrConstraintPrimaryKey</span>   = <a href="index.html#ErrConstraint">ErrConstraint</a>.<a href="index.html#Extend">Extend</a>(6)
+    <span id="ErrConstraintTrigger">ErrConstraintTrigger</span>      = <a href="index.html#ErrConstraint">ErrConstraint</a>.<a href="index.html#Extend">Extend</a>(7)
+    <span id="ErrConstraintUnique">ErrConstraintUnique</span>       = <a href="index.html#ErrConstraint">ErrConstraint</a>.<a href="index.html#Extend">Extend</a>(8)
+    <span id="ErrConstraintVTab">ErrConstraintVTab</span>         = <a href="index.html#ErrConstraint">ErrConstraint</a>.<a href="index.html#Extend">Extend</a>(9)
+    <span id="ErrConstraintRowId">ErrConstraintRowId</span>        = <a href="index.html#ErrConstraint">ErrConstraint</a>.<a href="index.html#Extend">Extend</a>(10)
+    <span id="ErrNoticeRecoverWAL">ErrNoticeRecoverWAL</span>       = <a href="index.html#ErrNotice">ErrNotice</a>.<a href="index.html#Extend">Extend</a>(1)
+    <span id="ErrNoticeRecoverRollback">ErrNoticeRecoverRollback</span>  = <a href="index.html#ErrNotice">ErrNotice</a>.<a href="index.html#Extend">Extend</a>(2)
+    <span id="ErrWarningAutoIndex">ErrWarningAutoIndex</span>       = <a href="index.html#ErrWarning">ErrWarning</a>.<a href="index.html#Extend">Extend</a>(1)
+)</pre>
+				<p>
+result codes from <a href="http://www.sqlite.org/c3ref/c_abort_rollback.html">http://www.sqlite.org/c3ref/c_abort_rollback.html</a>
+</p>
+
+			
+				<pre>var <span id="SQLiteTimestampFormats">SQLiteTimestampFormats</span> = []<a href="../../../builtin/index.html#string">string</a>{
+
+    &#34;2006-01-02 15:04:05.999999999-07:00&#34;,
+    &#34;2006-01-02T15:04:05.999999999-07:00&#34;,
+    &#34;2006-01-02 15:04:05.999999999&#34;,
+    &#34;2006-01-02T15:04:05.999999999&#34;,
+    &#34;2006-01-02 15:04:05&#34;,
+    &#34;2006-01-02T15:04:05&#34;,
+    &#34;2006-01-02 15:04&#34;,
+    &#34;2006-01-02T15:04&#34;,
+    &#34;2006-01-02&#34;,
+}</pre>
+				<p>
+Timestamp formats understood by both this module and SQLite.
+The first format in the slice will be used when saving time values
+into the database. When parsing a string from a timestamp or
+datetime column, the formats are tried in order.
+</p>
+
+			
+		
+		
+			
+			
+			<h2 id="Version">func <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3.go?s=3607:3680#L132">Version</a></h2>
+			<pre>func Version() (libVersion <a href="../../../builtin/index.html#string">string</a>, libVersionNumber <a href="../../../builtin/index.html#int">int</a>, sourceId <a href="../../../builtin/index.html#string">string</a>)</pre>
+			<p>
+Version returns SQLite library version information.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="ErrNo">type <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/error.go?s=201:215#L1">ErrNo</a></h2>
+			<pre>type ErrNo <a href="../../../builtin/index.html#int">int</a></pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ErrNo.Error">func (ErrNo) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/error.go?s=2457:2488#L45">Error</a></h3>
+				<pre>func (err <a href="index.html#ErrNo">ErrNo</a>) Error() <a href="../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="ErrNo.Extend">func (ErrNo) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/error.go?s=2527:2572#L49">Extend</a></h3>
+				<pre>func (err <a href="index.html#ErrNo">ErrNo</a>) Extend(by <a href="../../../builtin/index.html#int">int</a>) <a href="index.html#ErrNoExtended">ErrNoExtended</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ErrNoExtended">type <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/error.go?s=247:269#L4">ErrNoExtended</a></h2>
+			<pre>type ErrNoExtended <a href="../../../builtin/index.html#int">int</a></pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ErrNoExtended.Error">func (ErrNoExtended) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/error.go?s=2622:2661#L53">Error</a></h3>
+				<pre>func (err <a href="index.html#ErrNoExtended">ErrNoExtended</a>) Error() <a href="../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Error">type <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/error.go?s=271:564#L6">Error</a></h2>
+			<pre>type Error struct {
+    Code         <a href="index.html#ErrNo">ErrNo</a>         <span class="comment">/* The error code returned by SQLite */</span>
+    ExtendedCode <a href="index.html#ErrNoExtended">ErrNoExtended</a> <span class="comment">/* The extended error code returned by SQLite */</span>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Error.Error">func (Error) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/error.go?s=2745:2776#L57">Error</a></h3>
+				<pre>func (err <a href="index.html#Error">Error</a>) Error() <a href="../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="SQLiteBackup">type <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/backup.go?s=345:394#L12">SQLiteBackup</a></h2>
+			<pre>type SQLiteBackup struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="SQLiteBackup.Close">func (*SQLiteBackup) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/backup.go?s=1617:1653#L56">Close</a></h3>
+				<pre>func (b *<a href="index.html#SQLiteBackup">SQLiteBackup</a>) Close() <a href="../../../builtin/index.html#error">error</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="SQLiteBackup.Finish">func (*SQLiteBackup) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/backup.go?s=1556:1593#L52">Finish</a></h3>
+				<pre>func (b *<a href="index.html#SQLiteBackup">SQLiteBackup</a>) Finish() <a href="../../../builtin/index.html#error">error</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="SQLiteBackup.PageCount">func (*SQLiteBackup) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/backup.go?s=1467:1505#L48">PageCount</a></h3>
+				<pre>func (b *<a href="index.html#SQLiteBackup">SQLiteBackup</a>) PageCount() <a href="../../../builtin/index.html#int">int</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="SQLiteBackup.Remaining">func (*SQLiteBackup) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/backup.go?s=1378:1416#L44">Remaining</a></h3>
+				<pre>func (b *<a href="index.html#SQLiteBackup">SQLiteBackup</a>) Remaining() <a href="../../../builtin/index.html#int">int</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="SQLiteBackup.Step">func (*SQLiteBackup) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/backup.go?s=1099:1147#L34">Step</a></h3>
+				<pre>func (b *<a href="index.html#SQLiteBackup">SQLiteBackup</a>) Step(p <a href="../../../builtin/index.html#int">int</a>) (<a href="../../../builtin/index.html#bool">bool</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Backs up for one step. Calls the underlying `sqlite3_backup_step` function.
+This function returns a boolean indicating if the backup is done and
+an error signalling any other error. Done is returned if the underlying C
+function returns SQLITE_DONE (Code 101)
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="SQLiteConn">type <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3.go?s=4005:4156#L146">SQLiteConn</a></h2>
+			<pre>type SQLiteConn struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Conn struct.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="SQLiteConn.AutoCommit">func (*SQLiteConn) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3.go?s=9937:9975#L382">AutoCommit</a></h3>
+				<pre>func (c *<a href="index.html#SQLiteConn">SQLiteConn</a>) AutoCommit() <a href="../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+AutoCommit return which currently auto commit or not.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="SQLiteConn.Backup">func (*SQLiteConn) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/backup.go?s=396:489#L16">Backup</a></h3>
+				<pre>func (c *<a href="index.html#SQLiteConn">SQLiteConn</a>) Backup(dest <a href="../../../builtin/index.html#string">string</a>, conn *<a href="index.html#SQLiteConn">SQLiteConn</a>, src <a href="../../../builtin/index.html#string">string</a>) (*<a href="index.html#SQLiteBackup">SQLiteBackup</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="SQLiteConn.Begin">func (*SQLiteConn) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3.go?s=11890:11937#L468">Begin</a></h3>
+				<pre>func (c *<a href="index.html#SQLiteConn">SQLiteConn</a>) Begin() (<a href="../../../database/sql/driver/index.html">driver</a>.<a href="../../../database/sql/driver/index.html#Tx">Tx</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Begin transaction.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="SQLiteConn.Close">func (*SQLiteConn) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3.go?s=14757:14791#L586">Close</a></h3>
+				<pre>func (c *<a href="index.html#SQLiteConn">SQLiteConn</a>) Close() <a href="../../../builtin/index.html#error">error</a></pre>
+				<p>
+Close the connection.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="SQLiteConn.Exec">func (*SQLiteConn) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3.go?s=10278:10361#L395">Exec</a></h3>
+				<pre>func (c *<a href="index.html#SQLiteConn">SQLiteConn</a>) Exec(query <a href="../../../builtin/index.html#string">string</a>, args []<a href="../../../database/sql/driver/index.html">driver</a>.<a href="../../../database/sql/driver/index.html#Value">Value</a>) (<a href="../../../database/sql/driver/index.html">driver</a>.<a href="../../../database/sql/driver/index.html#Result">Result</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Implements Execer
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="SQLiteConn.LoadExtension">func (*SQLiteConn) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3_load_extension.go?s=976:1042#L35">LoadExtension</a></h3>
+				<pre>func (c *<a href="index.html#SQLiteConn">SQLiteConn</a>) LoadExtension(lib <a href="../../../builtin/index.html#string">string</a>, entry <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#error">error</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="SQLiteConn.Prepare">func (*SQLiteConn) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3.go?s=15004:15067#L598">Prepare</a></h3>
+				<pre>func (c *<a href="index.html#SQLiteConn">SQLiteConn</a>) Prepare(query <a href="../../../builtin/index.html#string">string</a>) (<a href="../../../database/sql/driver/index.html">driver</a>.<a href="../../../database/sql/driver/index.html#Stmt">Stmt</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Prepare the query string. Return a new statement.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="SQLiteConn.Query">func (*SQLiteConn) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3.go?s=10958:11040#L428">Query</a></h3>
+				<pre>func (c *<a href="index.html#SQLiteConn">SQLiteConn</a>) Query(query <a href="../../../builtin/index.html#string">string</a>, args []<a href="../../../database/sql/driver/index.html">driver</a>.<a href="../../../database/sql/driver/index.html#Value">Value</a>) (<a href="../../../database/sql/driver/index.html">driver</a>.<a href="../../../database/sql/driver/index.html#Rows">Rows</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Implements Queryer
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="SQLiteConn.RegisterAggregator">func (*SQLiteConn) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/tracecallback_noimpl.go?s=52:139#L1">RegisterAggregator</a></h3>
+				<pre>func (c *<a href="index.html#SQLiteConn">SQLiteConn</a>) RegisterAggregator(name <a href="../../../builtin/index.html#string">string</a>, impl interface{}, pure <a href="../../../builtin/index.html#bool">bool</a>) <a href="../../../builtin/index.html#error">error</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="SQLiteConn.RegisterFunc">func (*SQLiteConn) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3.go?s=8242:8323#L320">RegisterFunc</a></h3>
+				<pre>func (c *<a href="index.html#SQLiteConn">SQLiteConn</a>) RegisterFunc(name <a href="../../../builtin/index.html#string">string</a>, impl interface{}, pure <a href="../../../builtin/index.html#bool">bool</a>) <a href="../../../builtin/index.html#error">error</a></pre>
+				<p>
+RegisterFunc makes a Go function available as a SQLite function.
+</p>
+<p>
+The Go function can have arguments of the following types: any
+numeric type except complex, bool, []byte, string and
+interface{}. interface{} arguments are given the direct translation
+of the SQLite data type: int64 for INTEGER, float64 for FLOAT,
+[]byte for BLOB, string for TEXT.
+</p>
+<p>
+The function can additionally be variadic, as long as the type of
+the variadic argument is one of the above.
+</p>
+<p>
+If pure is true. SQLite will assume that the function&#39;s return
+value depends only on its inputs, and make more aggressive
+optimizations in its queries.
+</p>
+<p>
+See _example/go_custom_funcs for a detailed example.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="SQLiteDriver">type <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3.go?s=3900:3987#L140">SQLiteDriver</a></h2>
+			<pre>type SQLiteDriver struct {
+    Extensions  []<a href="../../../builtin/index.html#string">string</a>
+    ConnectHook func(*<a href="index.html#SQLiteConn">SQLiteConn</a>) <a href="../../../builtin/index.html#error">error</a>
+}</pre>
+			<p>
+Driver struct.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="SQLiteDriver.Open">func (*SQLiteDriver) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3.go?s=12681:12741#L493">Open</a></h3>
+				<pre>func (d *<a href="index.html#SQLiteDriver">SQLiteDriver</a>) Open(dsn <a href="../../../builtin/index.html#string">string</a>) (<a href="../../../database/sql/driver/index.html">driver</a>.<a href="../../../database/sql/driver/index.html#Conn">Conn</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Open database and return a new connection.
+You can specify a DSN string using a URI as the filename.
+</p>
+<pre>test.db
+file:test.db?cache=shared&amp;mode=memory
+:memory:
+file::memory:
+</pre>
+<p>
+go-sqlite3 adds the following query parameters to those used by SQLite:
+</p>
+<pre>_loc=XXX
+  Specify location of time format. It&#39;s possible to specify &#34;auto&#34;.
+_busy_timeout=XXX
+  Specify value for sqlite3_busy_timeout.
+_txlock=XXX
+  Specify locking behavior for transactions.  XXX can be &#34;immediate&#34;,
+  &#34;deferred&#34;, &#34;exclusive&#34;.
+</pre>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="SQLiteResult">type <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3.go?s=4389:4447#L171">SQLiteResult</a></h2>
+			<pre>type SQLiteResult struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Result struct.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="SQLiteResult.LastInsertId">func (*SQLiteResult) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3.go?s=18131:18183#L722">LastInsertId</a></h3>
+				<pre>func (r *<a href="index.html#SQLiteResult">SQLiteResult</a>) LastInsertId() (<a href="../../../builtin/index.html#int64">int64</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Return last inserted ID.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="SQLiteResult.RowsAffected">func (*SQLiteResult) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3.go?s=18241:18293#L727">RowsAffected</a></h3>
+				<pre>func (r *<a href="index.html#SQLiteResult">SQLiteResult</a>) RowsAffected() (<a href="../../../builtin/index.html#int64">int64</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Return how many rows affected.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="SQLiteRows">type <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3.go?s=4465:4580#L177">SQLiteRows</a></h2>
+			<pre>type SQLiteRows struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Rows struct.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="SQLiteRows.Close">func (*SQLiteRows) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3.go?s=18897:18932#L750">Close</a></h3>
+				<pre>func (rc *<a href="index.html#SQLiteRows">SQLiteRows</a>) Close() <a href="../../../builtin/index.html#error">error</a></pre>
+				<p>
+Close the rows.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="SQLiteRows.Columns">func (*SQLiteRows) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3.go?s=19132:19172#L765">Columns</a></h3>
+				<pre>func (rc *<a href="index.html#SQLiteRows">SQLiteRows</a>) Columns() []<a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+Return column names.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="SQLiteRows.DeclTypes">func (*SQLiteRows) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3.go?s=19386:19428#L776">DeclTypes</a></h3>
+				<pre>func (rc *<a href="index.html#SQLiteRows">SQLiteRows</a>) DeclTypes() []<a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+Return column types.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="SQLiteRows.Next">func (*SQLiteRows) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3.go?s=19672:19725#L787">Next</a></h3>
+				<pre>func (rc *<a href="index.html#SQLiteRows">SQLiteRows</a>) Next(dest []<a href="../../../database/sql/driver/index.html">driver</a>.<a href="../../../database/sql/driver/index.html#Value">Value</a>) <a href="../../../builtin/index.html#error">error</a></pre>
+				<p>
+Move cursor to next.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="SQLiteStmt">type <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3.go?s=4229:4369#L160">SQLiteStmt</a></h2>
+			<pre>type SQLiteStmt struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Stmt struct.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="SQLiteStmt.Close">func (*SQLiteStmt) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3.go?s=15832:15866#L625">Close</a></h3>
+				<pre>func (s *<a href="index.html#SQLiteStmt">SQLiteStmt</a>) Close() <a href="../../../builtin/index.html#error">error</a></pre>
+				<p>
+Close the statement.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="SQLiteStmt.Exec">func (*SQLiteStmt) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3.go?s=18385:18454#L732">Exec</a></h3>
+				<pre>func (s *<a href="index.html#SQLiteStmt">SQLiteStmt</a>) Exec(args []<a href="../../../database/sql/driver/index.html">driver</a>.<a href="../../../database/sql/driver/index.html#Value">Value</a>) (<a href="../../../database/sql/driver/index.html">driver</a>.<a href="../../../database/sql/driver/index.html#Result">Result</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Execute the statement with arguments. Return result object.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="SQLiteStmt.NumInput">func (*SQLiteStmt) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3.go?s=16196:16231#L642">NumInput</a></h3>
+				<pre>func (s *<a href="index.html#SQLiteStmt">SQLiteStmt</a>) NumInput() <a href="../../../builtin/index.html#int">int</a></pre>
+				<p>
+Return a number of parameters.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="SQLiteStmt.Query">func (*SQLiteStmt) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3.go?s=17891:17959#L714">Query</a></h3>
+				<pre>func (s *<a href="index.html#SQLiteStmt">SQLiteStmt</a>) Query(args []<a href="../../../database/sql/driver/index.html">driver</a>.<a href="../../../database/sql/driver/index.html#Value">Value</a>) (<a href="../../../database/sql/driver/index.html">driver</a>.<a href="../../../database/sql/driver/index.html#Rows">Rows</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Query the statement with arguments. Return records.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="SQLiteTx">type <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3.go?s=4172:4211#L155">SQLiteTx</a></h2>
+			<pre>type SQLiteTx struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Tx struct.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="SQLiteTx.Commit">func (*SQLiteTx) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3.go?s=7054:7088#L287">Commit</a></h3>
+				<pre>func (tx *<a href="index.html#SQLiteTx">SQLiteTx</a>) Commit() <a href="../../../builtin/index.html#error">error</a></pre>
+				<p>
+Commit transaction.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="SQLiteTx.Rollback">func (*SQLiteTx) <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3.go?s=7446:7482#L299">Rollback</a></h3>
+				<pre>func (tx *<a href="index.html#SQLiteTx">SQLiteTx</a>) Rollback() <a href="../../../builtin/index.html#error">error</a></pre>
+				<p>
+Rollback transaction.
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+
+
+	<div class="pkg-dir">
+		<table>
+			<tr>
+				<th class="pkg-name">Name</th>
+				<th class="pkg-synopsis">Synopsis</th>
+			</tr>
+
+			
+			<tr>
+				<td colspan="2"><a href="../index.html">..</a></td>
+			</tr>
+			
+
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="sqlite3_test/index.html">sqlite3_test</a>
+						</td>
+						<td class="pkg-synopsis">
+							
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="tool/index.html">tool</a>
+						</td>
+						<td class="pkg-synopsis">
+							
+						</td>
+					</tr>
+				
+			
+		</table>
+	</div>
+
+
+	
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

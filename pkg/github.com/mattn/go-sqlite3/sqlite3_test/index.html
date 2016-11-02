@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>sqlite3_test - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package sqlite3_test</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/mattn/go-sqlite3/sqlite3_test"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+				
+				<dd><a href="index.html#BenchmarkExec">func BenchmarkExec(b *testing.B)</a></dd>
+			
+				
+				<dd><a href="index.html#BenchmarkParams">func BenchmarkParams(b *testing.B)</a></dd>
+			
+				
+				<dd><a href="index.html#BenchmarkQuery">func BenchmarkQuery(b *testing.B)</a></dd>
+			
+				
+				<dd><a href="index.html#BenchmarkRows">func BenchmarkRows(b *testing.B)</a></dd>
+			
+				
+				<dd><a href="index.html#BenchmarkStmt">func BenchmarkStmt(b *testing.B)</a></dd>
+			
+				
+				<dd><a href="index.html#BenchmarkStmtRows">func BenchmarkStmtRows(b *testing.B)</a></dd>
+			
+				
+				<dd><a href="index.html#RunTests">func RunTests(t *testing.T, d *sql.DB, dialect Dialect)</a></dd>
+			
+				
+				<dd><a href="index.html#TestBlobs">func TestBlobs(t *testing.T)</a></dd>
+			
+				
+				<dd><a href="index.html#TestManyQueryRow">func TestManyQueryRow(t *testing.T)</a></dd>
+			
+				
+				<dd><a href="index.html#TestPreparedStmt">func TestPreparedStmt(t *testing.T)</a></dd>
+			
+				
+				<dd><a href="index.html#TestResult">func TestResult(t *testing.T)</a></dd>
+			
+				
+				<dd><a href="index.html#TestTxQuery">func TestTxQuery(t *testing.T)</a></dd>
+			
+			
+				
+				<dd><a href="index.html#DB">type DB</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Dialect">type Dialect</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3_test/sqltest.go">sqltest.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+			
+			
+			<h2 id="BenchmarkExec">func <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3_test/sqltest.go?s=6761:6793#L294">BenchmarkExec</a></h2>
+			<pre>func BenchmarkExec(b *<a href="../../../../testing/index.html">testing</a>.<a href="../../../../testing/index.html#B">B</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="BenchmarkParams">func <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3_test/sqltest.go?s=7162:7196#L315">BenchmarkParams</a></h2>
+			<pre>func BenchmarkParams(b *<a href="../../../../testing/index.html">testing</a>.<a href="../../../../testing/index.html#B">B</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="BenchmarkQuery">func <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3_test/sqltest.go?s=6897:6930#L302">BenchmarkQuery</a></h2>
+			<pre>func BenchmarkQuery(b *<a href="../../../../testing/index.html">testing</a>.<a href="../../../../testing/index.html#B">B</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="BenchmarkRows">func <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3_test/sqltest.go?s=7789:7821#L347">BenchmarkRows</a></h2>
+			<pre>func BenchmarkRows(b *<a href="../../../../testing/index.html">testing</a>.<a href="../../../../testing/index.html#B">B</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="BenchmarkStmt">func <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3_test/sqltest.go?s=7439:7471#L328">BenchmarkStmt</a></h2>
+			<pre>func BenchmarkStmt(b *<a href="../../../../testing/index.html">testing</a>.<a href="../../../../testing/index.html#B">B</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="BenchmarkStmtRows">func <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3_test/sqltest.go?s=8191:8227#L371">BenchmarkStmtRows</a></h2>
+			<pre>func BenchmarkStmtRows(b *<a href="../../../../testing/index.html">testing</a>.<a href="../../../../testing/index.html#B">B</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="RunTests">func <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3_test/sqltest.go?s=889:944#L41">RunTests</a></h2>
+			<pre>func RunTests(t *<a href="../../../../testing/index.html">testing</a>.<a href="../../../../testing/index.html#T">T</a>, d *<a href="../../../../database/sql/index.html">sql</a>.<a href="../../../../database/sql/index.html#DB">DB</a>, dialect <a href="index.html#Dialect">Dialect</a>)</pre>
+			<p>
+RunTests runs the SQL test suite
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="TestBlobs">func <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3_test/sqltest.go?s=3719:3747#L168">TestBlobs</a></h2>
+			<pre>func TestBlobs(t *<a href="../../../../testing/index.html">testing</a>.<a href="../../../../testing/index.html#T">T</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="TestManyQueryRow">func <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3_test/sqltest.go?s=4521:4556#L194">TestManyQueryRow</a></h2>
+			<pre>func TestManyQueryRow(t *<a href="../../../../testing/index.html">testing</a>.<a href="../../../../testing/index.html#T">T</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="TestPreparedStmt">func <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3_test/sqltest.go?s=5663:5698#L249">TestPreparedStmt</a></h2>
+			<pre>func TestPreparedStmt(t *<a href="../../../../testing/index.html">testing</a>.<a href="../../../../testing/index.html#T">T</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="TestResult">func <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3_test/sqltest.go?s=3133:3162#L142">TestResult</a></h2>
+			<pre>func TestResult(t *<a href="../../../../testing/index.html">testing</a>.<a href="../../../../testing/index.html#T">T</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="TestTxQuery">func <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3_test/sqltest.go?s=5018:5048#L211">TestTxQuery</a></h2>
+			<pre>func TestTxQuery(t *<a href="../../../../testing/index.html">testing</a>.<a href="../../../../testing/index.html#T">T</a>)</pre>
+			
+			
+			
+
+		
+		
+			
+			
+			<h2 id="DB">type <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3_test/sqltest.go?s=189:264#L12">DB</a></h2>
+			<pre>type DB struct {
+    *<a href="../../../../testing/index.html">testing</a>.<a href="../../../../testing/index.html#T">T</a>
+    *<a href="../../../../database/sql/index.html">sql</a>.<a href="../../../../database/sql/index.html#DB">DB</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Dialect">type <a href="http://localhost:6060/src/github.com/mattn/go-sqlite3/sqlite3_test/sqltest.go?s=118:134#L4">Dialect</a></h2>
+			<pre>type Dialect <a href="../../../../builtin/index.html#int">int</a></pre>
+			
+
+			
+				<pre>const (
+    <span id="SQLITE">SQLITE</span> <a href="index.html#Dialect">Dialect</a> = <a href="../../../../builtin/index.html#iota">iota</a>
+    <span id="POSTGRESQL">POSTGRESQL</span>
+    <span id="MYSQL">MYSQL</span>
+)</pre>
+				
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

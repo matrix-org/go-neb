@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>comparer - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package comparer</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/syndtr/goleveldb/leveldb/comparer"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package comparer provides interface and implementation for ordering
+sets of data.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+			
+				
+				<dd><a href="index.html#BasicComparer">type BasicComparer</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Comparer">type Comparer</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/comparer/bytes_comparer.go">bytes_comparer.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/comparer/comparer.go">comparer.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var <span id="DefaultComparer">DefaultComparer</span> = bytesComparer{}</pre>
+				<p>
+DefaultComparer are default implementation of the Comparer interface.
+It uses the natural ordering, consistent with bytes.Compare.
+</p>
+
+			
+		
+		
+		
+			
+			
+			<h2 id="BasicComparer">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/comparer/comparer.go?s=372:691#L2">BasicComparer</a></h2>
+			<pre>type BasicComparer interface {
+    <span class="comment">// Compare returns -1, 0, or +1 depending on whether a is &#39;less than&#39;,</span>
+    <span class="comment">// &#39;equal to&#39; or &#39;greater than&#39; b. The two arguments can only be &#39;equal&#39;</span>
+    <span class="comment">// if their contents are exactly equal. Furthermore, the empty slice</span>
+    <span class="comment">// must be &#39;less than&#39; any non-empty slice.</span>
+    Compare(a, b []<a href="../../../../../builtin/index.html#byte">byte</a>) <a href="../../../../../builtin/index.html#int">int</a>
+}</pre>
+			<p>
+BasicComparer is the interface that wraps the basic Compare method.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Comparer">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/comparer/comparer.go?s=792:2145#L12">Comparer</a></h2>
+			<pre>type Comparer interface {
+    <a href="index.html#BasicComparer">BasicComparer</a>
+
+    <span class="comment">// Name returns name of the comparer.</span>
+    <span class="comment">//</span>
+    <span class="comment">// The Level-DB on-disk format stores the comparer name, and opening a</span>
+    <span class="comment">// database with a different comparer from the one it was created with</span>
+    <span class="comment">// will result in an error.</span>
+    <span class="comment">//</span>
+    <span class="comment">// An implementation to a new name whenever the comparer implementation</span>
+    <span class="comment">// changes in a way that will cause the relative ordering of any two keys</span>
+    <span class="comment">// to change.</span>
+    <span class="comment">//</span>
+    <span class="comment">// Names starting with &#34;leveldb.&#34; are reserved and should not be used</span>
+    <span class="comment">// by any users of this package.</span>
+    Name() <a href="../../../../../builtin/index.html#string">string</a>
+
+    <span class="comment">// Separator appends a sequence of bytes x to dst such that a &lt;= x &amp;&amp; x &lt; b,</span>
+    <span class="comment">// where &#39;less than&#39; is consistent with Compare. An implementation should</span>
+    <span class="comment">// return nil if x equal to a.</span>
+    <span class="comment">//</span>
+    <span class="comment">// Either contents of a or b should not by any means modified. Doing so</span>
+    <span class="comment">// may cause corruption on the internal state.</span>
+    Separator(dst, a, b []<a href="../../../../../builtin/index.html#byte">byte</a>) []<a href="../../../../../builtin/index.html#byte">byte</a>
+
+    <span class="comment">// Successor appends a sequence of bytes x to dst such that x &gt;= b, where</span>
+    <span class="comment">// &#39;less than&#39; is consistent with Compare. An implementation should return</span>
+    <span class="comment">// nil if x equal to b.</span>
+    <span class="comment">//</span>
+    <span class="comment">// Contents of b should not by any means modified. Doing so may cause</span>
+    <span class="comment">// corruption on the internal state.</span>
+    Successor(dst, b []<a href="../../../../../builtin/index.html#byte">byte</a>) []<a href="../../../../../builtin/index.html#byte">byte</a>
+}</pre>
+			<p>
+Comparer defines a total ordering over the space of []byte keys: a &#39;less
+than&#39; relationship.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,3602 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>cli - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package cli</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/codegangsta/cli"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+				<dd><a href="index.html#pkg-examples" class="examplesLink">Examples</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-subdirectories">Subdirectories</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package cli provides a minimal framework for creating and organizing command line
+Go applications. cli is designed to be easy to understand and write, the most simple
+cli application can be written as follows:
+</p>
+<pre>func main() {
+  cli.NewApp().Run(os.Args)
+}
+</pre>
+<p>
+Of course this application does not do much, so let&#39;s make this an actual application:
+</p>
+<pre>func main() {
+  app := cli.NewApp()
+  app.Name = &#34;greet&#34;
+  app.Usage = &#34;say a greeting&#34;
+  app.Action = func(c *cli.Context) error {
+    println(&#34;Greetings&#34;)
+  }
+
+  app.Run(os.Args)
+}
+</pre>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+				
+				<dd><a href="index.html#DefaultAppComplete">func DefaultAppComplete(c *Context)</a></dd>
+			
+				
+				<dd><a href="index.html#HandleAction">func HandleAction(action interface{}, context *Context) (err error)</a></dd>
+			
+				
+				<dd><a href="index.html#HandleExitCoder">func HandleExitCoder(err error)</a></dd>
+			
+				
+				<dd><a href="index.html#ShowAppHelp">func ShowAppHelp(c *Context) error</a></dd>
+			
+				
+				<dd><a href="index.html#ShowCommandCompletions">func ShowCommandCompletions(ctx *Context, command string)</a></dd>
+			
+				
+				<dd><a href="index.html#ShowCommandHelp">func ShowCommandHelp(ctx *Context, command string) error</a></dd>
+			
+				
+				<dd><a href="index.html#ShowCompletions">func ShowCompletions(c *Context)</a></dd>
+			
+				
+				<dd><a href="index.html#ShowSubcommandHelp">func ShowSubcommandHelp(c *Context) error</a></dd>
+			
+				
+				<dd><a href="index.html#ShowVersion">func ShowVersion(c *Context)</a></dd>
+			
+			
+				
+				<dd><a href="index.html#ActionFunc">type ActionFunc</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#AfterFunc">type AfterFunc</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#App">type App</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewApp">func NewApp() *App</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#App.Categories">func (a *App) Categories() CommandCategories</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#App.Command">func (a *App) Command(name string) *Command</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#App.Run">func (a *App) Run(arguments []string) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#App.RunAndExitOnError">func (a *App) RunAndExitOnError()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#App.RunAsSubcommand">func (a *App) RunAsSubcommand(ctx *Context) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#App.Setup">func (a *App) Setup()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#App.VisibleCategories">func (a *App) VisibleCategories() []*CommandCategory</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#App.VisibleCommands">func (a *App) VisibleCommands() []Command</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#App.VisibleFlags">func (a *App) VisibleFlags() []Flag</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Args">type Args</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Args.First">func (a Args) First() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Args.Get">func (a Args) Get(n int) string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Args.Present">func (a Args) Present() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Args.Swap">func (a Args) Swap(from, to int) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Args.Tail">func (a Args) Tail() []string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Author">type Author</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Author.String">func (a Author) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#BashCompleteFunc">type BashCompleteFunc</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#BeforeFunc">type BeforeFunc</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#BoolFlag">type BoolFlag</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BoolFlag.Apply">func (f BoolFlag) Apply(set *flag.FlagSet)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BoolFlag.GetName">func (f BoolFlag) GetName() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BoolFlag.String">func (f BoolFlag) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#BoolTFlag">type BoolTFlag</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BoolTFlag.Apply">func (f BoolTFlag) Apply(set *flag.FlagSet)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BoolTFlag.GetName">func (f BoolTFlag) GetName() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BoolTFlag.String">func (f BoolTFlag) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Command">type Command</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Command.FullName">func (c Command) FullName() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Command.HasName">func (c Command) HasName(name string) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Command.Names">func (c Command) Names() []string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Command.Run">func (c Command) Run(ctx *Context) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Command.VisibleFlags">func (c Command) VisibleFlags() []Flag</a></dd>
+				
+			
+				
+				<dd><a href="index.html#CommandCategories">type CommandCategories</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CommandCategories.AddCommand">func (c CommandCategories) AddCommand(category string, command Command) CommandCategories</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CommandCategories.Len">func (c CommandCategories) Len() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CommandCategories.Less">func (c CommandCategories) Less(i, j int) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CommandCategories.Swap">func (c CommandCategories) Swap(i, j int)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#CommandCategory">type CommandCategory</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CommandCategory.VisibleCommands">func (c *CommandCategory) VisibleCommands() []Command</a></dd>
+				
+			
+				
+				<dd><a href="index.html#CommandNotFoundFunc">type CommandNotFoundFunc</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Commands">type Commands</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Context">type Context</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewContext">func NewContext(app *App, set *flag.FlagSet, parentCtx *Context) *Context</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.Args">func (c *Context) Args() Args</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.Bool">func (c *Context) Bool(name string) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.BoolT">func (c *Context) BoolT(name string) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.Duration">func (c *Context) Duration(name string) time.Duration</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.FlagNames">func (c *Context) FlagNames() (names []string)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.Float64">func (c *Context) Float64(name string) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.Generic">func (c *Context) Generic(name string) interface{}</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.GlobalBool">func (c *Context) GlobalBool(name string) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.GlobalBoolT">func (c *Context) GlobalBoolT(name string) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.GlobalDuration">func (c *Context) GlobalDuration(name string) time.Duration</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.GlobalFlagNames">func (c *Context) GlobalFlagNames() (names []string)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.GlobalFloat64">func (c *Context) GlobalFloat64(name string) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.GlobalGeneric">func (c *Context) GlobalGeneric(name string) interface{}</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.GlobalInt">func (c *Context) GlobalInt(name string) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.GlobalInt64">func (c *Context) GlobalInt64(name string) int64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.GlobalInt64Slice">func (c *Context) GlobalInt64Slice(name string) []int64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.GlobalIntSlice">func (c *Context) GlobalIntSlice(name string) []int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.GlobalIsSet">func (c *Context) GlobalIsSet(name string) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.GlobalSet">func (c *Context) GlobalSet(name, value string) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.GlobalString">func (c *Context) GlobalString(name string) string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.GlobalStringSlice">func (c *Context) GlobalStringSlice(name string) []string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.GlobalUint">func (c *Context) GlobalUint(name string) uint</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.GlobalUint64">func (c *Context) GlobalUint64(name string) uint64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.Int">func (c *Context) Int(name string) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.Int64">func (c *Context) Int64(name string) int64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.Int64Slice">func (c *Context) Int64Slice(name string) []int64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.IntSlice">func (c *Context) IntSlice(name string) []int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.IsSet">func (c *Context) IsSet(name string) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.NArg">func (c *Context) NArg() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.NumFlags">func (c *Context) NumFlags() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.Parent">func (c *Context) Parent() *Context</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.Set">func (c *Context) Set(name, value string) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.String">func (c *Context) String(name string) string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.StringSlice">func (c *Context) StringSlice(name string) []string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.Uint">func (c *Context) Uint(name string) uint</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Context.Uint64">func (c *Context) Uint64(name string) uint64</a></dd>
+				
+			
+				
+				<dd><a href="index.html#DurationFlag">type DurationFlag</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DurationFlag.Apply">func (f DurationFlag) Apply(set *flag.FlagSet)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DurationFlag.GetName">func (f DurationFlag) GetName() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DurationFlag.String">func (f DurationFlag) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#ExitCoder">type ExitCoder</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ExitError">type ExitError</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewExitError">func NewExitError(message string, exitCode int) *ExitError</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ExitError.Error">func (ee *ExitError) Error() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ExitError.ExitCode">func (ee *ExitError) ExitCode() int</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Flag">type Flag</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#FlagStringFunc">type FlagStringFunc</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Float64Flag">type Float64Flag</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Float64Flag.Apply">func (f Float64Flag) Apply(set *flag.FlagSet)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Float64Flag.GetName">func (f Float64Flag) GetName() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Float64Flag.String">func (f Float64Flag) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Generic">type Generic</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#GenericFlag">type GenericFlag</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#GenericFlag.Apply">func (f GenericFlag) Apply(set *flag.FlagSet)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#GenericFlag.GetName">func (f GenericFlag) GetName() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#GenericFlag.String">func (f GenericFlag) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Int64Flag">type Int64Flag</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Int64Flag.Apply">func (f Int64Flag) Apply(set *flag.FlagSet)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Int64Flag.GetName">func (f Int64Flag) GetName() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Int64Flag.String">func (f Int64Flag) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Int64Slice">type Int64Slice</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Int64Slice.Set">func (f *Int64Slice) Set(value string) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Int64Slice.String">func (f *Int64Slice) String() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Int64Slice.Value">func (f *Int64Slice) Value() []int64</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Int64SliceFlag">type Int64SliceFlag</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Int64SliceFlag.Apply">func (f Int64SliceFlag) Apply(set *flag.FlagSet)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Int64SliceFlag.GetName">func (f Int64SliceFlag) GetName() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Int64SliceFlag.String">func (f Int64SliceFlag) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#IntFlag">type IntFlag</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IntFlag.Apply">func (f IntFlag) Apply(set *flag.FlagSet)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IntFlag.GetName">func (f IntFlag) GetName() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IntFlag.String">func (f IntFlag) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#IntSlice">type IntSlice</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IntSlice.Set">func (f *IntSlice) Set(value string) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IntSlice.String">func (f *IntSlice) String() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IntSlice.Value">func (f *IntSlice) Value() []int</a></dd>
+				
+			
+				
+				<dd><a href="index.html#IntSliceFlag">type IntSliceFlag</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IntSliceFlag.Apply">func (f IntSliceFlag) Apply(set *flag.FlagSet)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IntSliceFlag.GetName">func (f IntSliceFlag) GetName() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#IntSliceFlag.String">func (f IntSliceFlag) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#MultiError">type MultiError</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewMultiError">func NewMultiError(err ...error) MultiError</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MultiError.Error">func (m MultiError) Error() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#OnUsageErrorFunc">type OnUsageErrorFunc</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#StringFlag">type StringFlag</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#StringFlag.Apply">func (f StringFlag) Apply(set *flag.FlagSet)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#StringFlag.GetName">func (f StringFlag) GetName() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#StringFlag.String">func (f StringFlag) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#StringSlice">type StringSlice</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#StringSlice.Set">func (f *StringSlice) Set(value string) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#StringSlice.String">func (f *StringSlice) String() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#StringSlice.Value">func (f *StringSlice) Value() []string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#StringSliceFlag">type StringSliceFlag</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#StringSliceFlag.Apply">func (f StringSliceFlag) Apply(set *flag.FlagSet)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#StringSliceFlag.GetName">func (f StringSliceFlag) GetName() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#StringSliceFlag.String">func (f StringSliceFlag) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Uint64Flag">type Uint64Flag</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Uint64Flag.Apply">func (f Uint64Flag) Apply(set *flag.FlagSet)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Uint64Flag.GetName">func (f Uint64Flag) GetName() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Uint64Flag.String">func (f Uint64Flag) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#UintFlag">type UintFlag</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#UintFlag.Apply">func (f UintFlag) Apply(set *flag.FlagSet)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#UintFlag.GetName">func (f UintFlag) GetName() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#UintFlag.String">func (f UintFlag) String() string</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+		<div id="pkg-examples">
+			<h4>Examples</h4>
+			<dl>
+			
+			<dd><a class="exampleLink" href="index.html#example_App_Run">App.Run</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_App_Run_bashComplete">App.Run (BashComplete)</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_App_Run_help">App.Run (Help)</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_App_Run_subcommand">App.Run (Subcommand)</a></dd>
+			
+			</dl>
+		</div>
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/codegangsta/cli/app.go">app.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/codegangsta/cli/category.go">category.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/codegangsta/cli/cli.go">cli.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/codegangsta/cli/command.go">command.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/codegangsta/cli/context.go">context.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/codegangsta/cli/errors.go">errors.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/codegangsta/cli/flag.go">flag.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go">flag_generated.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/codegangsta/cli/funcs.go">funcs.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/codegangsta/cli/help.go">help.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var <span id="AppHelpTemplate">AppHelpTemplate</span> = `NAME:
+   {{.Name}} - {{.Usage}}
+
+USAGE:
+   {{if .UsageText}}{{.UsageText}}{{else}}{{.HelpName}} {{if .VisibleFlags}}[global options]{{end}}{{if .Commands}} command [command options]{{end}} {{if .ArgsUsage}}{{.ArgsUsage}}{{else}}[arguments...]{{end}}{{end}}
+   {{if .Version}}{{if not .HideVersion}}
+VERSION:
+   {{.Version}}
+   {{end}}{{end}}{{if len .Authors}}
+AUTHOR(S):
+   {{range .Authors}}{{.}}{{end}}
+   {{end}}{{if .VisibleCommands}}
+COMMANDS:{{range .VisibleCategories}}{{if .Name}}
+   {{.Name}}:{{end}}{{range .VisibleCommands}}
+     {{join .Names &#34;, &#34;}}{{&#34;\t&#34;}}{{.Usage}}{{end}}
+{{end}}{{end}}{{if .VisibleFlags}}
+GLOBAL OPTIONS:
+   {{range .VisibleFlags}}{{.}}
+   {{end}}{{end}}{{if .Copyright}}
+COPYRIGHT:
+   {{.Copyright}}
+   {{end}}
+`</pre>
+				<p>
+AppHelpTemplate is the text template for the Default help topic.
+cli.go uses text/template to render templates. You can
+render custom help text by setting this variable.
+</p>
+
+			
+				<pre>var <span id="BashCompletionFlag">BashCompletionFlag</span> = <a href="index.html#BoolFlag">BoolFlag</a>{
+    <a href="index.html#Name">Name</a>:   &#34;generate-bash-completion&#34;,
+    <a href="index.html#Hidden">Hidden</a>: <a href="../../../builtin/index.html#true">true</a>,
+}</pre>
+				<p>
+BashCompletionFlag enables bash-completion for all commands and subcommands
+</p>
+
+			
+				<pre>var <span id="CommandHelpTemplate">CommandHelpTemplate</span> = `NAME:
+   {{.HelpName}} - {{.Usage}}
+
+USAGE:
+   {{.HelpName}}{{if .VisibleFlags}} [command options]{{end}} {{if .ArgsUsage}}{{.ArgsUsage}}{{else}}[arguments...]{{end}}{{if .Category}}
+
+CATEGORY:
+   {{.Category}}{{end}}{{if .Description}}
+
+DESCRIPTION:
+   {{.Description}}{{end}}{{if .VisibleFlags}}
+
+OPTIONS:
+   {{range .VisibleFlags}}{{.}}
+   {{end}}{{end}}
+`</pre>
+				<p>
+CommandHelpTemplate is the text template for the command help topic.
+cli.go uses text/template to render templates. You can
+render custom help text by setting this variable.
+</p>
+
+			
+				<pre>var <span id="ErrWriter">ErrWriter</span> <a href="../../../io/index.html">io</a>.<a href="../../../io/index.html#Writer">Writer</a> = <a href="../../../os/index.html">os</a>.<a href="../../../os/index.html#Stderr">Stderr</a></pre>
+				<p>
+ErrWriter is used to write errors to the user. This can be anything
+implementing the io.Writer interface and defaults to os.Stderr.
+</p>
+
+			
+				<pre>var <span id="HelpFlag">HelpFlag</span> = <a href="index.html#BoolFlag">BoolFlag</a>{
+    <a href="index.html#Name">Name</a>:  &#34;help, h&#34;,
+    <a href="index.html#Usage">Usage</a>: &#34;show help&#34;,
+}</pre>
+				<p>
+HelpFlag prints the help for all commands and subcommands
+Set to the zero value (BoolFlag{}) to disable flag -- keeps subcommand
+unless HideHelp is set to true)
+</p>
+
+			
+				<pre>var <span id="HelpPrinter">HelpPrinter</span> helpPrinter = printHelp</pre>
+				<p>
+HelpPrinter is a function that writes the help output. If not set a default
+is used. The function signature is:
+func(w io.Writer, templ string, data interface{})
+</p>
+
+			
+				<pre>var <span id="OsExiter">OsExiter</span> = <a href="../../../os/index.html">os</a>.<a href="../../../os/index.html#Exit">Exit</a></pre>
+				<p>
+OsExiter is the function used when the app exits. If not set defaults to os.Exit.
+</p>
+
+			
+				<pre>var <span id="SubcommandHelpTemplate">SubcommandHelpTemplate</span> = `NAME:
+   {{.HelpName}} - {{.Usage}}
+
+USAGE:
+   {{.HelpName}} command{{if .VisibleFlags}} [command options]{{end}} {{if .ArgsUsage}}{{.ArgsUsage}}{{else}}[arguments...]{{end}}
+
+COMMANDS:{{range .VisibleCategories}}{{if .Name}}
+   {{.Name}}:{{end}}{{range .VisibleCommands}}
+     {{join .Names &#34;, &#34;}}{{&#34;\t&#34;}}{{.Usage}}{{end}}
+{{end}}{{if .VisibleFlags}}
+OPTIONS:
+   {{range .VisibleFlags}}{{.}}
+   {{end}}{{end}}
+`</pre>
+				<p>
+SubcommandHelpTemplate is the text template for the subcommand help topic.
+cli.go uses text/template to render templates. You can
+render custom help text by setting this variable.
+</p>
+
+			
+				<pre>var <span id="VersionFlag">VersionFlag</span> = <a href="index.html#BoolFlag">BoolFlag</a>{
+    <a href="index.html#Name">Name</a>:  &#34;version, v&#34;,
+    <a href="index.html#Usage">Usage</a>: &#34;print the version&#34;,
+}</pre>
+				<p>
+VersionFlag prints the version for the application
+</p>
+
+			
+				<pre>var <span id="VersionPrinter">VersionPrinter</span> = printVersion</pre>
+				<p>
+VersionPrinter prints the version for the App
+</p>
+
+			
+		
+		
+			
+			
+			<h2 id="DefaultAppComplete">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/help.go?s=3542:3577#L116">DefaultAppComplete</a></h2>
+			<pre>func DefaultAppComplete(c *<a href="index.html#Context">Context</a>)</pre>
+			<p>
+DefaultAppComplete prints the list of subcommands as the default app completion method
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="HandleAction">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/app.go?s=11470:11537#L459">HandleAction</a></h2>
+			<pre>func HandleAction(action interface{}, context *<a href="index.html#Context">Context</a>) (err <a href="../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+HandleAction uses ✧✧✧reflection✧✧✧ to figure out if the given Action is an
+ActionFunc, a func with the legacy signature for Action, or some other
+invalid thing.  If it&#39;s an ActionFunc or a func with the legacy signature for
+Action, the func is run!
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="HandleExitCoder">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/errors.go?s=1816:1847#L64">HandleExitCoder</a></h2>
+			<pre>func HandleExitCoder(err <a href="../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+HandleExitCoder checks if the error fulfills the ExitCoder interface, and if
+so prints the error to stderr (if it is non-empty) and calls OsExiter with the
+given exit code.  If the given error is a MultiError, then this func is
+called on all members of the Errors slice.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ShowAppHelp">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/help.go?s=3349:3383#L110">ShowAppHelp</a></h2>
+			<pre>func ShowAppHelp(c *<a href="index.html#Context">Context</a>) <a href="../../../builtin/index.html#error">error</a></pre>
+			<p>
+ShowAppHelp is an action that displays the help.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ShowCommandCompletions">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/help.go?s=4950:5007#L173">ShowCommandCompletions</a></h2>
+			<pre>func ShowCommandCompletions(ctx *<a href="index.html#Context">Context</a>, command <a href="../../../builtin/index.html#string">string</a>)</pre>
+			<p>
+ShowCommandCompletions prints the custom completions for a given command
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ShowCommandHelp">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/help.go?s=3800:3856#L128">ShowCommandHelp</a></h2>
+			<pre>func ShowCommandHelp(ctx *<a href="index.html#Context">Context</a>, command <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#error">error</a></pre>
+			<p>
+ShowCommandHelp prints help for the given command
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ShowCompletions">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/help.go?s=4761:4793#L165">ShowCompletions</a></h2>
+			<pre>func ShowCompletions(c *<a href="index.html#Context">Context</a>)</pre>
+			<p>
+ShowCompletions prints the lists of commands within a given context
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ShowSubcommandHelp">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/help.go?s=4387:4428#L151">ShowSubcommandHelp</a></h2>
+			<pre>func ShowSubcommandHelp(c *<a href="index.html#Context">Context</a>) <a href="../../../builtin/index.html#error">error</a></pre>
+			<p>
+ShowSubcommandHelp prints help for the given subcommand
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ShowVersion">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/help.go?s=4529:4557#L156">ShowVersion</a></h2>
+			<pre>func ShowVersion(c *<a href="index.html#Context">Context</a>)</pre>
+			<p>
+ShowVersion prints the version number of the App
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="ActionFunc">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/funcs.go?s=582:618#L5">ActionFunc</a></h2>
+			<pre>type ActionFunc func(*<a href="index.html#Context">Context</a>) <a href="../../../builtin/index.html#error">error</a></pre>
+			<p>
+ActionFunc is the action to execute when no subcommands are specified
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="AfterFunc">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/funcs.go?s=472:507#L2">AfterFunc</a></h2>
+			<pre>type AfterFunc func(*<a href="index.html#Context">Context</a>) <a href="../../../builtin/index.html#error">error</a></pre>
+			<p>
+AfterFunc is an action to execute after any subcommands are run, but after the
+subcommand has finished it is run even if Action() panics
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="App">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/app.go?s=1073:3231#L22">App</a></h2>
+			<pre>type App struct {
+    <span class="comment">// The name of the program. Defaults to path.Base(os.Args[0])</span>
+    Name <a href="../../../builtin/index.html#string">string</a>
+    <span class="comment">// Full name of command for help, defaults to Name</span>
+    HelpName <a href="../../../builtin/index.html#string">string</a>
+    <span class="comment">// Description of the program.</span>
+    Usage <a href="../../../builtin/index.html#string">string</a>
+    <span class="comment">// Text to override the USAGE section of help</span>
+    UsageText <a href="../../../builtin/index.html#string">string</a>
+    <span class="comment">// Description of the program argument format.</span>
+    ArgsUsage <a href="../../../builtin/index.html#string">string</a>
+    <span class="comment">// Version of the program</span>
+    Version <a href="../../../builtin/index.html#string">string</a>
+    <span class="comment">// List of commands to execute</span>
+    Commands []<a href="index.html#Command">Command</a>
+    <span class="comment">// List of flags to parse</span>
+    Flags []<a href="index.html#Flag">Flag</a>
+    <span class="comment">// Boolean to enable bash completion commands</span>
+    EnableBashCompletion <a href="../../../builtin/index.html#bool">bool</a>
+    <span class="comment">// Boolean to hide built-in help command</span>
+    HideHelp <a href="../../../builtin/index.html#bool">bool</a>
+    <span class="comment">// Boolean to hide built-in version flag and the VERSION section of help</span>
+    HideVersion <a href="../../../builtin/index.html#bool">bool</a>
+
+    <span class="comment">// An action to execute when the bash-completion flag is set</span>
+    BashComplete <a href="index.html#BashCompleteFunc">BashCompleteFunc</a>
+    <span class="comment">// An action to execute before any subcommands are run, but after the context is ready</span>
+    <span class="comment">// If a non-nil error is returned, no subcommands are run</span>
+    Before <a href="index.html#BeforeFunc">BeforeFunc</a>
+    <span class="comment">// An action to execute after any subcommands are run, but after the subcommand has finished</span>
+    <span class="comment">// It is run even if Action() panics</span>
+    After <a href="index.html#AfterFunc">AfterFunc</a>
+
+    <span class="comment">// The action to execute when no subcommands are specified</span>
+    <span class="comment">// Expects a `cli.ActionFunc` but will accept the *deprecated* signature of `func(*cli.Context) {}`</span>
+    <span class="comment">// *Note*: support for the deprecated `Action` signature will be removed in a future version</span>
+    Action interface{}
+
+    <span class="comment">// Execute this function if the proper command cannot be found</span>
+    CommandNotFound <a href="index.html#CommandNotFoundFunc">CommandNotFoundFunc</a>
+    <span class="comment">// Execute this function if an usage error occurs</span>
+    OnUsageError <a href="index.html#OnUsageErrorFunc">OnUsageErrorFunc</a>
+    <span class="comment">// Compilation date</span>
+    Compiled <a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Time">Time</a>
+    <span class="comment">// List of all authors who contributed</span>
+    Authors []<a href="index.html#Author">Author</a>
+    <span class="comment">// Copyright of the binary if any</span>
+    Copyright <a href="../../../builtin/index.html#string">string</a>
+    <span class="comment">// Name of Author (Note: Use App.Authors, this is deprecated)</span>
+    Author <a href="../../../builtin/index.html#string">string</a>
+    <span class="comment">// Email of Author (Note: Use App.Authors, this is deprecated)</span>
+    Email <a href="../../../builtin/index.html#string">string</a>
+    <span class="comment">// Writer writer to write output to</span>
+    Writer <a href="../../../io/index.html">io</a>.<a href="../../../io/index.html#Writer">Writer</a>
+    <span class="comment">// ErrWriter writes error output</span>
+    ErrWriter <a href="../../../io/index.html">io</a>.<a href="../../../io/index.html#Writer">Writer</a>
+    <span class="comment">// Other custom info</span>
+    Metadata map[<a href="../../../builtin/index.html#string">string</a>]interface{}
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+App is the main structure of a cli application. It is recommended that
+an app be created with the cli.NewApp() function
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewApp">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/app.go?s=3578:3596#L97">NewApp</a></h3>
+				<pre>func NewApp() *<a href="index.html#App">App</a></pre>
+				<p>
+NewApp creates a new cli Application with some reasonable defaults for Name,
+Usage, Version and Action.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="App.Categories">func (*App) <a href="http://localhost:6060/src/github.com/codegangsta/cli/app.go?s=9495:9539#L374">Categories</a></h3>
+				<pre>func (a *<a href="index.html#App">App</a>) Categories() <a href="index.html#CommandCategories">CommandCategories</a></pre>
+				<p>
+Categories returns a slice containing all the categories with the commands they contain
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="App.Command">func (*App) <a href="http://localhost:6060/src/github.com/codegangsta/cli/app.go?s=9267:9310#L363">Command</a></h3>
+				<pre>func (a *<a href="index.html#App">App</a>) Command(name <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Command">Command</a></pre>
+				<p>
+Command returns the named command on App. Returns nil if the command does not exist
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="App.Run">func (*App) <a href="http://localhost:6060/src/github.com/codegangsta/cli/app.go?s=5169:5218#L162">Run</a></h3>
+				<pre>func (a *<a href="index.html#App">App</a>) Run(arguments []<a href="../../../builtin/index.html#string">string</a>) (err <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Run is the entry point to the cli app. Parses the arguments slice and routes
+to the proper flag/args combination
+</p>
+
+				
+				<div id="example_App_Run" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code"><span class="comment">// set args for examples sake</span>
+os.Args = []string{&#34;greet&#34;, &#34;--name&#34;, &#34;Jeremy&#34;}
+
+app := NewApp()
+app.Name = &#34;greet&#34;
+app.Flags = []Flag{
+    StringFlag{Name: &#34;name&#34;, Value: &#34;bob&#34;, Usage: &#34;a name to say&#34;},
+}
+app.Action = func(c *Context) error {
+    fmt.Printf(&#34;Hello %v\n&#34;, c.String(&#34;name&#34;))
+    return nil
+}
+app.UsageText = &#34;app [first_arg] [second_arg]&#34;
+app.Author = &#34;Harrison&#34;
+app.Email = &#34;harrison@lolwut.com&#34;
+app.Authors = []Author{{Name: &#34;Oliver Allen&#34;, Email: &#34;oliver@toyshop.com&#34;}}
+app.Run(os.Args)
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">Hello Jeremy
+</pre>
+			
+		
+	</div>
+</div>
+<div id="example_App_Run_bashComplete" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example (BashComplete)</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example (BashComplete)</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code"><span class="comment">// set args for examples sake</span>
+os.Args = []string{&#34;greet&#34;, &#34;--generate-bash-completion&#34;}
+
+app := NewApp()
+app.Name = &#34;greet&#34;
+app.EnableBashCompletion = true
+app.Commands = []Command{
+    {
+        Name:        &#34;describeit&#34;,
+        Aliases:     []string{&#34;d&#34;},
+        Usage:       &#34;use it to see a description&#34;,
+        Description: &#34;This is how we describe describeit the function&#34;,
+        Action: func(c *Context) error {
+            fmt.Printf(&#34;i like to describe things&#34;)
+            return nil
+        },
+    }, {
+        Name:        &#34;next&#34;,
+        Usage:       &#34;next example&#34;,
+        Description: &#34;more stuff to see when generating bash completion&#34;,
+        Action: func(c *Context) error {
+            fmt.Printf(&#34;the next example&#34;)
+            return nil
+        },
+    },
+}
+
+app.Run(os.Args)
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">describeit
+d
+next
+help
+h
+</pre>
+			
+		
+	</div>
+</div>
+<div id="example_App_Run_help" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example (Help)</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example (Help)</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code"><span class="comment">// set args for examples sake</span>
+os.Args = []string{&#34;greet&#34;, &#34;h&#34;, &#34;describeit&#34;}
+
+app := NewApp()
+app.Name = &#34;greet&#34;
+app.Flags = []Flag{
+    StringFlag{Name: &#34;name&#34;, Value: &#34;bob&#34;, Usage: &#34;a name to say&#34;},
+}
+app.Commands = []Command{
+    {
+        Name:        &#34;describeit&#34;,
+        Aliases:     []string{&#34;d&#34;},
+        Usage:       &#34;use it to see a description&#34;,
+        Description: &#34;This is how we describe describeit the function&#34;,
+        Action: func(c *Context) error {
+            fmt.Printf(&#34;i like to describe things&#34;)
+            return nil
+        },
+    },
+}
+app.Run(os.Args)
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">NAME:
+   greet describeit - use it to see a description
+
+USAGE:
+   greet describeit [arguments...]
+
+DESCRIPTION:
+   This is how we describe describeit the function
+</pre>
+			
+		
+	</div>
+</div>
+<div id="example_App_Run_subcommand" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example (Subcommand)</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example (Subcommand)</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code"><span class="comment">// set args for examples sake</span>
+os.Args = []string{&#34;say&#34;, &#34;hi&#34;, &#34;english&#34;, &#34;--name&#34;, &#34;Jeremy&#34;}
+app := NewApp()
+app.Name = &#34;say&#34;
+app.Commands = []Command{
+    {
+        Name:        &#34;hello&#34;,
+        Aliases:     []string{&#34;hi&#34;},
+        Usage:       &#34;use it to see a description&#34;,
+        Description: &#34;This is how we describe hello the function&#34;,
+        Subcommands: []Command{
+            {
+                Name:        &#34;english&#34;,
+                Aliases:     []string{&#34;en&#34;},
+                Usage:       &#34;sends a greeting in english&#34;,
+                Description: &#34;greets someone in english&#34;,
+                Flags: []Flag{
+                    StringFlag{
+                        Name:  &#34;name&#34;,
+                        Value: &#34;Bob&#34;,
+                        Usage: &#34;Name of the person to greet&#34;,
+                    },
+                },
+                Action: func(c *Context) error {
+                    fmt.Println(&#34;Hello,&#34;, c.String(&#34;name&#34;))
+                    return nil
+                },
+            },
+        },
+    },
+}
+
+app.Run(os.Args)
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">Hello, Jeremy
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+				
+				<h3 id="App.RunAndExitOnError">func (*App) <a href="http://localhost:6060/src/github.com/codegangsta/cli/app.go?s=6885:6918#L246">RunAndExitOnError</a></h3>
+				<pre>func (a *<a href="index.html#App">App</a>) RunAndExitOnError()</pre>
+				<p>
+RunAndExitOnError calls .Run() and exits non-zero if an error was returned
+</p>
+<p>
+Deprecated: instead you should return an error that fulfills cli.ExitCoder
+to cli.App.Run. This will cause the application to exit with the given eror
+code in the cli.ExitCoder
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="App.RunAsSubcommand">func (*App) <a href="http://localhost:6060/src/github.com/codegangsta/cli/app.go?s=7133:7188#L255">RunAsSubcommand</a></h3>
+				<pre>func (a *<a href="index.html#App">App</a>) RunAsSubcommand(ctx *<a href="index.html#Context">Context</a>) (err <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+RunAsSubcommand invokes the subcommand given the context, parses ctx.Args() to
+generate command-specific flags
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="App.Setup">func (*App) <a href="http://localhost:6060/src/github.com/codegangsta/cli/app.go?s=4129:4150#L114">Setup</a></h3>
+				<pre>func (a *<a href="index.html#App">App</a>) Setup()</pre>
+				<p>
+Setup runs initialization code to ensure all data structures are ready for
+`Run` or inspection prior to `Run`.  It is internally called by `Run`, but
+will return early if setup has already happened.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="App.VisibleCategories">func (*App) <a href="http://localhost:6060/src/github.com/codegangsta/cli/app.go?s=9655:9707#L380">VisibleCategories</a></h3>
+				<pre>func (a *<a href="index.html#App">App</a>) VisibleCategories() []*<a href="index.html#CommandCategory">CommandCategory</a></pre>
+				<p>
+VisibleCategories returns a slice of categories and commands that are
+Hidden=false
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="App.VisibleCommands">func (*App) <a href="http://localhost:6060/src/github.com/codegangsta/cli/app.go?s=10085:10126#L398">VisibleCommands</a></h3>
+				<pre>func (a *<a href="index.html#App">App</a>) VisibleCommands() []<a href="index.html#Command">Command</a></pre>
+				<p>
+VisibleCommands returns a slice of the Commands with Hidden=false
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="App.VisibleFlags">func (*App) <a href="http://localhost:6060/src/github.com/codegangsta/cli/app.go?s=10325:10360#L409">VisibleFlags</a></h3>
+				<pre>func (a *<a href="index.html#App">App</a>) VisibleFlags() []<a href="index.html#Flag">Flag</a></pre>
+				<p>
+VisibleFlags returns a slice of the Flags with Hidden=false
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Args">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/context.go?s=3817:3835#L141">Args</a></h2>
+			<pre>type Args []<a href="../../../builtin/index.html#string">string</a></pre>
+			<p>
+Args contains apps console arguments
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Args.First">func (Args) <a href="http://localhost:6060/src/github.com/codegangsta/cli/context.go?s=4301:4329#L163">First</a></h3>
+				<pre>func (a <a href="index.html#Args">Args</a>) First() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+First returns the first argument, or else a blank string
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Args.Get">func (Args) <a href="http://localhost:6060/src/github.com/codegangsta/cli/context.go?s=4159:4190#L155">Get</a></h3>
+				<pre>func (a <a href="index.html#Args">Args</a>) Get(n <a href="../../../builtin/index.html#int">int</a>) <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+Get returns the nth argument, or else a blank string
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Args.Present">func (Args) <a href="http://localhost:6060/src/github.com/codegangsta/cli/context.go?s=4600:4628#L177">Present</a></h3>
+				<pre>func (a <a href="index.html#Args">Args</a>) Present() <a href="../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Present checks if there are any arguments present
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Args.Swap">func (Args) <a href="http://localhost:6060/src/github.com/codegangsta/cli/context.go?s=4699:4737#L182">Swap</a></h3>
+				<pre>func (a <a href="index.html#Args">Args</a>) Swap(from, to <a href="../../../builtin/index.html#int">int</a>) <a href="../../../builtin/index.html#error">error</a></pre>
+				<p>
+Swap swaps arguments at the given indexes
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Args.Tail">func (Args) <a href="http://localhost:6060/src/github.com/codegangsta/cli/context.go?s=4447:4476#L169">Tail</a></h3>
+				<pre>func (a <a href="index.html#Args">Args</a>) Tail() []<a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+Tail returns the rest of the arguments (not the first one)
+or else an empty string slice
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Author">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/app.go?s=10861:10952#L440">Author</a></h2>
+			<pre>type Author struct {
+    Name  <a href="../../../builtin/index.html#string">string</a> <span class="comment">// The Authors name</span>
+    Email <a href="../../../builtin/index.html#string">string</a> <span class="comment">// The Authors email</span>
+}</pre>
+			<p>
+Author represents someone who has contributed to a cli project.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Author.String">func (Author) <a href="http://localhost:6060/src/github.com/codegangsta/cli/app.go?s=11060:11091#L446">String</a></h3>
+				<pre>func (a <a href="index.html#Author">Author</a>) String() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+String makes Author comply to the Stringer interface, to allow an easy print in the templating process
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="BashCompleteFunc">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/funcs.go?s=94:130#L1">BashCompleteFunc</a></h2>
+			<pre>type BashCompleteFunc func(*<a href="index.html#Context">Context</a>)</pre>
+			<p>
+BashCompleteFunc is an action to execute when the bash-completion flag is set
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="BeforeFunc">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/funcs.go?s=291:327#L1">BeforeFunc</a></h2>
+			<pre>type BeforeFunc func(*<a href="index.html#Context">Context</a>) <a href="../../../builtin/index.html#error">error</a></pre>
+			<p>
+BeforeFunc is an action to execute before any subcommands are run, but after
+the context is ready if a non-nil error is returned, no subcommands are run
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="BoolFlag">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=126:247#L2">BoolFlag</a></h2>
+			<pre>type BoolFlag struct {
+    Name        <a href="../../../builtin/index.html#string">string</a>
+    Usage       <a href="../../../builtin/index.html#string">string</a>
+    EnvVar      <a href="../../../builtin/index.html#string">string</a>
+    Hidden      <a href="../../../builtin/index.html#bool">bool</a>
+    Destination *<a href="../../../builtin/index.html#bool">bool</a>
+}</pre>
+			<p>
+BoolFlag is a flag with type bool
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="BoolFlag.Apply">func (BoolFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag.go?s=5691:5733#L229">Apply</a></h3>
+				<pre>func (f <a href="index.html#BoolFlag">BoolFlag</a>) Apply(set *<a href="../../../flag/index.html">flag</a>.<a href="../../../flag/index.html#FlagSet">FlagSet</a>)</pre>
+				<p>
+Apply populates the flag given the flag set and environment
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BoolFlag.GetName">func (BoolFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=434:468#L17">GetName</a></h3>
+				<pre>func (f <a href="index.html#BoolFlag">BoolFlag</a>) GetName() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+GetName returns the name of the flag
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BoolFlag.String">func (BoolFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=331:364#L12">String</a></h3>
+				<pre>func (f <a href="index.html#BoolFlag">BoolFlag</a>) String() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+String returns a readable representation of this value
+(for usage defaults)
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="BoolTFlag">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=1167:1289#L49">BoolTFlag</a></h2>
+			<pre>type BoolTFlag struct {
+    Name        <a href="../../../builtin/index.html#string">string</a>
+    Usage       <a href="../../../builtin/index.html#string">string</a>
+    EnvVar      <a href="../../../builtin/index.html#string">string</a>
+    Hidden      <a href="../../../builtin/index.html#bool">bool</a>
+    Destination *<a href="../../../builtin/index.html#bool">bool</a>
+}</pre>
+			<p>
+BoolTFlag is a flag with type bool that is true by default
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="BoolTFlag.Apply">func (BoolTFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag.go?s=6266:6309#L254">Apply</a></h3>
+				<pre>func (f <a href="index.html#BoolTFlag">BoolTFlag</a>) Apply(set *<a href="../../../flag/index.html">flag</a>.<a href="../../../flag/index.html#FlagSet">FlagSet</a>)</pre>
+				<p>
+Apply populates the flag given the flag set and environment
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BoolTFlag.GetName">func (BoolTFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=1477:1512#L64">GetName</a></h3>
+				<pre>func (f <a href="index.html#BoolTFlag">BoolTFlag</a>) GetName() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+GetName returns the name of the flag
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BoolTFlag.String">func (BoolTFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=1373:1407#L59">String</a></h3>
+				<pre>func (f <a href="index.html#BoolTFlag">BoolTFlag</a>) String() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+String returns a readable representation of this value
+(for usage defaults)
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Command">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/command.go?s=106:2115#L1">Command</a></h2>
+			<pre>type Command struct {
+    <span class="comment">// The name of the command</span>
+    Name <a href="../../../builtin/index.html#string">string</a>
+    <span class="comment">// short name of the command. Typically one character (deprecated, use `Aliases`)</span>
+    ShortName <a href="../../../builtin/index.html#string">string</a>
+    <span class="comment">// A list of aliases for the command</span>
+    Aliases []<a href="../../../builtin/index.html#string">string</a>
+    <span class="comment">// A short description of the usage of this command</span>
+    Usage <a href="../../../builtin/index.html#string">string</a>
+    <span class="comment">// Custom text to show on USAGE section of help</span>
+    UsageText <a href="../../../builtin/index.html#string">string</a>
+    <span class="comment">// A longer explanation of how the command works</span>
+    Description <a href="../../../builtin/index.html#string">string</a>
+    <span class="comment">// A short description of the arguments of this command</span>
+    ArgsUsage <a href="../../../builtin/index.html#string">string</a>
+    <span class="comment">// The category the command is part of</span>
+    Category <a href="../../../builtin/index.html#string">string</a>
+    <span class="comment">// The function to call when checking for bash command completions</span>
+    BashComplete <a href="index.html#BashCompleteFunc">BashCompleteFunc</a>
+    <span class="comment">// An action to execute before any sub-subcommands are run, but after the context is ready</span>
+    <span class="comment">// If a non-nil error is returned, no sub-subcommands are run</span>
+    Before <a href="index.html#BeforeFunc">BeforeFunc</a>
+    <span class="comment">// An action to execute after any subcommands are run, but after the subcommand has finished</span>
+    <span class="comment">// It is run even if Action() panics</span>
+    After <a href="index.html#AfterFunc">AfterFunc</a>
+    <span class="comment">// The function to call when this command is invoked</span>
+    Action interface{}
+
+    <span class="comment">// Execute this function if a usage error occurs.</span>
+    OnUsageError <a href="index.html#OnUsageErrorFunc">OnUsageErrorFunc</a>
+    <span class="comment">// List of child commands</span>
+    Subcommands <a href="index.html#Commands">Commands</a>
+    <span class="comment">// List of flags to parse</span>
+    Flags []<a href="index.html#Flag">Flag</a>
+    <span class="comment">// Treat all flags as normal arguments if true</span>
+    SkipFlagParsing <a href="../../../builtin/index.html#bool">bool</a>
+    <span class="comment">// Skip argument reordering which attempts to move flags before arguments,</span>
+    <span class="comment">// but only works if all flags appear after all arguments. This behavior was</span>
+    <span class="comment">// removed n version 2 since it only works under specific conditions so we</span>
+    <span class="comment">// backport here by exposing it as an option for compatibility.</span>
+    SkipArgReorder <a href="../../../builtin/index.html#bool">bool</a>
+    <span class="comment">// Boolean to hide built-in help command</span>
+    HideHelp <a href="../../../builtin/index.html#bool">bool</a>
+    <span class="comment">// Boolean to hide this command from help or completion</span>
+    Hidden <a href="../../../builtin/index.html#bool">bool</a>
+
+    <span class="comment">// Full name of command for help, defaults to full command name, including parent commands.</span>
+    HelpName <a href="../../../builtin/index.html#string">string</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Command is a subcommand for a cli.App.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Command.FullName">func (Command) <a href="http://localhost:6060/src/github.com/codegangsta/cli/command.go?s=2249:2283#L56">FullName</a></h3>
+				<pre>func (c <a href="index.html#Command">Command</a>) FullName() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+FullName returns the full name of the command.
+For subcommands this ensures that parent commands are part of the command path
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Command.HasName">func (Command) <a href="http://localhost:6060/src/github.com/codegangsta/cli/command.go?s=5398:5440#L201">HasName</a></h3>
+				<pre>func (c <a href="index.html#Command">Command</a>) HasName(name <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+HasName returns true if Command.Name or Command.ShortName matches given name
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Command.Names">func (Command) <a href="http://localhost:6060/src/github.com/codegangsta/cli/command.go?s=5150:5183#L190">Names</a></h3>
+				<pre>func (c <a href="index.html#Command">Command</a>) Names() []<a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+Names returns the names including short names and aliases.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Command.Run">func (Command) <a href="http://localhost:6060/src/github.com/codegangsta/cli/command.go?s=2542:2588#L67">Run</a></h3>
+				<pre>func (c <a href="index.html#Command">Command</a>) Run(ctx *<a href="index.html#Context">Context</a>) (err <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Run invokes the command given the context, parses ctx.Args() to generate command-specific flags
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Command.VisibleFlags">func (Command) <a href="http://localhost:6060/src/github.com/codegangsta/cli/command.go?s=6959:6997#L272">VisibleFlags</a></h3>
+				<pre>func (c <a href="index.html#Command">Command</a>) VisibleFlags() []<a href="index.html#Flag">Flag</a></pre>
+				<p>
+VisibleFlags returns a slice of the Flags with Hidden=false
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="CommandCategories">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/category.go?s=66:107#L1">CommandCategories</a></h2>
+			<pre>type CommandCategories []*<a href="index.html#CommandCategory">CommandCategory</a></pre>
+			<p>
+CommandCategories is a slice of *CommandCategory.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="CommandCategories.AddCommand">func (CommandCategories) <a href="http://localhost:6060/src/github.com/codegangsta/cli/category.go?s=487:576#L15">AddCommand</a></h3>
+				<pre>func (c <a href="index.html#CommandCategories">CommandCategories</a>) AddCommand(category <a href="../../../builtin/index.html#string">string</a>, command <a href="index.html#Command">Command</a>) <a href="index.html#CommandCategories">CommandCategories</a></pre>
+				<p>
+AddCommand adds a command to a category.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="CommandCategories.Len">func (CommandCategories) <a href="http://localhost:6060/src/github.com/codegangsta/cli/category.go?s=314:350#L6">Len</a></h3>
+				<pre>func (c <a href="index.html#CommandCategories">CommandCategories</a>) Len() <a href="../../../builtin/index.html#int">int</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="CommandCategories.Less">func (CommandCategories) <a href="http://localhost:6060/src/github.com/codegangsta/cli/category.go?s=232:278#L2">Less</a></h3>
+				<pre>func (c <a href="index.html#CommandCategories">CommandCategories</a>) Less(i, j <a href="../../../builtin/index.html#int">int</a>) <a href="../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="CommandCategories.Swap">func (CommandCategories) <a href="http://localhost:6060/src/github.com/codegangsta/cli/category.go?s=371:412#L10">Swap</a></h3>
+				<pre>func (c <a href="index.html#CommandCategories">CommandCategories</a>) Swap(i, j <a href="../../../builtin/index.html#int">int</a>)</pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="CommandCategory">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/category.go?s=163:230#L1">CommandCategory</a></h2>
+			<pre>type CommandCategory struct {
+    Name     <a href="../../../builtin/index.html#string">string</a>
+    Commands <a href="index.html#Commands">Commands</a>
+}</pre>
+			<p>
+CommandCategory is a category containing commands.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="CommandCategory.VisibleCommands">func (*CommandCategory) <a href="http://localhost:6060/src/github.com/codegangsta/cli/category.go?s=901:954#L26">VisibleCommands</a></h3>
+				<pre>func (c *<a href="index.html#CommandCategory">CommandCategory</a>) VisibleCommands() []<a href="index.html#Command">Command</a></pre>
+				<p>
+VisibleCommands returns a slice of the Commands with Hidden=false
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="CommandNotFoundFunc">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/funcs.go?s=693:740#L8">CommandNotFoundFunc</a></h2>
+			<pre>type CommandNotFoundFunc func(*<a href="index.html#Context">Context</a>, <a href="../../../builtin/index.html#string">string</a>)</pre>
+			<p>
+CommandNotFoundFunc is executed if the proper command cannot be found
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Commands">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/command.go?s=2418:2441#L64">Commands</a></h2>
+			<pre>type Commands []<a href="index.html#Command">Command</a></pre>
+			<p>
+Commands is a slice of Command
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Context">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/context.go?s=256:406#L5">Context</a></h2>
+			<pre>type Context struct {
+    App     *<a href="index.html#App">App</a>
+    Command <a href="index.html#Command">Command</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Context is a type that is passed through to
+each Handler action in a cli application. Context
+can be used to retrieve context-specific Args and
+parsed command-line options.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewContext">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/context.go?s=496:569#L14">NewContext</a></h3>
+				<pre>func NewContext(app *<a href="index.html#App">App</a>, set *<a href="../../../flag/index.html">flag</a>.<a href="../../../flag/index.html#FlagSet">FlagSet</a>, parentCtx *<a href="index.html#Context">Context</a>) *<a href="index.html#Context">Context</a></pre>
+				<p>
+NewContext creates a new context. For use in when invoking an App or Command action.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Context.Args">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/context.go?s=3909:3938#L144">Args</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) Args() <a href="index.html#Args">Args</a></pre>
+				<p>
+Args returns the command line arguments associated with the context.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.Bool">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=567:607#L23">Bool</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) Bool(name <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Bool looks up the value of a local BoolFlag, returns
+false if not found
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.BoolT">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=1613:1654#L70">BoolT</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) BoolT(name <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+BoolT looks up the value of a local BoolTFlag, returns
+false if not found
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.Duration">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=2750:2803#L118">Duration</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) Duration(name <a href="../../../builtin/index.html#string">string</a>) <a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Duration">Duration</a></pre>
+				<p>
+Duration looks up the value of a local DurationFlag, returns
+0 if not found
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.FlagNames">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/context.go?s=3133:3179#L112">FlagNames</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) FlagNames() (names []<a href="../../../builtin/index.html#string">string</a>)</pre>
+				<p>
+FlagNames returns a slice of flag names used in this context.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.Float64">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=3847:3893#L166">Float64</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) Float64(name <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#float64">float64</a></pre>
+				<p>
+Float64 looks up the value of a local Float64Flag, returns
+0 if not found
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.Generic">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=4878:4928#L213">Generic</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) Generic(name <a href="../../../builtin/index.html#string">string</a>) interface{}</pre>
+				<p>
+Generic looks up the value of a local GenericFlag, returns
+nil if not found
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.GlobalBool">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=734:780#L29">GlobalBool</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) GlobalBool(name <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+GlobalBool looks up the value of a global BoolFlag, returns
+false if not found
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.GlobalBoolT">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=1784:1831#L76">GlobalBoolT</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) GlobalBoolT(name <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+GlobalBoolT looks up the value of a global BoolTFlag, returns
+false if not found
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.GlobalDuration">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=2938:2997#L124">GlobalDuration</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) GlobalDuration(name <a href="../../../builtin/index.html#string">string</a>) <a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Duration">Duration</a></pre>
+				<p>
+GlobalDuration looks up the value of a global DurationFlag, returns
+0 if not found
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.GlobalFlagNames">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/context.go?s=3425:3477#L124">GlobalFlagNames</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) GlobalFlagNames() (names []<a href="../../../builtin/index.html#string">string</a>)</pre>
+				<p>
+GlobalFlagNames returns a slice of global flag names used by the app.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.GlobalFloat64">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=4025:4077#L172">GlobalFloat64</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) GlobalFloat64(name <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#float64">float64</a></pre>
+				<p>
+GlobalFloat64 looks up the value of a global Float64Flag, returns
+0 if not found
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.GlobalGeneric">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=5062:5118#L219">GlobalGeneric</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) GlobalGeneric(name <a href="../../../builtin/index.html#string">string</a>) interface{}</pre>
+				<p>
+GlobalGeneric looks up the value of a global GenericFlag, returns
+nil if not found
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.GlobalInt">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=7114:7158#L315">GlobalInt</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) GlobalInt(name <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#int">int</a></pre>
+				<p>
+GlobalInt looks up the value of a global IntFlag, returns
+0 if not found
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.GlobalInt64">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=6103:6151#L267">GlobalInt64</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) GlobalInt64(name <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#int64">int64</a></pre>
+				<p>
+GlobalInt64 looks up the value of a global Int64Flag, returns
+0 if not found
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.GlobalInt64Slice">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=9222:9277#L409">GlobalInt64Slice</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) GlobalInt64Slice(name <a href="../../../builtin/index.html#string">string</a>) []<a href="../../../builtin/index.html#int64">int64</a></pre>
+				<p>
+GlobalInt64Slice looks up the value of a global Int64SliceFlag, returns
+nil if not found
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.GlobalIntSlice">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=8145:8196#L362">GlobalIntSlice</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) GlobalIntSlice(name <a href="../../../builtin/index.html#string">string</a>) []<a href="../../../builtin/index.html#int">int</a></pre>
+				<p>
+GlobalIntSlice looks up the value of a global IntSliceFlag, returns
+nil if not found
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.GlobalIsSet">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/context.go?s=2840:2887#L97">GlobalIsSet</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) GlobalIsSet(name <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+GlobalIsSet determines if the global flag was actually set
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.GlobalSet">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/context.go?s=943:996#L29">GlobalSet</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) GlobalSet(name, value <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#error">error</a></pre>
+				<p>
+GlobalSet sets a context flag to a value on the global flagset
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.GlobalString">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=10304:10354#L457">GlobalString</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) GlobalString(name <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+GlobalString looks up the value of a global StringFlag, returns
+&#34;&#34; if not found
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.GlobalStringSlice">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=11374:11431#L504">GlobalStringSlice</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) GlobalStringSlice(name <a href="../../../builtin/index.html#string">string</a>) []<a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+GlobalStringSlice looks up the value of a global StringSliceFlag, returns
+nil if not found
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.GlobalUint">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=13491:13537#L600">GlobalUint</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) GlobalUint(name <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#uint">uint</a></pre>
+				<p>
+GlobalUint looks up the value of a global UintFlag, returns
+0 if not found
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.GlobalUint64">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=12460:12510#L552">GlobalUint64</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) GlobalUint64(name <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#uint64">uint64</a></pre>
+				<p>
+GlobalUint64 looks up the value of a global Uint64Flag, returns
+0 if not found
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.Int">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=6956:6994#L309">Int</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) Int(name <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#int">int</a></pre>
+				<p>
+Int looks up the value of a local IntFlag, returns
+0 if not found
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.Int64">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=5935:5977#L261">Int64</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) Int64(name <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#int64">int64</a></pre>
+				<p>
+Int64 looks up the value of a local Int64Flag, returns
+0 if not found
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.Int64Slice">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=9030:9079#L403">Int64Slice</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) Int64Slice(name <a href="../../../builtin/index.html#string">string</a>) []<a href="../../../builtin/index.html#int64">int64</a></pre>
+				<p>
+Int64Slice looks up the value of a local Int64SliceFlag, returns
+nil if not found
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.IntSlice">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=7963:8008#L356">IntSlice</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) IntSlice(name <a href="../../../builtin/index.html#string">string</a>) []<a href="../../../builtin/index.html#int">int</a></pre>
+				<p>
+IntSlice looks up the value of a local IntSliceFlag, returns
+nil if not found
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.IsSet">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/context.go?s=1101:1142#L34">IsSet</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) IsSet(name <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+IsSet determines if the flag was actually set
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.NArg">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/context.go?s=4047:4075#L150">NArg</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) NArg() <a href="../../../builtin/index.html#int">int</a></pre>
+				<p>
+NArg returns the number of the command line arguments.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.NumFlags">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/context.go?s=686:718#L19">NumFlags</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) NumFlags() <a href="../../../builtin/index.html#int">int</a></pre>
+				<p>
+NumFlags returns the number of flags set
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.Parent">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/context.go?s=3712:3747#L136">Parent</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) Parent() *<a href="index.html#Context">Context</a></pre>
+				<p>
+Parent returns the parent context, if any
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.Set">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/context.go?s=789:836#L24">Set</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) Set(name, value <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#error">error</a></pre>
+				<p>
+Set sets a context flag to a value.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.String">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=10130:10174#L451">String</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) String(name <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+String looks up the value of a local StringFlag, returns
+&#34;&#34; if not found
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.StringSlice">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=11177:11228#L498">StringSlice</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) StringSlice(name <a href="../../../builtin/index.html#string">string</a>) []<a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+StringSlice looks up the value of a local StringSliceFlag, returns
+nil if not found
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.Uint">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=13328:13368#L594">Uint</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) Uint(name <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#uint">uint</a></pre>
+				<p>
+Uint looks up the value of a local UintFlag, returns
+0 if not found
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Context.Uint64">func (*Context) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=12287:12331#L546">Uint64</a></h3>
+				<pre>func (c *<a href="index.html#Context">Context</a>) Uint64(name <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#uint64">uint64</a></pre>
+				<p>
+Uint64 looks up the value of a local Uint64Flag, returns
+0 if not found
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="DurationFlag">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=2257:2418#L96">DurationFlag</a></h2>
+			<pre>type DurationFlag struct {
+    Name        <a href="../../../builtin/index.html#string">string</a>
+    Usage       <a href="../../../builtin/index.html#string">string</a>
+    EnvVar      <a href="../../../builtin/index.html#string">string</a>
+    Hidden      <a href="../../../builtin/index.html#bool">bool</a>
+    Value       <a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Duration">Duration</a>
+    Destination *<a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Duration">Duration</a>
+}</pre>
+			<p>
+DurationFlag is a flag with type time.Duration (see <a href="https://golang.org/pkg/time/#ParseDuration">https://golang.org/pkg/time/#ParseDuration</a>)
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="DurationFlag.Apply">func (DurationFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag.go?s=9680:9726#L396">Apply</a></h3>
+				<pre>func (f <a href="index.html#DurationFlag">DurationFlag</a>) Apply(set *<a href="../../../flag/index.html">flag</a>.<a href="../../../flag/index.html#FlagSet">FlagSet</a>)</pre>
+				<p>
+Apply populates the flag given the flag set and environment
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DurationFlag.GetName">func (DurationFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=2609:2647#L112">GetName</a></h3>
+				<pre>func (f <a href="index.html#DurationFlag">DurationFlag</a>) GetName() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+GetName returns the name of the flag
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DurationFlag.String">func (DurationFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=2502:2539#L107">String</a></h3>
+				<pre>func (f <a href="index.html#DurationFlag">DurationFlag</a>) String() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+String returns a readable representation of this value
+(for usage defaults)
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ExitCoder">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/errors.go?s=887:938#L29">ExitCoder</a></h2>
+			<pre>type ExitCoder interface {
+    <a href="../../../builtin/index.html#error">error</a>
+    ExitCode() <a href="../../../builtin/index.html#int">int</a>
+}</pre>
+			<p>
+ExitCoder is the interface checked by `App` and `Command` for a custom exit
+code
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ExitError">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/errors.go?s=1013:1069#L35">ExitError</a></h2>
+			<pre>type ExitError struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+ExitError fulfills both the builtin `error` interface and `ExitCoder`
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewExitError">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/errors.go?s=1110:1168#L41">NewExitError</a></h3>
+				<pre>func NewExitError(message <a href="../../../builtin/index.html#string">string</a>, exitCode <a href="../../../builtin/index.html#int">int</a>) *<a href="index.html#ExitError">ExitError</a></pre>
+				<p>
+NewExitError makes a new *ExitError
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="ExitError.Error">func (*ExitError) <a href="http://localhost:6060/src/github.com/codegangsta/cli/errors.go?s=1325:1360#L50">Error</a></h3>
+				<pre>func (ee *<a href="index.html#ExitError">ExitError</a>) Error() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+Error returns the string message, fulfilling the interface required by
+`error`
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ExitError.ExitCode">func (*ExitError) <a href="http://localhost:6060/src/github.com/codegangsta/cli/errors.go?s=1472:1507#L56">ExitCode</a></h3>
+				<pre>func (ee *<a href="index.html#ExitError">ExitError</a>) ExitCode() <a href="../../../builtin/index.html#int">int</a></pre>
+				<p>
+ExitCode returns the exit code, fulfilling the interface required by
+`ExitCoder`
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Flag">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag.go?s=991:1114#L33">Flag</a></h2>
+			<pre>type Flag interface {
+    <a href="../../../fmt/index.html">fmt</a>.<a href="../../../fmt/index.html#Stringer">Stringer</a>
+    <span class="comment">// Apply Flag settings to the given flag set</span>
+    Apply(*<a href="../../../flag/index.html">flag</a>.<a href="../../../flag/index.html#FlagSet">FlagSet</a>)
+    GetName() <a href="../../../builtin/index.html#string">string</a>
+}</pre>
+			<p>
+Flag is a common interface related to parsing flags in cli.
+For more advanced flag parsing techniques, it is recommended that
+this interface be implemented.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="FlagStringFunc">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/funcs.go?s=1226:1263#L18">FlagStringFunc</a></h2>
+			<pre>type FlagStringFunc func(<a href="index.html#Flag">Flag</a>) <a href="../../../builtin/index.html#string">string</a></pre>
+			<p>
+FlagStringFunc is used by the help generation to display a flag, which is
+expected to be a single line.
+</p>
+
+
+			
+
+			
+				<pre>var <span id="FlagStringer">FlagStringer</span> <a href="index.html#FlagStringFunc">FlagStringFunc</a> = stringifyFlag</pre>
+				<p>
+FlagStringer converts a flag definition to a string. This is used by help
+to display a flag.
+</p>
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Float64Flag">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=3371:3519#L144">Float64Flag</a></h2>
+			<pre>type Float64Flag struct {
+    Name        <a href="../../../builtin/index.html#string">string</a>
+    Usage       <a href="../../../builtin/index.html#string">string</a>
+    EnvVar      <a href="../../../builtin/index.html#string">string</a>
+    Hidden      <a href="../../../builtin/index.html#bool">bool</a>
+    Value       <a href="../../../builtin/index.html#float64">float64</a>
+    Destination *<a href="../../../builtin/index.html#float64">float64</a>
+}</pre>
+			<p>
+Float64Flag is a flag with type float64
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Float64Flag.Apply">func (Float64Flag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag.go?s=10275:10320#L420">Apply</a></h3>
+				<pre>func (f <a href="index.html#Float64Flag">Float64Flag</a>) Apply(set *<a href="../../../flag/index.html">flag</a>.<a href="../../../flag/index.html#FlagSet">FlagSet</a>)</pre>
+				<p>
+Apply populates the flag given the flag set and environment
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Float64Flag.GetName">func (Float64Flag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=3709:3746#L160">GetName</a></h3>
+				<pre>func (f <a href="index.html#Float64Flag">Float64Flag</a>) GetName() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+GetName returns the name of the flag
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Float64Flag.String">func (Float64Flag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=3603:3639#L155">String</a></h3>
+				<pre>func (f <a href="index.html#Float64Flag">Float64Flag</a>) String() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+String returns a readable representation of this value
+(for usage defaults)
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Generic">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag.go?s=1523:1591#L58">Generic</a></h2>
+			<pre>type Generic interface {
+    Set(value <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#error">error</a>
+    String() <a href="../../../builtin/index.html#string">string</a>
+}</pre>
+			<p>
+Generic is a generic parseable type identified by a specific flag
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="GenericFlag">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=4447:4548#L192">GenericFlag</a></h2>
+			<pre>type GenericFlag struct {
+    Name   <a href="../../../builtin/index.html#string">string</a>
+    Usage  <a href="../../../builtin/index.html#string">string</a>
+    EnvVar <a href="../../../builtin/index.html#string">string</a>
+    Hidden <a href="../../../builtin/index.html#bool">bool</a>
+    Value  <a href="index.html#Generic">Generic</a>
+}</pre>
+			<p>
+GenericFlag is a flag with type Generic
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="GenericFlag.Apply">func (GenericFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag.go?s=1717:1762#L65">Apply</a></h3>
+				<pre>func (f <a href="index.html#GenericFlag">GenericFlag</a>) Apply(set *<a href="../../../flag/index.html">flag</a>.<a href="../../../flag/index.html#FlagSet">FlagSet</a>)</pre>
+				<p>
+Apply takes the flagset and calls Set on the generic flag with the value
+provided by the user for parsing by the flag
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="GenericFlag.GetName">func (GenericFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=4738:4775#L207">GetName</a></h3>
+				<pre>func (f <a href="index.html#GenericFlag">GenericFlag</a>) GetName() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+GetName returns the name of the flag
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="GenericFlag.String">func (GenericFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=4632:4668#L202">String</a></h3>
+				<pre>func (f <a href="index.html#GenericFlag">GenericFlag</a>) String() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+String returns a readable representation of this value
+(for usage defaults)
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Int64Flag">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=5473:5615#L239">Int64Flag</a></h2>
+			<pre>type Int64Flag struct {
+    Name        <a href="../../../builtin/index.html#string">string</a>
+    Usage       <a href="../../../builtin/index.html#string">string</a>
+    EnvVar      <a href="../../../builtin/index.html#string">string</a>
+    Hidden      <a href="../../../builtin/index.html#bool">bool</a>
+    Value       <a href="../../../builtin/index.html#int64">int64</a>
+    Destination *<a href="../../../builtin/index.html#int64">int64</a>
+}</pre>
+			<p>
+Int64Flag is a flag with type int64
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Int64Flag.Apply">func (Int64Flag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag.go?s=7921:7964#L324">Apply</a></h3>
+				<pre>func (f <a href="index.html#Int64Flag">Int64Flag</a>) Apply(set *<a href="../../../flag/index.html">flag</a>.<a href="../../../flag/index.html#FlagSet">FlagSet</a>)</pre>
+				<p>
+Apply populates the flag given the flag set and environment
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Int64Flag.GetName">func (Int64Flag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=5803:5838#L255">GetName</a></h3>
+				<pre>func (f <a href="index.html#Int64Flag">Int64Flag</a>) GetName() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+GetName returns the name of the flag
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Int64Flag.String">func (Int64Flag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=5699:5733#L250">String</a></h3>
+				<pre>func (f <a href="index.html#Int64Flag">Int64Flag</a>) String() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+String returns a readable representation of this value
+(for usage defaults)
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Int64Slice">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag.go?s=4441:4464#L178">Int64Slice</a></h2>
+			<pre>type Int64Slice []<a href="../../../builtin/index.html#int64">int64</a></pre>
+			<p>
+Int64Slice is an opaque type for []int to satisfy flag.Value
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Int64Slice.Set">func (*Int64Slice) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag.go?s=4543:4587#L181">Set</a></h3>
+				<pre>func (f *<a href="index.html#Int64Slice">Int64Slice</a>) Set(value <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#error">error</a></pre>
+				<p>
+Set parses the value into an integer and appends it to the list of values
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Int64Slice.String">func (*Int64Slice) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag.go?s=4784:4820#L191">String</a></h3>
+				<pre>func (f *<a href="index.html#Int64Slice">Int64Slice</a>) String() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+String returns a readable representation of this value (for usage defaults)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Int64Slice.Value">func (*Int64Slice) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag.go?s=4909:4945#L196">Value</a></h3>
+				<pre>func (f *<a href="index.html#Int64Slice">Int64Slice</a>) Value() []<a href="../../../builtin/index.html#int64">int64</a></pre>
+				<p>
+Value returns the slice of ints set by this flag
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Int64SliceFlag">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=8580:8688#L382">Int64SliceFlag</a></h2>
+			<pre>type Int64SliceFlag struct {
+    Name   <a href="../../../builtin/index.html#string">string</a>
+    Usage  <a href="../../../builtin/index.html#string">string</a>
+    EnvVar <a href="../../../builtin/index.html#string">string</a>
+    Hidden <a href="../../../builtin/index.html#bool">bool</a>
+    Value  *<a href="index.html#Int64Slice">Int64Slice</a>
+}</pre>
+			<p>
+Int64SliceFlag is a flag with type *Int64Slice
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Int64SliceFlag.Apply">func (Int64SliceFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag.go?s=5025:5073#L201">Apply</a></h3>
+				<pre>func (f <a href="index.html#Int64SliceFlag">Int64SliceFlag</a>) Apply(set *<a href="../../../flag/index.html">flag</a>.<a href="../../../flag/index.html#FlagSet">FlagSet</a>)</pre>
+				<p>
+Apply populates the flag given the flag set and environment
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Int64SliceFlag.GetName">func (Int64SliceFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=8881:8921#L397">GetName</a></h3>
+				<pre>func (f <a href="index.html#Int64SliceFlag">Int64SliceFlag</a>) GetName() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+GetName returns the name of the flag
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Int64SliceFlag.String">func (Int64SliceFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=8772:8811#L392">String</a></h3>
+				<pre>func (f <a href="index.html#Int64SliceFlag">Int64SliceFlag</a>) String() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+String returns a readable representation of this value
+(for usage defaults)
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="IntFlag">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=6508:6644#L287">IntFlag</a></h2>
+			<pre>type IntFlag struct {
+    Name        <a href="../../../builtin/index.html#string">string</a>
+    Usage       <a href="../../../builtin/index.html#string">string</a>
+    EnvVar      <a href="../../../builtin/index.html#string">string</a>
+    Hidden      <a href="../../../builtin/index.html#bool">bool</a>
+    Value       <a href="../../../builtin/index.html#int">int</a>
+    Destination *<a href="../../../builtin/index.html#int">int</a>
+}</pre>
+			<p>
+IntFlag is a flag with type int
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="IntFlag.Apply">func (IntFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag.go?s=7341:7382#L300">Apply</a></h3>
+				<pre>func (f <a href="index.html#IntFlag">IntFlag</a>) Apply(set *<a href="../../../flag/index.html">flag</a>.<a href="../../../flag/index.html#FlagSet">FlagSet</a>)</pre>
+				<p>
+Apply populates the flag given the flag set and environment
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="IntFlag.GetName">func (IntFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=6830:6863#L303">GetName</a></h3>
+				<pre>func (f <a href="index.html#IntFlag">IntFlag</a>) GetName() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+GetName returns the name of the flag
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="IntFlag.String">func (IntFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=6728:6760#L298">String</a></h3>
+				<pre>func (f <a href="index.html#IntFlag">IntFlag</a>) String() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+String returns a readable representation of this value
+(for usage defaults)
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="IntSlice">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag.go?s=3220:3239#L127">IntSlice</a></h2>
+			<pre>type IntSlice []<a href="../../../builtin/index.html#int">int</a></pre>
+			<p>
+IntSlice is an opaque type for []int to satisfy flag.Value
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="IntSlice.Set">func (*IntSlice) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag.go?s=3318:3360#L130">Set</a></h3>
+				<pre>func (f *<a href="index.html#IntSlice">IntSlice</a>) Set(value <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#error">error</a></pre>
+				<p>
+Set parses the value into an integer and appends it to the list of values
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="IntSlice.String">func (*IntSlice) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag.go?s=3545:3579#L140">String</a></h3>
+				<pre>func (f *<a href="index.html#IntSlice">IntSlice</a>) String() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+String returns a readable representation of this value (for usage defaults)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="IntSlice.Value">func (*IntSlice) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag.go?s=3668:3700#L145">Value</a></h3>
+				<pre>func (f *<a href="index.html#IntSlice">IntSlice</a>) Value() []<a href="../../../builtin/index.html#int">int</a></pre>
+				<p>
+Value returns the slice of ints set by this flag
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="IntSliceFlag">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=7525:7629#L335">IntSliceFlag</a></h2>
+			<pre>type IntSliceFlag struct {
+    Name   <a href="../../../builtin/index.html#string">string</a>
+    Usage  <a href="../../../builtin/index.html#string">string</a>
+    EnvVar <a href="../../../builtin/index.html#string">string</a>
+    Hidden <a href="../../../builtin/index.html#bool">bool</a>
+    Value  *<a href="index.html#IntSlice">IntSlice</a>
+}</pre>
+			<p>
+IntSliceFlag is a flag with type *IntSlice
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="IntSliceFlag.Apply">func (IntSliceFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag.go?s=3780:3826#L150">Apply</a></h3>
+				<pre>func (f <a href="index.html#IntSliceFlag">IntSliceFlag</a>) Apply(set *<a href="../../../flag/index.html">flag</a>.<a href="../../../flag/index.html#FlagSet">FlagSet</a>)</pre>
+				<p>
+Apply populates the flag given the flag set and environment
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="IntSliceFlag.GetName">func (IntSliceFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=7820:7858#L350">GetName</a></h3>
+				<pre>func (f <a href="index.html#IntSliceFlag">IntSliceFlag</a>) GetName() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+GetName returns the name of the flag
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="IntSliceFlag.String">func (IntSliceFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=7713:7750#L345">String</a></h3>
+				<pre>func (f <a href="index.html#IntSliceFlag">IntSliceFlag</a>) String() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+String returns a readable representation of this value
+(for usage defaults)
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="MultiError">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/errors.go?s=393:435#L8">MultiError</a></h2>
+			<pre>type MultiError struct {
+    Errors []<a href="../../../builtin/index.html#error">error</a>
+}</pre>
+			<p>
+MultiError is an error that wraps multiple errors.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewMultiError">func <a href="http://localhost:6060/src/github.com/codegangsta/cli/errors.go?s=508:551#L13">NewMultiError</a></h3>
+				<pre>func NewMultiError(err ...<a href="../../../builtin/index.html#error">error</a>) <a href="index.html#MultiError">MultiError</a></pre>
+				<p>
+NewMultiError creates a new MultiError. Pass in one or more errors.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="MultiError.Error">func (MultiError) <a href="http://localhost:6060/src/github.com/codegangsta/cli/errors.go?s=628:662#L18">Error</a></h3>
+				<pre>func (m <a href="index.html#MultiError">MultiError</a>) Error() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+Error implents the error interface.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="OnUsageErrorFunc">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/funcs.go?s=1034:1114#L14">OnUsageErrorFunc</a></h2>
+			<pre>type OnUsageErrorFunc func(context *<a href="index.html#Context">Context</a>, err <a href="../../../builtin/index.html#error">error</a>, isSubcommand <a href="../../../builtin/index.html#bool">bool</a>) <a href="../../../builtin/index.html#error">error</a></pre>
+			<p>
+OnUsageErrorFunc is executed if an usage error occurs. This is useful for displaying
+customized usage error messages.  This function is able to replace the
+original error messages.  If this function is not set, the &#34;Incorrect usage&#34;
+is displayed and the execution is interrupted.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="StringFlag">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=9660:9805#L429">StringFlag</a></h2>
+			<pre>type StringFlag struct {
+    Name        <a href="../../../builtin/index.html#string">string</a>
+    Usage       <a href="../../../builtin/index.html#string">string</a>
+    EnvVar      <a href="../../../builtin/index.html#string">string</a>
+    Hidden      <a href="../../../builtin/index.html#bool">bool</a>
+    Value       <a href="../../../builtin/index.html#string">string</a>
+    Destination *<a href="../../../builtin/index.html#string">string</a>
+}</pre>
+			<p>
+StringFlag is a flag with type string
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="StringFlag.Apply">func (StringFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag.go?s=6842:6886#L279">Apply</a></h3>
+				<pre>func (f <a href="index.html#StringFlag">StringFlag</a>) Apply(set *<a href="../../../flag/index.html">flag</a>.<a href="../../../flag/index.html#FlagSet">FlagSet</a>)</pre>
+				<p>
+Apply populates the flag given the flag set and environment
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="StringFlag.GetName">func (StringFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=9994:10030#L445">GetName</a></h3>
+				<pre>func (f <a href="index.html#StringFlag">StringFlag</a>) GetName() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+GetName returns the name of the flag
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="StringFlag.String">func (StringFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=9889:9924#L440">String</a></h3>
+				<pre>func (f <a href="index.html#StringFlag">StringFlag</a>) String() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+String returns a readable representation of this value
+(for usage defaults)
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="StringSlice">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag.go?s=2136:2161#L83">StringSlice</a></h2>
+			<pre>type StringSlice []<a href="../../../builtin/index.html#string">string</a></pre>
+			<p>
+StringSlice is an opaque type for []string to satisfy flag.Value
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="StringSlice.Set">func (*StringSlice) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag.go?s=2217:2262#L86">Set</a></h3>
+				<pre>func (f *<a href="index.html#StringSlice">StringSlice</a>) Set(value <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#error">error</a></pre>
+				<p>
+Set appends the string value to the list of values
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="StringSlice.String">func (*StringSlice) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag.go?s=2383:2420#L92">String</a></h3>
+				<pre>func (f *<a href="index.html#StringSlice">StringSlice</a>) String() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+String returns a readable representation of this value (for usage defaults)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="StringSlice.Value">func (*StringSlice) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag.go?s=2511:2549#L97">Value</a></h3>
+				<pre>func (f *<a href="index.html#StringSlice">StringSlice</a>) Value() []<a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+Value returns the slice of strings set by this flag
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="StringSliceFlag">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=10721:10831#L477">StringSliceFlag</a></h2>
+			<pre>type StringSliceFlag struct {
+    Name   <a href="../../../builtin/index.html#string">string</a>
+    Usage  <a href="../../../builtin/index.html#string">string</a>
+    EnvVar <a href="../../../builtin/index.html#string">string</a>
+    Hidden <a href="../../../builtin/index.html#bool">bool</a>
+    Value  *<a href="index.html#StringSlice">StringSlice</a>
+}</pre>
+			<p>
+StringSliceFlag is a flag with type *StringSlice
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="StringSliceFlag.Apply">func (StringSliceFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag.go?s=2629:2678#L102">Apply</a></h3>
+				<pre>func (f <a href="index.html#StringSliceFlag">StringSliceFlag</a>) Apply(set *<a href="../../../flag/index.html">flag</a>.<a href="../../../flag/index.html#FlagSet">FlagSet</a>)</pre>
+				<p>
+Apply populates the flag given the flag set and environment
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="StringSliceFlag.GetName">func (StringSliceFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=11025:11066#L492">GetName</a></h3>
+				<pre>func (f <a href="index.html#StringSliceFlag">StringSliceFlag</a>) GetName() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+GetName returns the name of the flag
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="StringSliceFlag.String">func (StringSliceFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=10915:10955#L487">String</a></h3>
+				<pre>func (f <a href="index.html#StringSliceFlag">StringSliceFlag</a>) String() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+String returns a readable representation of this value
+(for usage defaults)
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Uint64Flag">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=11818:11963#L524">Uint64Flag</a></h2>
+			<pre>type Uint64Flag struct {
+    Name        <a href="../../../builtin/index.html#string">string</a>
+    Usage       <a href="../../../builtin/index.html#string">string</a>
+    EnvVar      <a href="../../../builtin/index.html#string">string</a>
+    Hidden      <a href="../../../builtin/index.html#bool">bool</a>
+    Value       <a href="../../../builtin/index.html#uint64">uint64</a>
+    Destination *<a href="../../../builtin/index.html#uint64">uint64</a>
+}</pre>
+			<p>
+Uint64Flag is a flag with type uint64
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Uint64Flag.Apply">func (Uint64Flag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag.go?s=9087:9131#L372">Apply</a></h3>
+				<pre>func (f <a href="index.html#Uint64Flag">Uint64Flag</a>) Apply(set *<a href="../../../flag/index.html">flag</a>.<a href="../../../flag/index.html#FlagSet">FlagSet</a>)</pre>
+				<p>
+Apply populates the flag given the flag set and environment
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Uint64Flag.GetName">func (Uint64Flag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=12152:12188#L540">GetName</a></h3>
+				<pre>func (f <a href="index.html#Uint64Flag">Uint64Flag</a>) GetName() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+GetName returns the name of the flag
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Uint64Flag.String">func (Uint64Flag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=12047:12082#L535">String</a></h3>
+				<pre>func (f <a href="index.html#Uint64Flag">Uint64Flag</a>) String() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+String returns a readable representation of this value
+(for usage defaults)
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="UintFlag">type <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=12873:13012#L572">UintFlag</a></h2>
+			<pre>type UintFlag struct {
+    Name        <a href="../../../builtin/index.html#string">string</a>
+    Usage       <a href="../../../builtin/index.html#string">string</a>
+    EnvVar      <a href="../../../builtin/index.html#string">string</a>
+    Hidden      <a href="../../../builtin/index.html#bool">bool</a>
+    Value       <a href="../../../builtin/index.html#uint">uint</a>
+    Destination *<a href="../../../builtin/index.html#uint">uint</a>
+}</pre>
+			<p>
+UintFlag is a flag with type uint
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="UintFlag.Apply">func (UintFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag.go?s=8502:8544#L348">Apply</a></h3>
+				<pre>func (f <a href="index.html#UintFlag">UintFlag</a>) Apply(set *<a href="../../../flag/index.html">flag</a>.<a href="../../../flag/index.html#FlagSet">FlagSet</a>)</pre>
+				<p>
+Apply populates the flag given the flag set and environment
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="UintFlag.GetName">func (UintFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=13199:13233#L588">GetName</a></h3>
+				<pre>func (f <a href="index.html#UintFlag">UintFlag</a>) GetName() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+GetName returns the name of the flag
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="UintFlag.String">func (UintFlag) <a href="http://localhost:6060/src/github.com/codegangsta/cli/flag_generated.go?s=13096:13129#L583">String</a></h3>
+				<pre>func (f <a href="index.html#UintFlag">UintFlag</a>) String() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+String returns a readable representation of this value
+(for usage defaults)
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+
+
+	<div class="pkg-dir">
+		<table>
+			<tr>
+				<th class="pkg-name">Name</th>
+				<th class="pkg-synopsis">Synopsis</th>
+			</tr>
+
+			
+			<tr>
+				<td colspan="2"><a href="../index.html">..</a></td>
+			</tr>
+			
+
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="altsrc/index.html">altsrc</a>
+						</td>
+						<td class="pkg-synopsis">
+							
+						</td>
+					</tr>
+				
+			
+		</table>
+	</div>
+
+
+	
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>crc32 - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package crc32</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "hash/crc32"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+				<dd><a href="index.html#pkg-examples" class="examplesLink">Examples</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package crc32 implements the 32-bit cyclic redundancy check, or CRC-32,
+checksum. See <a href="http://en.wikipedia.org/wiki/Cyclic_redundancy_check">http://en.wikipedia.org/wiki/Cyclic_redundancy_check</a> for
+information.
+</p>
+<p>
+Polynomials are represented in LSB-first form also known as reversed representation.
+</p>
+<p>
+See <a href="http://en.wikipedia.org/wiki/Mathematics_of_cyclic_redundancy_checks#Reversed_representations_and_reciprocal_polynomials">http://en.wikipedia.org/wiki/Mathematics_of_cyclic_redundancy_checks#Reversed_representations_and_reciprocal_polynomials</a>
+for information.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="index.html#pkg-constants">Constants</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+				
+				<dd><a href="index.html#Checksum">func Checksum(data []byte, tab *Table) uint32</a></dd>
+			
+				
+				<dd><a href="index.html#ChecksumIEEE">func ChecksumIEEE(data []byte) uint32</a></dd>
+			
+				
+				<dd><a href="index.html#New">func New(tab *Table) hash.Hash32</a></dd>
+			
+				
+				<dd><a href="index.html#NewIEEE">func NewIEEE() hash.Hash32</a></dd>
+			
+				
+				<dd><a href="index.html#Update">func Update(crc uint32, tab *Table, p []byte) uint32</a></dd>
+			
+			
+				
+				<dd><a href="index.html#Table">type Table</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MakeTable">func MakeTable(poly uint32) *Table</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+		<div id="pkg-examples">
+			<h4>Examples</h4>
+			<dl>
+			
+			<dd><a class="exampleLink" href="index.html#example_MakeTable">MakeTable</a></dd>
+			
+			</dl>
+		</div>
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/hash/crc32/crc32.go">crc32.go</a>
+			
+				<a href="http://localhost:6060/src/hash/crc32/crc32_amd64.go">crc32_amd64.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const (
+    <span class="comment">// IEEE is by far and away the most common CRC-32 polynomial.</span>
+    <span class="comment">// Used by ethernet (IEEE 802.3), v.42, fddi, gzip, zip, png, ...</span>
+    <span id="IEEE">IEEE</span> = 0xedb88320
+
+    <span class="comment">// Castagnoli&#39;s polynomial, used in iSCSI.</span>
+    <span class="comment">// Has better error detection characteristics than IEEE.</span>
+    <span class="comment">// http://dx.doi.org/10.1109/26.231911</span>
+    <span id="Castagnoli">Castagnoli</span> = 0x82f63b78
+
+    <span class="comment">// Koopman&#39;s polynomial.</span>
+    <span class="comment">// Also has better error detection characteristics than IEEE.</span>
+    <span class="comment">// http://dx.doi.org/10.1109/DSN.2002.1028931</span>
+    <span id="Koopman">Koopman</span> = 0xeb31d82e
+)</pre>
+				<p>
+Predefined polynomials.
+</p>
+
+			
+				<pre>const <span id="Size">Size</span> = 4</pre>
+				<p>
+The size of a CRC-32 checksum in bytes.
+</p>
+
+			
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var <span id="IEEETable">IEEETable</span> = makeTable(<a href="index.html#IEEE">IEEE</a>)</pre>
+				<p>
+IEEETable is the table for the IEEE polynomial.
+</p>
+
+			
+		
+		
+			
+			
+			<h2 id="Checksum">func <a href="http://localhost:6060/src/hash/crc32/crc32.go?s=4825:4870#L167">Checksum</a></h2>
+			<pre>func Checksum(data []<a href="../../builtin/index.html#byte">byte</a>, tab *<a href="index.html#Table">Table</a>) <a href="../../builtin/index.html#uint32">uint32</a></pre>
+			<p>
+Checksum returns the CRC-32 checksum of data
+using the polynomial represented by the Table.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ChecksumIEEE">func <a href="http://localhost:6060/src/hash/crc32/crc32.go?s=4986:5023#L171">ChecksumIEEE</a></h2>
+			<pre>func ChecksumIEEE(data []<a href="../../builtin/index.html#byte">byte</a>) <a href="../../builtin/index.html#uint32">uint32</a></pre>
+			<p>
+ChecksumIEEE returns the CRC-32 checksum of data
+using the IEEE polynomial.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="New">func <a href="http://localhost:6060/src/hash/crc32/crc32.go?s=3160:3192#L107">New</a></h2>
+			<pre>func New(tab *<a href="index.html#Table">Table</a>) <a href="../index.html">hash</a>.<a href="../index.html#Hash32">Hash32</a></pre>
+			<p>
+New creates a new hash.Hash32 computing the CRC-32 checksum
+using the polynomial represented by the Table.
+Its Sum method will lay the value out in big-endian byte order.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="NewIEEE">func <a href="http://localhost:6060/src/hash/crc32/crc32.go?s=3385:3411#L112">NewIEEE</a></h2>
+			<pre>func NewIEEE() <a href="../index.html">hash</a>.<a href="../index.html#Hash32">Hash32</a></pre>
+			<p>
+NewIEEE creates a new hash.Hash32 computing the CRC-32 checksum
+using the IEEE polynomial.
+Its Sum method will lay the value out in big-endian byte order.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Update">func <a href="http://localhost:6060/src/hash/crc32/crc32.go?s=4236:4288#L143">Update</a></h2>
+			<pre>func Update(crc <a href="../../builtin/index.html#uint32">uint32</a>, tab *<a href="index.html#Table">Table</a>, p []<a href="../../builtin/index.html#byte">byte</a>) <a href="../../builtin/index.html#uint32">uint32</a></pre>
+			<p>
+Update returns the result of adding the bytes in p to the crc.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="Table">type <a href="http://localhost:6060/src/hash/crc32/crc32.go?s=1266:1288#L31">Table</a></h2>
+			<pre>type Table [256]<a href="../../builtin/index.html#uint32">uint32</a></pre>
+			<p>
+Table is a 256-word table representing the polynomial for efficient processing.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="MakeTable">func <a href="http://localhost:6060/src/hash/crc32/crc32.go?s=2047:2081#L56">MakeTable</a></h3>
+				<pre>func MakeTable(poly <a href="../../builtin/index.html#uint32">uint32</a>) *<a href="index.html#Table">Table</a></pre>
+				<p>
+MakeTable returns a Table constructed from the specified polynomial.
+The contents of this Table must not be modified.
+</p>
+
+				<div id="example_MakeTable" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code"><span class="comment">// In this package, the CRC polynomial is represented in reversed notation,</span>
+<span class="comment">// or LSB-first representation.</span>
+<span class="comment">//</span>
+<span class="comment">// LSB-first representation is a hexadecimal number with n bits, in which the</span>
+<span class="comment">// most significant bit represents the coefficient of x⁰ and the least significant</span>
+<span class="comment">// bit represents the coefficient of xⁿ⁻¹ (the coefficient for xⁿ is implicit).</span>
+<span class="comment">//</span>
+<span class="comment">// For example, CRC32-Q, as defined by the following polynomial,</span>
+<span class="comment">//	x³²+ x³¹+ x²⁴+ x²²+ x¹⁶+ x¹⁴+ x⁸+ x⁷+ x⁵+ x³+ x¹+ x⁰</span>
+<span class="comment">// has the reversed notation 0b11010101100000101000001010000001, so the value</span>
+<span class="comment">// that should be passed to MakeTable is 0xD5828281.</span>
+crc32q := crc32.MakeTable(0xD5828281)
+fmt.Printf(&#34;%08x\n&#34;, crc32.Checksum([]byte(&#34;Hello world&#34;), crc32q))
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">2964d064
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

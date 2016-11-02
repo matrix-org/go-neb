@@ -1,0 +1,1945 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>io - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package io</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "io"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+				<dd><a href="index.html#pkg-examples" class="examplesLink">Examples</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-subdirectories">Subdirectories</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package io provides basic interfaces to I/O primitives.
+Its primary job is to wrap existing implementations of such primitives,
+such as those in package os, into shared public interfaces that
+abstract the functionality, plus some other related primitives.
+</p>
+<p>
+Because these interfaces and primitives wrap lower-level operations with
+various implementations, unless otherwise informed clients should not
+assume they are safe for parallel execution.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+				
+				<dd><a href="index.html#Copy">func Copy(dst Writer, src Reader) (written int64, err error)</a></dd>
+			
+				
+				<dd><a href="index.html#CopyBuffer">func CopyBuffer(dst Writer, src Reader, buf []byte) (written int64, err error)</a></dd>
+			
+				
+				<dd><a href="index.html#CopyN">func CopyN(dst Writer, src Reader, n int64) (written int64, err error)</a></dd>
+			
+				
+				<dd><a href="index.html#ReadAtLeast">func ReadAtLeast(r Reader, buf []byte, min int) (n int, err error)</a></dd>
+			
+				
+				<dd><a href="index.html#ReadFull">func ReadFull(r Reader, buf []byte) (n int, err error)</a></dd>
+			
+				
+				<dd><a href="index.html#WriteString">func WriteString(w Writer, s string) (n int, err error)</a></dd>
+			
+			
+				
+				<dd><a href="index.html#ByteReader">type ByteReader</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ByteScanner">type ByteScanner</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ByteWriter">type ByteWriter</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Closer">type Closer</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#LimitedReader">type LimitedReader</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LimitedReader.Read">func (l *LimitedReader) Read(p []byte) (n int, err error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#PipeReader">type PipeReader</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Pipe">func Pipe() (*PipeReader, *PipeWriter)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#PipeReader.Close">func (r *PipeReader) Close() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#PipeReader.CloseWithError">func (r *PipeReader) CloseWithError(err error) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#PipeReader.Read">func (r *PipeReader) Read(data []byte) (n int, err error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#PipeWriter">type PipeWriter</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#PipeWriter.Close">func (w *PipeWriter) Close() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#PipeWriter.CloseWithError">func (w *PipeWriter) CloseWithError(err error) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#PipeWriter.Write">func (w *PipeWriter) Write(data []byte) (n int, err error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#ReadCloser">type ReadCloser</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ReadSeeker">type ReadSeeker</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ReadWriteCloser">type ReadWriteCloser</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ReadWriteSeeker">type ReadWriteSeeker</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ReadWriter">type ReadWriter</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Reader">type Reader</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#LimitReader">func LimitReader(r Reader, n int64) Reader</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MultiReader">func MultiReader(readers ...Reader) Reader</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#TeeReader">func TeeReader(r Reader, w Writer) Reader</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ReaderAt">type ReaderAt</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ReaderFrom">type ReaderFrom</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#RuneReader">type RuneReader</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#RuneScanner">type RuneScanner</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#SectionReader">type SectionReader</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewSectionReader">func NewSectionReader(r ReaderAt, off int64, n int64) *SectionReader</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SectionReader.Read">func (s *SectionReader) Read(p []byte) (n int, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SectionReader.ReadAt">func (s *SectionReader) ReadAt(p []byte, off int64) (n int, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SectionReader.Seek">func (s *SectionReader) Seek(offset int64, whence int) (int64, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#SectionReader.Size">func (s *SectionReader) Size() int64</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Seeker">type Seeker</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#WriteCloser">type WriteCloser</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#WriteSeeker">type WriteSeeker</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Writer">type Writer</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MultiWriter">func MultiWriter(writers ...Writer) Writer</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#WriterAt">type WriterAt</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#WriterTo">type WriterTo</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+		<div id="pkg-examples">
+			<h4>Examples</h4>
+			<dl>
+			
+			<dd><a class="exampleLink" href="index.html#example_Copy">Copy</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_CopyBuffer">CopyBuffer</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_CopyN">CopyN</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_LimitReader">LimitReader</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_MultiReader">MultiReader</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_MultiWriter">MultiWriter</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_ReadAtLeast">ReadAtLeast</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_ReadFull">ReadFull</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_SectionReader">SectionReader</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_SectionReader_ReadAt">SectionReader.ReadAt</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_SectionReader_Seek">SectionReader.Seek</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_TeeReader">TeeReader</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_WriteString">WriteString</a></dd>
+			
+			</dl>
+		</div>
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/io/io.go">io.go</a>
+			
+				<a href="http://localhost:6060/src/io/multi.go">multi.go</a>
+			
+				<a href="http://localhost:6060/src/io/pipe.go">pipe.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var <span id="EOF">EOF</span> = <a href="../errors/index.html">errors</a>.<a href="../errors/index.html#New">New</a>(&#34;EOF&#34;)</pre>
+				<p>
+EOF is the error returned by Read when no more input is available.
+Functions should return EOF only to signal a graceful end of input.
+If the EOF occurs unexpectedly in a structured data stream,
+the appropriate error is either ErrUnexpectedEOF or some other error
+giving more detail.
+</p>
+
+			
+				<pre>var <span id="ErrClosedPipe">ErrClosedPipe</span> = <a href="../errors/index.html">errors</a>.<a href="../errors/index.html#New">New</a>(&#34;io: read/write on closed pipe&#34;)</pre>
+				<p>
+ErrClosedPipe is the error used for read or write operations on a closed pipe.
+</p>
+
+			
+				<pre>var <span id="ErrNoProgress">ErrNoProgress</span> = <a href="../errors/index.html">errors</a>.<a href="../errors/index.html#New">New</a>(&#34;multiple Read calls return no data or error&#34;)</pre>
+				<p>
+ErrNoProgress is returned by some clients of an io.Reader when
+many calls to Read have failed to return any data or error,
+usually the sign of a broken io.Reader implementation.
+</p>
+
+			
+				<pre>var <span id="ErrShortBuffer">ErrShortBuffer</span> = <a href="../errors/index.html">errors</a>.<a href="../errors/index.html#New">New</a>(&#34;short buffer&#34;)</pre>
+				<p>
+ErrShortBuffer means that a read required a longer buffer than was provided.
+</p>
+
+			
+				<pre>var <span id="ErrShortWrite">ErrShortWrite</span> = <a href="../errors/index.html">errors</a>.<a href="../errors/index.html#New">New</a>(&#34;short write&#34;)</pre>
+				<p>
+ErrShortWrite means that a write accepted fewer bytes than requested
+but failed to return an explicit error.
+</p>
+
+			
+				<pre>var <span id="ErrUnexpectedEOF">ErrUnexpectedEOF</span> = <a href="../errors/index.html">errors</a>.<a href="../errors/index.html#New">New</a>(&#34;unexpected EOF&#34;)</pre>
+				<p>
+ErrUnexpectedEOF means that EOF was encountered in the
+middle of reading a fixed-size block or data structure.
+</p>
+
+			
+		
+		
+			
+			
+			<h2 id="Copy">func <a href="http://localhost:6060/src/io/io.go?s=12235:12295#L339">Copy</a></h2>
+			<pre>func Copy(dst <a href="index.html#Writer">Writer</a>, src <a href="index.html#Reader">Reader</a>) (written <a href="../builtin/index.html#int64">int64</a>, err <a href="../builtin/index.html#error">error</a>)</pre>
+			<p>
+Copy copies from src to dst until either EOF is reached
+on src or an error occurs.  It returns the number of bytes
+copied and the first error encountered while copying, if any.
+</p>
+<p>
+A successful Copy returns err == nil, not err == EOF.
+Because Copy is defined to read from src until EOF, it does
+not treat an EOF from Read as an error to be reported.
+</p>
+<p>
+If src implements the WriterTo interface,
+the copy is implemented by calling src.WriteTo(dst).
+Otherwise, if dst implements the ReaderFrom interface,
+the copy is implemented by calling dst.ReadFrom(src).
+</p>
+
+			<div id="example_Copy" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">r := strings.NewReader(&#34;some io.Reader stream to be read\n&#34;)
+
+if _, err := io.Copy(os.Stdout, r); err != nil {
+    log.Fatal(err)
+}
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">some io.Reader stream to be read
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+
+		
+			
+			
+			<h2 id="CopyBuffer">func <a href="http://localhost:6060/src/io/io.go?s=12575:12653#L347">CopyBuffer</a></h2>
+			<pre>func CopyBuffer(dst <a href="index.html#Writer">Writer</a>, src <a href="index.html#Reader">Reader</a>, buf []<a href="../builtin/index.html#byte">byte</a>) (written <a href="../builtin/index.html#int64">int64</a>, err <a href="../builtin/index.html#error">error</a>)</pre>
+			<p>
+CopyBuffer is identical to Copy except that it stages through the
+provided buffer (if one is required) rather than allocating a
+temporary one. If buf is nil, one is allocated; otherwise if it has
+zero length, CopyBuffer panics.
+</p>
+
+			<div id="example_CopyBuffer" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">r1 := strings.NewReader(&#34;first reader\n&#34;)
+r2 := strings.NewReader(&#34;second reader\n&#34;)
+buf := make([]byte, 8)
+
+<span class="comment">// buf is used here...</span>
+if _, err := io.CopyBuffer(os.Stdout, r1, buf); err != nil {
+    log.Fatal(err)
+}
+
+<span class="comment">// ... reused here also. No need to allocate an extra buffer.</span>
+if _, err := io.CopyBuffer(os.Stdout, r2, buf); err != nil {
+    log.Fatal(err)
+}
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">first reader
+second reader
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+
+		
+			
+			
+			<h2 id="CopyN">func <a href="http://localhost:6060/src/io/io.go?s=11389:11459#L315">CopyN</a></h2>
+			<pre>func CopyN(dst <a href="index.html#Writer">Writer</a>, src <a href="index.html#Reader">Reader</a>, n <a href="../builtin/index.html#int64">int64</a>) (written <a href="../builtin/index.html#int64">int64</a>, err <a href="../builtin/index.html#error">error</a>)</pre>
+			<p>
+CopyN copies n bytes (or until an error) from src to dst.
+It returns the number of bytes copied and the earliest
+error encountered while copying.
+On return, written == n if and only if err == nil.
+</p>
+<p>
+If dst implements the ReaderFrom interface,
+the copy is implemented using it.
+</p>
+
+			<div id="example_CopyN" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">r := strings.NewReader(&#34;some io.Reader stream to be read&#34;)
+
+if _, err := io.CopyN(os.Stdout, r, 5); err != nil {
+    log.Fatal(err)
+}
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">some
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+
+		
+			
+			
+			<h2 id="ReadAtLeast">func <a href="http://localhost:6060/src/io/io.go?s=10351:10417#L281">ReadAtLeast</a></h2>
+			<pre>func ReadAtLeast(r <a href="index.html#Reader">Reader</a>, buf []<a href="../builtin/index.html#byte">byte</a>, min <a href="../builtin/index.html#int">int</a>) (n <a href="../builtin/index.html#int">int</a>, err <a href="../builtin/index.html#error">error</a>)</pre>
+			<p>
+ReadAtLeast reads from r into buf until it has read at least min bytes.
+It returns the number of bytes copied and an error if fewer bytes were read.
+The error is EOF only if no bytes were read.
+If an EOF happens after reading fewer than min bytes,
+ReadAtLeast returns ErrUnexpectedEOF.
+If min is greater than the length of buf, ReadAtLeast returns ErrShortBuffer.
+On return, n &gt;= min if and only if err == nil.
+</p>
+
+			<div id="example_ReadAtLeast" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">r := strings.NewReader(&#34;some io.Reader stream to be read\n&#34;)
+
+buf := make([]byte, 33)
+if _, err := io.ReadAtLeast(r, buf, 4); err != nil {
+    log.Fatal(err)
+}
+fmt.Printf(&#34;%s\n&#34;, buf)
+
+<span class="comment">// buffer smaller than minimal read size.</span>
+shortBuf := make([]byte, 3)
+if _, err := io.ReadAtLeast(r, shortBuf, 4); err != nil {
+    fmt.Println(&#34;error:&#34;, err)
+}
+
+<span class="comment">// minimal read size bigger than io.Reader stream</span>
+longBuf := make([]byte, 64)
+if _, err := io.ReadAtLeast(r, longBuf, 64); err != nil {
+    fmt.Println(&#34;error:&#34;, err)
+}
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">some io.Reader stream to be read
+
+error: short buffer
+error: EOF
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+
+		
+			
+			
+			<h2 id="ReadFull">func <a href="http://localhost:6060/src/io/io.go?s=10995:11049#L304">ReadFull</a></h2>
+			<pre>func ReadFull(r <a href="index.html#Reader">Reader</a>, buf []<a href="../builtin/index.html#byte">byte</a>) (n <a href="../builtin/index.html#int">int</a>, err <a href="../builtin/index.html#error">error</a>)</pre>
+			<p>
+ReadFull reads exactly len(buf) bytes from r into buf.
+It returns the number of bytes copied and an error if fewer bytes were read.
+The error is EOF only if no bytes were read.
+If an EOF happens after reading some but not all the bytes,
+ReadFull returns ErrUnexpectedEOF.
+On return, n == len(buf) if and only if err == nil.
+</p>
+
+			<div id="example_ReadFull" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">r := strings.NewReader(&#34;some io.Reader stream to be read\n&#34;)
+
+buf := make([]byte, 4)
+if _, err := io.ReadFull(r, buf); err != nil {
+    log.Fatal(err)
+}
+fmt.Printf(&#34;%s\n&#34;, buf)
+
+<span class="comment">// minimal read size bigger than io.Reader stream</span>
+longBuf := make([]byte, 64)
+if _, err := io.ReadFull(r, longBuf); err != nil {
+    fmt.Println(&#34;error:&#34;, err)
+}
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">some
+error: unexpected EOF
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+
+		
+			
+			
+			<h2 id="WriteString">func <a href="http://localhost:6060/src/io/io.go?s=9764:9819#L267">WriteString</a></h2>
+			<pre>func WriteString(w <a href="index.html#Writer">Writer</a>, s <a href="../builtin/index.html#string">string</a>) (n <a href="../builtin/index.html#int">int</a>, err <a href="../builtin/index.html#error">error</a>)</pre>
+			<p>
+WriteString writes the contents of the string s to w, which accepts a slice of bytes.
+If w implements a WriteString method, it is invoked directly.
+</p>
+
+			<div id="example_WriteString" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">io.WriteString(os.Stdout, &#34;Hello World&#34;)
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">Hello World
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+
+		
+		
+			
+			
+			<h2 id="ByteReader">type <a href="http://localhost:6060/src/io/io.go?s=8263:8324#L218">ByteReader</a></h2>
+			<pre>type ByteReader interface {
+    ReadByte() (c <a href="../builtin/index.html#byte">byte</a>, err <a href="../builtin/index.html#error">error</a>)
+}</pre>
+			<p>
+ByteReader is the interface that wraps the ReadByte method.
+</p>
+<p>
+ReadByte reads and returns the next byte from the input.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ByteScanner">type <a href="http://localhost:6060/src/io/io.go?s=8625:8687#L229">ByteScanner</a></h2>
+			<pre>type ByteScanner interface {
+    <a href="index.html#ByteReader">ByteReader</a>
+    UnreadByte() <a href="../builtin/index.html#error">error</a>
+}</pre>
+			<p>
+ByteScanner is the interface that adds the UnreadByte method to the
+basic ReadByte method.
+</p>
+<p>
+UnreadByte causes the next call to ReadByte to return the same byte
+as the previous call to ReadByte.
+It may be an error to call UnreadByte twice without an intervening
+call to ReadByte.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ByteWriter">type <a href="http://localhost:6060/src/io/io.go?s=8753:8807#L235">ByteWriter</a></h2>
+			<pre>type ByteWriter interface {
+    WriteByte(c <a href="../builtin/index.html#byte">byte</a>) <a href="../builtin/index.html#error">error</a>
+}</pre>
+			<p>
+ByteWriter is the interface that wraps the WriteByte method.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Closer">type <a href="http://localhost:6060/src/io/io.go?s=3853:3893#L81">Closer</a></h2>
+			<pre>type Closer interface {
+    Close() <a href="../builtin/index.html#error">error</a>
+}</pre>
+			<p>
+Closer is the interface that wraps the basic Close method.
+</p>
+<p>
+The behavior of Close after the first call is undefined.
+Specific implementations may document their own behavior.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="LimitedReader">type <a href="http://localhost:6060/src/io/io.go?s=14016:14109#L404">LimitedReader</a></h2>
+			<pre>type LimitedReader struct {
+    R <a href="index.html#Reader">Reader</a> <span class="comment">// underlying reader</span>
+    N <a href="../builtin/index.html#int64">int64</a>  <span class="comment">// max bytes remaining</span>
+}</pre>
+			<p>
+A LimitedReader reads from R but limits the amount of
+data returned to just N bytes. Each call to Read
+updates N to reflect the new amount remaining.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="LimitedReader.Read">func (*LimitedReader) <a href="http://localhost:6060/src/io/io.go?s=14111:14168#L409">Read</a></h3>
+				<pre>func (l *<a href="index.html#LimitedReader">LimitedReader</a>) Read(p []<a href="../builtin/index.html#byte">byte</a>) (n <a href="../builtin/index.html#int">int</a>, err <a href="../builtin/index.html#error">error</a>)</pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="PipeReader">type <a href="http://localhost:6060/src/io/pipe.go?s=2308:2343#L114">PipeReader</a></h2>
+			<pre>type PipeReader struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+A PipeReader is the read half of a pipe.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="Pipe">func <a href="http://localhost:6060/src/io/pipe.go?s=4486:4524#L179">Pipe</a></h3>
+				<pre>func Pipe() (*<a href="index.html#PipeReader">PipeReader</a>, *<a href="index.html#PipeWriter">PipeWriter</a>)</pre>
+				<p>
+Pipe creates a synchronous in-memory pipe.
+It can be used to connect code expecting an io.Reader
+with code expecting an io.Writer.
+Reads on one end are matched with writes on the other,
+copying data directly between the two; there is no internal buffering.
+It is safe to call Read and Write in parallel with each other or with
+Close. Close will complete once pending I/O is done. Parallel calls to
+Read, and parallel calls to Write, are also safe:
+the individual calls will be gated sequentially.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="PipeReader.Close">func (*PipeReader) <a href="http://localhost:6060/src/io/pipe.go?s=2791:2825#L129">Close</a></h3>
+				<pre>func (r *<a href="index.html#PipeReader">PipeReader</a>) Close() <a href="../builtin/index.html#error">error</a></pre>
+				<p>
+Close closes the reader; subsequent writes to the
+write half of the pipe will return the error ErrClosedPipe.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="PipeReader.CloseWithError">func (*PipeReader) <a href="http://localhost:6060/src/io/pipe.go?s=2976:3028#L135">CloseWithError</a></h3>
+				<pre>func (r *<a href="index.html#PipeReader">PipeReader</a>) CloseWithError(err <a href="../builtin/index.html#error">error</a>) <a href="../builtin/index.html#error">error</a></pre>
+				<p>
+CloseWithError closes the reader; subsequent writes
+to the write half of the pipe will return the error err.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="PipeReader.Read">func (*PipeReader) <a href="http://localhost:6060/src/io/pipe.go?s=2589:2646#L123">Read</a></h3>
+				<pre>func (r *<a href="index.html#PipeReader">PipeReader</a>) Read(data []<a href="../builtin/index.html#byte">byte</a>) (n <a href="../builtin/index.html#int">int</a>, err <a href="../builtin/index.html#error">error</a>)</pre>
+				<p>
+Read implements the standard Read interface:
+it reads data from the pipe, blocking until a writer
+arrives or the write end is closed.
+If the write end is closed with an error, that error is
+returned as err; otherwise err is EOF.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="PipeWriter">type <a href="http://localhost:6060/src/io/pipe.go?s=3108:3143#L141">PipeWriter</a></h2>
+			<pre>type PipeWriter struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+A PipeWriter is the write half of a pipe.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="PipeWriter.Close">func (*PipeWriter) <a href="http://localhost:6060/src/io/pipe.go?s=3611:3645#L156">Close</a></h3>
+				<pre>func (w *<a href="index.html#PipeWriter">PipeWriter</a>) Close() <a href="../builtin/index.html#error">error</a></pre>
+				<p>
+Close closes the writer; subsequent reads from the
+read half of the pipe will return no bytes and EOF.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="PipeWriter.CloseWithError">func (*PipeWriter) <a href="http://localhost:6060/src/io/pipe.go?s=3875:3927#L165">CloseWithError</a></h3>
+				<pre>func (w *<a href="index.html#PipeWriter">PipeWriter</a>) CloseWithError(err <a href="../builtin/index.html#error">error</a>) <a href="../builtin/index.html#error">error</a></pre>
+				<p>
+CloseWithError closes the writer; subsequent reads from the
+read half of the pipe will return no bytes and the error err,
+or EOF if err is nil.
+</p>
+<p>
+CloseWithError always returns nil.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="PipeWriter.Write">func (*PipeWriter) <a href="http://localhost:6060/src/io/pipe.go?s=3414:3472#L150">Write</a></h3>
+				<pre>func (w *<a href="index.html#PipeWriter">PipeWriter</a>) Write(data []<a href="../builtin/index.html#byte">byte</a>) (n <a href="../builtin/index.html#int">int</a>, err <a href="../builtin/index.html#error">error</a>)</pre>
+				<p>
+Write implements the standard Write interface:
+it writes data to the pipe, blocking until readers
+have consumed all the data or the read end is closed.
+If the read end is closed with an error, that err is
+returned as err; otherwise err is ErrClosedPipe.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ReadCloser">type <a href="http://localhost:6060/src/io/io.go?s=4757:4802#L107">ReadCloser</a></h2>
+			<pre>type ReadCloser interface {
+    <a href="index.html#Reader">Reader</a>
+    <a href="index.html#Closer">Closer</a>
+}</pre>
+			<p>
+ReadCloser is the interface that groups the basic Read and Close methods.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ReadSeeker">type <a href="http://localhost:6060/src/io/io.go?s=5156:5201#L126">ReadSeeker</a></h2>
+			<pre>type ReadSeeker interface {
+    <a href="index.html#Reader">Reader</a>
+    <a href="index.html#Seeker">Seeker</a>
+}</pre>
+			<p>
+ReadSeeker is the interface that groups the basic Read and Seek methods.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ReadWriteCloser">type <a href="http://localhost:6060/src/io/io.go?s=5020:5078#L119">ReadWriteCloser</a></h2>
+			<pre>type ReadWriteCloser interface {
+    <a href="index.html#Reader">Reader</a>
+    <a href="index.html#Writer">Writer</a>
+    <a href="index.html#Closer">Closer</a>
+}</pre>
+			<p>
+ReadWriteCloser is the interface that groups the basic Read, Write and Close methods.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ReadWriteSeeker">type <a href="http://localhost:6060/src/io/io.go?s=5417:5475#L138">ReadWriteSeeker</a></h2>
+			<pre>type ReadWriteSeeker interface {
+    <a href="index.html#Reader">Reader</a>
+    <a href="index.html#Writer">Writer</a>
+    <a href="index.html#Seeker">Seeker</a>
+}</pre>
+			<p>
+ReadWriteSeeker is the interface that groups the basic Read, Write and Seek methods.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ReadWriter">type <a href="http://localhost:6060/src/io/io.go?s=4633:4678#L101">ReadWriter</a></h2>
+			<pre>type ReadWriter interface {
+    <a href="index.html#Reader">Reader</a>
+    <a href="index.html#Writer">Writer</a>
+}</pre>
+			<p>
+ReadWriter is the interface that groups the basic Read and Write methods.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Reader">type <a href="http://localhost:6060/src/io/io.go?s=3113:3173#L60">Reader</a></h2>
+			<pre>type Reader interface {
+    Read(p []<a href="../builtin/index.html#byte">byte</a>) (n <a href="../builtin/index.html#int">int</a>, err <a href="../builtin/index.html#error">error</a>)
+}</pre>
+			<p>
+Reader is the interface that wraps the basic Read method.
+</p>
+<p>
+Read reads up to len(p) bytes into p.  It returns the number of bytes
+read (0 &lt;= n &lt;= len(p)) and any error encountered.  Even if Read
+returns n &lt; len(p), it may use all of p as scratch space during the call.
+If some data is available but not len(p) bytes, Read conventionally
+returns what is available instead of waiting for more.
+</p>
+<p>
+When Read encounters an error or end-of-file condition after
+successfully reading n &gt; 0 bytes, it returns the number of
+bytes read.  It may return the (non-nil) error from the same call
+or return the error (and n == 0) from a subsequent call.
+An instance of this general case is that a Reader returning
+a non-zero number of bytes at the end of the input stream may
+return either err == EOF or err == nil.  The next Read should
+return 0, EOF.
+</p>
+<p>
+Callers should always process the n &gt; 0 bytes returned before
+considering the error err.  Doing so correctly handles I/O errors
+that happen after reading some bytes and also both of the
+allowed EOF behaviors.
+</p>
+<p>
+Implementations of Read are discouraged from returning a
+zero byte count with a nil error, except when len(p) == 0.
+Callers should treat a return of 0 and nil as indicating that
+nothing happened; in particular it does not indicate EOF.
+</p>
+<p>
+Implementations must not retain p.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="LimitReader">func <a href="http://localhost:6060/src/io/io.go?s=13781:13823#L399">LimitReader</a></h3>
+				<pre>func LimitReader(r <a href="index.html#Reader">Reader</a>, n <a href="../builtin/index.html#int64">int64</a>) <a href="index.html#Reader">Reader</a></pre>
+				<p>
+LimitReader returns a Reader that reads from r
+but stops with EOF after n bytes.
+The underlying implementation is a *LimitedReader.
+</p>
+
+				<div id="example_LimitReader" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">r := strings.NewReader(&#34;some io.Reader stream to be read\n&#34;)
+lr := io.LimitReader(r, 4)
+
+if _, err := io.Copy(os.Stdout, lr); err != nil {
+    log.Fatal(err)
+}
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">some
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+				
+				<h3 id="MultiReader">func <a href="http://localhost:6060/src/io/multi.go?s=830:872#L21">MultiReader</a></h3>
+				<pre>func MultiReader(readers ...<a href="index.html#Reader">Reader</a>) <a href="index.html#Reader">Reader</a></pre>
+				<p>
+MultiReader returns a Reader that&#39;s the logical concatenation of
+the provided input readers.  They&#39;re read sequentially.  Once all
+inputs have returned EOF, Read will return EOF.  If any of the readers
+return a non-nil, non-EOF error, Read will return that error.
+</p>
+
+				<div id="example_MultiReader" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">r1 := strings.NewReader(&#34;first reader &#34;)
+r2 := strings.NewReader(&#34;second reader &#34;)
+r3 := strings.NewReader(&#34;third reader\n&#34;)
+r := io.MultiReader(r1, r2, r3)
+
+if _, err := io.Copy(os.Stdout, r); err != nil {
+    log.Fatal(err)
+}
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">first reader second reader third reader
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+				
+				<h3 id="TeeReader">func <a href="http://localhost:6060/src/io/io.go?s=16109:16150#L493">TeeReader</a></h3>
+				<pre>func TeeReader(r <a href="index.html#Reader">Reader</a>, w <a href="index.html#Writer">Writer</a>) <a href="index.html#Reader">Reader</a></pre>
+				<p>
+TeeReader returns a Reader that writes to w what it reads from r.
+All reads from r performed through it are matched with
+corresponding writes to w.  There is no internal buffering -
+the write must complete before the read completes.
+Any error encountered while writing is reported as a read error.
+</p>
+
+				<div id="example_TeeReader" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">r := strings.NewReader(&#34;some io.Reader stream to be read\n&#34;)
+var buf bytes.Buffer
+tee := io.TeeReader(r, &amp;buf)
+
+printall := func(r io.Reader) {
+    b, err := ioutil.ReadAll(r)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf(&#34;%s&#34;, b)
+}
+
+printall(tee)
+printall(&amp;buf)
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">some io.Reader stream to be read
+some io.Reader stream to be read
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+
+			
+		
+			
+			
+			<h2 id="ReaderAt">type <a href="http://localhost:6060/src/io/io.go?s=7328:7403#L192">ReaderAt</a></h2>
+			<pre>type ReaderAt interface {
+    ReadAt(p []<a href="../builtin/index.html#byte">byte</a>, off <a href="../builtin/index.html#int64">int64</a>) (n <a href="../builtin/index.html#int">int</a>, err <a href="../builtin/index.html#error">error</a>)
+}</pre>
+			<p>
+ReaderAt is the interface that wraps the basic ReadAt method.
+</p>
+<p>
+ReadAt reads len(p) bytes into p starting at offset off in the
+underlying input source.  It returns the number of bytes
+read (0 &lt;= n &lt;= len(p)) and any error encountered.
+</p>
+<p>
+When ReadAt returns n &lt; len(p), it returns a non-nil error
+explaining why more bytes were not returned.  In this respect,
+ReadAt is stricter than Read.
+</p>
+<p>
+Even if ReadAt returns n &lt; len(p), it may use all of p as scratch
+space during the call.  If some data is available but not len(p) bytes,
+ReadAt blocks until either all the data is available or an error occurs.
+In this respect ReadAt is different from Read.
+</p>
+<p>
+If the n = len(p) bytes returned by ReadAt are at the end of the
+input source, ReadAt may return either err == EOF or err == nil.
+</p>
+<p>
+If ReadAt is reading from an input source with a seek offset,
+ReadAt should not affect nor be affected by the underlying
+seek offset.
+</p>
+<p>
+Clients of ReadAt can execute parallel ReadAt calls on the
+same input source.
+</p>
+<p>
+Implementations must not retain p.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ReaderFrom">type <a href="http://localhost:6060/src/io/io.go?s=5771:5841#L151">ReaderFrom</a></h2>
+			<pre>type ReaderFrom interface {
+    ReadFrom(r <a href="index.html#Reader">Reader</a>) (n <a href="../builtin/index.html#int64">int64</a>, err <a href="../builtin/index.html#error">error</a>)
+}</pre>
+			<p>
+ReaderFrom is the interface that wraps the ReadFrom method.
+</p>
+<p>
+ReadFrom reads data from r until EOF or error.
+The return value n is the number of bytes read.
+Any error except io.EOF encountered during the read is also returned.
+</p>
+<p>
+The Copy function uses ReaderFrom if available.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="RuneReader">type <a href="http://localhost:6060/src/io/io.go?s=9031:9102#L244">RuneReader</a></h2>
+			<pre>type RuneReader interface {
+    ReadRune() (r <a href="../builtin/index.html#rune">rune</a>, size <a href="../builtin/index.html#int">int</a>, err <a href="../builtin/index.html#error">error</a>)
+}</pre>
+			<p>
+RuneReader is the interface that wraps the ReadRune method.
+</p>
+<p>
+ReadRune reads a single UTF-8 encoded Unicode character
+and returns the rune and its size in bytes. If no character is
+available, err will be set.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="RuneScanner">type <a href="http://localhost:6060/src/io/io.go?s=9403:9465#L255">RuneScanner</a></h2>
+			<pre>type RuneScanner interface {
+    <a href="index.html#RuneReader">RuneReader</a>
+    UnreadRune() <a href="../builtin/index.html#error">error</a>
+}</pre>
+			<p>
+RuneScanner is the interface that adds the UnreadRune method to the
+basic ReadRune method.
+</p>
+<p>
+UnreadRune causes the next call to ReadRune to return the same rune
+as the previous call to ReadRune.
+It may be an error to call UnreadRune twice without an intervening
+call to ReadRune.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="SectionReader">type <a href="http://localhost:6060/src/io/io.go?s=14634:14718#L429">SectionReader</a></h2>
+			<pre>type SectionReader struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+SectionReader implements Read, Seek, and ReadAt on a section
+of an underlying ReaderAt.
+</p>
+
+
+			
+
+			
+
+			<div id="example_SectionReader" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">r := strings.NewReader(&#34;some io.Reader stream to be read\n&#34;)
+s := io.NewSectionReader(r, 5, 17)
+
+if _, err := io.Copy(os.Stdout, s); err != nil {
+    log.Fatal(err)
+}
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">io.Reader stream
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+			
+
+			
+				
+				<h3 id="NewSectionReader">func <a href="http://localhost:6060/src/io/io.go?s=14421:14489#L423">NewSectionReader</a></h3>
+				<pre>func NewSectionReader(r <a href="index.html#ReaderAt">ReaderAt</a>, off <a href="../builtin/index.html#int64">int64</a>, n <a href="../builtin/index.html#int64">int64</a>) *<a href="index.html#SectionReader">SectionReader</a></pre>
+				<p>
+NewSectionReader returns a SectionReader that reads from r
+starting at offset off and stops with EOF after n bytes.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="SectionReader.Read">func (*SectionReader) <a href="http://localhost:6060/src/io/io.go?s=14720:14777#L436">Read</a></h3>
+				<pre>func (s *<a href="index.html#SectionReader">SectionReader</a>) Read(p []<a href="../builtin/index.html#byte">byte</a>) (n <a href="../builtin/index.html#int">int</a>, err <a href="../builtin/index.html#error">error</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="SectionReader.ReadAt">func (*SectionReader) <a href="http://localhost:6060/src/io/io.go?s=15357:15427#L469">ReadAt</a></h3>
+				<pre>func (s *<a href="index.html#SectionReader">SectionReader</a>) ReadAt(p []<a href="../builtin/index.html#byte">byte</a>, off <a href="../builtin/index.html#int64">int64</a>) (n <a href="../builtin/index.html#int">int</a>, err <a href="../builtin/index.html#error">error</a>)</pre>
+				
+				
+				<div id="example_SectionReader_ReadAt" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">r := strings.NewReader(&#34;some io.Reader stream to be read\n&#34;)
+s := io.NewSectionReader(r, 5, 16)
+
+buf := make([]byte, 6)
+if _, err := s.ReadAt(buf, 10); err != nil {
+    log.Fatal(err)
+}
+
+fmt.Printf(&#34;%s\n&#34;, buf)
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">stream
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+				
+				<h3 id="SectionReader.Seek">func (*SectionReader) <a href="http://localhost:6060/src/io/io.go?s=15054:15123#L451">Seek</a></h3>
+				<pre>func (s *<a href="index.html#SectionReader">SectionReader</a>) Seek(offset <a href="../builtin/index.html#int64">int64</a>, whence <a href="../builtin/index.html#int">int</a>) (<a href="../builtin/index.html#int64">int64</a>, <a href="../builtin/index.html#error">error</a>)</pre>
+				
+				
+				<div id="example_SectionReader_Seek" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">r := strings.NewReader(&#34;some io.Reader stream to be read\n&#34;)
+s := io.NewSectionReader(r, 5, 16)
+
+if _, err := s.Seek(10, 0); err != nil {
+    log.Fatal(err)
+}
+
+buf := make([]byte, 6)
+if _, err := s.Read(buf); err != nil {
+    log.Fatal(err)
+}
+
+fmt.Printf(&#34;%s\n&#34;, buf)
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">stream
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+				
+				<h3 id="SectionReader.Size">func (*SectionReader) <a href="http://localhost:6060/src/io/io.go?s=15730:15766#L486">Size</a></h3>
+				<pre>func (s *<a href="index.html#SectionReader">SectionReader</a>) Size() <a href="../builtin/index.html#int64">int64</a></pre>
+				<p>
+Size returns the size of the section in bytes.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Seeker">type <a href="http://localhost:6060/src/io/io.go?s=4482:4554#L96">Seeker</a></h2>
+			<pre>type Seeker interface {
+    Seek(offset <a href="../builtin/index.html#int64">int64</a>, whence <a href="../builtin/index.html#int">int</a>) (<a href="../builtin/index.html#int64">int64</a>, <a href="../builtin/index.html#error">error</a>)
+}</pre>
+			<p>
+Seeker is the interface that wraps the basic Seek method.
+</p>
+<p>
+Seek sets the offset for the next Read or Write to offset,
+interpreted according to whence: 0 means relative to the start of
+the file, 1 means relative to the current offset, and 2 means
+relative to the end. Seek returns the new offset relative to the
+start of the file and an error, if any.
+</p>
+<p>
+Seeking to an offset before the start of the file is an error.
+Seeking to any positive offset is legal, but the behavior of subsequent
+I/O operations on the underlying object is implementation-dependent.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="WriteCloser">type <a href="http://localhost:6060/src/io/io.go?s=4883:4929#L113">WriteCloser</a></h2>
+			<pre>type WriteCloser interface {
+    <a href="index.html#Writer">Writer</a>
+    <a href="index.html#Closer">Closer</a>
+}</pre>
+			<p>
+WriteCloser is the interface that groups the basic Write and Close methods.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="WriteSeeker">type <a href="http://localhost:6060/src/io/io.go?s=5281:5327#L132">WriteSeeker</a></h2>
+			<pre>type WriteSeeker interface {
+    <a href="index.html#Writer">Writer</a>
+    <a href="index.html#Seeker">Seeker</a>
+}</pre>
+			<p>
+WriteSeeker is the interface that groups the basic Write and Seek methods.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Writer">type <a href="http://localhost:6060/src/io/io.go?s=3604:3665#L73">Writer</a></h2>
+			<pre>type Writer interface {
+    Write(p []<a href="../builtin/index.html#byte">byte</a>) (n <a href="../builtin/index.html#int">int</a>, err <a href="../builtin/index.html#error">error</a>)
+}</pre>
+			<p>
+Writer is the interface that wraps the basic Write method.
+</p>
+<p>
+Write writes len(p) bytes from p to the underlying data stream.
+It returns the number of bytes written from p (0 &lt;= n &lt;= len(p))
+and any error encountered that caused the write to stop early.
+Write must return a non-nil error if it returns n &lt; len(p).
+Write must not modify the slice data, even temporarily.
+</p>
+<p>
+Implementations must not retain p.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="MultiWriter">func <a href="http://localhost:6060/src/io/multi.go?s=1804:1846#L71">MultiWriter</a></h3>
+				<pre>func MultiWriter(writers ...<a href="index.html#Writer">Writer</a>) <a href="index.html#Writer">Writer</a></pre>
+				<p>
+MultiWriter creates a writer that duplicates its writes to all the
+provided writers, similar to the Unix tee(1) command.
+</p>
+
+				<div id="example_MultiWriter" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">r := strings.NewReader(&#34;some io.Reader stream to be read\n&#34;)
+
+var buf1, buf2 bytes.Buffer
+w := io.MultiWriter(&amp;buf1, &amp;buf2)
+
+if _, err := io.Copy(w, r); err != nil {
+    log.Fatal(err)
+}
+
+fmt.Print(buf1.String())
+fmt.Print(buf2.String())
+
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">some io.Reader stream to be read
+some io.Reader stream to be read
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+
+			
+		
+			
+			
+			<h2 id="WriterAt">type <a href="http://localhost:6060/src/io/io.go?s=8059:8135#L211">WriterAt</a></h2>
+			<pre>type WriterAt interface {
+    WriteAt(p []<a href="../builtin/index.html#byte">byte</a>, off <a href="../builtin/index.html#int64">int64</a>) (n <a href="../builtin/index.html#int">int</a>, err <a href="../builtin/index.html#error">error</a>)
+}</pre>
+			<p>
+WriterAt is the interface that wraps the basic WriteAt method.
+</p>
+<p>
+WriteAt writes len(p) bytes from p to the underlying data stream
+at offset off.  It returns the number of bytes written from p (0 &lt;= n &lt;= len(p))
+and any error encountered that caused the write to stop early.
+WriteAt must return a non-nil error if it returns n &lt; len(p).
+</p>
+<p>
+If WriteAt is writing to a destination with a seek offset,
+WriteAt should not affect nor be affected by the underlying
+seek offset.
+</p>
+<p>
+Clients of WriteAt can execute parallel WriteAt calls on the same
+destination if the ranges do not overlap.
+</p>
+<p>
+Implementations must not retain p.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="WriterTo">type <a href="http://localhost:6060/src/io/io.go?s=6161:6228#L162">WriterTo</a></h2>
+			<pre>type WriterTo interface {
+    WriteTo(w <a href="index.html#Writer">Writer</a>) (n <a href="../builtin/index.html#int64">int64</a>, err <a href="../builtin/index.html#error">error</a>)
+}</pre>
+			<p>
+WriterTo is the interface that wraps the WriteTo method.
+</p>
+<p>
+WriteTo writes data to w until there&#39;s no more data to write or
+when an error occurs. The return value n is the number of bytes
+written. Any error encountered during the write is also returned.
+</p>
+<p>
+The Copy function uses WriterTo if available.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+
+
+	<div class="pkg-dir">
+		<table>
+			<tr>
+				<th class="pkg-name">Name</th>
+				<th class="pkg-synopsis">Synopsis</th>
+			</tr>
+
+			
+			<tr>
+				<td colspan="2"><a href="http://localhost:6060/pkg/">..</a></td>
+			</tr>
+			
+
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="ioutil/index.html">ioutil</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package ioutil implements some I/O utility functions.
+						</td>
+					</tr>
+				
+			
+		</table>
+	</div>
+
+
+	
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

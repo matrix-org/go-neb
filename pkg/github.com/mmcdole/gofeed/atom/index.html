@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>atom - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package atom</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/mmcdole/gofeed/atom"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+			
+				
+				<dd><a href="index.html#Category">type Category</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Content">type Content</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Entry">type Entry</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Feed">type Feed</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Feed.String">func (f Feed) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Generator">type Generator</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Link">type Link</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Parser">type Parser</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Parser.Parse">func (ap *Parser) Parse(feed io.Reader) (*Feed, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Person">type Person</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Source">type Source</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/mmcdole/gofeed/atom/feed.go">feed.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/mmcdole/gofeed/atom/parser.go">parser.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+		
+			
+			
+			<h2 id="Category">type <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/atom/feed.go?s=2199:2343#L46">Category</a></h2>
+			<pre>type Category struct {
+    Term   <a href="../../../../builtin/index.html#string">string</a> `json:&#34;term,omitempty&#34;`
+    Scheme <a href="../../../../builtin/index.html#string">string</a> `json:&#34;scheme,omitempty&#34;`
+    Label  <a href="../../../../builtin/index.html#string">string</a> `json:&#34;label,omitempty&#34;`
+}</pre>
+			<p>
+Category is category metadata for Feeds and Entries
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Content">type <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/atom/feed.go?s=3008:3145#L73">Content</a></h2>
+			<pre>type Content struct {
+    Src   <a href="../../../../builtin/index.html#string">string</a> `json:&#34;src,omitempty&#34;`
+    Type  <a href="../../../../builtin/index.html#string">string</a> `json:&#34;type,omitempty&#34;`
+    Value <a href="../../../../builtin/index.html#string">string</a> `json:&#34;value,omitempty&#34;`
+}</pre>
+			<p>
+Content either contains or links to the content of
+the entry
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Entry">type <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/atom/feed.go?s=1220:2142#L27">Entry</a></h2>
+			<pre>type Entry struct {
+    Title           <a href="../../../../builtin/index.html#string">string</a>         `json:&#34;title,omitempty&#34;`
+    ID              <a href="../../../../builtin/index.html#string">string</a>         `json:&#34;id,omitempty&#34;`
+    Updated         <a href="../../../../builtin/index.html#string">string</a>         `json:&#34;updated,omitempty&#34;`
+    UpdatedParsed   *<a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Time">Time</a>     `json:&#34;updatedParsed,omitempty&#34;`
+    Summary         <a href="../../../../builtin/index.html#string">string</a>         `json:&#34;summary,omitempty&#34;`
+    Authors         []*<a href="index.html#Person">Person</a>      `json:&#34;authors,omitempty&#34;`
+    Contributors    []*<a href="index.html#Person">Person</a>      `json:&#34;contributors,omitempty&#34;`
+    Categories      []*<a href="index.html#Category">Category</a>    `json:&#34;categories,omitempty&#34;`
+    Links           []*<a href="index.html#Link">Link</a>        `json:&#34;links,omitempty&#34;`
+    Rights          <a href="../../../../builtin/index.html#string">string</a>         `json:&#34;rights,omitempty&#34;`
+    Published       <a href="../../../../builtin/index.html#string">string</a>         `json:&#34;published,omitempty&#34;`
+    PublishedParsed *<a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Time">Time</a>     `json:&#34;publishedParsed,omitempty&#34;`
+    Source          *<a href="index.html#Source">Source</a>        `json:&#34;source,omitempty&#34;`
+    Content         *<a href="index.html#Content">Content</a>       `json:&#34;content,omitempty&#34;`
+    Extensions      ext.<a href="index.html#Extensions">Extensions</a> `json:&#34;extensions,omitempty&#34;`
+}</pre>
+			<p>
+Entry is an Atom Entry
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Feed">type <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/atom/feed.go?s=116:1090#L1">Feed</a></h2>
+			<pre>type Feed struct {
+    Title         <a href="../../../../builtin/index.html#string">string</a>         `json:&#34;title,omitempty&#34;`
+    ID            <a href="../../../../builtin/index.html#string">string</a>         `json:&#34;id,omitempty&#34;`
+    Updated       <a href="../../../../builtin/index.html#string">string</a>         `json:&#34;updated,omitempty&#34;`
+    UpdatedParsed *<a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Time">Time</a>     `json:&#34;updatedParsed,omitempty&#34;`
+    Subtitle      <a href="../../../../builtin/index.html#string">string</a>         `json:&#34;subtitle,omitempty&#34;`
+    Links         []*<a href="index.html#Link">Link</a>        `json:&#34;links,omitempty&#34;`
+    Language      <a href="../../../../builtin/index.html#string">string</a>         `json:&#34;language,omitempty&#34;`
+    Generator     *<a href="index.html#Generator">Generator</a>     `json:&#34;generator,omitempty&#34;`
+    Icon          <a href="../../../../builtin/index.html#string">string</a>         `json:&#34;icon,omitempty&#34;`
+    Logo          <a href="../../../../builtin/index.html#string">string</a>         `json:&#34;logo,omitempty&#34;`
+    Rights        <a href="../../../../builtin/index.html#string">string</a>         `json:&#34;rights,omitempty&#34;`
+    Contributors  []*<a href="index.html#Person">Person</a>      `json:&#34;contributors,omitempty&#34;`
+    Authors       []*<a href="index.html#Person">Person</a>      `json:&#34;authors,omitempty&#34;`
+    Categories    []*<a href="index.html#Category">Category</a>    `json:&#34;categories,omitempty&#34;`
+    Entries       []*<a href="index.html#Entry">Entry</a>       `json:&#34;entries&#34;`
+    Extensions    ext.<a href="index.html#Extensions">Extensions</a> `json:&#34;extensions,omitempty&#34;`
+    Version       <a href="../../../../builtin/index.html#string">string</a>         `json:&#34;version&#34;`
+}</pre>
+			<p>
+Feed is an Atom Feed
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Feed.String">func (Feed) <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/atom/feed.go?s=1092:1121#L21">String</a></h3>
+				<pre>func (f <a href="index.html#Feed">Feed</a>) String() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Generator">type <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/atom/feed.go?s=3243:3391#L81">Generator</a></h2>
+			<pre>type Generator struct {
+    Value   <a href="../../../../builtin/index.html#string">string</a> `json:&#34;value,omitempty&#34;`
+    URI     <a href="../../../../builtin/index.html#string">string</a> `json:&#34;uri,omitempty&#34;`
+    Version <a href="../../../../builtin/index.html#string">string</a> `json:&#34;version,omitempty&#34;`
+}</pre>
+			<p>
+Generator identifies the agent used to generate a
+feed, for debugging and other purposes.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Link">type <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/atom/feed.go?s=2667:2939#L62">Link</a></h2>
+			<pre>type Link struct {
+    Href     <a href="../../../../builtin/index.html#string">string</a> `json:&#34;href,omitempty&#34;`
+    Hreflang <a href="../../../../builtin/index.html#string">string</a> `json:&#34;hreflang,omitempty&#34;`
+    Rel      <a href="../../../../builtin/index.html#string">string</a> `json:&#34;rel,omitempty&#34;`
+    Type     <a href="../../../../builtin/index.html#string">string</a> `json:&#34;type,omitempty&#34;`
+    Title    <a href="../../../../builtin/index.html#string">string</a> `json:&#34;title,omitempty&#34;`
+    Length   <a href="../../../../builtin/index.html#string">string</a> `json:&#34;length,omitempty&#34;`
+}</pre>
+			<p>
+Link is an Atom link that defines a reference
+from an entry or feed to a Web resource
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Parser">type <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/atom/parser.go?s=238:258#L5">Parser</a></h2>
+			<pre>type Parser struct{}</pre>
+			<p>
+Parser is an Atom Parser
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Parser.Parse">func (*Parser) <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/atom/parser.go?s=306:360#L8">Parse</a></h3>
+				<pre>func (ap *<a href="index.html#Parser">Parser</a>) Parse(feed <a href="../../../../io/index.html">io</a>.<a href="../../../../io/index.html#Reader">Reader</a>) (*<a href="index.html#Feed">Feed</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Parse parses an xml feed into an atom.Feed
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Person">type <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/atom/feed.go?s=2437:2573#L54">Person</a></h2>
+			<pre>type Person struct {
+    Name  <a href="../../../../builtin/index.html#string">string</a> `json:&#34;name,omitempty&#34;`
+    Email <a href="../../../../builtin/index.html#string">string</a> `json:&#34;email,omitempty&#34;`
+    URI   <a href="../../../../builtin/index.html#string">string</a> `json:&#34;uri,omitempty&#34;`
+}</pre>
+			<p>
+Person represents a person in an Atom feed
+for things like Authors, Contributors, etc
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Source">type <a href="http://localhost:6060/src/github.com/mmcdole/gofeed/atom/feed.go?s=3491:4315#L89">Source</a></h2>
+			<pre>type Source struct {
+    Title         <a href="../../../../builtin/index.html#string">string</a>         `json:&#34;title,omitempty&#34;`
+    ID            <a href="../../../../builtin/index.html#string">string</a>         `json:&#34;id,omitempty&#34;`
+    Updated       <a href="../../../../builtin/index.html#string">string</a>         `json:&#34;updated,omitempty&#34;`
+    UpdatedParsed *<a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Time">Time</a>     `json:&#34;updatedParsed,omitempty&#34;`
+    Subtitle      <a href="../../../../builtin/index.html#string">string</a>         `json:&#34;subtitle,omitempty&#34;`
+    Links         []*<a href="index.html#Link">Link</a>        `json:&#34;links,omitempty&#34;`
+    Generator     *<a href="index.html#Generator">Generator</a>     `json:&#34;generator,omitempty&#34;`
+    Icon          <a href="../../../../builtin/index.html#string">string</a>         `json:&#34;icon,omitempty&#34;`
+    Logo          <a href="../../../../builtin/index.html#string">string</a>         `json:&#34;logo,omitempty&#34;`
+    Rights        <a href="../../../../builtin/index.html#string">string</a>         `json:&#34;rights,omitempty&#34;`
+    Contributors  []*<a href="index.html#Person">Person</a>      `json:&#34;contributors,omitempty&#34;`
+    Authors       []*<a href="index.html#Person">Person</a>      `json:&#34;authors,omitempty&#34;`
+    Categories    []*<a href="index.html#Category">Category</a>    `json:&#34;categories,omitempty&#34;`
+    Extensions    ext.<a href="index.html#Extensions">Extensions</a> `json:&#34;extensions,omitempty&#34;`
+}</pre>
+			<p>
+Source contains the feed information for another
+feed if a given entry came from that feed.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

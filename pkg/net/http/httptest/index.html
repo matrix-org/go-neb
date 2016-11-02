@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>httptest - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package httptest</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "net/http/httptest"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+				<dd><a href="index.html#pkg-examples" class="examplesLink">Examples</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package httptest provides utilities for HTTP testing.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="index.html#pkg-constants">Constants</a></dd>
+			
+			
+			
+			
+				
+				<dd><a href="index.html#ResponseRecorder">type ResponseRecorder</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewRecorder">func NewRecorder() *ResponseRecorder</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ResponseRecorder.Flush">func (rw *ResponseRecorder) Flush()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ResponseRecorder.Header">func (rw *ResponseRecorder) Header() http.Header</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ResponseRecorder.Write">func (rw *ResponseRecorder) Write(buf []byte) (int, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ResponseRecorder.WriteHeader">func (rw *ResponseRecorder) WriteHeader(code int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ResponseRecorder.WriteString">func (rw *ResponseRecorder) WriteString(str string) (int, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Server">type Server</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewServer">func NewServer(handler http.Handler) *Server</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewTLSServer">func NewTLSServer(handler http.Handler) *Server</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewUnstartedServer">func NewUnstartedServer(handler http.Handler) *Server</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Server.Close">func (s *Server) Close()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Server.CloseClientConnections">func (s *Server) CloseClientConnections()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Server.Start">func (s *Server) Start()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Server.StartTLS">func (s *Server) StartTLS()</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+		<div id="pkg-examples">
+			<h4>Examples</h4>
+			<dl>
+			
+			<dd><a class="exampleLink" href="index.html#example_ResponseRecorder">ResponseRecorder</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Server">Server</a></dd>
+			
+			</dl>
+		</div>
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/net/http/httptest/recorder.go">recorder.go</a>
+			
+				<a href="http://localhost:6060/src/net/http/httptest/server.go">server.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const <span id="DefaultRemoteAddr">DefaultRemoteAddr</span> = &#34;1.2.3.4&#34;</pre>
+				<p>
+DefaultRemoteAddr is the default remote address to return in RemoteAddr if
+an explicit DefaultRemoteAddr isn&#39;t set on ResponseRecorder.
+</p>
+
+			
+		
+		
+		
+		
+			
+			
+			<h2 id="ResponseRecorder">type <a href="http://localhost:6060/src/net/http/httptest/recorder.go?s=393:665#L5">ResponseRecorder</a></h2>
+			<pre>type ResponseRecorder struct {
+    Code      <a href="../../../builtin/index.html#int">int</a>           <span class="comment">// the HTTP response code from WriteHeader</span>
+    HeaderMap <a href="../index.html">http</a>.<a href="../index.html#Header">Header</a>   <span class="comment">// the HTTP response headers</span>
+    Body      *<a href="../../../bytes/index.html">bytes</a>.<a href="../../../bytes/index.html#Buffer">Buffer</a> <span class="comment">// if non-nil, the bytes.Buffer to append written data to</span>
+    Flushed   <a href="../../../builtin/index.html#bool">bool</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+ResponseRecorder is an implementation of http.ResponseWriter that
+records its mutations for later inspection in tests.
+</p>
+
+
+			
+
+			
+
+			<div id="example_ResponseRecorder" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">handler := func(w http.ResponseWriter, r *http.Request) {
+    http.Error(w, &#34;something failed&#34;, http.StatusInternalServerError)
+}
+
+req, err := http.NewRequest(&#34;GET&#34;, &#34;http://example.com/foo&#34;, nil)
+if err != nil {
+    log.Fatal(err)
+}
+
+w := httptest.NewRecorder()
+handler(w, req)
+
+fmt.Printf(&#34;%d - %s&#34;, w.Code, w.Body.String())
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">500 - something failed
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+			
+
+			
+				
+				<h3 id="NewRecorder">func <a href="http://localhost:6060/src/net/http/httptest/recorder.go?s=723:759#L15">NewRecorder</a></h3>
+				<pre>func NewRecorder() *<a href="index.html#ResponseRecorder">ResponseRecorder</a></pre>
+				<p>
+NewRecorder returns an initialized ResponseRecorder.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="ResponseRecorder.Flush">func (*ResponseRecorder) <a href="http://localhost:6060/src/net/http/httptest/recorder.go?s=2631:2666#L94">Flush</a></h3>
+				<pre>func (rw *<a href="index.html#ResponseRecorder">ResponseRecorder</a>) Flush()</pre>
+				<p>
+Flush sets rw.Flushed to true.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ResponseRecorder.Header">func (*ResponseRecorder) <a href="http://localhost:6060/src/net/http/httptest/recorder.go?s=1096:1144#L28">Header</a></h3>
+				<pre>func (rw *<a href="index.html#ResponseRecorder">ResponseRecorder</a>) Header() <a href="../index.html">http</a>.<a href="../index.html#Header">Header</a></pre>
+				<p>
+Header returns the response headers.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ResponseRecorder.Write">func (*ResponseRecorder) <a href="http://localhost:6060/src/net/http/httptest/recorder.go?s=2056:2114#L68">Write</a></h3>
+				<pre>func (rw *<a href="index.html#ResponseRecorder">ResponseRecorder</a>) Write(buf []<a href="../../../builtin/index.html#byte">byte</a>) (<a href="../../../builtin/index.html#int">int</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Write always succeeds and writes to rw.Body, if not nil.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ResponseRecorder.WriteHeader">func (*ResponseRecorder) <a href="http://localhost:6060/src/net/http/httptest/recorder.go?s=2476:2525#L86">WriteHeader</a></h3>
+				<pre>func (rw *<a href="index.html#ResponseRecorder">ResponseRecorder</a>) WriteHeader(code <a href="../../../builtin/index.html#int">int</a>)</pre>
+				<p>
+WriteHeader sets rw.Code.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ResponseRecorder.WriteString">func (*ResponseRecorder) <a href="http://localhost:6060/src/net/http/httptest/recorder.go?s=2278:2342#L77">WriteString</a></h3>
+				<pre>func (rw *<a href="index.html#ResponseRecorder">ResponseRecorder</a>) WriteString(str <a href="../../../builtin/index.html#string">string</a>) (<a href="../../../builtin/index.html#int">int</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+WriteString always succeeds and writes to rw.Body, if not nil.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Server">type <a href="http://localhost:6060/src/net/http/httptest/server.go?s=471:1196#L16">Server</a></h2>
+			<pre>type Server struct {
+    URL      <a href="../../../builtin/index.html#string">string</a> <span class="comment">// base URL of form http://ipaddr:port with no trailing slash</span>
+    Listener <a href="../../index.html">net</a>.<a href="../../index.html#Listener">Listener</a>
+
+    <span class="comment">// TLS is the optional TLS configuration, populated with a new config</span>
+    <span class="comment">// after TLS is started. If set on an unstarted server before StartTLS</span>
+    <span class="comment">// is called, existing fields are copied into the new config.</span>
+    TLS *<a href="../../../crypto/tls/index.html">tls</a>.<a href="../../../crypto/tls/index.html#Config">Config</a>
+
+    <span class="comment">// Config may be changed after calling NewUnstartedServer and</span>
+    <span class="comment">// before Start or StartTLS.</span>
+    Config *<a href="../index.html">http</a>.<a href="../index.html#Server">Server</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+A Server is an HTTP server listening on a system-chosen port on the
+local loopback interface, for use in end-to-end HTTP tests.
+</p>
+
+
+			
+
+			
+
+			<div id="example_Server" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+    fmt.Fprintln(w, &#34;Hello, client&#34;)
+}))
+defer ts.Close()
+
+res, err := http.Get(ts.URL)
+if err != nil {
+    log.Fatal(err)
+}
+greeting, err := ioutil.ReadAll(res.Body)
+res.Body.Close()
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Printf(&#34;%s&#34;, greeting)
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">Hello, client
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+			
+
+			
+				
+				<h3 id="NewServer">func <a href="http://localhost:6060/src/net/http/httptest/server.go?s=2049:2093#L63">NewServer</a></h3>
+				<pre>func NewServer(handler <a href="../index.html">http</a>.<a href="../index.html#Handler">Handler</a>) *<a href="index.html#Server">Server</a></pre>
+				<p>
+NewServer starts and returns a new Server.
+The caller should call Close when finished, to shut it down.
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewTLSServer">func <a href="http://localhost:6060/src/net/http/httptest/server.go?s=3640:3687#L125">NewTLSServer</a></h3>
+				<pre>func NewTLSServer(handler <a href="../index.html">http</a>.<a href="../index.html#Handler">Handler</a>) *<a href="index.html#Server">Server</a></pre>
+				<p>
+NewTLSServer starts and returns a new Server using TLS.
+The caller should call Close when finished, to shut it down.
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewUnstartedServer">func <a href="http://localhost:6060/src/net/http/httptest/server.go?s=2374:2427#L75">NewUnstartedServer</a></h3>
+				<pre>func NewUnstartedServer(handler <a href="../index.html">http</a>.<a href="../index.html#Handler">Handler</a>) *<a href="index.html#Server">Server</a></pre>
+				<p>
+NewUnstartedServer returns a new Server but doesn&#39;t start it.
+</p>
+<p>
+After changing its configuration, the caller should call Start or
+StartTLS.
+</p>
+<p>
+The caller should call Close when finished, to shut it down.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Server.Close">func (*Server) <a href="http://localhost:6060/src/net/http/httptest/server.go?s=3924:3948#L137">Close</a></h3>
+				<pre>func (s *<a href="index.html#Server">Server</a>) Close()</pre>
+				<p>
+Close shuts down the server and blocks until all outstanding
+requests on this server have completed.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Server.CloseClientConnections">func (*Server) <a href="http://localhost:6060/src/net/http/httptest/server.go?s=6004:6045#L194">CloseClientConnections</a></h3>
+				<pre>func (s *<a href="index.html#Server">Server</a>) CloseClientConnections()</pre>
+				<p>
+CloseClientConnections closes any open HTTP connections to the test Server.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Server.Start">func (*Server) <a href="http://localhost:6060/src/net/http/httptest/server.go?s=2579:2603#L83">Start</a></h3>
+				<pre>func (s *<a href="index.html#Server">Server</a>) Start()</pre>
+				<p>
+Start starts a server from NewUnstartedServer.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Server.StartTLS">func (*Server) <a href="http://localhost:6060/src/net/http/httptest/server.go?s=2886:2913#L97">StartTLS</a></h3>
+				<pre>func (s *<a href="index.html#Server">Server</a>) StartTLS()</pre>
+				<p>
+StartTLS starts TLS on a server from NewUnstartedServer.
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

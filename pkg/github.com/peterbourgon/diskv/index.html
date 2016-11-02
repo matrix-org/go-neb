@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>diskv - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package diskv</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/peterbourgon/diskv"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-subdirectories">Subdirectories</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+			
+				
+				<dd><a href="index.html#BTreeIndex">type BTreeIndex</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BTreeIndex.Delete">func (i *BTreeIndex) Delete(key string)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BTreeIndex.Initialize">func (i *BTreeIndex) Initialize(less LessFunction, keys &lt;-chan string)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BTreeIndex.Insert">func (i *BTreeIndex) Insert(key string)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#BTreeIndex.Keys">func (i *BTreeIndex) Keys(from string, n int) []string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Compression">type Compression</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewGzipCompression">func NewGzipCompression() Compression</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewGzipCompressionLevel">func NewGzipCompressionLevel(level int) Compression</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewZlibCompression">func NewZlibCompression() Compression</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewZlibCompressionLevel">func NewZlibCompressionLevel(level int) Compression</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewZlibCompressionLevelDict">func NewZlibCompressionLevelDict(level int, dict []byte) Compression</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Diskv">type Diskv</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#New">func New(o Options) *Diskv</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Diskv.Erase">func (d *Diskv) Erase(key string) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Diskv.EraseAll">func (d *Diskv) EraseAll() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Diskv.Has">func (d *Diskv) Has(key string) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Diskv.Import">func (d *Diskv) Import(srcFilename, dstKey string, move bool) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Diskv.Keys">func (d *Diskv) Keys(cancel &lt;-chan struct{}) &lt;-chan string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Diskv.KeysPrefix">func (d *Diskv) KeysPrefix(prefix string, cancel &lt;-chan struct{}) &lt;-chan string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Diskv.Read">func (d *Diskv) Read(key string) ([]byte, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Diskv.ReadStream">func (d *Diskv) ReadStream(key string, direct bool) (io.ReadCloser, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Diskv.Write">func (d *Diskv) Write(key string, val []byte) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Diskv.WriteStream">func (d *Diskv) WriteStream(key string, r io.Reader, sync bool) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Index">type Index</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#LessFunction">type LessFunction</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Options">type Options</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#TransformFunction">type TransformFunction</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/peterbourgon/diskv/compression.go">compression.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/peterbourgon/diskv/diskv.go">diskv.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/peterbourgon/diskv/index.go">index.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+		
+			
+			
+			<h2 id="BTreeIndex">type <a href="http://localhost:6060/src/github.com/peterbourgon/diskv/index.go?s=864:932#L24">BTreeIndex</a></h2>
+			<pre>type BTreeIndex struct {
+    <a href="../../../sync/index.html">sync</a>.<a href="../../../sync/index.html#RWMutex">RWMutex</a>
+    <a href="index.html#LessFunction">LessFunction</a>
+    *<a href="../../google/btree/index.html">btree</a>.<a href="../../google/btree/index.html#BTree">BTree</a>
+}</pre>
+			<p>
+BTreeIndex is an implementation of the Index interface using google/btree.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="BTreeIndex.Delete">func (*BTreeIndex) <a href="http://localhost:6060/src/github.com/peterbourgon/diskv/index.go?s=1580:1619#L50">Delete</a></h3>
+				<pre>func (i *<a href="index.html#BTreeIndex">BTreeIndex</a>) Delete(key <a href="../../../builtin/index.html#string">string</a>)</pre>
+				<p>
+Delete removes the given key (only) from the BTree tree.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BTreeIndex.Initialize">func (*BTreeIndex) <a href="http://localhost:6060/src/github.com/peterbourgon/diskv/index.go?s=1084:1154#L32">Initialize</a></h3>
+				<pre>func (i *<a href="index.html#BTreeIndex">BTreeIndex</a>) Initialize(less <a href="index.html#LessFunction">LessFunction</a>, keys &lt;-chan <a href="../../../builtin/index.html#string">string</a>)</pre>
+				<p>
+Initialize populates the BTree tree with data from the keys channel,
+according to the passed less function. It&#39;s destructive to the BTreeIndex.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BTreeIndex.Insert">func (*BTreeIndex) <a href="http://localhost:6060/src/github.com/peterbourgon/diskv/index.go?s=1302:1341#L40">Insert</a></h3>
+				<pre>func (i *<a href="index.html#BTreeIndex">BTreeIndex</a>) Insert(key <a href="../../../builtin/index.html#string">string</a>)</pre>
+				<p>
+Insert inserts the given key (only) into the BTree tree.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BTreeIndex.Keys">func (*BTreeIndex) <a href="http://localhost:6060/src/github.com/peterbourgon/diskv/index.go?s=2059:2113#L63">Keys</a></h3>
+				<pre>func (i *<a href="index.html#BTreeIndex">BTreeIndex</a>) Keys(from <a href="../../../builtin/index.html#string">string</a>, n <a href="../../../builtin/index.html#int">int</a>) []<a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+Keys yields a maximum of n keys in order. If the passed &#39;from&#39; key is empty,
+Keys will return the first n keys. If the passed &#39;from&#39; key is non-empty, the
+first key in the returned slice will be the key that immediately follows the
+passed key, in key order.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Compression">type <a href="http://localhost:6060/src/github.com/peterbourgon/diskv/compression.go?s=479:602#L6">Compression</a></h2>
+			<pre>type Compression interface {
+    Writer(dst <a href="../../../io/index.html">io</a>.<a href="../../../io/index.html#Writer">Writer</a>) (<a href="../../../io/index.html">io</a>.<a href="../../../io/index.html#WriteCloser">WriteCloser</a>, <a href="../../../builtin/index.html#error">error</a>)
+    Reader(src <a href="../../../io/index.html">io</a>.<a href="../../../io/index.html#Reader">Reader</a>) (<a href="../../../io/index.html">io</a>.<a href="../../../io/index.html#ReadCloser">ReadCloser</a>, <a href="../../../builtin/index.html#error">error</a>)
+}</pre>
+			<p>
+Compression is an interface that Diskv uses to implement compression of
+data. Writer takes a destination io.Writer and returns a WriteCloser that
+compresses all data written through it. Reader takes a source io.Reader and
+returns a ReadCloser that decompresses all data read through it. You may
+define these methods on your own type, or use one of the NewCompression
+helpers.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewGzipCompression">func <a href="http://localhost:6060/src/github.com/peterbourgon/diskv/compression.go?s=660:697#L12">NewGzipCompression</a></h3>
+				<pre>func NewGzipCompression() <a href="index.html#Compression">Compression</a></pre>
+				<p>
+NewGzipCompression returns a Gzip-based Compression.
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewGzipCompressionLevel">func <a href="http://localhost:6060/src/github.com/peterbourgon/diskv/compression.go?s=843:894#L17">NewGzipCompressionLevel</a></h3>
+				<pre>func NewGzipCompressionLevel(level <a href="../../../builtin/index.html#int">int</a>) <a href="index.html#Compression">Compression</a></pre>
+				<p>
+NewGzipCompressionLevel returns a Gzip-based Compression with the given level.
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewZlibCompression">func <a href="http://localhost:6060/src/github.com/peterbourgon/diskv/compression.go?s=1155:1192#L25">NewZlibCompression</a></h3>
+				<pre>func NewZlibCompression() <a href="index.html#Compression">Compression</a></pre>
+				<p>
+NewZlibCompression returns a Zlib-based Compression.
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewZlibCompressionLevel">func <a href="http://localhost:6060/src/github.com/peterbourgon/diskv/compression.go?s=1338:1389#L30">NewZlibCompressionLevel</a></h3>
+				<pre>func NewZlibCompressionLevel(level <a href="../../../builtin/index.html#int">int</a>) <a href="index.html#Compression">Compression</a></pre>
+				<p>
+NewZlibCompressionLevel returns a Zlib-based Compression with the given level.
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewZlibCompressionLevelDict">func <a href="http://localhost:6060/src/github.com/peterbourgon/diskv/compression.go?s=1563:1631#L36">NewZlibCompressionLevelDict</a></h3>
+				<pre>func NewZlibCompressionLevelDict(level <a href="../../../builtin/index.html#int">int</a>, dict []<a href="../../../builtin/index.html#byte">byte</a>) <a href="index.html#Compression">Compression</a></pre>
+				<p>
+NewZlibCompressionLevelDict returns a Zlib-based Compression with the given
+level, based on the given dictionary.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="Diskv">type <a href="http://localhost:6060/src/github.com/peterbourgon/diskv/diskv.go?s=1474:1575#L48">Diskv</a></h2>
+			<pre>type Diskv struct {
+    <a href="index.html#Options">Options</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Diskv implements the Diskv interface. You shouldn&#39;t construct Diskv
+structures directly; instead, use the New constructor.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="New">func <a href="http://localhost:6060/src/github.com/peterbourgon/diskv/diskv.go?s=1744:1770#L58">New</a></h3>
+				<pre>func New(o <a href="index.html#Options">Options</a>) *<a href="index.html#Diskv">Diskv</a></pre>
+				<p>
+New returns an initialized Diskv structure, ready to use.
+If the path identified by baseDir already contains data,
+it will be accessible, but not yet cached.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Diskv.Erase">func (*Diskv) <a href="http://localhost:6060/src/github.com/peterbourgon/diskv/diskv.go?s=9023:9062#L344">Erase</a></h3>
+				<pre>func (d *<a href="index.html#Diskv">Diskv</a>) Erase(key <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#error">error</a></pre>
+				<p>
+Erase synchronously erases the given key from the disk and the cache.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Diskv.EraseAll">func (*Diskv) <a href="http://localhost:6060/src/github.com/peterbourgon/diskv/diskv.go?s=9839:9871#L378">EraseAll</a></h3>
+				<pre>func (d *<a href="index.html#Diskv">Diskv</a>) EraseAll() <a href="../../../builtin/index.html#error">error</a></pre>
+				<p>
+EraseAll will delete all of the data from the store, both in the cache and on
+the disk. Note that EraseAll doesn&#39;t distinguish diskv-related data from non-
+diskv-related data. Care should be taken to always specify a diskv base
+directory that is exclusively for diskv data.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Diskv.Has">func (*Diskv) <a href="http://localhost:6060/src/github.com/peterbourgon/diskv/diskv.go?s=10041:10077#L387">Has</a></h3>
+				<pre>func (d *<a href="index.html#Diskv">Diskv</a>) Has(key <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Has returns true if the given key exists.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Diskv.Import">func (*Diskv) <a href="http://localhost:6060/src/github.com/peterbourgon/diskv/diskv.go?s=4491:4564#L163">Import</a></h3>
+				<pre>func (d *<a href="index.html#Diskv">Diskv</a>) Import(srcFilename, dstKey <a href="../../../builtin/index.html#string">string</a>, move <a href="../../../builtin/index.html#bool">bool</a>) (err <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Import imports the source file into diskv under the destination key. If the
+destination key already exists, it&#39;s overwritten. If move is true, the
+source file is removed after a successful import.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Diskv.Keys">func (*Diskv) <a href="http://localhost:6060/src/github.com/peterbourgon/diskv/diskv.go?s=10507:10565#L410">Keys</a></h3>
+				<pre>func (d *<a href="index.html#Diskv">Diskv</a>) Keys(cancel &lt;-chan struct{}) &lt;-chan <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+Keys returns a channel that will yield every key accessible by the store,
+in undefined order. If a cancel channel is provided, closing it will
+terminate and close the keys channel.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Diskv.KeysPrefix">func (*Diskv) <a href="http://localhost:6060/src/github.com/peterbourgon/diskv/diskv.go?s=10895:10974#L418">KeysPrefix</a></h3>
+				<pre>func (d *<a href="index.html#Diskv">Diskv</a>) KeysPrefix(prefix <a href="../../../builtin/index.html#string">string</a>, cancel &lt;-chan struct{}) &lt;-chan <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+KeysPrefix returns a channel that will yield every key accessible by the
+store with the given prefix, in undefined order. If a cancel channel is
+provided, closing it will terminate and close the keys channel. If the
+provided prefix is the empty string, all keys will be yielded.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Diskv.Read">func (*Diskv) <a href="http://localhost:6060/src/github.com/peterbourgon/diskv/diskv.go?s=5552:5600#L207">Read</a></h3>
+				<pre>func (d *<a href="index.html#Diskv">Diskv</a>) Read(key <a href="../../../builtin/index.html#string">string</a>) ([]<a href="../../../builtin/index.html#byte">byte</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Read reads the key and returns the value.
+If the key is available in the cache, Read won&#39;t touch the disk.
+If the key is not in the cache, Read will have the side-effect of
+lazily caching the value.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Diskv.ReadStream">func (*Diskv) <a href="http://localhost:6060/src/github.com/peterbourgon/diskv/diskv.go?s=6276:6350#L226">ReadStream</a></h3>
+				<pre>func (d *<a href="index.html#Diskv">Diskv</a>) ReadStream(key <a href="../../../builtin/index.html#string">string</a>, direct <a href="../../../builtin/index.html#bool">bool</a>) (<a href="../../../io/index.html">io</a>.<a href="../../../io/index.html#ReadCloser">ReadCloser</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+ReadStream reads the key and returns the value (data) as an io.ReadCloser.
+If the value is cached from a previous read, and direct is false,
+ReadStream will use the cached value. Otherwise, it will return a handle to
+the file on disk, and cache the data on read.
+</p>
+<p>
+If direct is true, ReadStream will lazily delete any cached value for the
+key, and return a direct handle to the file on disk.
+</p>
+<p>
+If compression is enabled, ReadStream taps into the io.Reader stream prior
+to decompression, and caches the compressed data.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Diskv.Write">func (*Diskv) <a href="http://localhost:6060/src/github.com/peterbourgon/diskv/diskv.go?s=2430:2481#L88">Write</a></h3>
+				<pre>func (d *<a href="index.html#Diskv">Diskv</a>) Write(key <a href="../../../builtin/index.html#string">string</a>, val []<a href="../../../builtin/index.html#byte">byte</a>) <a href="../../../builtin/index.html#error">error</a></pre>
+				<p>
+Write synchronously writes the key-value pair to disk, making it immediately
+available for reads. Write relies on the filesystem to perform an eventual
+sync to physical media. If you need stronger guarantees, see WriteStream.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Diskv.WriteStream">func (*Diskv) <a href="http://localhost:6060/src/github.com/peterbourgon/diskv/diskv.go?s=2808:2877#L97">WriteStream</a></h3>
+				<pre>func (d *<a href="index.html#Diskv">Diskv</a>) WriteStream(key <a href="../../../builtin/index.html#string">string</a>, r <a href="../../../io/index.html">io</a>.<a href="../../../io/index.html#Reader">Reader</a>, sync <a href="../../../builtin/index.html#bool">bool</a>) <a href="../../../builtin/index.html#error">error</a></pre>
+				<p>
+WriteStream writes the data represented by the io.Reader to the disk, under
+the provided key. If sync is true, WriteStream performs an explicit sync on
+the file as soon as it&#39;s written.
+</p>
+<p>
+bytes.Buffer provides io.Reader semantics for basic data types.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Index">type <a href="http://localhost:6060/src/github.com/peterbourgon/diskv/index.go?s=151:301#L1">Index</a></h2>
+			<pre>type Index interface {
+    Initialize(less <a href="index.html#LessFunction">LessFunction</a>, keys &lt;-chan <a href="../../../builtin/index.html#string">string</a>)
+    Insert(key <a href="../../../builtin/index.html#string">string</a>)
+    Delete(key <a href="../../../builtin/index.html#string">string</a>)
+    Keys(from <a href="../../../builtin/index.html#string">string</a>, n <a href="../../../builtin/index.html#int">int</a>) []<a href="../../../builtin/index.html#string">string</a>
+}</pre>
+			<p>
+Index is a generic interface for things that can
+provide an ordered list of keys.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="LessFunction">type <a href="http://localhost:6060/src/github.com/peterbourgon/diskv/index.go?s=379:422#L9">LessFunction</a></h2>
+			<pre>type LessFunction func(<a href="../../../builtin/index.html#string">string</a>, <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#bool">bool</a></pre>
+			<p>
+LessFunction is used to initialize an Index of keys in a specific order.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Options">type <a href="http://localhost:6060/src/github.com/peterbourgon/diskv/diskv.go?s=1117:1343#L33">Options</a></h2>
+			<pre>type Options struct {
+    BasePath     <a href="../../../builtin/index.html#string">string</a>
+    Transform    <a href="index.html#TransformFunction">TransformFunction</a>
+    CacheSizeMax <a href="../../../builtin/index.html#uint64">uint64</a> <span class="comment">// bytes</span>
+    PathPerm     <a href="../../../os/index.html">os</a>.<a href="../../../os/index.html#FileMode">FileMode</a>
+    FilePerm     <a href="../../../os/index.html">os</a>.<a href="../../../os/index.html#FileMode">FileMode</a>
+
+    Index     <a href="index.html#Index">Index</a>
+    IndexLess <a href="index.html#LessFunction">LessFunction</a>
+
+    Compression <a href="index.html#Compression">Compression</a>
+}</pre>
+			<p>
+Options define a set of properties that dictate Diskv behavior.
+All values are optional.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="TransformFunction">type <a href="http://localhost:6060/src/github.com/peterbourgon/diskv/diskv.go?s=974:1020#L29">TransformFunction</a></h2>
+			<pre>type TransformFunction func(s <a href="../../../builtin/index.html#string">string</a>) []<a href="../../../builtin/index.html#string">string</a></pre>
+			<p>
+TransformFunction transforms a key into a slice of strings, with each
+element in the slice representing a directory in the file path where the
+key&#39;s entry will eventually be stored.
+</p>
+<p>
+For example, if TransformFunc transforms &#34;abcdef&#34; to [&#34;ab&#34;, &#34;cde&#34;, &#34;f&#34;],
+the final location of the data file will be &lt;basedir&gt;/ab/cde/f/abcdef
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+
+
+	<div class="pkg-dir">
+		<table>
+			<tr>
+				<th class="pkg-name">Name</th>
+				<th class="pkg-synopsis">Synopsis</th>
+			</tr>
+
+			
+			<tr>
+				<td colspan="2"><a href="../index.html">..</a></td>
+			</tr>
+			
+
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="examples/index.html">examples</a>
+						</td>
+						<td class="pkg-synopsis">
+							
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 20px;">
+							<a href="examples/content-addressable-store/index.html">content-addressable-store</a>
+						</td>
+						<td class="pkg-synopsis">
+							
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 20px;">
+							<a href="examples/super-simple-store/index.html">super-simple-store</a>
+						</td>
+						<td class="pkg-synopsis">
+							
+						</td>
+					</tr>
+				
+			
+		</table>
+	</div>
+
+
+	
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

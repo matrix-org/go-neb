@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>mime - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package mime</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "mime"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+				<dd><a href="index.html#pkg-examples" class="examplesLink">Examples</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-subdirectories">Subdirectories</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package mime implements parts of the MIME spec.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="index.html#pkg-constants">Constants</a></dd>
+			
+			
+			
+				
+				<dd><a href="index.html#AddExtensionType">func AddExtensionType(ext, typ string) error</a></dd>
+			
+				
+				<dd><a href="index.html#ExtensionsByType">func ExtensionsByType(typ string) ([]string, error)</a></dd>
+			
+				
+				<dd><a href="index.html#FormatMediaType">func FormatMediaType(t string, param map[string]string) string</a></dd>
+			
+				
+				<dd><a href="index.html#ParseMediaType">func ParseMediaType(v string) (mediatype string, params map[string]string, err error)</a></dd>
+			
+				
+				<dd><a href="index.html#TypeByExtension">func TypeByExtension(ext string) string</a></dd>
+			
+			
+				
+				<dd><a href="index.html#WordDecoder">type WordDecoder</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#WordDecoder.Decode">func (d *WordDecoder) Decode(word string) (string, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#WordDecoder.DecodeHeader">func (d *WordDecoder) DecodeHeader(header string) (string, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#WordEncoder">type WordEncoder</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#WordEncoder.Encode">func (e WordEncoder) Encode(charset, s string) string</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+		<div id="pkg-examples">
+			<h4>Examples</h4>
+			<dl>
+			
+			<dd><a class="exampleLink" href="index.html#example_WordDecoder_Decode">WordDecoder.Decode</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_WordDecoder_DecodeHeader">WordDecoder.DecodeHeader</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_WordEncoder_Encode">WordEncoder.Encode</a></dd>
+			
+			</dl>
+		</div>
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/mime/encodedword.go">encodedword.go</a>
+			
+				<a href="http://localhost:6060/src/mime/grammar.go">grammar.go</a>
+			
+				<a href="http://localhost:6060/src/mime/mediatype.go">mediatype.go</a>
+			
+				<a href="http://localhost:6060/src/mime/type.go">type.go</a>
+			
+				<a href="http://localhost:6060/src/mime/type_unix.go">type_unix.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const (
+    <span class="comment">// BEncoding represents Base64 encoding scheme as defined by RFC 2045.</span>
+    <span id="BEncoding">BEncoding</span> = <a href="index.html#WordEncoder">WordEncoder</a>(&#39;b&#39;)
+    <span class="comment">// QEncoding represents the Q-encoding scheme as defined by RFC 2047.</span>
+    <span id="QEncoding">QEncoding</span> = <a href="index.html#WordEncoder">WordEncoder</a>(&#39;q&#39;)
+)</pre>
+				
+			
+		
+		
+		
+			
+			
+			<h2 id="AddExtensionType">func <a href="http://localhost:6060/src/mime/type.go?s=4150:4194#L147">AddExtensionType</a></h2>
+			<pre>func AddExtensionType(ext, typ <a href="../builtin/index.html#string">string</a>) <a href="../builtin/index.html#error">error</a></pre>
+			<p>
+AddExtensionType sets the MIME type associated with
+the extension ext to typ. The extension should begin with
+a leading dot, as in &#34;.html&#34;.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ExtensionsByType">func <a href="http://localhost:6060/src/mime/type.go?s=3701:3752#L128">ExtensionsByType</a></h2>
+			<pre>func ExtensionsByType(typ <a href="../builtin/index.html#string">string</a>) ([]<a href="../builtin/index.html#string">string</a>, <a href="../builtin/index.html#error">error</a>)</pre>
+			<p>
+ExtensionsByType returns the extensions known to be associated with the MIME
+type typ. The returned extensions will each begin with a leading dot, as in
+&#34;.html&#34;. When typ has no associated extensions, ExtensionsByType returns an
+nil slice.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="FormatMediaType">func <a href="http://localhost:6060/src/mime/mediatype.go?s=534:596#L11">FormatMediaType</a></h2>
+			<pre>func FormatMediaType(t <a href="../builtin/index.html#string">string</a>, param map[<a href="../builtin/index.html#string">string</a>]<a href="../builtin/index.html#string">string</a>) <a href="../builtin/index.html#string">string</a></pre>
+			<p>
+FormatMediaType serializes mediatype t and the parameters
+param as a media type conforming to RFC 2045 and RFC 2616.
+The type and parameter names are written in lower-case.
+When any of the arguments result in a standard violation then
+FormatMediaType returns the empty string.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ParseMediaType">func <a href="http://localhost:6060/src/mime/mediatype.go?s=2584:2669#L94">ParseMediaType</a></h2>
+			<pre>func ParseMediaType(v <a href="../builtin/index.html#string">string</a>) (mediatype <a href="../builtin/index.html#string">string</a>, params map[<a href="../builtin/index.html#string">string</a>]<a href="../builtin/index.html#string">string</a>, err <a href="../builtin/index.html#error">error</a>)</pre>
+			<p>
+ParseMediaType parses a media type value and any optional
+parameters, per RFC 1521.  Media types are the values in
+Content-Type and Content-Disposition headers (RFC 2183).
+On success, ParseMediaType returns the media type converted
+to lowercase and trimmed of white space and a non-nil map.
+The returned map, params, maps from the lowercase
+attribute to the attribute value with its case preserved.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="TypeByExtension">func <a href="http://localhost:6060/src/mime/type.go?s=2667:2706#L91">TypeByExtension</a></h2>
+			<pre>func TypeByExtension(ext <a href="../builtin/index.html#string">string</a>) <a href="../builtin/index.html#string">string</a></pre>
+			<p>
+TypeByExtension returns the MIME type associated with the file extension ext.
+The extension ext should begin with a leading dot, as in &#34;.html&#34;.
+When ext has no associated type, TypeByExtension returns &#34;&#34;.
+</p>
+<p>
+Extensions are looked up first case-sensitively, then case-insensitively.
+</p>
+<p>
+The built-in table is small but on unix it is augmented by the local
+system&#39;s mime.types file(s) if available under one or more of these
+names:
+</p>
+<pre>/etc/mime.types
+/etc/apache2/mime.types
+/etc/apache/mime.types
+</pre>
+<p>
+On Windows, MIME types are extracted from the registry.
+</p>
+<p>
+Text types have the charset parameter set to &#34;utf-8&#34; by default.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="WordDecoder">type <a href="http://localhost:6060/src/mime/encodedword.go?s=4642:5058#L175">WordDecoder</a></h2>
+			<pre>type WordDecoder struct {
+    <span class="comment">// CharsetReader, if non-nil, defines a function to generate</span>
+    <span class="comment">// charset-conversion readers, converting from the provided</span>
+    <span class="comment">// charset into UTF-8.</span>
+    <span class="comment">// Charsets are always lower-case. utf-8, iso-8859-1 and us-ascii charsets</span>
+    <span class="comment">// are handled by default.</span>
+    <span class="comment">// One of the the CharsetReader&#39;s result values must be non-nil.</span>
+    CharsetReader func(charset <a href="../builtin/index.html#string">string</a>, input <a href="../io/index.html">io</a>.<a href="../io/index.html#Reader">Reader</a>) (<a href="../io/index.html">io</a>.<a href="../io/index.html#Reader">Reader</a>, <a href="../builtin/index.html#error">error</a>)
+}</pre>
+			<p>
+A WordDecoder decodes MIME headers containing RFC 2047 encoded-words.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="WordDecoder.Decode">func (*WordDecoder) <a href="http://localhost:6060/src/mime/encodedword.go?s=5104:5161#L186">Decode</a></h3>
+				<pre>func (d *<a href="index.html#WordDecoder">WordDecoder</a>) Decode(word <a href="../builtin/index.html#string">string</a>) (<a href="../builtin/index.html#string">string</a>, <a href="../builtin/index.html#error">error</a>)</pre>
+				<p>
+Decode decodes an RFC 2047 encoded-word.
+</p>
+
+				
+				<div id="example_WordDecoder_Decode" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">dec := new(mime.WordDecoder)
+header, err := dec.Decode(&#34;=?utf-8?q?=C2=A1Hola,_se=C3=B1or!?=&#34;)
+if err != nil {
+    panic(err)
+}
+fmt.Println(header)
+
+dec.CharsetReader = func(charset string, input io.Reader) (io.Reader, error) {
+    switch charset {
+    case &#34;x-case&#34;:
+        <span class="comment">// Fake character set for example.</span>
+        <span class="comment">// Real use would integrate with packages such</span>
+        <span class="comment">// as code.google.com/p/go-charset</span>
+        content, err := ioutil.ReadAll(input)
+        if err != nil {
+            return nil, err
+        }
+        return bytes.NewReader(bytes.ToUpper(content)), nil
+    default:
+        return nil, fmt.Errorf(&#34;unhandled charset %q&#34;, charset)
+    }
+}
+header, err = dec.Decode(&#34;=?x-case?q?hello!?=&#34;)
+if err != nil {
+    panic(err)
+}
+fmt.Println(header)
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">¡Hola, señor!
+HELLO!
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+				
+				<h3 id="WordDecoder.DecodeHeader">func (*WordDecoder) <a href="http://localhost:6060/src/mime/encodedword.go?s=6020:6085#L221">DecodeHeader</a></h3>
+				<pre>func (d *<a href="index.html#WordDecoder">WordDecoder</a>) DecodeHeader(header <a href="../builtin/index.html#string">string</a>) (<a href="../builtin/index.html#string">string</a>, <a href="../builtin/index.html#error">error</a>)</pre>
+				<p>
+DecodeHeader decodes all encoded-words of the given string. It returns an
+error if and only if CharsetReader of d returns an error.
+</p>
+
+				
+				<div id="example_WordDecoder_DecodeHeader" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">dec := new(mime.WordDecoder)
+header, err := dec.DecodeHeader(&#34;=?utf-8?q?=C3=89ric?= &lt;eric@example.org&gt;, =?utf-8?q?Ana=C3=AFs?= &lt;anais@example.org&gt;&#34;)
+if err != nil {
+    panic(err)
+}
+fmt.Println(header)
+
+header, err = dec.DecodeHeader(&#34;=?utf-8?q?=C2=A1Hola,?= =?utf-8?q?_se=C3=B1or!?=&#34;)
+if err != nil {
+    panic(err)
+}
+fmt.Println(header)
+
+dec.CharsetReader = func(charset string, input io.Reader) (io.Reader, error) {
+    switch charset {
+    case &#34;x-case&#34;:
+        <span class="comment">// Fake character set for example.</span>
+        <span class="comment">// Real use would integrate with packages such</span>
+        <span class="comment">// as code.google.com/p/go-charset</span>
+        content, err := ioutil.ReadAll(input)
+        if err != nil {
+            return nil, err
+        }
+        return bytes.NewReader(bytes.ToUpper(content)), nil
+    default:
+        return nil, fmt.Errorf(&#34;unhandled charset %q&#34;, charset)
+    }
+}
+header, err = dec.DecodeHeader(&#34;=?x-case?q?hello_?= =?x-case?q?world!?=&#34;)
+if err != nil {
+    panic(err)
+}
+fmt.Println(header)
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">Éric &lt;eric@example.org&gt;, Anaïs &lt;anais@example.org&gt;
+¡Hola, señor!
+HELLO WORLD!
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+		
+			
+			
+			<h2 id="WordEncoder">type <a href="http://localhost:6060/src/mime/encodedword.go?s=336:357#L10">WordEncoder</a></h2>
+			<pre>type WordEncoder <a href="../builtin/index.html#byte">byte</a></pre>
+			<p>
+A WordEncoder is a RFC 2047 encoded-word encoder.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="WordEncoder.Encode">func (WordEncoder) <a href="http://localhost:6060/src/mime/encodedword.go?s=846:899#L26">Encode</a></h3>
+				<pre>func (e <a href="index.html#WordEncoder">WordEncoder</a>) Encode(charset, s <a href="../builtin/index.html#string">string</a>) <a href="../builtin/index.html#string">string</a></pre>
+				<p>
+Encode returns the encoded-word form of s. If s is ASCII without special
+characters, it is returned unchanged. The provided charset is the IANA
+charset name of s. It is case insensitive.
+</p>
+
+				
+				<div id="example_WordEncoder_Encode" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">fmt.Println(mime.QEncoding.Encode(&#34;utf-8&#34;, &#34;¡Hola, señor!&#34;))
+fmt.Println(mime.QEncoding.Encode(&#34;utf-8&#34;, &#34;Hello!&#34;))
+fmt.Println(mime.BEncoding.Encode(&#34;UTF-8&#34;, &#34;¡Hola, señor!&#34;))
+fmt.Println(mime.QEncoding.Encode(&#34;ISO-8859-1&#34;, &#34;Caf\xE9&#34;))
+<span class="comment"></pre>
+			
+			<p>Output:</p>
+			<pre class="output">=?utf-8?q?=C2=A1Hola,_se=C3=B1or!?=
+Hello!
+=?UTF-8?b?wqFIb2xhLCBzZcOxb3Ih?=
+=?ISO-8859-1?q?Caf=E9?=
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+		
+	
+
+	
+
+
+
+
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+
+
+	<div class="pkg-dir">
+		<table>
+			<tr>
+				<th class="pkg-name">Name</th>
+				<th class="pkg-synopsis">Synopsis</th>
+			</tr>
+
+			
+			<tr>
+				<td colspan="2"><a href="http://localhost:6060/pkg/">..</a></td>
+			</tr>
+			
+
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="multipart/index.html">multipart</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package multipart implements MIME multipart parsing, as defined in RFC 2046.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="quotedprintable/index.html">quotedprintable</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package quotedprintable implements quoted-printable encoding as specified by RFC 2045.
+						</td>
+					</tr>
+				
+			
+		</table>
+	</div>
+
+
+	
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

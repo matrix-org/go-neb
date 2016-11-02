@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>utf32 - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package utf32</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "golang.org/x/text/encoding/unicode/utf32"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package utf32 provides the UTF-32 Unicode encoding.
+</p>
+<p>
+Please note that support for UTF-32 is discouraged as it is a rare and
+inefficient encoding, unfit for use as an interchange format. For use
+on the web, the W3C strongly discourages its use
+(<a href="https://www.w3.org/TR/html5/document-metadata.html#charset">https://www.w3.org/TR/html5/document-metadata.html#charset</a>)
+while WHATWG directly prohibits supporting it
+(<a href="https://html.spec.whatwg.org/multipage/syntax.html#character-encodings">https://html.spec.whatwg.org/multipage/syntax.html#character-encodings</a>).
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+				
+				<dd><a href="index.html#UTF32">func UTF32(e Endianness, b BOMPolicy) encoding.Encoding</a></dd>
+			
+			
+				
+				<dd><a href="index.html#BOMPolicy">type BOMPolicy</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Endianness">type Endianness</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/golang.org/x/text/encoding/unicode/utf32/utf32.go">utf32.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var <span id="All">All</span> = []<a href="../../index.html">encoding</a>.<a href="../../index.html#Encoding">Encoding</a>{
+    <a href="index.html#UTF32">UTF32</a>(<a href="index.html#BigEndian">BigEndian</a>, <a href="index.html#UseBOM">UseBOM</a>),
+    <a href="index.html#UTF32">UTF32</a>(<a href="index.html#BigEndian">BigEndian</a>, <a href="index.html#IgnoreBOM">IgnoreBOM</a>),
+    <a href="index.html#UTF32">UTF32</a>(<a href="index.html#LittleEndian">LittleEndian</a>, <a href="index.html#IgnoreBOM">IgnoreBOM</a>),
+}</pre>
+				<p>
+All lists a configuration for each IANA-defined UTF-32 variant.
+</p>
+
+			
+				<pre>var <span id="ErrMissingBOM">ErrMissingBOM</span> = <a href="../../../../../../errors/index.html">errors</a>.<a href="../../../../../../errors/index.html#New">New</a>(&#34;encoding: missing byte order mark&#34;)</pre>
+				<p>
+ErrMissingBOM means that decoding UTF-32 input with ExpectBOM did not
+find a starting byte order mark.
+</p>
+
+			
+		
+		
+			
+			
+			<h2 id="UTF32">func <a href="http://localhost:6060/src/golang.org/x/text/encoding/unicode/utf32/utf32.go?s=3017:3072#L56">UTF32</a></h2>
+			<pre>func UTF32(e <a href="index.html#Endianness">Endianness</a>, b <a href="index.html#BOMPolicy">BOMPolicy</a>) <a href="../../index.html">encoding</a>.<a href="../../index.html#Encoding">Encoding</a></pre>
+			<p>
+UTF32 returns a UTF-32 Encoding for the given default endianness and
+byte order mark (BOM) policy.
+</p>
+<p>
+When decoding from UTF-32 to UTF-8, if the BOMPolicy is IgnoreBOM then
+neither BOMs U+FEFF nor ill-formed code units 0xFFFE0000 in the input
+stream will affect the endianness used for decoding. Instead BOMs will
+be output as their standard UTF-8 encoding &#34;\xef\xbb\xbf&#34; while
+0xFFFE0000 code units will be output as &#34;\xef\xbf\xbd&#34;, the standard
+UTF-8 encoding for the Unicode replacement character. If the BOMPolicy
+is UseBOM or ExpectBOM a starting BOM is not written to the UTF-8
+output. Instead, it overrides the default endianness e for the remainder
+of the transformation. Any subsequent BOMs U+FEFF or ill-formed code
+units 0xFFFE0000 will not affect the endianness used, and will instead
+be output as their standard UTF-8 (replacement) encodings. For UseBOM,
+if there is no starting BOM, it will proceed with the default
+Endianness. For ExpectBOM, in that case, the transformation will return
+early with an ErrMissingBOM error.
+</p>
+<p>
+When encoding from UTF-8 to UTF-32, a BOM will be inserted at the start
+of the output if the BOMPolicy is UseBOM or ExpectBOM. Otherwise, a BOM
+will not be inserted. The UTF-8 input does not need to contain a BOM.
+</p>
+<p>
+There is no concept of a &#39;native&#39; endianness. If the UTF-32 data is
+produced and consumed in a greater context that implies a certain
+endianness, use IgnoreBOM. Otherwise, use ExpectBOM and always produce
+and consume a BOM.
+</p>
+<p>
+In the language of <a href="http://www.unicode.org/faq/utf_bom.html#bom10">http://www.unicode.org/faq/utf_bom.html#bom10</a>,
+IgnoreBOM corresponds to &#34;Where the precise type of the data stream is
+known... the BOM should not be used&#34; and ExpectBOM corresponds to &#34;A
+particular protocol... may require use of the BOM&#34;.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="BOMPolicy">type <a href="http://localhost:6060/src/golang.org/x/text/encoding/unicode/utf32/utf32.go?s=3696:3716#L75">BOMPolicy</a></h2>
+			<pre>type BOMPolicy <a href="../../../../../../builtin/index.html#uint8">uint8</a></pre>
+			<p>
+BOMPolicy is a UTF-32 encodings&#39;s byte order mark policy.
+</p>
+
+
+			
+				<pre>const (
+
+    <span class="comment">// IgnoreBOM means to ignore any byte order marks.</span>
+    <span id="IgnoreBOM">IgnoreBOM</span> <a href="index.html#BOMPolicy">BOMPolicy</a> = 0
+
+    <span class="comment">// UseBOM means that the UTF-32 form may start with a byte order mark,</span>
+    <span class="comment">// which will be used to override the default encoding.</span>
+    <span id="UseBOM">UseBOM</span> <a href="index.html#BOMPolicy">BOMPolicy</a> = writeBOM | acceptBOM
+
+    <span class="comment">// ExpectBOM means that the UTF-32 form must start with a byte order mark,</span>
+    <span class="comment">// which will be used to override the default encoding.</span>
+    <span id="ExpectBOM">ExpectBOM</span> <a href="index.html#BOMPolicy">BOMPolicy</a> = writeBOM | acceptBOM | requireBOM
+)</pre>
+				
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Endianness">type <a href="http://localhost:6060/src/golang.org/x/text/encoding/unicode/utf32/utf32.go?s=4845:4865#L106">Endianness</a></h2>
+			<pre>type Endianness <a href="../../../../../../builtin/index.html#bool">bool</a></pre>
+			<p>
+Endianness is a UTF-32 encoding&#39;s default endianness.
+</p>
+
+
+			
+				<pre>const (
+    <span class="comment">// BigEndian is UTF-32BE.</span>
+    <span id="BigEndian">BigEndian</span> <a href="index.html#Endianness">Endianness</a> = <a href="../../../../../../builtin/index.html#false">false</a>
+    <span class="comment">// LittleEndian is UTF-32LE.</span>
+    <span id="LittleEndian">LittleEndian</span> <a href="index.html#Endianness">Endianness</a> = <a href="../../../../../../builtin/index.html#true">true</a>
+)</pre>
+				
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

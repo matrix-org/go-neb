@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>journal - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package journal</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/syndtr/goleveldb/leveldb/journal"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package journal reads and writes sequences of journals. Each journal is a stream
+of bytes that completes before the next journal starts.
+</p>
+<p>
+When reading, call Next to obtain an io.Reader for the next journal. Next will
+return io.EOF when there are no more journals. It is valid to call Next
+without reading the current journal to exhaustion.
+</p>
+<p>
+When writing, call Next to obtain an io.Writer for the next journal. Calling
+Next finishes the current journal. Call Close to finish the final journal.
+</p>
+<p>
+Optionally, call Flush to finish the current journal and flush the underlying
+writer without starting a new journal. To start a new journal after flushing,
+call Next.
+</p>
+<p>
+Neither Readers or Writers are safe to use concurrently.
+</p>
+<p>
+Example code:
+</p>
+<pre>func read(r io.Reader) ([]string, error) {
+	var ss []string
+	journals := journal.NewReader(r, nil, true, true)
+	for {
+		j, err := journals.Next()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return nil, err
+		}
+		s, err := ioutil.ReadAll(j)
+		if err != nil {
+			return nil, err
+		}
+		ss = append(ss, string(s))
+	}
+	return ss, nil
+}
+
+func write(w io.Writer, ss []string) error {
+	journals := journal.NewWriter(w)
+	for _, s := range ss {
+		j, err := journals.Next()
+		if err != nil {
+			return err
+		}
+		if _, err := j.Write([]byte(s)), err != nil {
+			return err
+		}
+	}
+	return journals.Close()
+}
+</pre>
+<p>
+The wire format is that the stream is divided into 32KiB blocks, and each
+block contains a number of tightly packed chunks. Chunks cannot cross block
+boundaries. The last block may be shorter than 32 KiB. Any unused bytes in a
+block must be zero.
+</p>
+<p>
+A journal maps to one or more chunks. Each chunk has a 7 byte header (a 4
+byte checksum, a 2 byte little-endian uint16 length, and a 1 byte chunk type)
+followed by a payload. The checksum is over the chunk type and the payload.
+</p>
+<p>
+There are four chunk types: whether the chunk is the full journal, or the
+first, middle or last chunk of a multi-chunk journal. A multi-chunk journal
+has one first chunk, zero or more middle chunks, and one last chunk.
+</p>
+<p>
+The wire format allows for limited recovery in the face of data corruption:
+on a format error (such as a checksum mismatch), the reader moves to the
+next block and looks for the next full or first chunk.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+			
+				
+				<dd><a href="index.html#Dropper">type Dropper</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ErrCorrupted">type ErrCorrupted</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ErrCorrupted.Error">func (e *ErrCorrupted) Error() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Reader">type Reader</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewReader">func NewReader(r io.Reader, dropper Dropper, strict, checksum bool) *Reader</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Reader.Next">func (r *Reader) Next() (io.Reader, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Reader.Reset">func (r *Reader) Reset(reader io.Reader, dropper Dropper, strict, checksum bool) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Writer">type Writer</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewWriter">func NewWriter(w io.Writer) *Writer</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Writer.Close">func (w *Writer) Close() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Writer.Flush">func (w *Writer) Flush() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Writer.Next">func (w *Writer) Next() (io.Writer, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Writer.Reset">func (w *Writer) Reset(writer io.Writer) (err error)</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/journal/journal.go">journal.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+		
+			
+			
+			<h2 id="Dropper">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/journal/journal.go?s=3899:3942#L109">Dropper</a></h2>
+			<pre>type Dropper interface {
+    Drop(err <a href="../../../../../builtin/index.html#error">error</a>)
+}</pre>
+			<p>
+Dropper is the interface that wrap simple Drop method. The Drop
+method will be called when the journal reader dropping a block or chunk.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ErrCorrupted">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/journal/journal.go?s=3561:3616#L98">ErrCorrupted</a></h2>
+			<pre>type ErrCorrupted struct {
+    Size   <a href="../../../../../builtin/index.html#int">int</a>
+    Reason <a href="../../../../../builtin/index.html#string">string</a>
+}</pre>
+			<p>
+ErrCorrupted is the error type that generated by corrupted block or chunk.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ErrCorrupted.Error">func (*ErrCorrupted) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/journal/journal.go?s=3618:3655#L103">Error</a></h3>
+				<pre>func (e *<a href="index.html#ErrCorrupted">ErrCorrupted</a>) Error() <a href="../../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Reader">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/journal/journal.go?s=3999:4660#L114">Reader</a></h2>
+			<pre>type Reader struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Reader reads journals from an underlying io.Reader.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewReader">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/journal/journal.go?s=4820:4895#L142">NewReader</a></h3>
+				<pre>func NewReader(r <a href="../../../../../io/index.html">io</a>.<a href="../../../../../io/index.html#Reader">Reader</a>, dropper <a href="index.html#Dropper">Dropper</a>, strict, checksum <a href="../../../../../builtin/index.html#bool">bool</a>) *<a href="index.html#Reader">Reader</a></pre>
+				<p>
+NewReader returns a new reader. The dropper may be nil, and if
+strict is true then corrupted or invalid chunk will halt the journal
+reader entirely.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Reader.Next">func (*Reader) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/journal/journal.go?s=7607:7649#L238">Next</a></h3>
+				<pre>func (r *<a href="index.html#Reader">Reader</a>) Next() (<a href="../../../../../io/index.html">io</a>.<a href="../../../../../io/index.html#Reader">Reader</a>, <a href="../../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Next returns a reader for the next journal. It returns io.EOF if there are no
+more journals. The reader returned becomes stale after the next Next call,
+and should no longer be used. If strict is false, the reader will returns
+io.ErrUnexpectedEOF error when found corrupted journal.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Reader.Reset">func (*Reader) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/journal/journal.go?s=7987:8073#L256">Reset</a></h3>
+				<pre>func (r *<a href="index.html#Reader">Reader</a>) Reset(reader <a href="../../../../../io/index.html">io</a>.<a href="../../../../../io/index.html#Reader">Reader</a>, dropper <a href="index.html#Dropper">Dropper</a>, strict, checksum <a href="../../../../../builtin/index.html#bool">bool</a>) <a href="../../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Reset resets the journal reader, allows reuse of the journal reader. Reset returns
+last accumulated error.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Writer">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/journal/journal.go?s=9292:9945#L334">Writer</a></h2>
+			<pre>type Writer struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Writer writes journals to an underlying io.Writer.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewWriter">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/journal/journal.go?s=9982:10017#L358">NewWriter</a></h3>
+				<pre>func NewWriter(w <a href="../../../../../io/index.html">io</a>.<a href="../../../../../io/index.html#Writer">Writer</a>) *<a href="index.html#Writer">Writer</a></pre>
+				<p>
+NewWriter returns a new Writer.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Writer.Close">func (*Writer) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/journal/journal.go?s=11240:11270#L412">Close</a></h3>
+				<pre>func (w *<a href="index.html#Writer">Writer</a>) Close() <a href="../../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Close finishes the current journal and closes the writer.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Writer.Flush">func (*Writer) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/journal/journal.go?s=11550:11580#L424">Flush</a></h3>
+				<pre>func (w *<a href="index.html#Writer">Writer</a>) Flush() <a href="../../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Flush finishes the current journal, writes to the underlying writer, and
+flushes it if that writer implements interface{ Flush() error }.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Writer.Next">func (*Writer) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/journal/journal.go?s=12261:12303#L458">Next</a></h3>
+				<pre>func (w *<a href="index.html#Writer">Writer</a>) Next() (<a href="../../../../../io/index.html">io</a>.<a href="../../../../../io/index.html#Writer">Writer</a>, <a href="../../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Next returns a writer for the next journal. The writer returned becomes stale
+after the next Close, Flush or Next call, and should no longer be used.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Writer.Reset">func (*Writer) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/journal/journal.go?s=11852:11904#L439">Reset</a></h3>
+				<pre>func (w *<a href="index.html#Writer">Writer</a>) Reset(writer <a href="../../../../../io/index.html">io</a>.<a href="../../../../../io/index.html#Writer">Writer</a>) (err <a href="../../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Reset resets the journal writer, allows reuse of the journal writer. Reset
+will also closes the journal writer if not already.
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

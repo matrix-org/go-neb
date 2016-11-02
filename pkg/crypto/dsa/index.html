@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>dsa - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package dsa</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "crypto/dsa"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package dsa implements the Digital Signature Algorithm, as defined in FIPS 186-3.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+				
+				<dd><a href="index.html#GenerateKey">func GenerateKey(priv *PrivateKey, rand io.Reader) error</a></dd>
+			
+				
+				<dd><a href="index.html#GenerateParameters">func GenerateParameters(params *Parameters, rand io.Reader, sizes ParameterSizes) (err error)</a></dd>
+			
+				
+				<dd><a href="index.html#Sign">func Sign(rand io.Reader, priv *PrivateKey, hash []byte) (r, s *big.Int, err error)</a></dd>
+			
+				
+				<dd><a href="index.html#Verify">func Verify(pub *PublicKey, hash []byte, r, s *big.Int) bool</a></dd>
+			
+			
+				
+				<dd><a href="index.html#ParameterSizes">type ParameterSizes</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Parameters">type Parameters</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#PrivateKey">type PrivateKey</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#PublicKey">type PublicKey</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/crypto/dsa/dsa.go">dsa.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var <span id="ErrInvalidPublicKey">ErrInvalidPublicKey</span> = <a href="../../errors/index.html">errors</a>.<a href="../../errors/index.html#New">New</a>(&#34;crypto/dsa: invalid public key&#34;)</pre>
+				<p>
+ErrInvalidPublicKey results when a public key is not usable by this code.
+FIPS is quite strict about the format of DSA keys, but other code may be
+less so. Thus, when using keys which may have been generated by other code,
+this error must be handled.
+</p>
+
+			
+		
+		
+			
+			
+			<h2 id="GenerateKey">func <a href="http://localhost:6060/src/crypto/dsa/dsa.go?s=3306:3362#L141">GenerateKey</a></h2>
+			<pre>func GenerateKey(priv *<a href="index.html#PrivateKey">PrivateKey</a>, rand <a href="../../io/index.html">io</a>.<a href="../../io/index.html#Reader">Reader</a>) <a href="../../builtin/index.html#error">error</a></pre>
+			<p>
+GenerateKey generates a public&amp;private key pair. The Parameters of the
+PrivateKey must already be valid (see GenerateParameters).
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="GenerateParameters">func <a href="http://localhost:6060/src/crypto/dsa/dsa.go?s=1576:1669#L45">GenerateParameters</a></h2>
+			<pre>func GenerateParameters(params *<a href="index.html#Parameters">Parameters</a>, rand <a href="../../io/index.html">io</a>.<a href="../../io/index.html#Reader">Reader</a>, sizes <a href="index.html#ParameterSizes">ParameterSizes</a>) (err <a href="../../builtin/index.html#error">error</a>)</pre>
+			<p>
+GenerateParameters puts a random, valid set of DSA parameters into params.
+This function can take many seconds, even on fast machines.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Sign">func <a href="http://localhost:6060/src/crypto/dsa/dsa.go?s=4644:4727#L184">Sign</a></h2>
+			<pre>func Sign(rand <a href="../../io/index.html">io</a>.<a href="../../io/index.html#Reader">Reader</a>, priv *<a href="index.html#PrivateKey">PrivateKey</a>, hash []<a href="../../builtin/index.html#byte">byte</a>) (r, s *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>, err <a href="../../builtin/index.html#error">error</a>)</pre>
+			<p>
+Sign signs an arbitrary length hash (which should be the result of hashing a
+larger message) using the private key, priv. It returns the signature as a
+pair of integers. The security of the private key depends on the entropy of
+rand.
+</p>
+<p>
+Note that FIPS 186-3 section 4.6 specifies that the hash should be truncated
+to the byte-length of the subgroup. This function does not perform that
+truncation itself.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Verify">func <a href="http://localhost:6060/src/crypto/dsa/dsa.go?s=5673:5733#L239">Verify</a></h2>
+			<pre>func Verify(pub *<a href="index.html#PublicKey">PublicKey</a>, hash []<a href="../../builtin/index.html#byte">byte</a>, r, s *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>) <a href="../../builtin/index.html#bool">bool</a></pre>
+			<p>
+Verify verifies the signature in r, s of hash using the public key, pub. It
+reports whether the signature is valid.
+</p>
+<p>
+Note that FIPS 186-3 section 4.6 specifies that the hash should be truncated
+to the byte-length of the subgroup. This function does not perform that
+truncation itself.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="ParameterSizes">type <a href="http://localhost:6060/src/crypto/dsa/dsa.go?s=1161:1184#L30">ParameterSizes</a></h2>
+			<pre>type ParameterSizes <a href="../../builtin/index.html#int">int</a></pre>
+			<p>
+ParameterSizes is a enumeration of the acceptable bit lengths of the primes
+in a set of DSA parameters. See FIPS 186-3, section 4.2.
+</p>
+
+
+			
+				<pre>const (
+    <span id="L1024N160">L1024N160</span> <a href="index.html#ParameterSizes">ParameterSizes</a> = <a href="../../builtin/index.html#iota">iota</a>
+    <span id="L2048N224">L2048N224</span>
+    <span id="L2048N256">L2048N256</span>
+    <span id="L3072N256">L3072N256</span>
+)</pre>
+				
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Parameters">type <a href="http://localhost:6060/src/crypto/dsa/dsa.go?s=453:497#L6">Parameters</a></h2>
+			<pre>type Parameters struct {
+    P, Q, G *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>
+}</pre>
+			<p>
+Parameters represents the domain parameters for a key. These parameters can
+be shared across many keys. The bit length of Q must be a multiple of 8.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="PrivateKey">type <a href="http://localhost:6060/src/crypto/dsa/dsa.go?s=636:685#L17">PrivateKey</a></h2>
+			<pre>type PrivateKey struct {
+    <a href="index.html#PublicKey">PublicKey</a>
+    X *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>
+}</pre>
+			<p>
+PrivateKey represents a DSA private key.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="PublicKey">type <a href="http://localhost:6060/src/crypto/dsa/dsa.go?s=541:590#L11">PublicKey</a></h2>
+			<pre>type PublicKey struct {
+    <a href="index.html#Parameters">Parameters</a>
+    Y *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>
+}</pre>
+			<p>
+PublicKey represents a DSA public key.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

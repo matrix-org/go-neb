@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>cookiejar - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package cookiejar</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "net/http/cookiejar"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package cookiejar implements an in-memory RFC 6265-compliant http.CookieJar.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+			
+				
+				<dd><a href="index.html#Jar">type Jar</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#New">func New(o *Options) (*Jar, error)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Jar.Cookies">func (j *Jar) Cookies(u *url.URL) (cookies []*http.Cookie)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Jar.SetCookies">func (j *Jar) SetCookies(u *url.URL, cookies []*http.Cookie)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Options">type Options</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#PublicSuffixList">type PublicSuffixList</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/net/http/cookiejar/jar.go">jar.go</a>
+			
+				<a href="http://localhost:6060/src/net/http/cookiejar/punycode.go">punycode.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+		
+			
+			
+			<h2 id="Jar">type <a href="http://localhost:6060/src/net/http/cookiejar/jar.go?s=1957:2301#L50">Jar</a></h2>
+			<pre>type Jar struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Jar implements the http.CookieJar interface from the net/http package.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="New">func <a href="http://localhost:6060/src/net/http/cookiejar/jar.go?s=2387:2421#L67">New</a></h3>
+				<pre>func New(o *<a href="index.html#Options">Options</a>) (*<a href="index.html#Jar">Jar</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+New returns a new cookie jar. A nil *Options is equivalent to a zero
+Options.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Jar.Cookies">func (*Jar) <a href="http://localhost:6060/src/net/http/cookiejar/jar.go?s=5174:5232#L161">Cookies</a></h3>
+				<pre>func (j *<a href="index.html#Jar">Jar</a>) Cookies(u *<a href="../../url/index.html">url</a>.<a href="../../url/index.html#URL">URL</a>) (cookies []*<a href="../index.html">http</a>.<a href="../index.html#Cookie">Cookie</a>)</pre>
+				<p>
+Cookies implements the Cookies method of the http.CookieJar interface.
+</p>
+<p>
+It returns an empty slice if the URL&#39;s scheme is not HTTP or HTTPS.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Jar.SetCookies">func (*Jar) <a href="http://localhost:6060/src/net/http/cookiejar/jar.go?s=6507:6567#L225">SetCookies</a></h3>
+				<pre>func (j *<a href="index.html#Jar">Jar</a>) SetCookies(u *<a href="../../url/index.html">url</a>.<a href="../../url/index.html#URL">URL</a>, cookies []*<a href="../index.html">http</a>.<a href="../index.html#Cookie">Cookie</a>)</pre>
+				<p>
+SetCookies implements the SetCookies method of the http.CookieJar interface.
+</p>
+<p>
+It does nothing if the URL&#39;s scheme is not HTTP or HTTPS.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Options">type <a href="http://localhost:6060/src/net/http/cookiejar/jar.go?s=1537:1881#L39">Options</a></h2>
+			<pre>type Options struct {
+    <span class="comment">// PublicSuffixList is the public suffix list that determines whether</span>
+    <span class="comment">// an HTTP server can set a cookie for a domain.</span>
+    <span class="comment">//</span>
+    <span class="comment">// A nil value is valid and may be useful for testing but it is not</span>
+    <span class="comment">// secure: it means that the HTTP server for foo.co.uk can set a cookie</span>
+    <span class="comment">// for bar.co.uk.</span>
+    PublicSuffixList <a href="index.html#PublicSuffixList">PublicSuffixList</a>
+}</pre>
+			<p>
+Options are the options for creating a new Jar.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="PublicSuffixList">type <a href="http://localhost:6060/src/net/http/cookiejar/jar.go?s=1003:1484#L24">PublicSuffixList</a></h2>
+			<pre>type PublicSuffixList interface {
+    <span class="comment">// PublicSuffix returns the public suffix of domain.</span>
+    <span class="comment">//</span>
+    <span class="comment">// TODO: specify which of the caller and callee is responsible for IP</span>
+    <span class="comment">// addresses, for leading and trailing dots, for case sensitivity, and</span>
+    <span class="comment">// for IDN/Punycode.</span>
+    PublicSuffix(domain <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#string">string</a>
+
+    <span class="comment">// String returns a description of the source of this public suffix</span>
+    <span class="comment">// list. The description will typically contain something like a time</span>
+    <span class="comment">// stamp or version number.</span>
+    String() <a href="../../../builtin/index.html#string">string</a>
+}</pre>
+			<p>
+PublicSuffixList provides the public suffix of a domain. For example:
+</p>
+<pre>- the public suffix of &#34;example.com&#34; is &#34;com&#34;,
+- the public suffix of &#34;foo1.foo2.foo3.co.uk&#34; is &#34;co.uk&#34;, and
+- the public suffix of &#34;bar.pvt.k12.ma.us&#34; is &#34;pvt.k12.ma.us&#34;.
+</pre>
+<p>
+Implementations of PublicSuffixList must be safe for concurrent use by
+multiple goroutines.
+</p>
+<p>
+An implementation that always returns &#34;&#34; is valid and may be useful for
+testing but it is not secure: it means that the HTTP server for foo.com can
+set a cookie for bar.com.
+</p>
+<p>
+A public suffix list implementation is in the package
+golang.org/x/net/publicsuffix.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>realms - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package realms</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/matrix-org/go-neb/realms/github"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+			
+				
+				<dd><a href="index.html#GithubRealm">type GithubRealm</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#GithubRealm.AuthSession">func (r *GithubRealm) AuthSession(id, userID, realmID string) types.AuthSession</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#GithubRealm.ID">func (r *GithubRealm) ID() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#GithubRealm.Init">func (r *GithubRealm) Init() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#GithubRealm.OnReceiveRedirect">func (r *GithubRealm) OnReceiveRedirect(w http.ResponseWriter, req *http.Request)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#GithubRealm.Register">func (r *GithubRealm) Register() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#GithubRealm.RequestAuthSession">func (r *GithubRealm) RequestAuthSession(userID string, req json.RawMessage) interface{}</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#GithubRealm.Type">func (r *GithubRealm) Type() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#GithubSession">type GithubSession</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#GithubSession.Authenticated">func (s *GithubSession) Authenticated() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#GithubSession.ID">func (s *GithubSession) ID() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#GithubSession.Info">func (s *GithubSession) Info() interface{}</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#GithubSession.RealmID">func (s *GithubSession) RealmID() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#GithubSession.UserID">func (s *GithubSession) UserID() string</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/github/github.go">github.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+		
+			
+			
+			<h2 id="GithubRealm">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/github/github.go?s=376:508#L8">GithubRealm</a></h2>
+			<pre>type GithubRealm struct {
+    ClientSecret <a href="../../../../../builtin/index.html#string">string</a>
+    ClientID     <a href="../../../../../builtin/index.html#string">string</a>
+    StarterLink  <a href="../../../../../builtin/index.html#string">string</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+GithubRealm can handle OAuth processes with github.com
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="GithubRealm.AuthSession">func (*GithubRealm) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/github/github.go?s=6752:6831#L233">AuthSession</a></h3>
+				<pre>func (r *<a href="index.html#GithubRealm">GithubRealm</a>) AuthSession(id, userID, realmID <a href="../../../../../builtin/index.html#string">string</a>) <a href="../../types/index.html">types</a>.<a href="../../types/index.html#AuthSession">AuthSession</a></pre>
+				<p>
+AuthSession returns a GithubSession for this user
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="GithubRealm.ID">func (*GithubRealm) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/github/github.go?s=2462:2495#L90">ID</a></h3>
+				<pre>func (r *<a href="index.html#GithubRealm">GithubRealm</a>) ID() <a href="../../../../../builtin/index.html#string">string</a></pre>
+				<p>
+ID returns the realm ID
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="GithubRealm.Init">func (*GithubRealm) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/github/github.go?s=2612:2646#L100">Init</a></h3>
+				<pre>func (r *<a href="index.html#GithubRealm">GithubRealm</a>) Init() <a href="../../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Init does nothing.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="GithubRealm.OnReceiveRedirect">func (*GithubRealm) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/github/github.go?s=4179:4260#L157">OnReceiveRedirect</a></h3>
+				<pre>func (r *<a href="index.html#GithubRealm">GithubRealm</a>) OnReceiveRedirect(w <a href="../../../../../net/http/index.html">http</a>.<a href="../../../../../net/http/index.html#ResponseWriter">ResponseWriter</a>, req *<a href="../../../../../net/http/index.html">http</a>.<a href="../../../../../net/http/index.html#Request">Request</a>)</pre>
+				<p>
+OnReceiveRedirect processes OAuth redirect requests from Github
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="GithubRealm.Register">func (*GithubRealm) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/github/github.go?s=2690:2728#L105">Register</a></h3>
+				<pre>func (r *<a href="index.html#GithubRealm">GithubRealm</a>) Register() <a href="../../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Register does nothing.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="GithubRealm.RequestAuthSession">func (*GithubRealm) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/github/github.go?s=2831:2919#L110">RequestAuthSession</a></h3>
+				<pre>func (r *<a href="index.html#GithubRealm">GithubRealm</a>) RequestAuthSession(userID <a href="../../../../../builtin/index.html#string">string</a>, req <a href="../../../../../encoding/json/index.html">json</a>.<a href="../../../../../encoding/json/index.html#RawMessage">RawMessage</a>) interface{}</pre>
+				<p>
+RequestAuthSession generates an OAuth2 URL for this user to auth with github via.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="GithubRealm.Type">func (*GithubRealm) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/github/github.go?s=2532:2567#L95">Type</a></h3>
+				<pre>func (r *<a href="index.html#GithubRealm">GithubRealm</a>) Type() <a href="../../../../../builtin/index.html#string">string</a></pre>
+				<p>
+Type is github
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="GithubSession">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/github/github.go?s=570:945#L17">GithubSession</a></h2>
+			<pre>type GithubSession struct {
+    <span class="comment">// The client-supplied URL to redirect them to after the auth process is complete.</span>
+    ClientsRedirectURL <a href="../../../../../builtin/index.html#string">string</a>
+    <span class="comment">// AccessToken is the github access token for the user</span>
+    AccessToken <a href="../../../../../builtin/index.html#string">string</a>
+    <span class="comment">// Scopes are the set of *ALLOWED* scopes (which may not be the same as the requested scopes)</span>
+    Scopes <a href="../../../../../builtin/index.html#string">string</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+GithubSession represents an authenticated github session
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="GithubSession.Authenticated">func (*GithubSession) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/github/github.go?s=1020:1064#L30">Authenticated</a></h3>
+				<pre>func (s *<a href="index.html#GithubSession">GithubSession</a>) Authenticated() <a href="../../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Authenticated returns true if the user has completed the auth process
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="GithubSession.ID">func (*GithubSession) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/github/github.go?s=2381:2416#L85">ID</a></h3>
+				<pre>func (s *<a href="index.html#GithubSession">GithubSession</a>) ID() <a href="../../../../../builtin/index.html#string">string</a></pre>
+				<p>
+ID returns the session ID
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="GithubSession.Info">func (*GithubSession) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/github/github.go?s=1184:1226#L35">Info</a></h3>
+				<pre>func (s *<a href="index.html#GithubSession">GithubSession</a>) Info() interface{}</pre>
+				<p>
+Info returns a list of possible repositories that this session can integrate with.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="GithubSession.RealmID">func (*GithubSession) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/github/github.go?s=2288:2328#L80">RealmID</a></h3>
+				<pre>func (s *<a href="index.html#GithubSession">GithubSession</a>) RealmID() <a href="../../../../../builtin/index.html#string">string</a></pre>
+				<p>
+RealmID returns the realm ID of the realm which performed the authentication
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="GithubSession.UserID">func (*GithubSession) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/github/github.go?s=2146:2185#L75">UserID</a></h3>
+				<pre>func (s *<a href="index.html#GithubSession">GithubSession</a>) UserID() <a href="../../../../../builtin/index.html#string">string</a></pre>
+				<p>
+UserID returns the user_id who authorised with Github
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

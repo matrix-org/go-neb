@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>storage - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package storage</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/syndtr/goleveldb/leveldb/storage"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package storage provides storage abstraction for LevelDB.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+				
+				<dd><a href="index.html#FileDescOk">func FileDescOk(fd FileDesc) bool</a></dd>
+			
+			
+				
+				<dd><a href="index.html#ErrCorrupted">type ErrCorrupted</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ErrCorrupted.Error">func (e *ErrCorrupted) Error() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#FileDesc">type FileDesc</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#FileDesc.String">func (fd FileDesc) String() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#FileDesc.Zero">func (fd FileDesc) Zero() bool</a></dd>
+				
+			
+				
+				<dd><a href="index.html#FileType">type FileType</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#FileType.String">func (t FileType) String() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Locker">type Locker</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Reader">type Reader</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Storage">type Storage</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewMemStorage">func NewMemStorage() Storage</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#OpenFile">func OpenFile(path string, readOnly bool) (Storage, error)</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Syncer">type Syncer</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Writer">type Writer</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/storage/file_storage.go">file_storage.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/storage/file_storage_unix.go">file_storage_unix.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/storage/mem_storage.go">mem_storage.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/storage/storage.go">storage.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var (
+    <span id="ErrInvalidFile">ErrInvalidFile</span> = <a href="../../../../../errors/index.html">errors</a>.<a href="../../../../../errors/index.html#New">New</a>(&#34;leveldb/storage: invalid file for argument&#34;)
+    <span id="ErrLocked">ErrLocked</span>      = <a href="../../../../../errors/index.html">errors</a>.<a href="../../../../../errors/index.html#New">New</a>(&#34;leveldb/storage: already locked&#34;)
+    <span id="ErrClosed">ErrClosed</span>      = <a href="../../../../../errors/index.html">errors</a>.<a href="../../../../../errors/index.html#New">New</a>(&#34;leveldb/storage: closed&#34;)
+)</pre>
+				<p>
+Common error.
+</p>
+
+			
+		
+		
+			
+			
+			<h2 id="FileDescOk">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/storage/storage.go?s=2521:2554#L108">FileDescOk</a></h2>
+			<pre>func FileDescOk(fd <a href="index.html#FileDesc">FileDesc</a>) <a href="../../../../../builtin/index.html#bool">bool</a></pre>
+			<p>
+FileDescOk returns true if fd is a valid &#39;file descriptor&#39;.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="ErrCorrupted">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/storage/storage.go?s=1163:1216#L43">ErrCorrupted</a></h2>
+			<pre>type ErrCorrupted struct {
+    Fd  <a href="index.html#FileDesc">FileDesc</a>
+    Err <a href="../../../../../builtin/index.html#error">error</a>
+}</pre>
+			<p>
+ErrCorrupted is the type that wraps errors that indicate corruption of
+a file. Package storage has its own type instead of using
+errors.ErrCorrupted to prevent circular import.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ErrCorrupted.Error">func (*ErrCorrupted) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/storage/storage.go?s=1218:1255#L48">Error</a></h3>
+				<pre>func (e *<a href="index.html#ErrCorrupted">ErrCorrupted</a>) Error() <a href="../../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="FileDesc">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/storage/storage.go?s=1938:1989#L82">FileDesc</a></h2>
+			<pre>type FileDesc struct {
+    Type <a href="index.html#FileType">FileType</a>
+    Num  <a href="../../../../../builtin/index.html#int64">int64</a>
+}</pre>
+			<p>
+FileDesc is a &#39;file descriptor&#39;.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="FileDesc.String">func (FileDesc) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/storage/storage.go?s=1991:2025#L87">String</a></h3>
+				<pre>func (fd <a href="index.html#FileDesc">FileDesc</a>) String() <a href="../../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="FileDesc.Zero">func (FileDesc) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/storage/storage.go?s=2395:2425#L103">Zero</a></h3>
+				<pre>func (fd <a href="index.html#FileDesc">FileDesc</a>) Zero() <a href="../../../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Zero returns true if fd == (FileDesc{}).
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="FileType">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/storage/storage.go?s=343:360#L7">FileType</a></h2>
+			<pre>type FileType <a href="../../../../../builtin/index.html#int">int</a></pre>
+			<p>
+FileType represent a file type.
+</p>
+
+
+			
+				<pre>const (
+    <span id="TypeManifest">TypeManifest</span> <a href="index.html#FileType">FileType</a> = 1 &lt;&lt; <a href="../../../../../builtin/index.html#iota">iota</a>
+    <span id="TypeJournal">TypeJournal</span>
+    <span id="TypeTable">TypeTable</span>
+    <span id="TypeTemp">TypeTemp</span>
+
+    <span id="TypeAll">TypeAll</span> = <a href="index.html#TypeManifest">TypeManifest</a> | <a href="index.html#TypeJournal">TypeJournal</a> | <a href="index.html#TypeTable">TypeTable</a> | <a href="index.html#TypeTemp">TypeTemp</a>
+)</pre>
+				<p>
+File types.
+</p>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="FileType.String">func (FileType) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/storage/storage.go?s=519:552#L19">String</a></h3>
+				<pre>func (t <a href="index.html#FileType">FileType</a>) String() <a href="../../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Locker">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/storage/storage.go?s=1865:1900#L77">Locker</a></h2>
+			<pre>type Locker interface {
+    Unlock()
+}</pre>
+			<p>
+Locker is the interface that wraps Unlock method.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Reader">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/storage/storage.go?s=1612:1676#L63">Reader</a></h2>
+			<pre>type Reader interface {
+    <a href="../../../../../io/index.html">io</a>.<a href="../../../../../io/index.html#ReadSeeker">ReadSeeker</a>
+    <a href="../../../../../io/index.html">io</a>.<a href="../../../../../io/index.html#ReaderAt">ReaderAt</a>
+    <a href="../../../../../io/index.html">io</a>.<a href="../../../../../io/index.html#Closer">Closer</a>
+}</pre>
+			<p>
+Reader is the interface that groups the basic Read, Seek, ReadAt and Close
+methods.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Storage">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/storage/storage.go?s=2777:4681#L121">Storage</a></h2>
+			<pre>type Storage interface {
+    <span class="comment">// Lock locks the storage. Any subsequent attempt to call Lock will fail</span>
+    <span class="comment">// until the last lock released.</span>
+    <span class="comment">// Caller should call Unlock method after use.</span>
+    Lock() (<a href="index.html#Locker">Locker</a>, <a href="../../../../../builtin/index.html#error">error</a>)
+
+    <span class="comment">// Log logs a string. This is used for logging.</span>
+    <span class="comment">// An implementation may write to a file, stdout or simply do nothing.</span>
+    Log(str <a href="../../../../../builtin/index.html#string">string</a>)
+
+    <span class="comment">// SetMeta store &#39;file descriptor&#39; that can later be acquired using GetMeta</span>
+    <span class="comment">// method. The &#39;file descriptor&#39; should point to a valid file.</span>
+    <span class="comment">// SetMeta should be implemented in such way that changes should happen</span>
+    <span class="comment">// atomically.</span>
+    SetMeta(fd <a href="index.html#FileDesc">FileDesc</a>) <a href="../../../../../builtin/index.html#error">error</a>
+
+    <span class="comment">// GetMeta returns &#39;file descriptor&#39; stored in meta. The &#39;file descriptor&#39;</span>
+    <span class="comment">// can be updated using SetMeta method.</span>
+    <span class="comment">// Returns os.ErrNotExist if meta doesn&#39;t store any &#39;file descriptor&#39;, or</span>
+    <span class="comment">// &#39;file descriptor&#39; point to nonexistent file.</span>
+    GetMeta() (<a href="index.html#FileDesc">FileDesc</a>, <a href="../../../../../builtin/index.html#error">error</a>)
+
+    <span class="comment">// List returns file descriptors that match the given file types.</span>
+    <span class="comment">// The file types may be OR&#39;ed together.</span>
+    List(ft <a href="index.html#FileType">FileType</a>) ([]<a href="index.html#FileDesc">FileDesc</a>, <a href="../../../../../builtin/index.html#error">error</a>)
+
+    <span class="comment">// Open opens file with the given &#39;file descriptor&#39; read-only.</span>
+    <span class="comment">// Returns os.ErrNotExist error if the file does not exist.</span>
+    <span class="comment">// Returns ErrClosed if the underlying storage is closed.</span>
+    Open(fd <a href="index.html#FileDesc">FileDesc</a>) (<a href="index.html#Reader">Reader</a>, <a href="../../../../../builtin/index.html#error">error</a>)
+
+    <span class="comment">// Create creates file with the given &#39;file descriptor&#39;, truncate if already</span>
+    <span class="comment">// exist and opens write-only.</span>
+    <span class="comment">// Returns ErrClosed if the underlying storage is closed.</span>
+    Create(fd <a href="index.html#FileDesc">FileDesc</a>) (<a href="index.html#Writer">Writer</a>, <a href="../../../../../builtin/index.html#error">error</a>)
+
+    <span class="comment">// Remove removes file with the given &#39;file descriptor&#39;.</span>
+    <span class="comment">// Returns ErrClosed if the underlying storage is closed.</span>
+    Remove(fd <a href="index.html#FileDesc">FileDesc</a>) <a href="../../../../../builtin/index.html#error">error</a>
+
+    <span class="comment">// Rename renames file from oldfd to newfd.</span>
+    <span class="comment">// Returns ErrClosed if the underlying storage is closed.</span>
+    Rename(oldfd, newfd <a href="index.html#FileDesc">FileDesc</a>) <a href="../../../../../builtin/index.html#error">error</a>
+
+    <span class="comment">// Close closes the storage.</span>
+    <span class="comment">// It is valid to call Close multiple times. Other methods should not be</span>
+    <span class="comment">// called after the storage has been closed.</span>
+    Close() <a href="../../../../../builtin/index.html#error">error</a>
+}</pre>
+			<p>
+Storage is the storage. A storage instance must be safe for concurrent use.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewMemStorage">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/storage/mem_storage.go?s=683:711#L30">NewMemStorage</a></h3>
+				<pre>func NewMemStorage() <a href="index.html#Storage">Storage</a></pre>
+				<p>
+NewMemStorage returns a new memory-backed storage implementation.
+</p>
+
+				
+				
+			
+				
+				<h3 id="OpenFile">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/storage/file_storage.go?s=1325:1383#L58">OpenFile</a></h3>
+				<pre>func OpenFile(path <a href="../../../../../builtin/index.html#string">string</a>, readOnly <a href="../../../../../builtin/index.html#bool">bool</a>) (<a href="index.html#Storage">Storage</a>, <a href="../../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+OpenFile returns a new filesytem-backed storage implementation with the given
+path. This also acquire a file lock, so any subsequent attempt to open the
+same path will fail.
+</p>
+<p>
+The storage must be closed after use, by calling Close method.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="Syncer">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/storage/storage.go?s=1412:1520#L56">Syncer</a></h2>
+			<pre>type Syncer interface {
+    <span class="comment">// Sync commits the current contents of the file to stable storage.</span>
+    Sync() <a href="../../../../../builtin/index.html#error">error</a>
+}</pre>
+			<p>
+Syncer is the interface that wraps basic Sync method.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Writer">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/storage/storage.go?s=1761:1810#L71">Writer</a></h2>
+			<pre>type Writer interface {
+    <a href="../../../../../io/index.html">io</a>.<a href="../../../../../io/index.html#WriteCloser">WriteCloser</a>
+    <a href="index.html#Syncer">Syncer</a>
+}</pre>
+			<p>
+Writer is the interface that groups the basic Write, Sync and Close
+methods.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

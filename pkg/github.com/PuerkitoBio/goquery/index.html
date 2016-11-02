@@ -1,0 +1,3288 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>goquery - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package goquery</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/PuerkitoBio/goquery"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+				<dd><a href="index.html#pkg-examples" class="examplesLink">Examples</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package goquery implements features similar to jQuery, including the chainable
+syntax, to manipulate and query an HTML document.
+</p>
+<p>
+It brings a syntax and a set of features similar to jQuery to the Go language.
+It is based on Go&#39;s net/html package and the CSS Selector library cascadia.
+Since the net/html parser returns nodes, and not a full-featured DOM
+tree, jQuery&#39;s stateful manipulation functions (like height(), css(), detach())
+have been left off.
+</p>
+<p>
+Also, because the net/html parser requires UTF-8 encoding, so does goquery: it is
+the caller&#39;s responsibility to ensure that the source document provides UTF-8 encoded HTML.
+See the repository&#39;s wiki for various options on how to do this.
+</p>
+<p>
+Syntax-wise, it is as close as possible to jQuery, with the same method names when
+possible, and that warm and fuzzy chainable interface. jQuery being the
+ultra-popular library that it is, writing a similar HTML-manipulating
+library was better to follow its API than to start anew (in the same spirit as
+Go&#39;s fmt package), even though some of its methods are less than intuitive (looking
+at you, index()...).
+</p>
+<p>
+It is hosted on GitHub, along with additional documentation in the README.md
+file: <a href="https://github.com/puerkitobio/goquery">https://github.com/puerkitobio/goquery</a>
+</p>
+<p>
+Please note that because of the net/html dependency, goquery requires Go1.1+.
+</p>
+<p>
+The various methods are split into files based on the category of behavior.
+The three dots (...) indicate that various &#34;overloads&#34; are available.
+</p>
+<p>
+* array.go : array-like positional manipulation of the selection.
+</p>
+<pre>- Eq()
+- First()
+- Get()
+- Index...()
+- Last()
+- Slice()
+</pre>
+<p>
+* expand.go : methods that expand or augment the selection&#39;s set.
+</p>
+<pre>- Add...()
+- AndSelf()
+- Union(), which is an alias for AddSelection()
+</pre>
+<p>
+* filter.go : filtering methods, that reduce the selection&#39;s set.
+</p>
+<pre>- End()
+- Filter...()
+- Has...()
+- Intersection(), which is an alias of FilterSelection()
+- Not...()
+</pre>
+<p>
+* iteration.go : methods to loop over the selection&#39;s nodes.
+</p>
+<pre>- Each()
+- EachWithBreak()
+- Map()
+</pre>
+<p>
+* manipulation.go : methods for modifying the document
+</p>
+<pre>- After...()
+- Append...()
+- Before...()
+- Clone()
+- Empty()
+- Prepend...()
+- Remove...()
+- ReplaceWith...()
+- Unwrap()
+- Wrap...()
+- WrapAll...()
+- WrapInner...()
+</pre>
+<p>
+* property.go : methods that inspect and get the node&#39;s properties values.
+</p>
+<pre>- Attr*(), RemoveAttr(), SetAttr()
+- AddClass(), HasClass(), RemoveClass(), ToggleClass()
+- Html()
+- Length()
+- Size(), which is an alias for Length()
+- Text()
+</pre>
+<p>
+* query.go : methods that query, or reflect, a node&#39;s identity.
+</p>
+<pre>- Contains()
+- Is...()
+</pre>
+<p>
+* traversal.go : methods to traverse the HTML document tree.
+</p>
+<pre>- Children...()
+- Contents()
+- Find...()
+- Next...()
+- Parent[s]...()
+- Prev...()
+- Siblings...()
+</pre>
+<p>
+* type.go : definition of the types exposed by goquery.
+</p>
+<pre>- Document
+- Selection
+- Matcher
+</pre>
+<p>
+* utilities.go : definition of helper functions (and not methods on a *Selection)
+that are not part of jQuery, but are useful to goquery.
+</p>
+<pre>- NodeName
+- OuterHtml
+</pre>
+
+			</div>
+		</div>
+		<div id="example_" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		<p>This example scrapes the reviews shown on the home page of metalsucks.net.
+</p>
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+<span class="comment">// Load the HTML document</span>
+doc, err := goquery.NewDocument(&#34;http://metalsucks.net&#34;)
+if err != nil {
+    log.Fatal(err)
+}
+
+<span class="comment">// Find the review items</span>
+doc.Find(&#34;.sidebar-reviews article .content-block&#34;).Each(func(i int, s *goquery.Selection) {
+    <span class="comment">// For each item found, get the band and title</span>
+    band := s.Find(&#34;a&#34;).Text()
+    title := s.Find(&#34;i&#34;).Text()
+    fmt.Printf(&#34;Review %d: %s - %s\n&#34;, i, band, title)
+})
+<span class="comment">// To see the output of the Example while running the test suite (go test), simply</span>
+<span class="comment">// remove the leading &#34;x&#34; before Output on the next line. This will cause the</span>
+<span class="comment">// example to fail (all the &#34;real&#34; tests should pass).</span>
+
+<span class="comment">// xOutput: voluntarily fail the Example output.</span>
+</pre>
+			
+		
+	</div>
+</div>
+
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+				
+				<dd><a href="index.html#NodeName">func NodeName(s *Selection) string</a></dd>
+			
+				
+				<dd><a href="index.html#OuterHtml">func OuterHtml(s *Selection) (string, error)</a></dd>
+			
+			
+				
+				<dd><a href="index.html#Document">type Document</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#CloneDocument">func CloneDocument(doc *Document) *Document</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewDocument">func NewDocument(url string) (*Document, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewDocumentFromNode">func NewDocumentFromNode(root *html.Node) *Document</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewDocumentFromReader">func NewDocumentFromReader(r io.Reader) (*Document, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewDocumentFromResponse">func NewDocumentFromResponse(res *http.Response) (*Document, error)</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Matcher">type Matcher</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Selection">type Selection</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Add">func (s *Selection) Add(selector string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.AddClass">func (s *Selection) AddClass(class ...string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.AddMatcher">func (s *Selection) AddMatcher(m Matcher) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.AddNodes">func (s *Selection) AddNodes(nodes ...*html.Node) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.AddSelection">func (s *Selection) AddSelection(sel *Selection) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.After">func (s *Selection) After(selector string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.AfterHtml">func (s *Selection) AfterHtml(html string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.AfterMatcher">func (s *Selection) AfterMatcher(m Matcher) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.AfterNodes">func (s *Selection) AfterNodes(ns ...*html.Node) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.AfterSelection">func (s *Selection) AfterSelection(sel *Selection) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.AndSelf">func (s *Selection) AndSelf() *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Append">func (s *Selection) Append(selector string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.AppendHtml">func (s *Selection) AppendHtml(html string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.AppendMatcher">func (s *Selection) AppendMatcher(m Matcher) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.AppendNodes">func (s *Selection) AppendNodes(ns ...*html.Node) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.AppendSelection">func (s *Selection) AppendSelection(sel *Selection) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Attr">func (s *Selection) Attr(attrName string) (val string, exists bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.AttrOr">func (s *Selection) AttrOr(attrName, defaultValue string) string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Before">func (s *Selection) Before(selector string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.BeforeHtml">func (s *Selection) BeforeHtml(html string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.BeforeMatcher">func (s *Selection) BeforeMatcher(m Matcher) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.BeforeNodes">func (s *Selection) BeforeNodes(ns ...*html.Node) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.BeforeSelection">func (s *Selection) BeforeSelection(sel *Selection) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Children">func (s *Selection) Children() *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.ChildrenFiltered">func (s *Selection) ChildrenFiltered(selector string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.ChildrenMatcher">func (s *Selection) ChildrenMatcher(m Matcher) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Clone">func (s *Selection) Clone() *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Closest">func (s *Selection) Closest(selector string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.ClosestMatcher">func (s *Selection) ClosestMatcher(m Matcher) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.ClosestNodes">func (s *Selection) ClosestNodes(nodes ...*html.Node) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.ClosestSelection">func (s *Selection) ClosestSelection(sel *Selection) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Contains">func (s *Selection) Contains(n *html.Node) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Contents">func (s *Selection) Contents() *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.ContentsFiltered">func (s *Selection) ContentsFiltered(selector string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.ContentsMatcher">func (s *Selection) ContentsMatcher(m Matcher) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Each">func (s *Selection) Each(f func(int, *Selection)) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.EachWithBreak">func (s *Selection) EachWithBreak(f func(int, *Selection) bool) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Empty">func (s *Selection) Empty() *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.End">func (s *Selection) End() *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Eq">func (s *Selection) Eq(index int) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Filter">func (s *Selection) Filter(selector string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.FilterFunction">func (s *Selection) FilterFunction(f func(int, *Selection) bool) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.FilterMatcher">func (s *Selection) FilterMatcher(m Matcher) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.FilterNodes">func (s *Selection) FilterNodes(nodes ...*html.Node) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.FilterSelection">func (s *Selection) FilterSelection(sel *Selection) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Find">func (s *Selection) Find(selector string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.FindMatcher">func (s *Selection) FindMatcher(m Matcher) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.FindNodes">func (s *Selection) FindNodes(nodes ...*html.Node) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.FindSelection">func (s *Selection) FindSelection(sel *Selection) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.First">func (s *Selection) First() *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Get">func (s *Selection) Get(index int) *html.Node</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Has">func (s *Selection) Has(selector string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.HasClass">func (s *Selection) HasClass(class string) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.HasMatcher">func (s *Selection) HasMatcher(m Matcher) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.HasNodes">func (s *Selection) HasNodes(nodes ...*html.Node) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.HasSelection">func (s *Selection) HasSelection(sel *Selection) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Html">func (s *Selection) Html() (ret string, e error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Index">func (s *Selection) Index() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.IndexMatcher">func (s *Selection) IndexMatcher(m Matcher) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.IndexOfNode">func (s *Selection) IndexOfNode(node *html.Node) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.IndexOfSelection">func (s *Selection) IndexOfSelection(sel *Selection) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.IndexSelector">func (s *Selection) IndexSelector(selector string) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Intersection">func (s *Selection) Intersection(sel *Selection) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Is">func (s *Selection) Is(selector string) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.IsFunction">func (s *Selection) IsFunction(f func(int, *Selection) bool) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.IsMatcher">func (s *Selection) IsMatcher(m Matcher) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.IsNodes">func (s *Selection) IsNodes(nodes ...*html.Node) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.IsSelection">func (s *Selection) IsSelection(sel *Selection) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Last">func (s *Selection) Last() *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Length">func (s *Selection) Length() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Map">func (s *Selection) Map(f func(int, *Selection) string) (result []string)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Next">func (s *Selection) Next() *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.NextAll">func (s *Selection) NextAll() *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.NextAllFiltered">func (s *Selection) NextAllFiltered(selector string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.NextAllMatcher">func (s *Selection) NextAllMatcher(m Matcher) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.NextFiltered">func (s *Selection) NextFiltered(selector string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.NextFilteredUntil">func (s *Selection) NextFilteredUntil(filterSelector, untilSelector string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.NextFilteredUntilMatcher">func (s *Selection) NextFilteredUntilMatcher(filter, until Matcher) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.NextFilteredUntilNodes">func (s *Selection) NextFilteredUntilNodes(filterSelector string, nodes ...*html.Node) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.NextFilteredUntilSelection">func (s *Selection) NextFilteredUntilSelection(filterSelector string, sel *Selection) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.NextMatcher">func (s *Selection) NextMatcher(m Matcher) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.NextMatcherUntilNodes">func (s *Selection) NextMatcherUntilNodes(filter Matcher, nodes ...*html.Node) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.NextMatcherUntilSelection">func (s *Selection) NextMatcherUntilSelection(filter Matcher, sel *Selection) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.NextUntil">func (s *Selection) NextUntil(selector string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.NextUntilMatcher">func (s *Selection) NextUntilMatcher(m Matcher) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.NextUntilNodes">func (s *Selection) NextUntilNodes(nodes ...*html.Node) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.NextUntilSelection">func (s *Selection) NextUntilSelection(sel *Selection) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Not">func (s *Selection) Not(selector string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.NotFunction">func (s *Selection) NotFunction(f func(int, *Selection) bool) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.NotMatcher">func (s *Selection) NotMatcher(m Matcher) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.NotNodes">func (s *Selection) NotNodes(nodes ...*html.Node) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.NotSelection">func (s *Selection) NotSelection(sel *Selection) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Parent">func (s *Selection) Parent() *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.ParentFiltered">func (s *Selection) ParentFiltered(selector string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.ParentMatcher">func (s *Selection) ParentMatcher(m Matcher) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Parents">func (s *Selection) Parents() *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.ParentsFiltered">func (s *Selection) ParentsFiltered(selector string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.ParentsFilteredUntil">func (s *Selection) ParentsFilteredUntil(filterSelector, untilSelector string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.ParentsFilteredUntilMatcher">func (s *Selection) ParentsFilteredUntilMatcher(filter, until Matcher) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.ParentsFilteredUntilNodes">func (s *Selection) ParentsFilteredUntilNodes(filterSelector string, nodes ...*html.Node) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.ParentsFilteredUntilSelection">func (s *Selection) ParentsFilteredUntilSelection(filterSelector string, sel *Selection) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.ParentsMatcher">func (s *Selection) ParentsMatcher(m Matcher) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.ParentsMatcherUntilNodes">func (s *Selection) ParentsMatcherUntilNodes(filter Matcher, nodes ...*html.Node) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.ParentsMatcherUntilSelection">func (s *Selection) ParentsMatcherUntilSelection(filter Matcher, sel *Selection) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.ParentsUntil">func (s *Selection) ParentsUntil(selector string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.ParentsUntilMatcher">func (s *Selection) ParentsUntilMatcher(m Matcher) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.ParentsUntilNodes">func (s *Selection) ParentsUntilNodes(nodes ...*html.Node) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.ParentsUntilSelection">func (s *Selection) ParentsUntilSelection(sel *Selection) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Prepend">func (s *Selection) Prepend(selector string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.PrependHtml">func (s *Selection) PrependHtml(html string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.PrependMatcher">func (s *Selection) PrependMatcher(m Matcher) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.PrependNodes">func (s *Selection) PrependNodes(ns ...*html.Node) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.PrependSelection">func (s *Selection) PrependSelection(sel *Selection) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Prev">func (s *Selection) Prev() *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.PrevAll">func (s *Selection) PrevAll() *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.PrevAllFiltered">func (s *Selection) PrevAllFiltered(selector string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.PrevAllMatcher">func (s *Selection) PrevAllMatcher(m Matcher) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.PrevFiltered">func (s *Selection) PrevFiltered(selector string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.PrevFilteredUntil">func (s *Selection) PrevFilteredUntil(filterSelector, untilSelector string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.PrevFilteredUntilMatcher">func (s *Selection) PrevFilteredUntilMatcher(filter, until Matcher) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.PrevFilteredUntilNodes">func (s *Selection) PrevFilteredUntilNodes(filterSelector string, nodes ...*html.Node) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.PrevFilteredUntilSelection">func (s *Selection) PrevFilteredUntilSelection(filterSelector string, sel *Selection) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.PrevMatcher">func (s *Selection) PrevMatcher(m Matcher) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.PrevMatcherUntilNodes">func (s *Selection) PrevMatcherUntilNodes(filter Matcher, nodes ...*html.Node) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.PrevMatcherUntilSelection">func (s *Selection) PrevMatcherUntilSelection(filter Matcher, sel *Selection) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.PrevUntil">func (s *Selection) PrevUntil(selector string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.PrevUntilMatcher">func (s *Selection) PrevUntilMatcher(m Matcher) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.PrevUntilNodes">func (s *Selection) PrevUntilNodes(nodes ...*html.Node) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.PrevUntilSelection">func (s *Selection) PrevUntilSelection(sel *Selection) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Remove">func (s *Selection) Remove() *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.RemoveAttr">func (s *Selection) RemoveAttr(attrName string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.RemoveClass">func (s *Selection) RemoveClass(class ...string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.RemoveFiltered">func (s *Selection) RemoveFiltered(selector string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.RemoveMatcher">func (s *Selection) RemoveMatcher(m Matcher) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.ReplaceWith">func (s *Selection) ReplaceWith(selector string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.ReplaceWithHtml">func (s *Selection) ReplaceWithHtml(html string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.ReplaceWithMatcher">func (s *Selection) ReplaceWithMatcher(m Matcher) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.ReplaceWithNodes">func (s *Selection) ReplaceWithNodes(ns ...*html.Node) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.ReplaceWithSelection">func (s *Selection) ReplaceWithSelection(sel *Selection) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.SetAttr">func (s *Selection) SetAttr(attrName, val string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Siblings">func (s *Selection) Siblings() *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.SiblingsFiltered">func (s *Selection) SiblingsFiltered(selector string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.SiblingsMatcher">func (s *Selection) SiblingsMatcher(m Matcher) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Size">func (s *Selection) Size() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Slice">func (s *Selection) Slice(start, end int) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Text">func (s *Selection) Text() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.ToggleClass">func (s *Selection) ToggleClass(class ...string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Union">func (s *Selection) Union(sel *Selection) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Unwrap">func (s *Selection) Unwrap() *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.Wrap">func (s *Selection) Wrap(selector string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.WrapAll">func (s *Selection) WrapAll(selector string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.WrapAllHtml">func (s *Selection) WrapAllHtml(html string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.WrapAllMatcher">func (s *Selection) WrapAllMatcher(m Matcher) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.WrapAllNode">func (s *Selection) WrapAllNode(n *html.Node) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.WrapAllSelection">func (s *Selection) WrapAllSelection(sel *Selection) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.WrapHtml">func (s *Selection) WrapHtml(html string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.WrapInner">func (s *Selection) WrapInner(selector string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.WrapInnerHtml">func (s *Selection) WrapInnerHtml(html string) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.WrapInnerMatcher">func (s *Selection) WrapInnerMatcher(m Matcher) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.WrapInnerNode">func (s *Selection) WrapInnerNode(n *html.Node) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.WrapInnerSelection">func (s *Selection) WrapInnerSelection(sel *Selection) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.WrapMatcher">func (s *Selection) WrapMatcher(m Matcher) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.WrapNode">func (s *Selection) WrapNode(n *html.Node) *Selection</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Selection.WrapSelection">func (s *Selection) WrapSelection(sel *Selection) *Selection</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+		<div id="pkg-examples">
+			<h4>Examples</h4>
+			<dl>
+			
+			<dd><a class="exampleLink" href="index.html#example_">Package</a></dd>
+			
+			</dl>
+		</div>
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/array.go">array.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/doc.go">doc.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/expand.go">expand.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/filter.go">filter.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/iteration.go">iteration.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go">manipulation.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/property.go">property.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/query.go">query.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go">traversal.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/type.go">type.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/utilities.go">utilities.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+			
+			
+			<h2 id="NodeName">func <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/utilities.go?s=982:1016#L25">NodeName</a></h2>
+			<pre>func NodeName(s *<a href="index.html#Selection">Selection</a>) <a href="../../../builtin/index.html#string">string</a></pre>
+			<p>
+NodeName returns the node name of the first element in the selection.
+It tries to behave in a similar way as the DOM&#39;s nodeName property
+(<a href="https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeName">https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeName</a>).
+</p>
+<p>
+Go&#39;s net/html package defines the following node types, listed with
+the corresponding returned value from this function:
+</p>
+<pre>ErrorNode : #error
+TextNode : #text
+DocumentNode : #document
+ElementNode : the element&#39;s tag name
+CommentNode : #comment
+DoctypeNode : the name of the document type
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="OuterHtml">func <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/utilities.go?s=1596:1640#L47">OuterHtml</a></h2>
+			<pre>func OuterHtml(s *<a href="index.html#Selection">Selection</a>) (<a href="../../../builtin/index.html#string">string</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+OuterHtml returns the outer HTML rendering of the first item in
+the selection - that is, the HTML including the first element&#39;s
+tag and attributes.
+</p>
+<p>
+Unlike InnerHtml, this is a function and not a method on the Selection,
+because this is not a jQuery method (in javascript-land, this is
+a property provided by the DOM).
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="Document">type <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/type.go?s=513:589#L9">Document</a></h2>
+			<pre>type Document struct {
+    *<a href="index.html#Selection">Selection</a>
+    Url *<a href="../../../net/url/index.html">url</a>.<a href="../../../net/url/index.html#URL">URL</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Document represents an HTML document to be manipulated. Unlike jQuery, which
+is loaded as part of a DOM document, and thus acts upon its containing
+document, GoQuery doesn&#39;t know which HTML document to act upon. So it needs
+to be told, and that&#39;s what the Document class is for. It holds the root
+document node to manipulate, and can make selections on this document.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="CloneDocument">func <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/type.go?s=2357:2400#L69">CloneDocument</a></h3>
+				<pre>func CloneDocument(doc *<a href="index.html#Document">Document</a>) *<a href="index.html#Document">Document</a></pre>
+				<p>
+CloneDocument creates a deep-clone of a document.
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewDocument">func <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/type.go?s=960:1007#L24">NewDocument</a></h3>
+				<pre>func NewDocument(url <a href="../../../builtin/index.html#string">string</a>) (*<a href="index.html#Document">Document</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+NewDocument is a Document constructor that takes a string URL as argument.
+It loads the specified document, parses it, and stores the root Document
+node, ready to be manipulated.
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewDocumentFromNode">func <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/type.go?s=684:735#L17">NewDocumentFromNode</a></h3>
+				<pre>func NewDocumentFromNode(root *<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>) *<a href="index.html#Document">Document</a></pre>
+				<p>
+NewDocumentFromNode is a Document constructor that takes a root html Node
+as argument.
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewDocumentFromReader">func <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/type.go?s=1461:1519#L38">NewDocumentFromReader</a></h3>
+				<pre>func NewDocumentFromReader(r <a href="../../../io/index.html">io</a>.<a href="../../../io/index.html#Reader">Reader</a>) (*<a href="index.html#Document">Document</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+NewDocumentFromReader returns a Document from a generic reader.
+It returns an error as second value if the reader&#39;s data cannot be parsed
+as html. It does *not* check if the reader is also an io.Closer, so the
+provided reader is never closed by this call, it is the responsibility
+of the caller to close it if required.
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewDocumentFromResponse">func <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/type.go?s=1883:1950#L49">NewDocumentFromResponse</a></h3>
+				<pre>func NewDocumentFromResponse(res *<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Response">Response</a>) (*<a href="index.html#Document">Document</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+NewDocumentFromResponse is another Document constructor that takes an http response as argument.
+It loads the specified response&#39;s document, parses it, and stores the root Document
+node, ready to be manipulated. The response&#39;s body is closed on return.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="Matcher">type <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/type.go?s=3491:3611#L103">Matcher</a></h2>
+			<pre>type Matcher interface {
+    Match(*<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>) <a href="../../../builtin/index.html#bool">bool</a>
+    MatchAll(*<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>) []*<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>
+    Filter([]*<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>) []*<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>
+}</pre>
+			<p>
+Matcher is an interface that defines the methods to match
+HTML nodes against a compiled selector string. Cascadia&#39;s
+Selector implements this interface.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Selection">type <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/type.go?s=2918:3007#L84">Selection</a></h2>
+			<pre>type Selection struct {
+    Nodes []*<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Selection represents a collection of nodes matching some criteria. The
+initial Selection can be created by using Document.Find, and then
+manipulated using the jQuery-like chainable syntax and methods.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Selection.Add">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/expand.go?s=268:319#L1">Add</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Add(selector <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+Add adds the selector string&#39;s matching nodes to those in the current
+selection and returns a new Selection object.
+The selector string is run in the context of the document of the current
+Selection object.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.AddClass">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/property.go?s=2593:2649#L94">AddClass</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) AddClass(class ...<a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+AddClass adds the given class(es) to each element in the set of matched elements.
+Multiple class names can be specified, separated by a space or via multiple arguments.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.AddMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/expand.go?s=635:687#L7">AddMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) AddMatcher(m <a href="index.html#Matcher">Matcher</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+AddMatcher adds the matcher&#39;s matching nodes to those in the current
+selection and returns a new Selection object.
+The matcher is run in the context of the document of the current
+Selection object.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.AddNodes">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/expand.go?s=1278:1338#L27">AddNodes</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) AddNodes(nodes ...*<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+AddNodes adds the specified nodes to those in the
+current selection and returns a new Selection object.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.AddSelection">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/expand.go?s=903:962#L13">AddSelection</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) AddSelection(sel *<a href="index.html#Selection">Selection</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+AddSelection adds the specified Selection object&#39;s nodes to those in the
+current selection and returns a new Selection object.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.After">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=417:470#L6">After</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) After(selector <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+After applies the selector from the root document and inserts the matched elements
+after the elements in the set of matched elements.
+</p>
+<p>
+If one of the matched elements in the selection is not currently in the
+document, it&#39;s impossible to insert nodes after it, so it will be ignored.
+</p>
+<p>
+This follows the same rules as Selection.Append.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.AfterHtml">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=1400:1453#L32">AfterHtml</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) AfterHtml(html <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+AfterHtml parses the html and inserts it after the set of matched elements.
+</p>
+<p>
+This follows the same rules as Selection.Append.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.AfterMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=882:936#L17">AfterMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) AfterMatcher(m <a href="index.html#Matcher">Matcher</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+AfterMatcher applies the matcher from the root document and inserts the matched elements
+after the elements in the set of matched elements.
+</p>
+<p>
+If one of the matched elements in the selection is not currently in the
+document, it&#39;s impossible to insert nodes after it, so it will be ignored.
+</p>
+<p>
+This follows the same rules as Selection.Append.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.AfterNodes">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=1638:1697#L39">AfterNodes</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) AfterNodes(ns ...*<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+AfterNodes inserts the nodes after each element in the set of matched elements.
+</p>
+<p>
+This follows the same rules as Selection.Append.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.AfterSelection">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=1164:1225#L25">AfterSelection</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) AfterSelection(sel *<a href="index.html#Selection">Selection</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+AfterSelection inserts the elements in the selection after each element in the set of matched
+elements.
+</p>
+<p>
+This follows the same rules as Selection.Append.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.AndSelf">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/expand.go?s=1594:1634#L34">AndSelf</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) AndSelf() *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+AndSelf adds the previous set of elements on the stack to the current set.
+It returns a new Selection object containing the current Selection combined
+with the previous one.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Append">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=2305:2359#L57">Append</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Append(selector <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+Append appends the elements specified by the selector to the end of each element
+in the set of matched elements, following those rules:
+</p>
+<p>
+1) The selector is applied to the root document.
+</p>
+<p>
+2) Elements that are part of the document will be moved to the new location.
+</p>
+<p>
+3) If there are multiple locations to append to, cloned nodes will be
+appended to all target locations except the last one, which will be moved
+as noted in (2).
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.AppendHtml">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=3069:3123#L78">AppendHtml</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) AppendHtml(html <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+AppendHtml parses the html and appends it to the set of matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.AppendMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=2595:2650#L65">AppendMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) AppendMatcher(m <a href="index.html#Matcher">Matcher</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+AppendMatcher appends the elements specified by the matcher to the end of each element
+in the set of matched elements.
+</p>
+<p>
+This follows the same rules as Selection.Append.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.AppendNodes">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=3314:3374#L85">AppendNodes</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) AppendNodes(ns ...*<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+AppendNodes appends the specified nodes to each node in the set of matched elements.
+</p>
+<p>
+This follows the same rules as Selection.Append.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.AppendSelection">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=2888:2950#L73">AppendSelection</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) AppendSelection(sel *<a href="index.html#Selection">Selection</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+AppendSelection appends the elements in the selection to the end of each element
+in the set of matched elements.
+</p>
+<p>
+This follows the same rules as Selection.Append.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Attr">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/property.go?s=326:393#L6">Attr</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Attr(attrName <a href="../../../builtin/index.html#string">string</a>) (val <a href="../../../builtin/index.html#string">string</a>, exists <a href="../../../builtin/index.html#bool">bool</a>)</pre>
+				<p>
+Attr gets the specified attribute&#39;s value for the first element in the
+Selection. To get the value for each element individually, use a looping
+construct such as Each or Map method.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.AttrOr">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/property.go?s=564:628#L14">AttrOr</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) AttrOr(attrName, defaultValue <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+AttrOr works like Attr but returns default value if attribute is not present.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Before">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=3623:3677#L94">Before</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Before(selector <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+Before inserts the matched elements before each element in the set of matched elements.
+</p>
+<p>
+This follows the same rules as Selection.Append.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.BeforeHtml">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=4412:4466#L116">BeforeHtml</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) BeforeHtml(html <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+BeforeHtml parses the html and inserts it before the set of matched elements.
+</p>
+<p>
+This follows the same rules as Selection.Append.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.BeforeMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=3886:3941#L101">BeforeMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) BeforeMatcher(m <a href="index.html#Matcher">Matcher</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+BeforeMatcher inserts the matched elements before each element in the set of matched elements.
+</p>
+<p>
+This follows the same rules as Selection.Append.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.BeforeNodes">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=4654:4714#L123">BeforeNodes</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) BeforeNodes(ns ...*<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+BeforeNodes inserts the nodes before each element in the set of matched elements.
+</p>
+<p>
+This follows the same rules as Selection.Append.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.BeforeSelection">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=4172:4234#L109">BeforeSelection</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) BeforeSelection(sel *<a href="index.html#Selection">Selection</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+BeforeSelection inserts the elements in the selection before each element in the set of matched
+elements.
+</p>
+<p>
+This follows the same rules as Selection.Append.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Children">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=2996:3037#L75">Children</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Children() *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+Children gets the child elements of each element in the Selection.
+It returns a new Selection object containing these elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.ChildrenFiltered">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=3284:3348#L82">ChildrenFiltered</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) ChildrenFiltered(selector <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+ChildrenFiltered gets the child elements of each element in the Selection,
+filtered by the specified selector. It returns a new
+Selection object containing these elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.ChildrenMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=3623:3680#L89">ChildrenMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) ChildrenMatcher(m <a href="index.html#Matcher">Matcher</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+ChildrenMatcher gets the child elements of each element in the Selection,
+filtered by the specified matcher. It returns a new
+Selection object containing these elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Clone">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=4971:5009#L133">Clone</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Clone() *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+Clone creates a deep copy of the set of matched nodes. The new nodes will not be
+attached to the document.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Closest">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=4702:4757#L113">Closest</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Closest(selector <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+Closest gets the first element that matches the selector by testing the
+element itself and traversing up through its ancestors in the DOM tree.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.ClosestMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=4980:5036#L120">ClosestMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) ClosestMatcher(m <a href="index.html#Matcher">Matcher</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+ClosestMatcher gets the first element that matches the matcher by testing the
+element itself and traversing up through its ancestors in the DOM tree.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.ClosestNodes">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=5492:5556#L135">ClosestNodes</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) ClosestNodes(nodes ...*<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+ClosestNodes gets the first element that matches one of the nodes by testing the
+element itself and traversing up through its ancestors in the DOM tree.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.ClosestSelection">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=6112:6175#L155">ClosestSelection</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) ClosestSelection(sel *<a href="index.html#Selection">Selection</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+ClosestSelection gets the first element that matches one of the nodes in the
+Selection by testing the element itself and traversing up through its ancestors
+in the DOM tree.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Contains">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/query.go?s=1686:1733#L41">Contains</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Contains(n *<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>) <a href="../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Contains returns true if the specified Node is within,
+at any depth, one of the nodes in the Selection object.
+It is NOT inclusive, to behave like jQuery&#39;s implementation, and
+unlike Javascript&#39;s .contains, so if the contained
+node is itself in the selection, it returns false.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Contents">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=1884:1925#L49">Contents</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Contents() *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+Contents gets the children of each element in the Selection,
+including text and comment nodes. It returns a new Selection object
+containing these elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.ContentsFiltered">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=2353:2417#L58">ContentsFiltered</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) ContentsFiltered(selector <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+ContentsFiltered gets the children of each element in the Selection,
+filtered by the specified selector. It returns a new Selection
+object containing these elements. Since selectors only act on Element nodes,
+this function is an alias to ChildrenFiltered unless the selector is empty,
+in which case it is an alias to Contents.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.ContentsMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=2770:2827#L69">ContentsMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) ContentsMatcher(m <a href="index.html#Matcher">Matcher</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+ContentsMatcher gets the children of each element in the Selection,
+filtered by the specified matcher. It returns a new Selection
+object containing these elements. Since matchers only act on Element nodes,
+this function is an alias to ChildrenMatcher.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Each">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/iteration.go?s=331:391#L1">Each</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Each(f func(<a href="../../../builtin/index.html#int">int</a>, *<a href="index.html#Selection">Selection</a>)) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+Each iterates over a Selection object, executing a function for each
+matched element. It returns the current Selection object. The function
+f is called for each element in the selection with the index of the
+element in that selection starting at 0, and a *Selection that contains
+only that element.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.EachWithBreak">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/iteration.go?s=750:824#L9">EachWithBreak</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) EachWithBreak(f func(<a href="../../../builtin/index.html#int">int</a>, *<a href="index.html#Selection">Selection</a>) <a href="../../../builtin/index.html#bool">bool</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+EachWithBreak iterates over a Selection object, executing a function for each
+matched element. It is identical to Each except that it is possible to break
+out of the loop by returning false in the callback function. It returns the
+current Selection object.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Empty">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=5218:5256#L141">Empty</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Empty() *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+Empty removes all children nodes from the set of matched elements.
+It returns the children nodes in a new Selection.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.End">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/filter.go?s=4621:4657#L109">End</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) End() *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+End ends the most recent filtering operation in the current chain and
+returns the set of matched elements to its previous state.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Eq">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/array.go?s=770:814#L15">Eq</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Eq(index <a href="../../../builtin/index.html#int">int</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+Eq reduces the set of matched elements to the one at the specified index.
+If a negative index is given, it counts backwards starting at the end of the
+set. It returns a new Selection object, and an empty Selection object if the
+index is invalid.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Filter">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/filter.go?s=211:265#L1">Filter</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Filter(selector <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+Filter reduces the set of matched elements to those that match the selector string.
+It returns a new Selection object for this subset of matching elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.FilterFunction">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/filter.go?s=1258:1333#L22">FilterFunction</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) FilterFunction(f func(<a href="../../../builtin/index.html#int">int</a>, *<a href="index.html#Selection">Selection</a>) <a href="../../../builtin/index.html#bool">bool</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+FilterFunction reduces the set of matched elements to those that pass the function&#39;s test.
+It returns a new Selection object for this subset of elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.FilterMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/filter.go?s=491:546#L4">FilterMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) FilterMatcher(m <a href="index.html#Matcher">Matcher</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+FilterMatcher reduces the set of matched elements to those that match
+the given matcher. It returns a new Selection object for this subset
+of matching elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.FilterNodes">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/filter.go?s=1829:1892#L34">FilterNodes</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) FilterNodes(nodes ...*<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+FilterNodes reduces the set of matched elements to those that match the specified nodes.
+It returns a new Selection object for this subset of elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.FilterSelection">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/filter.go?s=2404:2466#L47">FilterSelection</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) FilterSelection(sel *<a href="index.html#Selection">Selection</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+FilterSelection reduces the set of matched elements to those that match a
+node in the specified Selection object.
+It returns a new Selection object for this subset of elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Find">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=559:611#L13">Find</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Find(selector <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+Find gets the descendants of each element in the current set of matched
+elements, filtered by a selector. It returns a new Selection object
+containing these matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.FindMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=882:935#L20">FindMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) FindMatcher(m <a href="index.html#Matcher">Matcher</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+FindMatcher gets the descendants of each element in the current set of matched
+elements, filtered by the matcher. It returns a new Selection object
+containing these matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.FindNodes">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=1493:1554#L37">FindNodes</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) FindNodes(nodes ...*<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+FindNodes gets the descendants of each element in the current
+Selection, filtered by some nodes. It returns a new Selection object
+containing these matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.FindSelection">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=1171:1231#L27">FindSelection</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) FindSelection(sel *<a href="index.html#Selection">Selection</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+FindSelection gets the descendants of each element in the current
+Selection, filtered by a Selection. It returns a new Selection object
+containing these matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.First">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/array.go?s=226:264#L1">First</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) First() *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+First reduces the set of matched elements to the first in the set.
+It returns a new Selection object, and an empty Selection object if the
+the selection is empty.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Get">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/array.go?s=1422:1467#L42">Get</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Get(index <a href="../../../builtin/index.html#int">int</a>) *<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a></pre>
+				<p>
+Get retrieves the underlying node at the specified index.
+Get without parameter is not implemented, since the node array is available
+on the Selection object.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Has">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/filter.go?s=3278:3329#L71">Has</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Has(selector <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+Has reduces the set of matched elements to those that have a descendant
+that matches the selector.
+It returns a new Selection object with the matching elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.HasClass">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/property.go?s=3135:3182#L118">HasClass</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) HasClass(class <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+HasClass determines whether any of the matched elements are assigned the
+given class.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.HasMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/filter.go?s=3561:3613#L78">HasMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) HasMatcher(m <a href="index.html#Matcher">Matcher</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+HasMatcher reduces the set of matched elements to those that have a descendant
+that matches the matcher.
+It returns a new Selection object with the matching elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.HasNodes">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/filter.go?s=3848:3908#L85">HasNodes</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) HasNodes(nodes ...*<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+HasNodes reduces the set of matched elements to those that have a
+descendant that matches one of the nodes.
+It returns a new Selection object with the matching elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.HasSelection">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/filter.go?s=4346:4405#L100">HasSelection</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) HasSelection(sel *<a href="index.html#Selection">Selection</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+HasSelection reduces the set of matched elements to those that have a
+descendant that matches one of the nodes of the specified Selection object.
+It returns a new Selection object with the matching elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Html">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/property.go?s=2048:2096#L74">Html</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Html() (ret <a href="../../../builtin/index.html#string">string</a>, e <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Html gets the HTML contents of the first element in the set of matched
+elements. It includes text and comment nodes.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Index">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/array.go?s=1691:1722#L51">Index</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Index() <a href="../../../builtin/index.html#int">int</a></pre>
+				<p>
+Index returns the position of the first element within the Selection object
+relative to its sibling elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.IndexMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/array.go?s=2337:2384#L72">IndexMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) IndexMatcher(m <a href="index.html#Matcher">Matcher</a>) <a href="../../../builtin/index.html#int">int</a></pre>
+				<p>
+IndexMatcher returns the position of the first element within the
+Selection object relative to the elements matched by the matcher, or -1 if
+not found.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.IndexOfNode">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/array.go?s=2617:2669#L82">IndexOfNode</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) IndexOfNode(node *<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>) <a href="../../../builtin/index.html#int">int</a></pre>
+				<p>
+IndexOfNode returns the position of the specified node within the Selection
+object, or -1 if not found.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.IndexOfSelection">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/array.go?s=2857:2913#L88">IndexOfSelection</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) IndexOfSelection(sel *<a href="index.html#Selection">Selection</a>) <a href="../../../builtin/index.html#int">int</a></pre>
+				<p>
+IndexOfSelection returns the position of the first node in the specified
+Selection object within this Selection object, or -1 if not found.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.IndexSelector">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/array.go?s=1999:2053#L61">IndexSelector</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) IndexSelector(selector <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#int">int</a></pre>
+				<p>
+IndexSelector returns the position of the first element within the
+Selection object relative to the elements matched by the selector, or -1 if
+not found.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Intersection">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/filter.go?s=3012:3071#L64">Intersection</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Intersection(sel *<a href="index.html#Selection">Selection</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+Intersection is an alias for FilterSelection.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Is">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/query.go?s=180:224#L1">Is</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Is(selector <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+Is checks the current matched set of elements against a selector and
+returns true if at least one of these elements matches.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.IsFunction">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/query.go?s=782:847#L20">IsFunction</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) IsFunction(f func(<a href="../../../builtin/index.html#int">int</a>, *<a href="index.html#Selection">Selection</a>) <a href="../../../builtin/index.html#bool">bool</a>) <a href="../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+IsFunction checks the current matched set of elements against a predicate and
+returns true if at least one of these elements matches.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.IsMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/query.go?s=455:500#L7">IsMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) IsMatcher(m <a href="index.html#Matcher">Matcher</a>) <a href="../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+IsMatcher checks the current matched set of elements against a matcher and
+returns true if at least one of these elements matches.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.IsNodes">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/query.go?s=1289:1342#L32">IsNodes</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) IsNodes(nodes ...*<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>) <a href="../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+IsNodes checks the current matched set of elements against the specified nodes
+and returns true if at least one of these elements matches.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.IsSelection">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/query.go?s=1042:1094#L26">IsSelection</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) IsSelection(sel *<a href="index.html#Selection">Selection</a>) <a href="../../../builtin/index.html#bool">bool</a></pre>
+				<p>
+IsSelection checks the current matched set of elements against a Selection object
+and returns true if at least one of these elements matches.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Last">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/array.go?s=452:489#L7">Last</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Last() *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+Last reduces the set of matched elements to the last in the set.
+It returns a new Selection object, and an empty Selection object if
+the selection is empty.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Length">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/property.go?s=1866:1898#L68">Length</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Length() <a href="../../../builtin/index.html#int">int</a></pre>
+				<p>
+Length returns the number of elements in the Selection object.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Map">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/iteration.go?s=1251:1324#L23">Map</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Map(f func(<a href="../../../builtin/index.html#int">int</a>, *<a href="index.html#Selection">Selection</a>) <a href="../../../builtin/index.html#string">string</a>) (result []<a href="../../../builtin/index.html#string">string</a>)</pre>
+				<p>
+Map passes each element in the current matched set through a function,
+producing a slice of string holding the returned values. The function
+f is called for each element in the selection with the index of the
+element in that selection starting at 0, and a *Selection that contains
+only that element.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Next">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=11775:11812#L277">Next</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Next() *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+Next gets the immediately following sibling of each element in the
+Selection. It returns a new Selection object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.NextAll">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=12705:12745#L297">NextAll</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) NextAll() *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+NextAll gets all the following siblings of each element in the
+Selection. It returns a new Selection object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.NextAllFiltered">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=13005:13068#L304">NextAllFiltered</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) NextAllFiltered(selector <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+NextAllFiltered gets all the following siblings of each element in the
+Selection filtered by a selector. It returns a new Selection object
+containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.NextAllMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=13356:13412#L311">NextAllMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) NextAllMatcher(m <a href="index.html#Matcher">Matcher</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+NextAllMatcher gets all the following siblings of each element in the
+Selection filtered by a matcher. It returns a new Selection object
+containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.NextFiltered">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=12073:12133#L284">NextFiltered</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) NextFiltered(selector <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+NextFiltered gets the immediately following sibling of each element in the
+Selection filtered by a selector. It returns a new Selection object
+containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.NextFilteredUntil">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=18319:18405#L426">NextFilteredUntil</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) NextFilteredUntil(filterSelector, untilSelector <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+NextFilteredUntil is like NextUntil, with the option to filter
+the results based on a selector string.
+It returns a new Selection object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.NextFilteredUntilMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=18735:18813#L434">NextFilteredUntilMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) NextFilteredUntilMatcher(filter, until <a href="index.html#Matcher">Matcher</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+NextFilteredUntilMatcher is like NextUntilMatcher, with the option to filter
+the results based on a matcher.
+It returns a new Selection object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.NextFilteredUntilNodes">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=19858:19955#L459">NextFilteredUntilNodes</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) NextFilteredUntilNodes(filterSelector <a href="../../../builtin/index.html#string">string</a>, nodes ...*<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+NextFilteredUntilNodes is like NextUntilNodes, with the
+option to filter the results based on a selector string. It returns a new
+Selection object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.NextFilteredUntilSelection">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=19107:19203#L442">NextFilteredUntilSelection</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) NextFilteredUntilSelection(filterSelector <a href="../../../builtin/index.html#string">string</a>, sel *<a href="index.html#Selection">Selection</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+NextFilteredUntilSelection is like NextUntilSelection, with the
+option to filter the results based on a selector string. It returns a new
+Selection object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.NextMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=12422:12475#L291">NextMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) NextMatcher(m <a href="index.html#Matcher">Matcher</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+NextMatcher gets the immediately following sibling of each element in the
+Selection filtered by a matcher. It returns a new Selection object
+containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.NextMatcherUntilNodes">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=20256:20345#L467">NextMatcherUntilNodes</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) NextMatcherUntilNodes(filter <a href="index.html#Matcher">Matcher</a>, nodes ...*<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+NextMatcherUntilNodes is like NextUntilNodes, with the
+option to filter the results based on a matcher. It returns a new
+Selection object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.NextMatcherUntilSelection">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=19470:19558#L449">NextMatcherUntilSelection</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) NextMatcherUntilSelection(filter <a href="index.html#Matcher">Matcher</a>, sel *<a href="index.html#Selection">Selection</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+NextMatcherUntilSelection is like NextUntilSelection, with the
+option to filter the results based on a matcher. It returns a new
+Selection object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.NextUntil">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=15563:15620#L358">NextUntil</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) NextUntil(selector <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+NextUntil gets all following siblings of each element up to but not
+including the element matched by the selector. It returns a new Selection
+object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.NextUntilMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=15921:15979#L366">NextUntilMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) NextUntilMatcher(m <a href="index.html#Matcher">Matcher</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+NextUntilMatcher gets all following siblings of each element up to but not
+including the element matched by the matcher. It returns a new Selection
+object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.NextUntilNodes">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=16605:16671#L384">NextUntilNodes</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) NextUntilNodes(nodes ...*<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+NextUntilNodes gets all following siblings of each element up to but not
+including the element matched by the nodes. It returns a new Selection
+object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.NextUntilSelection">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=16261:16326#L374">NextUntilSelection</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) NextUntilSelection(sel *<a href="index.html#Selection">Selection</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+NextUntilSelection gets all following siblings of each element up to but not
+including the element matched by the Selection. It returns a new Selection
+object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Not">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/filter.go?s=741:792#L10">Not</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Not(selector <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+Not removes elements from the Selection that match the selector string.
+It returns a new Selection object with the matching elements removed.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.NotFunction">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/filter.go?s=1543:1615#L28">NotFunction</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) NotFunction(f func(<a href="../../../builtin/index.html#int">int</a>, *<a href="index.html#Selection">Selection</a>) <a href="../../../builtin/index.html#bool">bool</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+NotFunction removes elements from the Selection that pass the function&#39;s test.
+It returns a new Selection object with the matching elements removed.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.NotMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/filter.go?s=998:1050#L16">NotMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) NotMatcher(m <a href="index.html#Matcher">Matcher</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+NotMatcher removes elements from the Selection that match the given matcher.
+It returns a new Selection object with the matching elements removed.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.NotNodes">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/filter.go?s=2101:2161#L40">NotNodes</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) NotNodes(nodes ...*<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+NotNodes removes elements from the Selection that match the specified nodes.
+It returns a new Selection object with the matching elements removed.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.NotSelection">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/filter.go?s=2773:2832#L56">NotSelection</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) NotSelection(sel *<a href="index.html#Selection">Selection</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+NotSelection removes elements from the Selection that match a node in the specified
+Selection object. It returns a new Selection object with the matching elements removed.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Parent">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=3883:3922#L95">Parent</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Parent() *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+Parent gets the parent of each element in the Selection. It returns a
+new Selection object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.ParentFiltered">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=4135:4197#L101">ParentFiltered</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) ParentFiltered(selector <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+ParentFiltered gets the parent of each element in the Selection filtered by a
+selector. It returns a new Selection object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.ParentMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=4438:4493#L107">ParentMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) ParentMatcher(m <a href="index.html#Matcher">Matcher</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+ParentMatcher gets the parent of each element in the Selection filtered by a
+matcher. It returns a new Selection object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Parents">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=6401:6441#L164">Parents</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Parents() *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+Parents gets the ancestors of each element in the current Selection. It
+returns a new Selection object with the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.ParentsFiltered">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=6648:6711#L170">ParentsFiltered</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) ParentsFiltered(selector <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+ParentsFiltered gets the ancestors of each element in the current
+Selection. It returns a new Selection object with the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.ParentsFilteredUntil">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=8635:8724#L214">ParentsFilteredUntil</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) ParentsFilteredUntil(filterSelector, untilSelector <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+ParentsFilteredUntil is like ParentsUntil, with the option to filter the
+results based on a selector string. It returns a new Selection
+object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.ParentsFilteredUntilMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=9037:9118#L220">ParentsFilteredUntilMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) ParentsFilteredUntilMatcher(filter, until <a href="index.html#Matcher">Matcher</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+ParentsFilteredUntilMatcher is like ParentsUntilMatcher, with the option to filter the
+results based on a matcher. It returns a new Selection object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.ParentsFilteredUntilNodes">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=10176:10276#L244">ParentsFilteredUntilNodes</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) ParentsFilteredUntilNodes(filterSelector <a href="../../../builtin/index.html#string">string</a>, nodes ...*<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+ParentsFilteredUntilNodes is like ParentsUntilNodes, with the
+option to filter the results based on a selector string. It returns a new
+Selection object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.ParentsFilteredUntilSelection">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=9398:9497#L227">ParentsFilteredUntilSelection</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) ParentsFilteredUntilSelection(filterSelector <a href="../../../builtin/index.html#string">string</a>, sel *<a href="index.html#Selection">Selection</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+ParentsFilteredUntilSelection is like ParentsUntilSelection, with the
+option to filter the results based on a selector string. It returns a new
+Selection object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.ParentsMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=6947:7003#L176">ParentsMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) ParentsMatcher(m <a href="index.html#Matcher">Matcher</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+ParentsMatcher gets the ancestors of each element in the current
+Selection. It returns a new Selection object with the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.ParentsMatcherUntilNodes">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=10563:10655#L251">ParentsMatcherUntilNodes</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) ParentsMatcherUntilNodes(filter <a href="index.html#Matcher">Matcher</a>, nodes ...*<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+ParentsMatcherUntilNodes is like ParentsUntilNodes, with the
+option to filter the results based on a matcher. It returns a new
+Selection object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.ParentsMatcherUntilSelection">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=9773:9864#L234">ParentsMatcherUntilSelection</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) ParentsMatcherUntilSelection(filter <a href="index.html#Matcher">Matcher</a>, sel *<a href="index.html#Selection">Selection</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+ParentsMatcherUntilSelection is like ParentsUntilSelection, with the
+option to filter the results based on a matcher. It returns a new
+Selection object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.ParentsUntil">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=7276:7336#L183">ParentsUntil</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) ParentsUntil(selector <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+ParentsUntil gets the ancestors of each element in the Selection, up to but
+not including the element matched by the selector. It returns a new Selection
+object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.ParentsUntilMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=7629:7690#L190">ParentsUntilMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) ParentsUntilMatcher(m <a href="index.html#Matcher">Matcher</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+ParentsUntilMatcher gets the ancestors of each element in the Selection, up to but
+not including the element matched by the matcher. It returns a new Selection
+object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.ParentsUntilNodes">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=8316:8385#L207">ParentsUntilNodes</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) ParentsUntilNodes(nodes ...*<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+ParentsUntilNodes gets the ancestors of each element in the Selection,
+up to but not including the specified nodes. It returns a
+new Selection object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.ParentsUntilSelection">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=7967:8035#L197">ParentsUntilSelection</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) ParentsUntilSelection(sel *<a href="index.html#Selection">Selection</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+ParentsUntilSelection gets the ancestors of each element in the Selection,
+up to but not including the elements in the specified Selection. It returns a
+new Selection object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Prepend">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=5600:5655#L156">Prepend</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Prepend(selector <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+Prepend prepends the elements specified by the selector to each element in
+the set of matched elements, following the same rules as Append.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.PrependHtml">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=6354:6409#L177">PrependHtml</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) PrependHtml(html <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+PrependHtml parses the html and prepends it to the set of matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.PrependMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=5883:5939#L164">PrependMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) PrependMatcher(m <a href="index.html#Matcher">Matcher</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+PrependMatcher prepends the elements specified by the matcher to each
+element in the set of matched elements.
+</p>
+<p>
+This follows the same rules as Selection.Append.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.PrependNodes">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=6606:6667#L185">PrependNodes</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) PrependNodes(ns ...*<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+PrependNodes prepends the specified nodes to each node in the set of
+matched elements.
+</p>
+<p>
+This follows the same rules as Selection.Append.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.PrependSelection">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=6169:6232#L172">PrependSelection</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) PrependSelection(sel *<a href="index.html#Selection">Selection</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+PrependSelection prepends the elements in the selection to each element in
+the set of matched elements.
+</p>
+<p>
+This follows the same rules as Selection.Append.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Prev">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=13649:13686#L317">Prev</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Prev() *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+Prev gets the immediately preceding sibling of each element in the
+Selection. It returns a new Selection object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.PrevAll">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=14579:14619#L337">PrevAll</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) PrevAll() *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+PrevAll gets all the preceding siblings of each element in the
+Selection. It returns a new Selection object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.PrevAllFiltered">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=14879:14942#L344">PrevAllFiltered</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) PrevAllFiltered(selector <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+PrevAllFiltered gets all the preceding siblings of each element in the
+Selection filtered by a selector. It returns a new Selection object
+containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.PrevAllMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=15230:15286#L351">PrevAllMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) PrevAllMatcher(m <a href="index.html#Matcher">Matcher</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+PrevAllMatcher gets all the preceding siblings of each element in the
+Selection filtered by a matcher. It returns a new Selection object
+containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.PrevFiltered">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=13947:14007#L324">PrevFiltered</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) PrevFiltered(selector <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+PrevFiltered gets the immediately preceding sibling of each element in the
+Selection filtered by a selector. It returns a new Selection object
+containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.PrevFilteredUntil">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=20621:20707#L475">PrevFilteredUntil</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) PrevFilteredUntil(filterSelector, untilSelector <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+PrevFilteredUntil is like PrevUntil, with the option to filter
+the results based on a selector string.
+It returns a new Selection object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.PrevFilteredUntilMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=21037:21115#L483">PrevFilteredUntilMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) PrevFilteredUntilMatcher(filter, until <a href="index.html#Matcher">Matcher</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+PrevFilteredUntilMatcher is like PrevUntilMatcher, with the option to filter
+the results based on a matcher.
+It returns a new Selection object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.PrevFilteredUntilNodes">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=22160:22257#L508">PrevFilteredUntilNodes</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) PrevFilteredUntilNodes(filterSelector <a href="../../../builtin/index.html#string">string</a>, nodes ...*<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+PrevFilteredUntilNodes is like PrevUntilNodes, with the
+option to filter the results based on a selector string. It returns a new
+Selection object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.PrevFilteredUntilSelection">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=21409:21505#L491">PrevFilteredUntilSelection</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) PrevFilteredUntilSelection(filterSelector <a href="../../../builtin/index.html#string">string</a>, sel *<a href="index.html#Selection">Selection</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+PrevFilteredUntilSelection is like PrevUntilSelection, with the
+option to filter the results based on a selector string. It returns a new
+Selection object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.PrevMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=14296:14349#L331">PrevMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) PrevMatcher(m <a href="index.html#Matcher">Matcher</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+PrevMatcher gets the immediately preceding sibling of each element in the
+Selection filtered by a matcher. It returns a new Selection object
+containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.PrevMatcherUntilNodes">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=22558:22647#L516">PrevMatcherUntilNodes</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) PrevMatcherUntilNodes(filter <a href="index.html#Matcher">Matcher</a>, nodes ...*<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+PrevMatcherUntilNodes is like PrevUntilNodes, with the
+option to filter the results based on a matcher. It returns a new
+Selection object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.PrevMatcherUntilSelection">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=21772:21860#L498">PrevMatcherUntilSelection</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) PrevMatcherUntilSelection(filter <a href="index.html#Matcher">Matcher</a>, sel *<a href="index.html#Selection">Selection</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+PrevMatcherUntilSelection is like PrevUntilSelection, with the
+option to filter the results based on a matcher. It returns a new
+Selection object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.PrevUntil">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=16947:17004#L392">PrevUntil</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) PrevUntil(selector <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+PrevUntil gets all preceding siblings of each element up to but not
+including the element matched by the selector. It returns a new Selection
+object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.PrevUntilMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=17305:17363#L400">PrevUntilMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) PrevUntilMatcher(m <a href="index.html#Matcher">Matcher</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+PrevUntilMatcher gets all preceding siblings of each element up to but not
+including the element matched by the matcher. It returns a new Selection
+object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.PrevUntilNodes">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=17989:18055#L418">PrevUntilNodes</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) PrevUntilNodes(nodes ...*<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+PrevUntilNodes gets all preceding siblings of each element up to but not
+including the element matched by the nodes. It returns a new Selection
+object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.PrevUntilSelection">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=17645:17710#L408">PrevUntilSelection</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) PrevUntilSelection(sel *<a href="index.html#Selection">Selection</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+PrevUntilSelection gets all preceding siblings of each element up to but not
+including the element matched by the Selection. It returns a new Selection
+object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Remove">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=7016:7055#L195">Remove</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Remove() *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+Remove removes the set of matched elements from the document.
+It returns the same selection, now consisting of nodes not in the document.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.RemoveAttr">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/property.go?s=884:942#L28">RemoveAttr</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) RemoveAttr(attrName <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+RemoveAttr removes the named attribute from each element in the set of matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.RemoveClass">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/property.go?s=3605:3664#L132">RemoveClass</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) RemoveClass(class ...<a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+RemoveClass removes the given class(es) from each element in the set of matched elements.
+Multiple class names can be specified, separated by a space or via multiple arguments.
+If no class name is provided, all classes are removed.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.RemoveFiltered">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=7271:7333#L207">RemoveFiltered</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) RemoveFiltered(selector <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+RemoveFiltered removes the set of matched elements by selector.
+It returns the Selection of removed nodes.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.RemoveMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=7489:7544#L213">RemoveMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) RemoveMatcher(m <a href="index.html#Matcher">Matcher</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+RemoveMatcher removes the set of matched elements.
+It returns the Selection of removed nodes.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.ReplaceWith">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=7794:7853#L222">ReplaceWith</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) ReplaceWith(selector <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+ReplaceWith replaces each element in the set of matched elements with the
+nodes matched by the given selector.
+It returns the removed elements.
+</p>
+<p>
+This follows the same rules as Selection.Append.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.ReplaceWithHtml">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=8771:8830#L249">ReplaceWithHtml</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) ReplaceWithHtml(html <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+ReplaceWithHtml replaces each element in the set of matched elements with
+the parsed HTML.
+It returns the removed elements.
+</p>
+<p>
+This follows the same rules as Selection.Append.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.ReplaceWithMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=8128:8188#L231">ReplaceWithMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) ReplaceWithMatcher(m <a href="index.html#Matcher">Matcher</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+ReplaceWithMatcher replaces each element in the set of matched elements with
+the nodes matched by the given Matcher.
+It returns the removed elements.
+</p>
+<p>
+This follows the same rules as Selection.Append.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.ReplaceWithNodes">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=9072:9137#L258">ReplaceWithNodes</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) ReplaceWithNodes(ns ...*<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+ReplaceWithNodes replaces each element in the set of matched elements with
+the given nodes.
+It returns the removed elements.
+</p>
+<p>
+This follows the same rules as Selection.Append.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.ReplaceWithSelection">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=8469:8536#L240">ReplaceWithSelection</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) ReplaceWithSelection(sel *<a href="index.html#Selection">Selection</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+ReplaceWithSelection replaces each element in the set of matched elements with
+the nodes from the given Selection.
+It returns the removed elements.
+</p>
+<p>
+This follows the same rules as Selection.Append.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.SetAttr">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/property.go?s=1101:1161#L37">SetAttr</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) SetAttr(attrName, val <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+SetAttr sets the given attribute on each element in the set of matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Siblings">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=10866:10907#L257">Siblings</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Siblings() *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+Siblings gets the siblings of each element in the Selection. It returns
+a new Selection object containing the matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.SiblingsFiltered">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=11150:11214#L264">SiblingsFiltered</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) SiblingsFiltered(selector <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+SiblingsFiltered gets the siblings of each element in the Selection
+filtered by a selector. It returns a new Selection object containing the
+matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.SiblingsMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/traversal.go?s=11485:11542#L271">SiblingsMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) SiblingsMatcher(m <a href="index.html#Matcher">Matcher</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+SiblingsMatcher gets the siblings of each element in the Selection
+filtered by a matcher. It returns a new Selection object containing the
+matched elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Size">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/property.go?s=1745:1775#L63">Size</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Size() <a href="../../../builtin/index.html#int">int</a></pre>
+				<p>
+Size is an alias for Length.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Slice">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/array.go?s=1073:1125#L29">Slice</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Slice(start, end <a href="../../../builtin/index.html#int">int</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+Slice reduces the set of matched elements to a subset specified by a range
+of indices.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Text">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/property.go?s=1489:1522#L52">Text</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Text() <a href="../../../builtin/index.html#string">string</a></pre>
+				<p>
+Text gets the combined text contents of each element in the set of matched
+elements, including their descendants.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.ToggleClass">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/property.go?s=4303:4362#L160">ToggleClass</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) ToggleClass(class ...<a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+ToggleClass adds or removes the given class(es) for each element in the set of matched elements.
+Multiple class names can be specified, separated by a space or via multiple arguments.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Union">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/expand.go?s=1082:1134#L21">Union</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Union(sel *<a href="index.html#Selection">Selection</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+Union is an alias for AddSelection.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Unwrap">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=9360:9399#L266">Unwrap</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Unwrap() *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+Unwrap removes the parents of the set of matched elements, leaving the matched
+elements (and their siblings, if any) in their place.
+It returns the original selection.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.Wrap">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=9996:10048#L284">Wrap</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) Wrap(selector <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+Wrap wraps each element in the set of matched elements inside the first
+element matched by the given selector. The matched child is cloned before
+being inserted into the document.
+</p>
+<p>
+It returns the original set of elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.WrapAll">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=11748:11803#L336">WrapAll</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) WrapAll(selector <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+WrapAll wraps a single HTML structure, matched by the given selector, around
+all elements in the set of matched elements. The matched child is cloned
+before being inserted into the document.
+</p>
+<p>
+It returns the original set of elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.WrapAllHtml">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=12824:12879#L363">WrapAllHtml</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) WrapAllHtml(html <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+WrapAllHtml wraps the given HTML structure around all elements in the set of
+matched elements. The matched child is cloned before being inserted into the
+document.
+</p>
+<p>
+It returns the original set of elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.WrapAllMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=12113:12169#L345">WrapAllMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) WrapAllMatcher(m <a href="index.html#Matcher">Matcher</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+WrapAllMatcher wraps a single HTML structure, matched by the given Matcher,
+around all elements in the set of matched elements. The matched child is
+cloned before being inserted into the document.
+</p>
+<p>
+It returns the original set of elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.WrapAllNode">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=13316:13372#L379">WrapAllNode</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) WrapAllNode(n *<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+WrapAllNode wraps the given node around the first element in the Selection,
+making all other nodes in the Selection children of the given node. The node
+is cloned before being inserted into the document.
+</p>
+<p>
+It returns the original set of elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.WrapAllSelection">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=12498:12561#L354">WrapAllSelection</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) WrapAllSelection(sel *<a href="index.html#Selection">Selection</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+WrapAllSelection wraps a single HTML structure, the first node of the given
+Selection, around all elements in the set of matched elements. The matched
+child is cloned before being inserted into the document.
+</p>
+<p>
+It returns the original set of elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.WrapHtml">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=10951:11003#L310">WrapHtml</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) WrapHtml(html <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+WrapHtml wraps each element in the set of matched elements inside the inner-
+most child of the given HTML.
+</p>
+<p>
+It returns the original set of elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.WrapInner">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=13969:14026#L406">WrapInner</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) WrapInner(selector <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+WrapInner wraps an HTML structure, matched by the given selector, around the
+content of element in the set of matched elements. The matched child is
+cloned before being inserted into the document.
+</p>
+<p>
+It returns the original set of elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.WrapInnerHtml">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=15099:15156#L433">WrapInnerHtml</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) WrapInnerHtml(html <a href="../../../builtin/index.html#string">string</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+WrapInnerHtml wraps an HTML structure, matched by the given selector, around
+the content of element in the set of matched elements. The matched child is
+cloned before being inserted into the document.
+</p>
+<p>
+It returns the original set of elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.WrapInnerMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=14345:14403#L415">WrapInnerMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) WrapInnerMatcher(m <a href="index.html#Matcher">Matcher</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+WrapInnerMatcher wraps an HTML structure, matched by the given selector,
+around the content of element in the set of matched elements. The matched
+child is cloned before being inserted into the document.
+</p>
+<p>
+It returns the original set of elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.WrapInnerNode">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=15464:15522#L442">WrapInnerNode</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) WrapInnerNode(n *<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+WrapInnerNode wraps an HTML structure, matched by the given selector, around
+the content of element in the set of matched elements. The matched child is
+cloned before being inserted into the document.
+</p>
+<p>
+It returns the original set of elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.WrapInnerSelection">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=14732:14797#L424">WrapInnerSelection</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) WrapInnerSelection(sel *<a href="index.html#Selection">Selection</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+WrapInnerSelection wraps an HTML structure, matched by the given selector,
+around the content of element in the set of matched elements. The matched
+child is cloned before being inserted into the document.
+</p>
+<p>
+It returns the original set of elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.WrapMatcher">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=10344:10397#L293">WrapMatcher</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) WrapMatcher(m <a href="index.html#Matcher">Matcher</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+WrapMatcher wraps each element in the set of matched elements inside the
+first element matched by the given matcher. The matched child is cloned
+before being inserted into the document.
+</p>
+<p>
+It returns the original set of elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.WrapNode">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=11278:11331#L319">WrapNode</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) WrapNode(n *<a href="../../../golang.org/x/net/html/index.html">html</a>.<a href="../../../golang.org/x/net/html/index.html#Node">Node</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+WrapNode wraps each element in the set of matched elements inside the inner-
+most child of the given node. The given node is copied before being inserted
+into the document.
+</p>
+<p>
+It returns the original set of elements.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Selection.WrapSelection">func (*Selection) <a href="http://localhost:6060/src/github.com/PuerkitoBio/goquery/manipulation.go?s=10691:10751#L302">WrapSelection</a></h3>
+				<pre>func (s *<a href="index.html#Selection">Selection</a>) WrapSelection(sel *<a href="index.html#Selection">Selection</a>) *<a href="index.html#Selection">Selection</a></pre>
+				<p>
+WrapSelection wraps each element in the set of matched elements inside the
+first element in the given Selection. The element is cloned before being
+inserted into the document.
+</p>
+<p>
+It returns the original set of elements.
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

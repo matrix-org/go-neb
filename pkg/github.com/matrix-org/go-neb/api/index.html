@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>api - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package api</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/matrix-org/go-neb/api"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-subdirectories">Subdirectories</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package api contains the fundamental data types used by Go-NEB.
+</p>
+<p>
+Most HTTP API calls and/or config file sections are just ways of representing these
+data types.
+</p>
+<h3 id="hdr-See_also">See also</h3>
+<p>
+Package &#34;api.handlers&#34; for information on the HTTP API calls.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+			
+				
+				<dd><a href="index.html#ClientConfig">type ClientConfig</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ClientConfig.Check">func (c *ClientConfig) Check() error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#ConfigFile">type ConfigFile</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ConfigureAuthRealmRequest">type ConfigureAuthRealmRequest</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ConfigureAuthRealmRequest.Check">func (c *ConfigureAuthRealmRequest) Check() error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#ConfigureServiceRequest">type ConfigureServiceRequest</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ConfigureServiceRequest.Check">func (c *ConfigureServiceRequest) Check() error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#RequestAuthSessionRequest">type RequestAuthSessionRequest</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#RequestAuthSessionRequest.Check">func (r *RequestAuthSessionRequest) Check() error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Session">type Session</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Session.Check">func (c *Session) Check() error</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/api.go">api.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+		
+			
+			
+			<h2 id="ClientConfig">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/api.go?s=2222:3382#L47">ClientConfig</a></h2>
+			<pre>type ClientConfig struct {
+    <span class="comment">// The matrix User ID to connect with. E.g. @alice:matrix.org</span>
+    UserID <a href="../../../../builtin/index.html#string">string</a>
+    <span class="comment">// A URL with the host and port of the matrix server. E.g. https://matrix.org:8448</span>
+    HomeserverURL <a href="../../../../builtin/index.html#string">string</a>
+    <span class="comment">// The matrix access token to authenticate the requests with.</span>
+    AccessToken <a href="../../../../builtin/index.html#string">string</a>
+    <span class="comment">// True to start a sync stream for this user. If false, no /sync goroutine will be</span>
+    <span class="comment">// created and this client won&#39;t listen for new events from Matrix. For services</span>
+    <span class="comment">// which only SEND events into Matrix, it may be desirable to set Sync to false to reduce the</span>
+    <span class="comment">// number of goroutines Go-NEB has to maintain. For services which respond to !commands,</span>
+    <span class="comment">// Sync MUST be set to true in order to receive those commands.</span>
+    Sync <a href="../../../../builtin/index.html#bool">bool</a>
+    <span class="comment">// True to automatically join every room this client is invited to.</span>
+    <span class="comment">// This is desirable for services which have !commands as that means anyone can pull the bot</span>
+    <span class="comment">// into the room. It is up to the service to decide which, if any, users to respond to however.</span>
+    AutoJoinRooms <a href="../../../../builtin/index.html#bool">bool</a>
+    <span class="comment">// The desired display name for this client.</span>
+    <span class="comment">// This does not automatically set the display name for this client. See /configureClient.</span>
+    DisplayName <a href="../../../../builtin/index.html#string">string</a>
+}</pre>
+			<p>
+A ClientConfig contains the configuration information for a matrix client so that
+Go-NEB can drive it. It forms the HTTP body to /configureClient requests.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ClientConfig.Check">func (*ClientConfig) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/api.go?s=4651:4687#L111">Check</a></h3>
+				<pre>func (c *<a href="index.html#ClientConfig">ClientConfig</a>) Check() <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Check that the client has supplied the correct fields.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ConfigFile">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/api.go?s=3672:3817#L79">ConfigFile</a></h2>
+			<pre>type ConfigFile struct {
+    Clients  []<a href="index.html#ClientConfig">ClientConfig</a>
+    Realms   []<a href="index.html#ConfigureAuthRealmRequest">ConfigureAuthRealmRequest</a>
+    Services []<a href="index.html#ConfigureServiceRequest">ConfigureServiceRequest</a>
+    Sessions []<a href="index.html#Session">Session</a>
+}</pre>
+			<p>
+ConfigFile represents config.sample.yaml
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ConfigureAuthRealmRequest">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/api.go?s=383:877#L8">ConfigureAuthRealmRequest</a></h2>
+			<pre>type ConfigureAuthRealmRequest struct {
+    <span class="comment">// An arbitrary unique identifier for this auth realm. This can be anything.</span>
+    <span class="comment">// Using an existing ID will REPLACE the entire existing AuthRealm with the new information.</span>
+    ID <a href="../../../../builtin/index.html#string">string</a>
+    <span class="comment">// The type of auth realm. This determines which code is loaded to execute the</span>
+    <span class="comment">// auth realm. It must be a known type. E.g. &#34;github&#34;.</span>
+    Type <a href="../../../../builtin/index.html#string">string</a>
+    <span class="comment">// AuthRealm specific config information. See the docs for the auth realm you&#39;re interested in.</span>
+    Config <a href="../../../../encoding/json/index.html">json</a>.<a href="../../../../encoding/json/index.html#RawMessage">RawMessage</a>
+}</pre>
+			<p>
+ConfigureAuthRealmRequest is a request to /configureAuthRealm
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ConfigureAuthRealmRequest.Check">func (*ConfigureAuthRealmRequest) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/api.go?s=4137:4186#L95">Check</a></h3>
+				<pre>func (c *<a href="index.html#ConfigureAuthRealmRequest">ConfigureAuthRealmRequest</a>) Check() <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Check validates the /configureAuthRealm request
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ConfigureServiceRequest">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/api.go?s=1439:2058#L31">ConfigureServiceRequest</a></h2>
+			<pre>type ConfigureServiceRequest struct {
+    <span class="comment">// An arbitrary unique identifier for this service. This can be anything.</span>
+    <span class="comment">// Using an existing ID will REPLACE the entire Service with the new information.</span>
+    ID <a href="../../../../builtin/index.html#string">string</a>
+    <span class="comment">// The type of service. This determines which code is loaded to execute the</span>
+    <span class="comment">// service. It must be a known type, e.g. &#34;github&#34;.</span>
+    Type <a href="../../../../builtin/index.html#string">string</a>
+    <span class="comment">// The user ID of the configured client that this service will use to communicate with Matrix.</span>
+    <span class="comment">// The user MUST already be configured.</span>
+    UserID <a href="../../../../builtin/index.html#string">string</a>
+    <span class="comment">// Service-specific config information. See the docs for the service you&#39;re interested in.</span>
+    Config <a href="../../../../encoding/json/index.html">json</a>.<a href="../../../../encoding/json/index.html#RawMessage">RawMessage</a>
+}</pre>
+			<p>
+ConfigureServiceRequest is a request to /configureService
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ConfigureServiceRequest.Check">func (*ConfigureServiceRequest) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/api.go?s=3868:3915#L87">Check</a></h3>
+				<pre>func (c *<a href="index.html#ConfigureServiceRequest">ConfigureServiceRequest</a>) Check() <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Check validates the /configureService request
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="RequestAuthSessionRequest">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/api.go?s=944:1376#L20">RequestAuthSessionRequest</a></h2>
+			<pre>type RequestAuthSessionRequest struct {
+    <span class="comment">// The realm ID to request a new auth session on. The realm MUST already exist.</span>
+    RealmID <a href="../../../../builtin/index.html#string">string</a>
+    <span class="comment">// The Matrix user ID requesting the auth session. If the auth is successful,</span>
+    <span class="comment">// this user ID will be associated with the third-party credentials obtained.</span>
+    UserID <a href="../../../../builtin/index.html#string">string</a>
+    <span class="comment">// AuthRealm specific config information. See the docs for the auth realm you&#39;re interested in.</span>
+    Config <a href="../../../../encoding/json/index.html">json</a>.<a href="../../../../encoding/json/index.html#RawMessage">RawMessage</a>
+}</pre>
+			<p>
+RequestAuthSessionRequest is a request to /requestAuthSession
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="RequestAuthSessionRequest.Check">func (*RequestAuthSessionRequest) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/api.go?s=4971:5020#L122">Check</a></h3>
+				<pre>func (r *<a href="index.html#RequestAuthSessionRequest">RequestAuthSessionRequest</a>) Check() <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Check that the request is valid.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Session">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/api.go?s=3522:3626#L71">Session</a></h2>
+			<pre>type Session struct {
+    SessionID <a href="../../../../builtin/index.html#string">string</a>
+    RealmID   <a href="../../../../builtin/index.html#string">string</a>
+    UserID    <a href="../../../../builtin/index.html#string">string</a>
+    Config    <a href="../../../../encoding/json/index.html">json</a>.<a href="../../../../encoding/json/index.html#RawMessage">RawMessage</a>
+}</pre>
+			<p>
+Session contains the complete auth session information for a given user on a given realm.
+They are created for use with ConfigFile.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Session.Check">func (*Session) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/api.go?s=4372:4403#L103">Check</a></h3>
+				<pre>func (c *<a href="index.html#Session">Session</a>) Check() <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Check validates the session config request
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+
+
+	<div class="pkg-dir">
+		<table>
+			<tr>
+				<th class="pkg-name">Name</th>
+				<th class="pkg-synopsis">Synopsis</th>
+			</tr>
+
+			
+			<tr>
+				<td colspan="2"><a href="../index.html">..</a></td>
+			</tr>
+			
+
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="handlers/index.html">handlers</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package handlers contains the HTTP handlers for Go-NEB.
+						</td>
+					</tr>
+				
+			
+		</table>
+	</div>
+
+
+	
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>exec - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package exec</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "os/exec"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+				<dd><a href="index.html#pkg-examples" class="examplesLink">Examples</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package exec runs external commands. It wraps os.StartProcess to make it
+easier to remap stdin and stdout, connect I/O with pipes, and do other
+adjustments.
+</p>
+<p>
+Note that the examples in this package assume a Unix system.
+They may not run on Windows, and they do not run in the Go Playground
+used by golang.org and godoc.org.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+				
+				<dd><a href="index.html#LookPath">func LookPath(file string) (string, error)</a></dd>
+			
+			
+				
+				<dd><a href="index.html#Cmd">type Cmd</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Command">func Command(name string, arg ...string) *Cmd</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Cmd.CombinedOutput">func (c *Cmd) CombinedOutput() ([]byte, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Cmd.Output">func (c *Cmd) Output() ([]byte, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Cmd.Run">func (c *Cmd) Run() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Cmd.Start">func (c *Cmd) Start() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Cmd.StderrPipe">func (c *Cmd) StderrPipe() (io.ReadCloser, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Cmd.StdinPipe">func (c *Cmd) StdinPipe() (io.WriteCloser, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Cmd.StdoutPipe">func (c *Cmd) StdoutPipe() (io.ReadCloser, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Cmd.Wait">func (c *Cmd) Wait() error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Error">type Error</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Error.Error">func (e *Error) Error() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#ExitError">type ExitError</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ExitError.Error">func (e *ExitError) Error() string</a></dd>
+				
+			
+			
+				
+				<dd><a href="index.html#pkg-note-BUG">Bugs</a></dd>
+				
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+		<div id="pkg-examples">
+			<h4>Examples</h4>
+			<dl>
+			
+			<dd><a class="exampleLink" href="index.html#example_Cmd_Output">Cmd.Output</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Cmd_Start">Cmd.Start</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Cmd_StdoutPipe">Cmd.StdoutPipe</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Command">Command</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_LookPath">LookPath</a></dd>
+			
+			</dl>
+		</div>
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/os/exec/exec.go">exec.go</a>
+			
+				<a href="http://localhost:6060/src/os/exec/exec_posix.go">exec_posix.go</a>
+			
+				<a href="http://localhost:6060/src/os/exec/lp_unix.go">lp_unix.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var <span id="ErrNotFound">ErrNotFound</span> = <a href="../../errors/index.html">errors</a>.<a href="../../errors/index.html#New">New</a>(&#34;executable file not found in $PATH&#34;)</pre>
+				<p>
+ErrNotFound is the error resulting if a path search failed to find an executable file.
+</p>
+
+			
+		
+		
+			
+			
+			<h2 id="LookPath">func <a href="http://localhost:6060/src/os/exec/lp_unix.go?s=915:957#L23">LookPath</a></h2>
+			<pre>func LookPath(file <a href="../../builtin/index.html#string">string</a>) (<a href="../../builtin/index.html#string">string</a>, <a href="../../builtin/index.html#error">error</a>)</pre>
+			<p>
+LookPath searches for an executable binary named file
+in the directories named by the PATH environment variable.
+If file contains a slash, it is tried directly and the PATH is not consulted.
+The result may be an absolute path or a path relative to the current directory.
+</p>
+
+			<div id="example_LookPath" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+path, err := exec.LookPath(&#34;fortune&#34;)
+if err != nil {
+    log.Fatal(&#34;installing fortune is in your future&#34;)
+}
+fmt.Printf(&#34;fortune is available at %s\n&#34;, path)
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+
+		
+		
+			
+			
+			<h2 id="Cmd">type <a href="http://localhost:6060/src/os/exec/exec.go?s=1021:3661#L32">Cmd</a></h2>
+			<pre>type Cmd struct {
+    <span class="comment">// Path is the path of the command to run.</span>
+    <span class="comment">//</span>
+    <span class="comment">// This is the only field that must be set to a non-zero</span>
+    <span class="comment">// value. If Path is relative, it is evaluated relative</span>
+    <span class="comment">// to Dir.</span>
+    Path <a href="../../builtin/index.html#string">string</a>
+
+    <span class="comment">// Args holds command line arguments, including the command as Args[0].</span>
+    <span class="comment">// If the Args field is empty or nil, Run uses {Path}.</span>
+    <span class="comment">//</span>
+    <span class="comment">// In typical use, both Path and Args are set by calling Command.</span>
+    Args []<a href="../../builtin/index.html#string">string</a>
+
+    <span class="comment">// Env specifies the environment of the process.</span>
+    <span class="comment">// If Env is nil, Run uses the current process&#39;s environment.</span>
+    Env []<a href="../../builtin/index.html#string">string</a>
+
+    <span class="comment">// Dir specifies the working directory of the command.</span>
+    <span class="comment">// If Dir is the empty string, Run runs the command in the</span>
+    <span class="comment">// calling process&#39;s current directory.</span>
+    Dir <a href="../../builtin/index.html#string">string</a>
+
+    <span class="comment">// Stdin specifies the process&#39;s standard input.</span>
+    <span class="comment">// If Stdin is nil, the process reads from the null device (os.DevNull).</span>
+    <span class="comment">// If Stdin is an *os.File, the process&#39;s standard input is connected</span>
+    <span class="comment">// directly to that file.</span>
+    <span class="comment">// Otherwise, during the execution of the command a separate</span>
+    <span class="comment">// goroutine reads from Stdin and delivers that data to the command</span>
+    <span class="comment">// over a pipe. In this case, Wait does not complete until the goroutine</span>
+    <span class="comment">// stops copying, either because it has reached the end of Stdin</span>
+    <span class="comment">// (EOF or a read error) or because writing to the pipe returned an error.</span>
+    Stdin <a href="../../io/index.html">io</a>.<a href="../../io/index.html#Reader">Reader</a>
+
+    <span class="comment">// Stdout and Stderr specify the process&#39;s standard output and error.</span>
+    <span class="comment">//</span>
+    <span class="comment">// If either is nil, Run connects the corresponding file descriptor</span>
+    <span class="comment">// to the null device (os.DevNull).</span>
+    <span class="comment">//</span>
+    <span class="comment">// If Stdout and Stderr are the same writer, at most one</span>
+    <span class="comment">// goroutine at a time will call Write.</span>
+    Stdout <a href="../../io/index.html">io</a>.<a href="../../io/index.html#Writer">Writer</a>
+    Stderr <a href="../../io/index.html">io</a>.<a href="../../io/index.html#Writer">Writer</a>
+
+    <span class="comment">// ExtraFiles specifies additional open files to be inherited by the</span>
+    <span class="comment">// new process. It does not include standard input, standard output, or</span>
+    <span class="comment">// standard error. If non-nil, entry i becomes file descriptor 3+i.</span>
+    <span class="comment">//</span>
+    <span class="comment">// BUG(rsc): On OS X 10.6, child processes may sometimes inherit unwanted fds.</span>
+    <span class="comment">// https://golang.org/issue/2603</span>
+    ExtraFiles []*<a href="../index.html">os</a>.<a href="../index.html#File">File</a>
+
+    <span class="comment">// SysProcAttr holds optional, operating system-specific attributes.</span>
+    <span class="comment">// Run passes it to os.StartProcess as the os.ProcAttr&#39;s Sys field.</span>
+    SysProcAttr *<a href="../../syscall/index.html">syscall</a>.<a href="../../syscall/index.html#SysProcAttr">SysProcAttr</a>
+
+    <span class="comment">// Process is the underlying process, once started.</span>
+    Process *<a href="../index.html">os</a>.<a href="../index.html#Process">Process</a>
+
+    <span class="comment">// ProcessState contains information about an exited process,</span>
+    <span class="comment">// available after a call to Wait or Run.</span>
+    ProcessState *<a href="../index.html">os</a>.<a href="../index.html#ProcessState">ProcessState</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Cmd represents an external command being prepared or run.
+</p>
+<p>
+A Cmd cannot be reused after calling its Run, Output or CombinedOutput
+methods.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="Command">func <a href="http://localhost:6060/src/os/exec/exec.go?s=4176:4221#L116">Command</a></h3>
+				<pre>func Command(name <a href="../../builtin/index.html#string">string</a>, arg ...<a href="../../builtin/index.html#string">string</a>) *<a href="index.html#Cmd">Cmd</a></pre>
+				<p>
+Command returns the Cmd struct to execute the named program with
+the given arguments.
+</p>
+<p>
+It sets only the Path and Args in the returned structure.
+</p>
+<p>
+If name contains no path separators, Command uses LookPath to
+resolve the path to a complete name if possible. Otherwise it uses
+name directly.
+</p>
+<p>
+The returned Cmd&#39;s Args field is constructed from the command name
+followed by the elements of arg, so arg should not include the
+command name itself. For example, Command(&#34;echo&#34;, &#34;hello&#34;)
+</p>
+
+				<div id="example_Command" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+cmd := exec.Command(&#34;tr&#34;, &#34;a-z&#34;, &#34;A-Z&#34;)
+cmd.Stdin = strings.NewReader(&#34;some input&#34;)
+var out bytes.Buffer
+cmd.Stdout = &amp;out
+err := cmd.Run()
+if err != nil {
+    log.Fatal(err)
+}
+fmt.Printf(&#34;in all caps: %q\n&#34;, out.String())
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+
+			
+				
+				<h3 id="Cmd.CombinedOutput">func (*Cmd) <a href="http://localhost:6060/src/os/exec/exec.go?s=11924:11970#L433">CombinedOutput</a></h3>
+				<pre>func (c *<a href="index.html#Cmd">Cmd</a>) CombinedOutput() ([]<a href="../../builtin/index.html#byte">byte</a>, <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+CombinedOutput runs the command and returns its combined standard
+output and standard error.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Cmd.Output">func (*Cmd) <a href="http://localhost:6060/src/os/exec/exec.go?s=11387:11425#L410">Output</a></h3>
+				<pre>func (c *<a href="index.html#Cmd">Cmd</a>) Output() ([]<a href="../../builtin/index.html#byte">byte</a>, <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Output runs the command and returns its standard output.
+Any returned error will usually be of type *ExitError.
+If c.Stderr was nil, Output populates ExitError.Stderr.
+</p>
+
+				
+				<div id="example_Cmd_Output" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+out, err := exec.Command(&#34;date&#34;).Output()
+if err != nil {
+    log.Fatal(err)
+}
+fmt.Printf(&#34;The date is %s\n&#34;, out)
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+				
+				<h3 id="Cmd.Run">func (*Cmd) <a href="http://localhost:6060/src/os/exec/exec.go?s=7135:7160#L248">Run</a></h3>
+				<pre>func (c *<a href="index.html#Cmd">Cmd</a>) Run() <a href="../../builtin/index.html#error">error</a></pre>
+				<p>
+Run starts the specified command and waits for it to complete.
+</p>
+<p>
+The returned error is nil if the command runs, has no problems
+copying stdin, stdout, and stderr, and exits with a zero exit
+status.
+</p>
+<p>
+If the command fails to run or doesn&#39;t complete successfully, the
+error is of type *ExitError. Other error types may be
+returned for I/O problems.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Cmd.Start">func (*Cmd) <a href="http://localhost:6060/src/os/exec/exec.go?s=8166:8193#L285">Start</a></h3>
+				<pre>func (c *<a href="index.html#Cmd">Cmd</a>) Start() <a href="../../builtin/index.html#error">error</a></pre>
+				<p>
+Start starts the specified command but does not wait for it to complete.
+</p>
+<p>
+The Wait method will return the exit code and release associated resources
+once the command exits.
+</p>
+
+				
+				<div id="example_Cmd_Start" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+cmd := exec.Command(&#34;sleep&#34;, &#34;5&#34;)
+err := cmd.Start()
+if err != nil {
+    log.Fatal(err)
+}
+log.Printf(&#34;Waiting for command to finish...&#34;)
+err = cmd.Wait()
+log.Printf(&#34;Command finished with error: %v&#34;, err)
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+				
+				<h3 id="Cmd.StderrPipe">func (*Cmd) <a href="http://localhost:6060/src/os/exec/exec.go?s=14580:14629#L520">StderrPipe</a></h3>
+				<pre>func (c *<a href="index.html#Cmd">Cmd</a>) StderrPipe() (<a href="../../io/index.html">io</a>.<a href="../../io/index.html#ReadCloser">ReadCloser</a>, <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+StderrPipe returns a pipe that will be connected to the command&#39;s
+standard error when the command starts.
+</p>
+<p>
+Wait will close the pipe after seeing the command exit, so most callers
+need not close the pipe themselves; however, an implication is that
+it is incorrect to call Wait before all reads from the pipe have completed.
+For the same reason, it is incorrect to use Run when using StderrPipe.
+See the StdoutPipe example for idiomatic usage.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Cmd.StdinPipe">func (*Cmd) <a href="http://localhost:6060/src/os/exec/exec.go?s=12597:12646#L453">StdinPipe</a></h3>
+				<pre>func (c *<a href="index.html#Cmd">Cmd</a>) StdinPipe() (<a href="../../io/index.html">io</a>.<a href="../../io/index.html#WriteCloser">WriteCloser</a>, <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+StdinPipe returns a pipe that will be connected to the command&#39;s
+standard input when the command starts.
+The pipe will be closed automatically after Wait sees the command exit.
+A caller need only call Close to force the pipe to close sooner.
+For example, if the command being run will not exit until standard input
+is closed, the caller must close the pipe.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Cmd.StdoutPipe">func (*Cmd) <a href="http://localhost:6060/src/os/exec/exec.go?s=13694:13743#L495">StdoutPipe</a></h3>
+				<pre>func (c *<a href="index.html#Cmd">Cmd</a>) StdoutPipe() (<a href="../../io/index.html">io</a>.<a href="../../io/index.html#ReadCloser">ReadCloser</a>, <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+StdoutPipe returns a pipe that will be connected to the command&#39;s
+standard output when the command starts.
+</p>
+<p>
+Wait will close the pipe after seeing the command exit, so most callers
+need not close the pipe themselves; however, an implication is that
+it is incorrect to call Wait before all reads from the pipe have completed.
+For the same reason, it is incorrect to call Run when using StdoutPipe.
+See the example for idiomatic usage.
+</p>
+
+				
+				<div id="example_Cmd_StdoutPipe" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+cmd := exec.Command(&#34;echo&#34;, &#34;-n&#34;, `{&#34;Name&#34;: &#34;Bob&#34;, &#34;Age&#34;: 32}`)
+stdout, err := cmd.StdoutPipe()
+if err != nil {
+    log.Fatal(err)
+}
+if err := cmd.Start(); err != nil {
+    log.Fatal(err)
+}
+var person struct {
+    Name string
+    Age  int
+}
+if err := json.NewDecoder(stdout).Decode(&amp;person); err != nil {
+    log.Fatal(err)
+}
+if err := cmd.Wait(); err != nil {
+    log.Fatal(err)
+}
+fmt.Printf(&#34;%s is %d years old\n&#34;, person.Name, person.Age)
+</pre>
+			
+		
+	</div>
+</div>
+
+				
+			
+				
+				<h3 id="Cmd.Wait">func (*Cmd) <a href="http://localhost:6060/src/os/exec/exec.go?s=10671:10697#L378">Wait</a></h3>
+				<pre>func (c *<a href="index.html#Cmd">Cmd</a>) Wait() <a href="../../builtin/index.html#error">error</a></pre>
+				<p>
+Wait waits for the command to exit.
+It must have been started by Start.
+</p>
+<p>
+The returned error is nil if the command runs, has no problems
+copying stdin, stdout, and stderr, and exits with a zero exit
+status.
+</p>
+<p>
+If the command fails to run or doesn&#39;t complete successfully, the
+error is of type *ExitError. Other error types may be
+returned for I/O problems.
+</p>
+<p>
+If c.Stdin is not an *os.File, Wait also waits for the I/O loop
+copying from c.Stdin into the process&#39;s standard input
+to complete.
+</p>
+<p>
+Wait releases any resources associated with the Cmd.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Error">type <a href="http://localhost:6060/src/os/exec/exec.go?s=723:769#L19">Error</a></h2>
+			<pre>type Error struct {
+    Name <a href="../../builtin/index.html#string">string</a>
+    Err  <a href="../../builtin/index.html#error">error</a>
+}</pre>
+			<p>
+Error records the name of a binary that failed to be executed
+and the reason it failed.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Error.Error">func (*Error) <a href="http://localhost:6060/src/os/exec/exec.go?s=771:801#L24">Error</a></h3>
+				<pre>func (e *<a href="index.html#Error">Error</a>) Error() <a href="../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ExitError">type <a href="http://localhost:6060/src/os/exec/exec.go?s=9496:10012#L342">ExitError</a></h2>
+			<pre>type ExitError struct {
+    *<a href="../index.html">os</a>.<a href="../index.html#ProcessState">ProcessState</a>
+
+    <span class="comment">// Stderr holds a subset of the standard error output from the</span>
+    <span class="comment">// Cmd.Output method if standard error was not otherwise being</span>
+    <span class="comment">// collected.</span>
+    <span class="comment">//</span>
+    <span class="comment">// If the error output is long, Stderr may contain only a prefix</span>
+    <span class="comment">// and suffix of the output, with the middle replaced with</span>
+    <span class="comment">// text about the number of omitted bytes.</span>
+    <span class="comment">//</span>
+    <span class="comment">// Stderr is provided for debugging, for inclusion in error messages.</span>
+    <span class="comment">// Users with other needs should redirect Cmd.Stderr as needed.</span>
+    Stderr []<a href="../../builtin/index.html#byte">byte</a>
+}</pre>
+			<p>
+An ExitError reports an unsuccessful exit by a command.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ExitError.Error">func (*ExitError) <a href="http://localhost:6060/src/os/exec/exec.go?s=10014:10048#L358">Error</a></h3>
+				<pre>func (e *<a href="index.html#ExitError">ExitError</a>) Error() <a href="../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+	
+
+	
+		
+			<h2 id="pkg-note-BUG">Bugs</h2>
+			<ul style="list-style: none; padding: 0;">
+			
+			<li><a href="http://localhost:6060/src/os/exec/exec.go?s=2867:2979#L80">&#x261e;</a> On OS X 10.6, child processes may sometimes inherit unwanted fds.
+https://golang.org/issue/2603
+</li>
+			
+			</ul>
+		
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

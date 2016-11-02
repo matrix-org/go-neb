@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>httpcache - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package httpcache</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/gregjones/httpcache"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-subdirectories">Subdirectories</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package httpcache provides a http.RoundTripper implementation that works as a
+mostly RFC-compliant cache for http responses.
+</p>
+<p>
+It is only suitable for use as a &#39;private&#39; cache (i.e. for a web-browser or an API-client
+and not for a shared proxy).
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="index.html#pkg-constants">Constants</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+				
+				<dd><a href="index.html#CachedResponse">func CachedResponse(c Cache, req *http.Request) (resp *http.Response, err error)</a></dd>
+			
+				
+				<dd><a href="index.html#Date">func Date(respHeaders http.Header) (date time.Time, err error)</a></dd>
+			
+			
+				
+				<dd><a href="index.html#Cache">type Cache</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#MemoryCache">type MemoryCache</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewMemoryCache">func NewMemoryCache() *MemoryCache</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MemoryCache.Delete">func (c *MemoryCache) Delete(key string)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MemoryCache.Get">func (c *MemoryCache) Get(key string) (resp []byte, ok bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MemoryCache.Set">func (c *MemoryCache) Set(key string, resp []byte)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Transport">type Transport</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewMemoryCacheTransport">func NewMemoryCacheTransport() *Transport</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewTransport">func NewTransport(c Cache) *Transport</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Transport.CancelRequest">func (t *Transport) CancelRequest(req *http.Request)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Transport.Client">func (t *Transport) Client() *http.Client</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Transport.RoundTrip">func (t *Transport) RoundTrip(req *http.Request) (resp *http.Response, err error)</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/gregjones/httpcache/httpcache.go">httpcache.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const (
+
+    <span class="comment">// XFromCache is the header added to responses that are returned from the cache</span>
+    <span id="XFromCache">XFromCache</span> = &#34;X-From-Cache&#34;
+)</pre>
+				
+			
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var <span id="ErrNoDateHeader">ErrNoDateHeader</span> = <a href="../../../errors/index.html">errors</a>.<a href="../../../errors/index.html#New">New</a>(&#34;no Date header&#34;)</pre>
+				<p>
+ErrNoDateHeader indicates that the HTTP headers contained no Date header.
+</p>
+
+			
+		
+		
+			
+			
+			<h2 id="CachedResponse">func <a href="http://localhost:6060/src/github.com/gregjones/httpcache/httpcache.go?s=1212:1292#L39">CachedResponse</a></h2>
+			<pre>func CachedResponse(c <a href="index.html#Cache">Cache</a>, req *<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Request">Request</a>) (resp *<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Response">Response</a>, err <a href="../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+CachedResponse returns the cached http.Response for req if present, and nil
+otherwise.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Date">func <a href="http://localhost:6060/src/github.com/gregjones/httpcache/httpcache.go?s=9487:9549#L322">Date</a></h2>
+			<pre>func Date(respHeaders <a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Header">Header</a>) (date <a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Time">Time</a>, err <a href="../../../builtin/index.html#error">error</a>)</pre>
+			<p>
+Date parses and returns the value of the Date header.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="Cache">type <a href="http://localhost:6060/src/github.com/gregjones/httpcache/httpcache.go?s=635:1004#L22">Cache</a></h2>
+			<pre>type Cache interface {
+    <span class="comment">// Get returns the []byte representation of a cached response and a bool</span>
+    <span class="comment">// set to true if the value isn&#39;t empty</span>
+    Get(key <a href="../../../builtin/index.html#string">string</a>) (responseBytes []<a href="../../../builtin/index.html#byte">byte</a>, ok <a href="../../../builtin/index.html#bool">bool</a>)
+    <span class="comment">// Set stores the []byte representation of a response against a key</span>
+    Set(key <a href="../../../builtin/index.html#string">string</a>, responseBytes []<a href="../../../builtin/index.html#byte">byte</a>)
+    <span class="comment">// Delete removes the value associated with the key</span>
+    Delete(key <a href="../../../builtin/index.html#string">string</a>)
+}</pre>
+			<p>
+A Cache interface is used by the Transport to store and retrieve responses.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="MemoryCache">type <a href="http://localhost:6060/src/github.com/gregjones/httpcache/httpcache.go?s=1530:1602#L50">MemoryCache</a></h2>
+			<pre>type MemoryCache struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+MemoryCache is an implemtation of Cache that stores responses in an in-memory map.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewMemoryCache">func <a href="http://localhost:6060/src/github.com/gregjones/httpcache/httpcache.go?s=2200:2234#L78">NewMemoryCache</a></h3>
+				<pre>func NewMemoryCache() *<a href="index.html#MemoryCache">MemoryCache</a></pre>
+				<p>
+NewMemoryCache returns a new Cache that will store items in an in-memory map
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="MemoryCache.Delete">func (*MemoryCache) <a href="http://localhost:6060/src/github.com/gregjones/httpcache/httpcache.go?s=2024:2064#L71">Delete</a></h3>
+				<pre>func (c *<a href="index.html#MemoryCache">MemoryCache</a>) Delete(key <a href="../../../builtin/index.html#string">string</a>)</pre>
+				<p>
+Delete removes key from the cache
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="MemoryCache.Get">func (*MemoryCache) <a href="http://localhost:6060/src/github.com/gregjones/httpcache/httpcache.go?s=1695:1755#L56">Get</a></h3>
+				<pre>func (c *<a href="index.html#MemoryCache">MemoryCache</a>) Get(key <a href="../../../builtin/index.html#string">string</a>) (resp []<a href="../../../builtin/index.html#byte">byte</a>, ok <a href="../../../builtin/index.html#bool">bool</a>)</pre>
+				<p>
+Get returns the []byte representation of the response and true if present, false if not
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="MemoryCache.Set">func (*MemoryCache) <a href="http://localhost:6060/src/github.com/gregjones/httpcache/httpcache.go?s=1882:1932#L64">Set</a></h3>
+				<pre>func (c *<a href="index.html#MemoryCache">MemoryCache</a>) Set(key <a href="../../../builtin/index.html#string">string</a>, resp []<a href="../../../builtin/index.html#byte">byte</a>)</pre>
+				<p>
+Set saves response resp to the cache with key
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Transport">type <a href="http://localhost:6060/src/github.com/gregjones/httpcache/httpcache.go?s=2988:3397#L113">Transport</a></h2>
+			<pre>type Transport struct {
+    <span class="comment">// The RoundTripper interface actually used to make requests</span>
+    <span class="comment">// If nil, http.DefaultTransport is used</span>
+    Transport <a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#RoundTripper">RoundTripper</a>
+    Cache     <a href="index.html#Cache">Cache</a>
+    <span class="comment">// If true, responses returned from the cache will be given an extra header, X-From-Cache</span>
+    MarkCachedResponses <a href="../../../builtin/index.html#bool">bool</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Transport is an implementation of http.RoundTripper that will return values from a cache
+where possible (avoiding a network request) and will additionally add validators (etag/if-modified-since)
+to repeated requests allowing servers to return 304 / Not Modified
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewMemoryCacheTransport">func <a href="http://localhost:6060/src/github.com/gregjones/httpcache/httpcache.go?s=17096:17137#L580">NewMemoryCacheTransport</a></h3>
+				<pre>func NewMemoryCacheTransport() *<a href="index.html#Transport">Transport</a></pre>
+				<p>
+NewMemoryCacheTransport returns a new Transport using the in-memory cache implementation
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewTransport">func <a href="http://localhost:6060/src/github.com/gregjones/httpcache/httpcache.go?s=3517:3554#L128">NewTransport</a></h3>
+				<pre>func NewTransport(c <a href="index.html#Cache">Cache</a>) *<a href="index.html#Transport">Transport</a></pre>
+				<p>
+NewTransport returns a new Transport with the
+provided Cache implementation and MarkCachedResponses set to true
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Transport.CancelRequest">func (*Transport) <a href="http://localhost:6060/src/github.com/gregjones/httpcache/httpcache.go?s=8800:8852#L295">CancelRequest</a></h3>
+				<pre>func (t *<a href="index.html#Transport">Transport</a>) CancelRequest(req *<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Request">Request</a>)</pre>
+				<p>
+CancelRequest calls CancelRequest on the underlaying transport if implemented or
+throw a warning otherwise.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Transport.Client">func (*Transport) <a href="http://localhost:6060/src/github.com/gregjones/httpcache/httpcache.go?s=3673:3714#L133">Client</a></h3>
+				<pre>func (t *<a href="index.html#Transport">Transport</a>) Client() *<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Client">Client</a></pre>
+				<p>
+Client returns an *http.Client that caches responses.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Transport.RoundTrip">func (*Transport) <a href="http://localhost:6060/src/github.com/gregjones/httpcache/httpcache.go?s=4923:5004#L171">RoundTrip</a></h3>
+				<pre>func (t *<a href="index.html#Transport">Transport</a>) RoundTrip(req *<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Request">Request</a>) (resp *<a href="../../../net/http/index.html">http</a>.<a href="../../../net/http/index.html#Response">Response</a>, err <a href="../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+RoundTrip takes a Request and returns a Response
+</p>
+<p>
+If there is a fresh Response already in cache, then it will be returned without connecting to
+the server.
+</p>
+<p>
+If there is a stale Response, then any validators it contains will be set on the new request
+to give the server a chance to respond with NotModified. If this happens, then the cached Response
+will be returned.
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+
+
+	<div class="pkg-dir">
+		<table>
+			<tr>
+				<th class="pkg-name">Name</th>
+				<th class="pkg-synopsis">Synopsis</th>
+			</tr>
+
+			
+			<tr>
+				<td colspan="2"><a href="../index.html">..</a></td>
+			</tr>
+			
+
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="diskcache/index.html">diskcache</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package diskcache provides an implementation of httpcache.Cache that uses the diskv package to supplement an in-memory map with persistent storage
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="leveldbcache/index.html">leveldbcache</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package leveldbcache provides an implementation of httpcache.Cache that uses github.com/syndtr/goleveldb/leveldb
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="memcache/index.html">memcache</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package memcache provides an implementation of httpcache.Cache that uses App Engine&#39;s memcache package to store cached responses.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="redis/index.html">redis</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package redis provides a redis interface for http caching.
+						</td>
+					</tr>
+				
+			
+		</table>
+	</div>
+
+
+	
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>encoding - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package encoding</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "golang.org/x/text/encoding"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+				<dd><a href="index.html#pkg-examples" class="examplesLink">Examples</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-subdirectories">Subdirectories</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package encoding defines an interface for character encodings, such as Shift
+JIS and Windows 1252, that can convert to and from UTF-8.
+</p>
+<p>
+Encoding implementations are provided in other packages, such as
+golang.org/x/text/encoding/charmap and
+golang.org/x/text/encoding/japanese.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="index.html#pkg-constants">Constants</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+			
+				
+				<dd><a href="index.html#Decoder">type Decoder</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Decoder.Bytes">func (d *Decoder) Bytes(b []byte) ([]byte, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Decoder.Reader">func (d *Decoder) Reader(r io.Reader) io.Reader</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Decoder.String">func (d *Decoder) String(s string) (string, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Encoder">type Encoder</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#HTMLEscapeUnsupported">func HTMLEscapeUnsupported(e *Encoder) *Encoder</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ReplaceUnsupported">func ReplaceUnsupported(e *Encoder) *Encoder</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Encoder.Bytes">func (e *Encoder) Bytes(b []byte) ([]byte, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Encoder.String">func (e *Encoder) String(s string) (string, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Encoder.Writer">func (e *Encoder) Writer(w io.Writer) io.Writer</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Encoding">type Encoding</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+		<div id="pkg-examples">
+			<h4>Examples</h4>
+			<dl>
+			
+			<dd><a class="exampleLink" href="index.html#example_UTF8Validator">UTF8Validator</a></dd>
+			
+			</dl>
+		</div>
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/golang.org/x/text/encoding/encoding.go">encoding.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const <span id="ASCIISub">ASCIISub</span> = &#39;\x1a&#39;</pre>
+				<p>
+ASCIISub is the ASCII substitute character, as recommended by
+<a href="http://unicode.org/reports/tr36/#Text_Comparison">http://unicode.org/reports/tr36/#Text_Comparison</a>
+</p>
+
+			
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var <span id="ErrInvalidUTF8">ErrInvalidUTF8</span> = <a href="../../../../errors/index.html">errors</a>.<a href="../../../../errors/index.html#New">New</a>(&#34;encoding: invalid UTF-8&#34;)</pre>
+				<p>
+ErrInvalidUTF8 means that a transformer encountered invalid UTF-8.
+</p>
+
+			
+				<pre>var <span id="UTF8Validator">UTF8Validator</span> <a href="../transform/index.html">transform</a>.<a href="../transform/index.html#Transformer">Transformer</a> = utf8Validator{}</pre>
+				<p>
+UTF8Validator is a transformer that returns ErrInvalidUTF8 on the first
+input byte that is not valid UTF-8.
+</p>
+
+			
+		
+		
+		
+			
+			
+			<h2 id="Decoder">type <a href="http://localhost:6060/src/golang.org/x/text/encoding/encoding.go?s=1542:1756#L35">Decoder</a></h2>
+			<pre>type Decoder struct {
+    <a href="../transform/index.html">transform</a>.<a href="../transform/index.html#Transformer">Transformer</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+A Decoder converts bytes to UTF-8. It implements transform.Transformer.
+</p>
+<p>
+Transforming source bytes that are not of that encoding will not result in an
+error per se. Each byte that cannot be transcoded will be represented in the
+output by the UTF-8 encoding of &#39;\uFFFD&#39;, the replacement rune.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Decoder.Bytes">func (*Decoder) <a href="http://localhost:6060/src/golang.org/x/text/encoding/encoding.go?s=1879:1928#L46">Bytes</a></h3>
+				<pre>func (d *<a href="index.html#Decoder">Decoder</a>) Bytes(b []<a href="../../../../builtin/index.html#byte">byte</a>) ([]<a href="../../../../builtin/index.html#byte">byte</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Bytes converts the given encoded bytes to UTF-8. It returns the converted
+bytes or nil, err if any error occurred.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Decoder.Reader">func (*Decoder) <a href="http://localhost:6060/src/golang.org/x/text/encoding/encoding.go?s=2446:2493#L68">Reader</a></h3>
+				<pre>func (d *<a href="index.html#Decoder">Decoder</a>) Reader(r <a href="../../../../io/index.html">io</a>.<a href="../../../../io/index.html#Reader">Reader</a>) <a href="../../../../io/index.html">io</a>.<a href="../../../../io/index.html#Reader">Reader</a></pre>
+				<p>
+Reader wraps another Reader to decode its bytes.
+</p>
+<p>
+The Decoder may not be used for any other operation as long as the returned
+Reader is in use.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Decoder.String">func (*Decoder) <a href="http://localhost:6060/src/golang.org/x/text/encoding/encoding.go?s=2146:2196#L56">String</a></h3>
+				<pre>func (d *<a href="index.html#Decoder">Decoder</a>) String(s <a href="../../../../builtin/index.html#string">string</a>) (<a href="../../../../builtin/index.html#string">string</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+String converts the given encoded string to UTF-8. It returns the converted
+string or &#34;&#34;, err if any error occurred.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Encoder">type <a href="http://localhost:6060/src/golang.org/x/text/encoding/encoding.go?s=2973:3187#L79">Encoder</a></h2>
+			<pre>type Encoder struct {
+    <a href="../transform/index.html">transform</a>.<a href="../transform/index.html#Transformer">Transformer</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+An Encoder converts bytes from UTF-8. It implements transform.Transformer.
+</p>
+<p>
+Each rune that cannot be transcoded will result in an error. In this case,
+the transform will consume all source byte up to, not including the offending
+rune. Transforming source bytes that are not valid UTF-8 will be replaced by
+`\uFFFD`. To return early with an error instead, use transform.Chain to
+preprocess the data with a UTF8Validator.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="HTMLEscapeUnsupported">func <a href="http://localhost:6060/src/golang.org/x/text/encoding/encoding.go?s=6734:6781#L214">HTMLEscapeUnsupported</a></h3>
+				<pre>func HTMLEscapeUnsupported(e *<a href="index.html#Encoder">Encoder</a>) *<a href="index.html#Encoder">Encoder</a></pre>
+				<p>
+HTMLEscapeUnsupported wraps encoders to replace source runes outside the
+repertoire of the destination encoding with HTML escape sequences.
+</p>
+<p>
+This wrapper exists to comply to URL and HTML forms requiring a
+non-terminating legacy encoder. The produced sequences may lead to data
+loss as they are indistinguishable from legitimate input. To avoid this
+issue, use UTF-8 encodings whenever possible.
+</p>
+
+				
+				
+			
+				
+				<h3 id="ReplaceUnsupported">func <a href="http://localhost:6060/src/golang.org/x/text/encoding/encoding.go?s=7155:7199#L224">ReplaceUnsupported</a></h3>
+				<pre>func ReplaceUnsupported(e *<a href="index.html#Encoder">Encoder</a>) *<a href="index.html#Encoder">Encoder</a></pre>
+				<p>
+ReplaceUnsupported wraps encoders to replace source runes outside the
+repertoire of the destination encoding with an encoding-specific
+replacement.
+</p>
+<p>
+This wrapper is only provided for backwards compatibility and legacy
+handling. Its use is strongly discouraged. Use UTF-8 whenever possible.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Encoder.Bytes">func (*Encoder) <a href="http://localhost:6060/src/golang.org/x/text/encoding/encoding.go?s=3294:3343#L90">Bytes</a></h3>
+				<pre>func (e *<a href="index.html#Encoder">Encoder</a>) Bytes(b []<a href="../../../../builtin/index.html#byte">byte</a>) ([]<a href="../../../../builtin/index.html#byte">byte</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Bytes converts bytes from UTF-8. It returns the converted bytes or nil, err if
+any error occurred.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Encoder.String">func (*Encoder) <a href="http://localhost:6060/src/golang.org/x/text/encoding/encoding.go?s=3547:3597#L100">String</a></h3>
+				<pre>func (e *<a href="index.html#Encoder">Encoder</a>) String(s <a href="../../../../builtin/index.html#string">string</a>) (<a href="../../../../builtin/index.html#string">string</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+String converts a string from UTF-8. It returns the converted string or
+&#34;&#34;, err if any error occurred.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Encoder.Writer">func (*Encoder) <a href="http://localhost:6060/src/golang.org/x/text/encoding/encoding.go?s=3854:3901#L112">Writer</a></h3>
+				<pre>func (e *<a href="index.html#Encoder">Encoder</a>) Writer(w <a href="../../../../io/index.html">io</a>.<a href="../../../../io/index.html#Writer">Writer</a>) <a href="../../../../io/index.html">io</a>.<a href="../../../../io/index.html#Writer">Writer</a></pre>
+				<p>
+Writer wraps another Writer to encode its UTF-8 output.
+</p>
+<p>
+The Encoder may not be used for any other operation as long as the returned
+Writer is in use.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Encoding">type <a href="http://localhost:6060/src/golang.org/x/text/encoding/encoding.go?s=1091:1234#L22">Encoding</a></h2>
+			<pre>type Encoding interface {
+    <span class="comment">// NewDecoder returns a Decoder.</span>
+    NewDecoder() *<a href="index.html#Decoder">Decoder</a>
+
+    <span class="comment">// NewEncoder returns an Encoder.</span>
+    NewEncoder() *<a href="index.html#Encoder">Encoder</a>
+}</pre>
+			<p>
+Encoding is a character set encoding that can be transformed to and from
+UTF-8.
+</p>
+
+
+			
+
+			
+				<pre>var <span id="Nop">Nop</span> <a href="index.html#Encoding">Encoding</a> = nop{}</pre>
+				<p>
+Nop is the nop encoding. Its transformed bytes are the same as the source
+bytes; it does not replace invalid UTF-8 sequences.
+</p>
+
+			
+				<pre>var <span id="Replacement">Replacement</span> <a href="index.html#Encoding">Encoding</a> = replacement{}</pre>
+				<p>
+Replacement is the replacement encoding. Decoding from the replacement
+encoding yields a single &#39;\uFFFD&#39; replacement rune. Encoding from UTF-8 to
+the replacement encoding yields the same as the source bytes except that
+invalid UTF-8 is converted to &#39;\uFFFD&#39;.
+</p>
+<p>
+It is defined at <a href="http://encoding.spec.whatwg.org/#replacement">http://encoding.spec.whatwg.org/#replacement</a>
+</p>
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+
+
+	<div class="pkg-dir">
+		<table>
+			<tr>
+				<th class="pkg-name">Name</th>
+				<th class="pkg-synopsis">Synopsis</th>
+			</tr>
+
+			
+			<tr>
+				<td colspan="2"><a href="../index.html">..</a></td>
+			</tr>
+			
+
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="charmap/index.html">charmap</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package charmap provides simple character encodings such as IBM Code Page 437 and Windows 1252.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="htmlindex/index.html">htmlindex</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package htmlindex maps character set encoding names to Encodings as recommended by the W3C for use in HTML 5.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="ianaindex/index.html">ianaindex</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package ianaindex maps names to Encodings as specified by the IANA registry.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="japanese/index.html">japanese</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package japanese provides Japanese encodings such as EUC-JP and Shift JIS.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="korean/index.html">korean</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package korean provides Korean encodings such as EUC-KR.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="simplifiedchinese/index.html">simplifiedchinese</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package simplifiedchinese provides Simplified Chinese encodings such as GBK.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="traditionalchinese/index.html">traditionalchinese</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package traditionalchinese provides Traditional Chinese encodings such as Big5.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="unicode/index.html">unicode</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package unicode provides Unicode encodings such as UTF-16.
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 20px;">
+							<a href="unicode/utf32/index.html">utf32</a>
+						</td>
+						<td class="pkg-synopsis">
+							Package utf32 provides the UTF-32 Unicode encoding.
+						</td>
+					</tr>
+				
+			
+		</table>
+	</div>
+
+
+	
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

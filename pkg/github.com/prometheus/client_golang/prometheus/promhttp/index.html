@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>promhttp - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package promhttp</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/prometheus/client_golang/prometheus/promhttp"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package promhttp contains functions to create http.Handler instances to
+expose Prometheus metrics via HTTP. In later versions of this package, it
+will also contain tooling to instrument instances of http.Handler and
+http.RoundTripper.
+</p>
+<p>
+promhttp.Handler acts on the prometheus.DefaultGatherer. With HandlerFor,
+you can create a handler for a custom registry or anything that implements
+the Gatherer interface. It also allows to create handlers that act
+differently on errors or allow to log errors.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+				
+				<dd><a href="index.html#Handler">func Handler() http.Handler</a></dd>
+			
+				
+				<dd><a href="index.html#HandlerFor">func HandlerFor(reg prometheus.Gatherer, opts HandlerOpts) http.Handler</a></dd>
+			
+			
+				
+				<dd><a href="index.html#HandlerErrorHandling">type HandlerErrorHandling</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#HandlerOpts">type HandlerOpts</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Logger">type Logger</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/promhttp/http.go">http.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+			
+			
+			<h2 id="Handler">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/promhttp/http.go?s=2296:2323#L64">Handler</a></h2>
+			<pre>func Handler() <a href="../../../../../net/http/index.html">http</a>.<a href="../../../../../net/http/index.html#Handler">Handler</a></pre>
+			<p>
+Handler returns an HTTP handler for the prometheus.DefaultGatherer. The
+Handler uses the default HandlerOpts, i.e. report the first error as an HTTP
+error, no error logging, and compression if requested by the client.
+</p>
+<p>
+If you want to create a Handler for the DefaultGatherer with different
+HandlerOpts, create it with HandlerFor with prometheus.DefaultGatherer and
+your desired HandlerOpts.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="HandlerFor">func <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/promhttp/http.go?s=2527:2598#L70">HandlerFor</a></h2>
+			<pre>func HandlerFor(reg <a href="../index.html">prometheus</a>.<a href="../index.html#Gatherer">Gatherer</a>, opts <a href="index.html#HandlerOpts">HandlerOpts</a>) <a href="../../../../../net/http/index.html">http</a>.<a href="../../../../../net/http/index.html#Handler">Handler</a></pre>
+			<p>
+HandlerFor returns an http.Handler for the provided Gatherer. The behavior
+of the Handler is defined by the provided HandlerOpts.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="HandlerErrorHandling">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/promhttp/http.go?s=4517:4546#L134">HandlerErrorHandling</a></h2>
+			<pre>type HandlerErrorHandling <a href="../../../../../builtin/index.html#int">int</a></pre>
+			<p>
+HandlerErrorHandling defines how a Handler serving metrics will handle
+errors.
+</p>
+
+
+			
+				<pre>const (
+    <span class="comment">// Serve an HTTP status code 500 upon the first error</span>
+    <span class="comment">// encountered. Report the error message in the body.</span>
+    <span id="HTTPErrorOnError">HTTPErrorOnError</span> <a href="index.html#HandlerErrorHandling">HandlerErrorHandling</a> = <a href="../../../../../builtin/index.html#iota">iota</a>
+    <span class="comment">// Ignore errors and try to serve as many metrics as possible.  However,</span>
+    <span class="comment">// if no metrics can be served, serve an HTTP status code 500 and the</span>
+    <span class="comment">// last error message in the body. Only use this in deliberate &#34;best</span>
+    <span class="comment">// effort&#34; metrics collection scenarios. It is recommended to at least</span>
+    <span class="comment">// log errors (by providing an ErrorLog in HandlerOpts) to not mask</span>
+    <span class="comment">// errors completely.</span>
+    <span id="ContinueOnError">ContinueOnError</span>
+    <span class="comment">// Panic upon the first error encountered (useful for &#34;crash only&#34; apps).</span>
+    <span id="PanicOnError">PanicOnError</span>
+)</pre>
+				<p>
+These constants cause handlers serving metrics to behave as described if
+errors are encountered.
+</p>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="HandlerOpts">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/promhttp/http.go?s=5719:6228#L162">HandlerOpts</a></h2>
+			<pre>type HandlerOpts struct {
+    <span class="comment">// ErrorLog specifies an optional logger for errors collecting and</span>
+    <span class="comment">// serving metrics. If nil, errors are not logged at all.</span>
+    ErrorLog <a href="index.html#Logger">Logger</a>
+    <span class="comment">// ErrorHandling defines how errors are handled. Note that errors are</span>
+    <span class="comment">// logged regardless of the configured ErrorHandling provided ErrorLog</span>
+    <span class="comment">// is not nil.</span>
+    ErrorHandling <a href="index.html#HandlerErrorHandling">HandlerErrorHandling</a>
+    <span class="comment">// If DisableCompression is true, the handler will never compress the</span>
+    <span class="comment">// response, even if requested by the client.</span>
+    DisableCompression <a href="../../../../../builtin/index.html#bool">bool</a>
+}</pre>
+			<p>
+HandlerOpts specifies options how to serve metrics via an http.Handler. The
+zero value of HandlerOpts is a reasonable default.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Logger">type <a href="http://localhost:6060/src/github.com/prometheus/client_golang/prometheus/promhttp/http.go?s=5532:5584#L156">Logger</a></h2>
+			<pre>type Logger interface {
+    Println(v ...interface{})
+}</pre>
+			<p>
+Logger is the minimal interface HandlerOpts needs for logging. Note that
+log.Logger from the standard library implements this interface, and it is
+easy to implement by custom loggers, if they don&#39;t do so already anyway.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

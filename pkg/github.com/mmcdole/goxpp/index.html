@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>xpp - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package xpp</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/mmcdole/goxpp"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+			
+				
+				<dd><a href="index.html#CharsetReader">type CharsetReader</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#XMLEventType">type XMLEventType</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#XMLPullParser">type XMLPullParser</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewXMLPullParser">func NewXMLPullParser(r io.Reader, strict bool, cr CharsetReader) *XMLPullParser</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#XMLPullParser.Attribute">func (p *XMLPullParser) Attribute(name string) string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#XMLPullParser.DecodeElement">func (p *XMLPullParser) DecodeElement(v interface{}) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#XMLPullParser.EventName">func (p *XMLPullParser) EventName(e XMLEventType) (name string)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#XMLPullParser.EventType">func (p *XMLPullParser) EventType(t xml.Token) (event XMLEventType)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#XMLPullParser.Expect">func (p *XMLPullParser) Expect(event XMLEventType, name string) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#XMLPullParser.ExpectAll">func (p *XMLPullParser) ExpectAll(event XMLEventType, space string, name string) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#XMLPullParser.IsWhitespace">func (p *XMLPullParser) IsWhitespace() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#XMLPullParser.Next">func (p *XMLPullParser) Next() (event XMLEventType, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#XMLPullParser.NextTag">func (p *XMLPullParser) NextTag() (event XMLEventType, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#XMLPullParser.NextText">func (p *XMLPullParser) NextText() (string, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#XMLPullParser.NextToken">func (p *XMLPullParser) NextToken() (event XMLEventType, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#XMLPullParser.Skip">func (p *XMLPullParser) Skip() error</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/mmcdole/goxpp/xpp.go">xpp.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+		
+			
+			
+			<h2 id="CharsetReader">type <a href="http://localhost:6060/src/github.com/mmcdole/goxpp/xpp.go?s=97:172#L2">CharsetReader</a></h2>
+			<pre>type CharsetReader func(charset <a href="../../../builtin/index.html#string">string</a>, input <a href="../../../io/index.html">io</a>.<a href="../../../io/index.html#Reader">Reader</a>) (<a href="../../../io/index.html">io</a>.<a href="../../../io/index.html#Reader">Reader</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="XMLEventType">type <a href="http://localhost:6060/src/github.com/mmcdole/goxpp/xpp.go?s=75:96#L1">XMLEventType</a></h2>
+			<pre>type XMLEventType <a href="../../../builtin/index.html#int">int</a></pre>
+			
+
+			
+				<pre>const (
+    <span id="StartDocument">StartDocument</span> <a href="index.html#XMLEventType">XMLEventType</a> = <a href="../../../builtin/index.html#iota">iota</a>
+    <span id="EndDocument">EndDocument</span>
+    <span id="StartTag">StartTag</span>
+    <span id="EndTag">EndTag</span>
+    <span id="Text">Text</span>
+    <span id="Comment">Comment</span>
+    <span id="ProcessingInstruction">ProcessingInstruction</span>
+    <span id="Directive">Directive</span>
+    <span id="IgnorableWhitespace">IgnorableWhitespace</span> <span class="comment">// TODO: ?</span>
+
+)</pre>
+				
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="XMLPullParser">type <a href="http://localhost:6060/src/github.com/mmcdole/goxpp/xpp.go?s=351:577#L17">XMLPullParser</a></h2>
+			<pre>type XMLPullParser struct {
+    <span class="comment">// Document State</span>
+    Spaces map[<a href="../../../builtin/index.html#string">string</a>]<a href="../../../builtin/index.html#string">string</a>
+
+    <span class="comment">// Token State</span>
+    Depth <a href="../../../builtin/index.html#int">int</a>
+    Event <a href="index.html#XMLEventType">XMLEventType</a>
+    Attrs []<a href="../../../encoding/xml/index.html">xml</a>.<a href="../../../encoding/xml/index.html#Attr">Attr</a>
+    Name  <a href="../../../builtin/index.html#string">string</a>
+    Space <a href="../../../builtin/index.html#string">string</a>
+    Text  <a href="../../../builtin/index.html#string">string</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewXMLPullParser">func <a href="http://localhost:6060/src/github.com/mmcdole/goxpp/xpp.go?s=579:659#L33">NewXMLPullParser</a></h3>
+				<pre>func NewXMLPullParser(r <a href="../../../io/index.html">io</a>.<a href="../../../io/index.html#Reader">Reader</a>, strict <a href="../../../builtin/index.html#bool">bool</a>, cr <a href="index.html#CharsetReader">CharsetReader</a>) *<a href="index.html#XMLPullParser">XMLPullParser</a></pre>
+				
+				
+				
+			
+
+			
+				
+				<h3 id="XMLPullParser.Attribute">func (*XMLPullParser) <a href="http://localhost:6060/src/github.com/mmcdole/goxpp/xpp.go?s=3221:3274#L162">Attribute</a></h3>
+				<pre>func (p *<a href="index.html#XMLPullParser">XMLPullParser</a>) Attribute(name <a href="../../../builtin/index.html#string">string</a>) <a href="../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="XMLPullParser.DecodeElement">func (*XMLPullParser) <a href="http://localhost:6060/src/github.com/mmcdole/goxpp/xpp.go?s=3979:4037#L182">DecodeElement</a></h3>
+				<pre>func (p *<a href="index.html#XMLPullParser">XMLPullParser</a>) DecodeElement(v interface{}) <a href="../../../builtin/index.html#error">error</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="XMLPullParser.EventName">func (*XMLPullParser) <a href="http://localhost:6060/src/github.com/mmcdole/goxpp/xpp.go?s=4626:4689#L212">EventName</a></h3>
+				<pre>func (p *<a href="index.html#XMLPullParser">XMLPullParser</a>) EventName(e <a href="index.html#XMLEventType">XMLEventType</a>) (name <a href="../../../builtin/index.html#string">string</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="XMLPullParser.EventType">func (*XMLPullParser) <a href="http://localhost:6060/src/github.com/mmcdole/goxpp/xpp.go?s=5094:5161#L236">EventType</a></h3>
+				<pre>func (p *<a href="index.html#XMLPullParser">XMLPullParser</a>) EventType(t <a href="../../../encoding/xml/index.html">xml</a>.<a href="../../../encoding/xml/index.html#Token">Token</a>) (event <a href="index.html#XMLEventType">XMLEventType</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="XMLPullParser.Expect">func (*XMLPullParser) <a href="http://localhost:6060/src/github.com/mmcdole/goxpp/xpp.go?s=3382:3457#L171">Expect</a></h3>
+				<pre>func (p *<a href="index.html#XMLPullParser">XMLPullParser</a>) Expect(event <a href="index.html#XMLEventType">XMLEventType</a>, name <a href="../../../builtin/index.html#string">string</a>) (err <a href="../../../builtin/index.html#error">error</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="XMLPullParser.ExpectAll">func (*XMLPullParser) <a href="http://localhost:6060/src/github.com/mmcdole/goxpp/xpp.go?s=3501:3593#L175">ExpectAll</a></h3>
+				<pre>func (p *<a href="index.html#XMLPullParser">XMLPullParser</a>) ExpectAll(event <a href="index.html#XMLEventType">XMLEventType</a>, space <a href="../../../builtin/index.html#string">string</a>, name <a href="../../../builtin/index.html#string">string</a>) (err <a href="../../../builtin/index.html#error">error</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="XMLPullParser.IsWhitespace">func (*XMLPullParser) <a href="http://localhost:6060/src/github.com/mmcdole/goxpp/xpp.go?s=4537:4580#L208">IsWhitespace</a></h3>
+				<pre>func (p *<a href="index.html#XMLPullParser">XMLPullParser</a>) IsWhitespace() <a href="../../../builtin/index.html#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="XMLPullParser.Next">func (*XMLPullParser) <a href="http://localhost:6060/src/github.com/mmcdole/goxpp/xpp.go?s=1257:1319#L65">Next</a></h3>
+				<pre>func (p *<a href="index.html#XMLPullParser">XMLPullParser</a>) Next() (event <a href="index.html#XMLEventType">XMLEventType</a>, err <a href="../../../builtin/index.html#error">error</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="XMLPullParser.NextTag">func (*XMLPullParser) <a href="http://localhost:6060/src/github.com/mmcdole/goxpp/xpp.go?s=843:908#L45">NextTag</a></h3>
+				<pre>func (p *<a href="index.html#XMLPullParser">XMLPullParser</a>) NextTag() (event <a href="index.html#XMLEventType">XMLEventType</a>, err <a href="../../../builtin/index.html#error">error</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="XMLPullParser.NextText">func (*XMLPullParser) <a href="http://localhost:6060/src/github.com/mmcdole/goxpp/xpp.go?s=2326:2376#L115">NextText</a></h3>
+				<pre>func (p *<a href="index.html#XMLPullParser">XMLPullParser</a>) NextText() (<a href="../../../builtin/index.html#string">string</a>, <a href="../../../builtin/index.html#error">error</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="XMLPullParser.NextToken">func (*XMLPullParser) <a href="http://localhost:6060/src/github.com/mmcdole/goxpp/xpp.go?s=1788:1855#L91">NextToken</a></h3>
+				<pre>func (p *<a href="index.html#XMLPullParser">XMLPullParser</a>) NextToken() (event <a href="index.html#XMLEventType">XMLEventType</a>, err <a href="../../../builtin/index.html#error">error</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="XMLPullParser.Skip">func (*XMLPullParser) <a href="http://localhost:6060/src/github.com/mmcdole/goxpp/xpp.go?s=2980:3016#L146">Skip</a></h3>
+				<pre>func (p *<a href="index.html#XMLPullParser">XMLPullParser</a>) Skip() <a href="../../../builtin/index.html#error">error</a></pre>
+				
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

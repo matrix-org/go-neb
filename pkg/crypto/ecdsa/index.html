@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>ecdsa - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package ecdsa</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "crypto/ecdsa"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package ecdsa implements the Elliptic Curve Digital Signature Algorithm, as
+defined in FIPS 186-3.
+</p>
+<p>
+This implementation  derives the nonce from an AES-CTR CSPRNG keyed by
+ChopMD(256, SHA2-512(priv.D || entropy || hash)). The CSPRNG key is IRO by
+a result of Coron; the AES-CTR stream is IRO under standard assumptions.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+				
+				<dd><a href="index.html#Sign">func Sign(rand io.Reader, priv *PrivateKey, hash []byte) (r, s *big.Int, err error)</a></dd>
+			
+				
+				<dd><a href="index.html#Verify">func Verify(pub *PublicKey, hash []byte, r, s *big.Int) bool</a></dd>
+			
+			
+				
+				<dd><a href="index.html#PrivateKey">type PrivateKey</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#GenerateKey">func GenerateKey(c elliptic.Curve, rand io.Reader) (priv *PrivateKey, err error)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#PrivateKey.Public">func (priv *PrivateKey) Public() crypto.PublicKey</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#PrivateKey.Sign">func (priv *PrivateKey) Sign(rand io.Reader, msg []byte, opts crypto.SignerOpts) ([]byte, error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#PublicKey">type PublicKey</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/crypto/ecdsa/ecdsa.go">ecdsa.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+			
+			
+			<h2 id="Sign">func <a href="http://localhost:6060/src/crypto/ecdsa/ecdsa.go?s=4284:4367#L137">Sign</a></h2>
+			<pre>func Sign(rand <a href="../../io/index.html">io</a>.<a href="../../io/index.html#Reader">Reader</a>, priv *<a href="index.html#PrivateKey">PrivateKey</a>, hash []<a href="../../builtin/index.html#byte">byte</a>) (r, s *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>, err <a href="../../builtin/index.html#error">error</a>)</pre>
+			<p>
+Sign signs an arbitrary length hash (which should be the result of hashing a
+larger message) using the private key, priv. It returns the signature as a
+pair of integers. The security of the private key depends on the entropy of
+rand.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Verify">func <a href="http://localhost:6060/src/crypto/ecdsa/ecdsa.go?s=5960:6020#L211">Verify</a></h2>
+			<pre>func Verify(pub *<a href="index.html#PublicKey">PublicKey</a>, hash []<a href="../../builtin/index.html#byte">byte</a>, r, s *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>) <a href="../../builtin/index.html#bool">bool</a></pre>
+			<p>
+Verify verifies the signature in r, s of hash using the public key, pub. Its
+return value records whether the signature is valid.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="PrivateKey">type <a href="http://localhost:6060/src/crypto/ecdsa/ecdsa.go?s=1378:1427#L42">PrivateKey</a></h2>
+			<pre>type PrivateKey struct {
+    <a href="index.html#PublicKey">PublicKey</a>
+    D *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>
+}</pre>
+			<p>
+PrivateKey represents a ECDSA private key.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="GenerateKey">func <a href="http://localhost:6060/src/crypto/ecdsa/ecdsa.go?s=2606:2686#L89">GenerateKey</a></h3>
+				<pre>func GenerateKey(c <a href="../elliptic/index.html">elliptic</a>.<a href="../elliptic/index.html#Curve">Curve</a>, rand <a href="../../io/index.html">io</a>.<a href="../../io/index.html#Reader">Reader</a>) (priv *<a href="index.html#PrivateKey">PrivateKey</a>, err <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+GenerateKey generates a public and private key pair.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="PrivateKey.Public">func (*PrivateKey) <a href="http://localhost:6060/src/crypto/ecdsa/ecdsa.go?s=1532:1581#L52">Public</a></h3>
+				<pre>func (priv *<a href="index.html#PrivateKey">PrivateKey</a>) Public() <a href="../index.html">crypto</a>.<a href="../index.html#PublicKey">PublicKey</a></pre>
+				<p>
+Public returns the public key corresponding to priv.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="PrivateKey.Sign">func (*PrivateKey) <a href="http://localhost:6060/src/crypto/ecdsa/ecdsa.go?s=1853:1949#L60">Sign</a></h3>
+				<pre>func (priv *<a href="index.html#PrivateKey">PrivateKey</a>) Sign(rand <a href="../../io/index.html">io</a>.<a href="../../io/index.html#Reader">Reader</a>, msg []<a href="../../builtin/index.html#byte">byte</a>, opts <a href="../index.html">crypto</a>.<a href="../index.html#SignerOpts">SignerOpts</a>) ([]<a href="../../builtin/index.html#byte">byte</a>, <a href="../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Sign signs msg with priv, reading randomness from rand. This method is
+intended to support keys where the private part is kept in, for example, a
+hardware module. Common uses should use the Sign function in this package
+directly.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="PublicKey">type <a href="http://localhost:6060/src/crypto/ecdsa/ecdsa.go?s=1274:1330#L36">PublicKey</a></h2>
+			<pre>type PublicKey struct {
+    <a href="../elliptic/index.html">elliptic</a>.<a href="../elliptic/index.html#Curve">Curve</a>
+    X, Y *<a href="../../math/big/index.html">big</a>.<a href="../../math/big/index.html#Int">Int</a>
+}</pre>
+			<p>
+PublicKey represents an ECDSA public key.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

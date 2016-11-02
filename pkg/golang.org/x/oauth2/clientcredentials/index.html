@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>clientcredentials - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package clientcredentials</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "golang.org/x/oauth2/clientcredentials"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package clientcredentials implements the OAuth2.0 &#34;client credentials&#34; token flow,
+also known as the &#34;two-legged OAuth 2.0&#34;.
+</p>
+<p>
+This should be used when the client is acting on its own behalf or when the client
+is the resource owner. It may also be used when requesting access to protected
+resources based on an authorization previously arranged with the authorization
+server.
+</p>
+<p>
+See <a href="http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.4">http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.4</a>
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+			
+				
+				<dd><a href="index.html#Config">type Config</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Config.Client">func (c *Config) Client(ctx context.Context) *http.Client</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Config.Token">func (c *Config) Token(ctx context.Context) (*oauth2.Token, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Config.TokenSource">func (c *Config) TokenSource(ctx context.Context) oauth2.TokenSource</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/golang.org/x/oauth2/clientcredentials/clientcredentials.go">clientcredentials.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+		
+			
+			
+			<h2 id="Config">type <a href="http://localhost:6060/src/golang.org/x/oauth2/clientcredentials/clientcredentials.go?s=1767:2106#L44">Config</a></h2>
+			<pre>type Config struct {
+    <span class="comment">// ClientID is the application&#39;s ID.</span>
+    ClientID <a href="../../../../builtin/index.html#string">string</a>
+
+    <span class="comment">// ClientSecret is the application&#39;s secret.</span>
+    ClientSecret <a href="../../../../builtin/index.html#string">string</a>
+
+    <span class="comment">// TokenURL is the resource server&#39;s token endpoint</span>
+    <span class="comment">// URL. This is a constant specific to each server.</span>
+    TokenURL <a href="../../../../builtin/index.html#string">string</a>
+
+    <span class="comment">// Scope specifies optional requested permissions.</span>
+    Scopes []<a href="../../../../builtin/index.html#string">string</a>
+}</pre>
+			<p>
+Client Credentials Config describes a 2-legged OAuth2 flow, with both the
+client application information and the server&#39;s endpoint URLs.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Config.Client">func (*Config) <a href="http://localhost:6060/src/golang.org/x/oauth2/clientcredentials/clientcredentials.go?s=2724:2781#L73">Client</a></h3>
+				<pre>func (c *<a href="index.html#Config">Config</a>) Client(ctx <a href="../../net/context/index.html">context</a>.<a href="../../net/context/index.html#Context">Context</a>) *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Client">Client</a></pre>
+				<p>
+Client returns an HTTP client using the provided token.
+The token will auto-refresh as necessary. The underlying
+HTTP transport will be obtained using the provided context.
+The returned client and its Transport should not be modified.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Config.Token">func (*Config) <a href="http://localhost:6060/src/golang.org/x/oauth2/clientcredentials/clientcredentials.go?s=2256:2322#L62">Token</a></h3>
+				<pre>func (c *<a href="index.html#Config">Config</a>) Token(ctx <a href="../../net/context/index.html">context</a>.<a href="../../net/context/index.html#Context">Context</a>) (*<a href="../index.html">oauth2</a>.<a href="../index.html#Token">Token</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Token uses client credentials to retrieve a token.
+The HTTP client to use is derived from the context.
+If nil, http.DefaultClient is used.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Config.TokenSource">func (*Config) <a href="http://localhost:6060/src/golang.org/x/oauth2/clientcredentials/clientcredentials.go?s=3066:3134#L82">TokenSource</a></h3>
+				<pre>func (c *<a href="index.html#Config">Config</a>) TokenSource(ctx <a href="../../net/context/index.html">context</a>.<a href="../../net/context/index.html#Context">Context</a>) <a href="../index.html">oauth2</a>.<a href="../index.html#TokenSource">TokenSource</a></pre>
+				<p>
+TokenSource returns a TokenSource that returns t until t expires,
+automatically refreshing it as necessary using the provided context and the
+client ID and client secret.
+</p>
+<p>
+Most users will use Config.Client instead.
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

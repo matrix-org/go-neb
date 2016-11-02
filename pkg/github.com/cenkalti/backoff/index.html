@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>backoff - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package backoff</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/cenkalti/backoff"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+				<dd><a href="index.html#pkg-examples" class="examplesLink">Examples</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package backoff implements backoff algorithms for retrying operations.
+</p>
+<p>
+Also has a Retry() helper for retrying operations that may fail.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="index.html#pkg-constants">Constants</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+				
+				<dd><a href="index.html#Retry">func Retry(o Operation, b BackOff) error</a></dd>
+			
+				
+				<dd><a href="index.html#RetryNotify">func RetryNotify(operation Operation, b BackOff, notify Notify) error</a></dd>
+			
+			
+				
+				<dd><a href="index.html#BackOff">type BackOff</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Clock">type Clock</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ConstantBackOff">type ConstantBackOff</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewConstantBackOff">func NewConstantBackOff(d time.Duration) *ConstantBackOff</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ConstantBackOff.NextBackOff">func (b *ConstantBackOff) NextBackOff() time.Duration</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ConstantBackOff.Reset">func (b *ConstantBackOff) Reset()</a></dd>
+				
+			
+				
+				<dd><a href="index.html#ExponentialBackOff">type ExponentialBackOff</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewExponentialBackOff">func NewExponentialBackOff() *ExponentialBackOff</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ExponentialBackOff.GetElapsedTime">func (b *ExponentialBackOff) GetElapsedTime() time.Duration</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ExponentialBackOff.NextBackOff">func (b *ExponentialBackOff) NextBackOff() time.Duration</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ExponentialBackOff.Reset">func (b *ExponentialBackOff) Reset()</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Notify">type Notify</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Operation">type Operation</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#StopBackOff">type StopBackOff</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#StopBackOff.NextBackOff">func (b *StopBackOff) NextBackOff() time.Duration</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#StopBackOff.Reset">func (b *StopBackOff) Reset()</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Ticker">type Ticker</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewTicker">func NewTicker(b BackOff) *Ticker</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Ticker.Stop">func (t *Ticker) Stop()</a></dd>
+				
+			
+				
+				<dd><a href="index.html#ZeroBackOff">type ZeroBackOff</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ZeroBackOff.NextBackOff">func (b *ZeroBackOff) NextBackOff() time.Duration</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ZeroBackOff.Reset">func (b *ZeroBackOff) Reset()</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+		<div id="pkg-examples">
+			<h4>Examples</h4>
+			<dl>
+			
+			<dd><a class="exampleLink" href="index.html#example_Retry">Retry</a></dd>
+			
+			<dd><a class="exampleLink" href="index.html#example_Ticker">Ticker</a></dd>
+			
+			</dl>
+		</div>
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/cenkalti/backoff/backoff.go">backoff.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/cenkalti/backoff/exponential.go">exponential.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/cenkalti/backoff/retry.go">retry.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/cenkalti/backoff/ticker.go">ticker.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const (
+    <span id="DefaultInitialInterval">DefaultInitialInterval</span>     = 500 * <a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Millisecond">Millisecond</a>
+    <span id="DefaultRandomizationFactor">DefaultRandomizationFactor</span> = 0.5
+    <span id="DefaultMultiplier">DefaultMultiplier</span>          = 1.5
+    <span id="DefaultMaxInterval">DefaultMaxInterval</span>         = 60 * <a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Second">Second</a>
+    <span id="DefaultMaxElapsedTime">DefaultMaxElapsedTime</span>      = 15 * <a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Minute">Minute</a>
+)</pre>
+				<p>
+Default values for ExponentialBackOff.
+</p>
+
+			
+				<pre>const <span id="Stop">Stop</span> <a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Duration">Duration</a> = -1</pre>
+				<p>
+Indicates that no more retries should be made for use in NextBackOff().
+</p>
+
+			
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var <span id="SystemClock">SystemClock</span> = systemClock{}</pre>
+				<p>
+SystemClock implements Clock interface that uses time.Now().
+</p>
+
+			
+		
+		
+			
+			
+			<h2 id="Retry">func <a href="http://localhost:6060/src/github.com/cenkalti/backoff/retry.go?s=767:807#L12">Retry</a></h2>
+			<pre>func Retry(o <a href="index.html#Operation">Operation</a>, b <a href="index.html#BackOff">BackOff</a>) <a href="../../../builtin/index.html#error">error</a></pre>
+			<p>
+Retry the operation o until it does not return error or BackOff stops.
+o is guaranteed to be run at least once.
+It is the caller&#39;s responsibility to reset b after Retry returns.
+</p>
+<p>
+Retry sleeps the goroutine for the duration returned by BackOff after a
+failed operation returns.
+</p>
+
+			<div id="example_Retry" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+operation := func() error {
+    <span class="comment">// An operation that might fail.</span>
+    return nil <span class="comment">// or return errors.New(&#34;some error&#34;)</span>
+}
+
+err := Retry(operation, NewExponentialBackOff())
+if err != nil {
+    <span class="comment">// Handle error.</span>
+    return err
+}
+
+<span class="comment">// Operation is successful.</span>
+return nil
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+
+		
+			
+			
+			<h2 id="RetryNotify">func <a href="http://localhost:6060/src/github.com/cenkalti/backoff/retry.go?s=954:1023#L16">RetryNotify</a></h2>
+			<pre>func RetryNotify(operation <a href="index.html#Operation">Operation</a>, b <a href="index.html#BackOff">BackOff</a>, notify <a href="index.html#Notify">Notify</a>) <a href="../../../builtin/index.html#error">error</a></pre>
+			<p>
+RetryNotify calls notify function with the error and wait duration
+for each failed attempt before sleep.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="BackOff">type <a href="http://localhost:6060/src/github.com/cenkalti/backoff/backoff.go?s=235:684#L1">BackOff</a></h2>
+			<pre>type BackOff interface {
+    <span class="comment">// NextBackOff returns the duration to wait before retrying the operation,</span>
+    <span class="comment">// or backoff.Stop to indicate that no more retries should be made.</span>
+    <span class="comment">//</span>
+    <span class="comment">// Example usage:</span>
+    <span class="comment">//</span>
+    <span class="comment">// 	duration := backoff.NextBackOff();</span>
+    <span class="comment">// 	if (duration == backoff.Stop) {</span>
+    <span class="comment">// 		// Do not retry operation.</span>
+    <span class="comment">// 	} else {</span>
+    <span class="comment">// 		// Sleep for duration and retry operation.</span>
+    <span class="comment">// 	}</span>
+    <span class="comment">//</span>
+    NextBackOff() <a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Duration">Duration</a>
+
+    <span class="comment">// Reset to initial state.</span>
+    Reset()
+}</pre>
+			<p>
+BackOff is a backoff policy for retrying an operation.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Clock">type <a href="http://localhost:6060/src/github.com/cenkalti/backoff/exponential.go?s=2287:2328#L59">Clock</a></h2>
+			<pre>type Clock interface {
+    Now() <a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Time">Time</a>
+}</pre>
+			<p>
+Clock is an interface that returns current time for BackOff.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ConstantBackOff">type <a href="http://localhost:6060/src/github.com/cenkalti/backoff/backoff.go?s=1583:1638#L40">ConstantBackOff</a></h2>
+			<pre>type ConstantBackOff struct {
+    Interval <a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Duration">Duration</a>
+}</pre>
+			<p>
+ConstantBackOff is a backoff policy that always returns the same backoff delay.
+This is in contrast to an exponential backoff policy,
+which returns a delay that grows longer as you call NextBackOff() over and over again.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewConstantBackOff">func <a href="http://localhost:6060/src/github.com/cenkalti/backoff/backoff.go?s=1774:1831#L47">NewConstantBackOff</a></h3>
+				<pre>func NewConstantBackOff(d <a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Duration">Duration</a>) *<a href="index.html#ConstantBackOff">ConstantBackOff</a></pre>
+				
+				
+				
+			
+
+			
+				
+				<h3 id="ConstantBackOff.NextBackOff">func (*ConstantBackOff) <a href="http://localhost:6060/src/github.com/cenkalti/backoff/backoff.go?s=1697:1750#L45">NextBackOff</a></h3>
+				<pre>func (b *<a href="index.html#ConstantBackOff">ConstantBackOff</a>) NextBackOff() <a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Duration">Duration</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="ConstantBackOff.Reset">func (*ConstantBackOff) <a href="http://localhost:6060/src/github.com/cenkalti/backoff/backoff.go?s=1640:1673#L44">Reset</a></h3>
+				<pre>func (b *<a href="index.html#ConstantBackOff">ConstantBackOff</a>) Reset()</pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ExponentialBackOff">type <a href="http://localhost:6060/src/github.com/cenkalti/backoff/exponential.go?s=1850:2221#L44">ExponentialBackOff</a></h2>
+			<pre>type ExponentialBackOff struct {
+    InitialInterval     <a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Duration">Duration</a>
+    RandomizationFactor <a href="../../../builtin/index.html#float64">float64</a>
+    Multiplier          <a href="../../../builtin/index.html#float64">float64</a>
+    MaxInterval         <a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Duration">Duration</a>
+    <span class="comment">// After MaxElapsedTime the ExponentialBackOff stops.</span>
+    <span class="comment">// It never stops if MaxElapsedTime == 0.</span>
+    MaxElapsedTime <a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Duration">Duration</a>
+    Clock          <a href="index.html#Clock">Clock</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+ExponentialBackOff is a backoff implementation that increases the backoff
+period for each retry attempt using a randomization function that grows exponentially.
+</p>
+<p>
+NextBackOff() is calculated using the following formula:
+</p>
+<pre>randomized interval =
+    RetryInterval * (random value in range [1 - RandomizationFactor, 1 + RandomizationFactor])
+</pre>
+<p>
+In other words NextBackOff() will range between the randomization factor
+percentage below and above the retry interval.
+</p>
+<p>
+For example, given the following parameters:
+</p>
+<pre>RetryInterval = 2
+RandomizationFactor = 0.5
+Multiplier = 2
+</pre>
+<p>
+the actual backoff period used in the next retry attempt will range between 1 and 3 seconds,
+multiplied by the exponential, that is, between 2 and 6 seconds.
+</p>
+<p>
+Note: MaxInterval caps the RetryInterval and not the randomized interval.
+</p>
+<p>
+If the time elapsed since an ExponentialBackOff instance is created goes past the
+MaxElapsedTime, then the method NextBackOff() starts returning backoff.Stop.
+</p>
+<p>
+The elapsed time can be reset by calling Reset().
+</p>
+<p>
+Example: Given the following default arguments, for 10 tries the sequence will be,
+and assuming we go over the MaxElapsedTime on the 10th try:
+</p>
+<pre>Request #  RetryInterval (seconds)  Randomized Interval (seconds)
+
+ 1          0.5                     [0.25,   0.75]
+ 2          0.75                    [0.375,  1.125]
+ 3          1.125                   [0.562,  1.687]
+ 4          1.687                   [0.8435, 2.53]
+ 5          2.53                    [1.265,  3.795]
+ 6          3.795                   [1.897,  5.692]
+ 7          5.692                   [2.846,  8.538]
+ 8          8.538                   [4.269, 12.807]
+ 9         12.807                   [6.403, 19.210]
+10         19.210                   backoff.Stop
+</pre>
+<p>
+Note: Implementation is not thread-safe.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewExponentialBackOff">func <a href="http://localhost:6060/src/github.com/cenkalti/backoff/exponential.go?s=2687:2735#L73">NewExponentialBackOff</a></h3>
+				<pre>func NewExponentialBackOff() *<a href="index.html#ExponentialBackOff">ExponentialBackOff</a></pre>
+				<p>
+NewExponentialBackOff creates an instance of ExponentialBackOff using default values.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="ExponentialBackOff.GetElapsedTime">func (*ExponentialBackOff) <a href="http://localhost:6060/src/github.com/cenkalti/backoff/exponential.go?s=4250:4309#L121">GetElapsedTime</a></h3>
+				<pre>func (b *<a href="index.html#ExponentialBackOff">ExponentialBackOff</a>) GetElapsedTime() <a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Duration">Duration</a></pre>
+				<p>
+GetElapsedTime returns the elapsed time since an ExponentialBackOff instance
+is created and is reset when Reset() is called.
+</p>
+<p>
+The elapsed time is computed using time.Now().UnixNano().
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ExponentialBackOff.NextBackOff">func (*ExponentialBackOff) <a href="http://localhost:6060/src/github.com/cenkalti/backoff/exponential.go?s=3716:3772#L108">NextBackOff</a></h3>
+				<pre>func (b *<a href="index.html#ExponentialBackOff">ExponentialBackOff</a>) NextBackOff() <a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Duration">Duration</a></pre>
+				<p>
+NextBackOff calculates the next backoff interval using the formula:
+</p>
+<pre>Randomized interval = RetryInterval +/- (RandomizationFactor * RetryInterval)
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="ExponentialBackOff.Reset">func (*ExponentialBackOff) <a href="http://localhost:6060/src/github.com/cenkalti/backoff/exponential.go?s=3453:3489#L101">Reset</a></h3>
+				<pre>func (b *<a href="index.html#ExponentialBackOff">ExponentialBackOff</a>) Reset()</pre>
+				<p>
+Reset the interval back to the initial retry interval and restarts the timer.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Notify">type <a href="http://localhost:6060/src/github.com/cenkalti/backoff/retry.go?s=433:471#L4">Notify</a></h2>
+			<pre>type Notify func(<a href="../../../builtin/index.html#error">error</a>, <a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Duration">Duration</a>)</pre>
+			<p>
+Notify is a notify-on-error function. It receives an operation error and
+backoff delay if the operation failed (with an error).
+</p>
+<p>
+NOTE that if the backoff policy stated to stop retrying,
+the notify function isn&#39;t called.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Operation">type <a href="http://localhost:6060/src/github.com/cenkalti/backoff/retry.go?s=170:197#L1">Operation</a></h2>
+			<pre>type Operation func() <a href="../../../builtin/index.html#error">error</a></pre>
+			<p>
+An Operation is executing by Retry() or RetryNotify().
+The operation will be retried using a backoff policy if it returns an error.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="StopBackOff">type <a href="http://localhost:6060/src/github.com/cenkalti/backoff/backoff.go?s=1225:1250#L31">StopBackOff</a></h2>
+			<pre>type StopBackOff struct{}</pre>
+			<p>
+StopBackOff is a fixed backoff policy that always returns backoff.Stop for
+NextBackOff(), meaning that the operation should never be retried.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="StopBackOff.NextBackOff">func (*StopBackOff) <a href="http://localhost:6060/src/github.com/cenkalti/backoff/backoff.go?s=1286:1335#L35">NextBackOff</a></h3>
+				<pre>func (b *<a href="index.html#StopBackOff">StopBackOff</a>) NextBackOff() <a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Duration">Duration</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="StopBackOff.Reset">func (*StopBackOff) <a href="http://localhost:6060/src/github.com/cenkalti/backoff/backoff.go?s=1252:1281#L33">Reset</a></h3>
+				<pre>func (b *<a href="index.html#StopBackOff">StopBackOff</a>) Reset()</pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Ticker">type <a href="http://localhost:6060/src/github.com/cenkalti/backoff/ticker.go?s=303:439#L3">Ticker</a></h2>
+			<pre>type Ticker struct {
+    C &lt;-chan <a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Time">Time</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Ticker holds a channel that delivers `ticks&#39; of a clock at times reported by a BackOff.
+</p>
+<p>
+Ticks will continue to arrive when the previous operation is still running,
+so operations that take a while to fail could run in quick succession.
+</p>
+
+
+			
+
+			
+
+			<div id="example_Ticker" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+operation := func() error {
+    <span class="comment">// An operation that might fail</span>
+    return nil <span class="comment">// or return errors.New(&#34;some error&#34;)</span>
+}
+
+b := NewExponentialBackOff()
+ticker := NewTicker(b)
+
+var err error
+
+<span class="comment">// Ticks will continue to arrive when the previous operation is still running,</span>
+<span class="comment">// so operations that take a while to fail could run in quick succession.</span>
+for _ = range ticker.C {
+    if err = operation(); err != nil {
+        log.Println(err, &#34;will retry...&#34;)
+        continue
+    }
+
+    ticker.Stop()
+    break
+}
+
+if err != nil {
+    <span class="comment">// Operation has failed.</span>
+    return err
+}
+
+<span class="comment">// Operation is successful.</span>
+return nil
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+			
+
+			
+				
+				<h3 id="NewTicker">func <a href="http://localhost:6060/src/github.com/cenkalti/backoff/ticker.go?s=681:714#L14">NewTicker</a></h3>
+				<pre>func NewTicker(b <a href="index.html#BackOff">BackOff</a>) *<a href="index.html#Ticker">Ticker</a></pre>
+				<p>
+NewTicker returns a new Ticker containing a channel that will send the time at times
+specified by the BackOff argument. Ticker is guaranteed to tick at least once.
+The channel is closed when Stop method is called or BackOff stops.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Ticker.Stop">func (*Ticker) <a href="http://localhost:6060/src/github.com/cenkalti/backoff/ticker.go?s=958:981#L28">Stop</a></h3>
+				<pre>func (t *<a href="index.html#Ticker">Ticker</a>) Stop()</pre>
+				<p>
+Stop turns off a ticker. After Stop, no more ticks will be sent.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ZeroBackOff">type <a href="http://localhost:6060/src/github.com/cenkalti/backoff/backoff.go?s=952:977#L23">ZeroBackOff</a></h2>
+			<pre>type ZeroBackOff struct{}</pre>
+			<p>
+ZeroBackOff is a fixed backoff policy whose backoff time is always zero,
+meaning that the operation is retried immediately without waiting, indefinitely.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ZeroBackOff.NextBackOff">func (*ZeroBackOff) <a href="http://localhost:6060/src/github.com/cenkalti/backoff/backoff.go?s=1013:1062#L27">NextBackOff</a></h3>
+				<pre>func (b *<a href="index.html#ZeroBackOff">ZeroBackOff</a>) NextBackOff() <a href="../../../time/index.html">time</a>.<a href="../../../time/index.html#Duration">Duration</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="ZeroBackOff.Reset">func (*ZeroBackOff) <a href="http://localhost:6060/src/github.com/cenkalti/backoff/backoff.go?s=979:1008#L25">Reset</a></h3>
+				<pre>func (b *<a href="index.html#ZeroBackOff">ZeroBackOff</a>) Reset()</pre>
+				
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

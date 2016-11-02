@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>table - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package table</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/syndtr/goleveldb/leveldb/table"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package table allows read and write sorted key/value.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+			
+				
+				<dd><a href="index.html#ErrCorrupted">type ErrCorrupted</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ErrCorrupted.Error">func (e *ErrCorrupted) Error() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Reader">type Reader</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewReader">func NewReader(f io.ReaderAt, size int64, fd storage.FileDesc, cache *cache.NamespaceGetter, bpool *util.BufferPool, o *opt.Options) (*Reader, error)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Reader.Find">func (r *Reader) Find(key []byte, filtered bool, ro *opt.ReadOptions) (rkey, value []byte, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Reader.FindKey">func (r *Reader) FindKey(key []byte, filtered bool, ro *opt.ReadOptions) (rkey []byte, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Reader.Get">func (r *Reader) Get(key []byte, ro *opt.ReadOptions) (value []byte, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Reader.NewIterator">func (r *Reader) NewIterator(slice *util.Range, ro *opt.ReadOptions) iterator.Iterator</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Reader.OffsetOf">func (r *Reader) OffsetOf(key []byte) (offset int64, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Reader.Release">func (r *Reader) Release()</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Writer">type Writer</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewWriter">func NewWriter(f io.Writer, o *opt.Options) *Writer</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Writer.Append">func (w *Writer) Append(key, value []byte) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Writer.BlocksLen">func (w *Writer) BlocksLen() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Writer.BytesLen">func (w *Writer) BytesLen() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Writer.Close">func (w *Writer) Close() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Writer.EntriesLen">func (w *Writer) EntriesLen() int</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/table/reader.go">reader.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/table/table.go">table.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/table/writer.go">writer.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var (
+    <span id="ErrNotFound">ErrNotFound</span>       = <a href="../errors/index.html">errors</a>.<a href="../errors/index.html#ErrNotFound">ErrNotFound</a>
+    <span id="ErrReaderReleased">ErrReaderReleased</span> = <a href="../errors/index.html">errors</a>.<a href="../errors/index.html#New">New</a>(&#34;leveldb/table: reader released&#34;)
+    <span id="ErrIterReleased">ErrIterReleased</span>   = <a href="../errors/index.html">errors</a>.<a href="../errors/index.html#New">New</a>(&#34;leveldb/table: iterator released&#34;)
+)</pre>
+				<p>
+Reader errors.
+</p>
+
+			
+		
+		
+		
+			
+			
+			<h2 id="ErrCorrupted">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/table/reader.go?s=986:1072#L28">ErrCorrupted</a></h2>
+			<pre>type ErrCorrupted struct {
+    Pos    <a href="../../../../../builtin/index.html#int64">int64</a>
+    Size   <a href="../../../../../builtin/index.html#int64">int64</a>
+    Kind   <a href="../../../../../builtin/index.html#string">string</a>
+    Reason <a href="../../../../../builtin/index.html#string">string</a>
+}</pre>
+			<p>
+ErrCorrupted describes error due to corruption. This error will be wrapped
+with errors.ErrCorrupted.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ErrCorrupted.Error">func (*ErrCorrupted) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/table/reader.go?s=1074:1111#L35">Error</a></h3>
+				<pre>func (e *<a href="index.html#ErrCorrupted">ErrCorrupted</a>) Error() <a href="../../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Reader">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/table/reader.go?s=11326:11757#L501">Reader</a></h2>
+			<pre>type Reader struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Reader is a table reader.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewReader">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/table/reader.go?s=24837:24986#L1010">NewReader</a></h3>
+				<pre>func NewReader(f <a href="../../../../../io/index.html">io</a>.<a href="../../../../../io/index.html#ReaderAt">ReaderAt</a>, size <a href="../../../../../builtin/index.html#int64">int64</a>, fd <a href="../storage/index.html">storage</a>.<a href="../storage/index.html#FileDesc">FileDesc</a>, cache *<a href="../cache/index.html">cache</a>.<a href="../cache/index.html#NamespaceGetter">NamespaceGetter</a>, bpool *<a href="../util/index.html">util</a>.<a href="../util/index.html#BufferPool">BufferPool</a>, o *<a href="../opt/index.html">opt</a>.<a href="../opt/index.html#Options">Options</a>) (*<a href="index.html#Reader">Reader</a>, <a href="../../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+NewReader creates a new initialized table reader for the file.
+The fi, cache and bpool is optional and can be nil.
+</p>
+<p>
+The returned table reader instance is safe for concurrent use.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Reader.Find">func (*Reader) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/table/reader.go?s=22053:22154#L906">Find</a></h3>
+				<pre>func (r *<a href="index.html#Reader">Reader</a>) Find(key []<a href="../../../../../builtin/index.html#byte">byte</a>, filtered <a href="../../../../../builtin/index.html#bool">bool</a>, ro *<a href="../opt/index.html">opt</a>.<a href="../opt/index.html#ReadOptions">ReadOptions</a>) (rkey, value []<a href="../../../../../builtin/index.html#byte">byte</a>, err <a href="../../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Find finds key/value pair whose key is greater than or equal to the
+given key. It returns ErrNotFound if the table doesn&#39;t contain
+such pair.
+If filtered is true then the nearest &#39;block&#39; will be checked against
+&#39;filter data&#39; (if present) and will immediately return ErrNotFound if
+&#39;filter data&#39; indicates that such pair doesn&#39;t exist.
+</p>
+<p>
+The caller may modify the contents of the returned slice as it is its
+own copy.
+It is safe to modify the contents of the argument after Find returns.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Reader.FindKey">func (*Reader) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/table/reader.go?s=22698:22795#L919">FindKey</a></h3>
+				<pre>func (r *<a href="index.html#Reader">Reader</a>) FindKey(key []<a href="../../../../../builtin/index.html#byte">byte</a>, filtered <a href="../../../../../builtin/index.html#bool">bool</a>, ro *<a href="../opt/index.html">opt</a>.<a href="../opt/index.html#ReadOptions">ReadOptions</a>) (rkey []<a href="../../../../../builtin/index.html#byte">byte</a>, err <a href="../../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+FindKey finds key that is greater than or equal to the given key.
+It returns ErrNotFound if the table doesn&#39;t contain such key.
+If filtered is true then the nearest &#39;block&#39; will be checked against
+&#39;filter data&#39; (if present) and will immediately return ErrNotFound if
+&#39;filter data&#39; indicates that such key doesn&#39;t exist.
+</p>
+<p>
+The caller may modify the contents of the returned slice as it is its
+own copy.
+It is safe to modify the contents of the argument after Find returns.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Reader.Get">func (*Reader) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/table/reader.go?s=23132:23211#L930">Get</a></h3>
+				<pre>func (r *<a href="index.html#Reader">Reader</a>) Get(key []<a href="../../../../../builtin/index.html#byte">byte</a>, ro *<a href="../opt/index.html">opt</a>.<a href="../opt/index.html#ReadOptions">ReadOptions</a>) (value []<a href="../../../../../builtin/index.html#byte">byte</a>, err <a href="../../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Get gets the value for the given key. It returns errors.ErrNotFound
+if the table does not contain the key.
+</p>
+<p>
+The caller may modify the contents of the returned slice as it is its
+own copy.
+It is safe to modify the contents of the argument after Find returns.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Reader.NewIterator">func (*Reader) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/table/reader.go?s=18924:19010#L783">NewIterator</a></h3>
+				<pre>func (r *<a href="index.html#Reader">Reader</a>) NewIterator(slice *<a href="../util/index.html">util</a>.<a href="../util/index.html#Range">Range</a>, ro *<a href="../opt/index.html">opt</a>.<a href="../opt/index.html#ReadOptions">ReadOptions</a>) <a href="../iterator/index.html">iterator</a>.<a href="../iterator/index.html#Iterator">Iterator</a></pre>
+				<p>
+NewIterator creates an iterator from the table.
+</p>
+<p>
+Slice allows slicing the iterator to only contains keys in the given
+range. A nil Range.Start is treated as a key before all keys in the
+table. And a nil Range.Limit is treated as a key after all keys in
+the table.
+</p>
+<p>
+The returned iterator is not safe for concurrent use and should be released
+after use.
+</p>
+<p>
+Also read Iterator documentation of the leveldb/iterator package.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Reader.OffsetOf">func (*Reader) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/table/reader.go?s=23579:23642#L950">OffsetOf</a></h3>
+				<pre>func (r *<a href="index.html#Reader">Reader</a>) OffsetOf(key []<a href="../../../../../builtin/index.html#byte">byte</a>) (offset <a href="../../../../../builtin/index.html#int64">int64</a>, err <a href="../../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+OffsetOf returns approximate offset for the given key.
+</p>
+<p>
+It is safe to modify the contents of the argument after Get returns.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Reader.Release">func (*Reader) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/table/reader.go?s=24289:24315#L985">Release</a></h3>
+				<pre>func (r *<a href="index.html#Reader">Reader</a>) Release()</pre>
+				<p>
+Release implements util.Releaser.
+It also close the file if it is an io.Closer.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Writer">type <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/table/writer.go?s=2846:3425#L129">Writer</a></h2>
+			<pre>type Writer struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Writer is a table writer.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewWriter">func <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/table/writer.go?s=8384:8435#L343">NewWriter</a></h3>
+				<pre>func NewWriter(f <a href="../../../../../io/index.html">io</a>.<a href="../../../../../io/index.html#Writer">Writer</a>, o *<a href="../opt/index.html">opt</a>.<a href="../opt/index.html#Options">Options</a>) *<a href="index.html#Writer">Writer</a></pre>
+				<p>
+NewWriter creates a new initialized table writer for the file.
+</p>
+<p>
+Table writer is not safe for concurrent use.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Writer.Append">func (*Writer) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/table/writer.go?s=5579:5627#L227">Append</a></h3>
+				<pre>func (w *<a href="index.html#Writer">Writer</a>) Append(key, value []<a href="../../../../../builtin/index.html#byte">byte</a>) <a href="../../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Append appends key/value pair to the table. The keys passed must
+be in increasing order.
+</p>
+<p>
+It is safe to modify the contents of the arguments after Append returns.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Writer.BlocksLen">func (*Writer) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/table/writer.go?s=6290:6322#L254">BlocksLen</a></h3>
+				<pre>func (w *<a href="index.html#Writer">Writer</a>) BlocksLen() <a href="../../../../../builtin/index.html#int">int</a></pre>
+				<p>
+BlocksLen returns number of blocks written so far.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Writer.BytesLen">func (*Writer) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/table/writer.go?s=6601:6632#L269">BytesLen</a></h3>
+				<pre>func (w *<a href="index.html#Writer">Writer</a>) BytesLen() <a href="../../../../../builtin/index.html#int">int</a></pre>
+				<p>
+BytesLen returns number of bytes written so far.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Writer.Close">func (*Writer) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/table/writer.go?s=6810:6840#L276">Close</a></h3>
+				<pre>func (w *<a href="index.html#Writer">Writer</a>) Close() <a href="../../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Close will finalize the table. Calling Append is not possible
+after Close, but calling BlocksLen, EntriesLen and BytesLen
+is still possible.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Writer.EntriesLen">func (*Writer) <a href="http://localhost:6060/src/github.com/syndtr/goleveldb/leveldb/table/writer.go?s=6491:6524#L264">EntriesLen</a></h3>
+				<pre>func (w *<a href="index.html#Writer">Writer</a>) EntriesLen() <a href="../../../../../builtin/index.html#int">int</a></pre>
+				<p>
+EntriesLen returns number of entries added so far.
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

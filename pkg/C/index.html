@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>cgo - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Command cgo</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<p>
+Cgo enables the creation of Go packages that call C code.
+</p>
+<h3 id="hdr-Using_cgo_with_the_go_command">Using cgo with the go command</h3>
+<p>
+To use cgo write normal Go code that imports a pseudo-package &#34;C&#34;.
+The Go code can then refer to types such as C.size_t, variables such
+as C.stdout, or functions such as C.putchar.
+</p>
+<p>
+If the import of &#34;C&#34; is immediately preceded by a comment, that
+comment, called the preamble, is used as a header when compiling
+the C parts of the package.  For example:
+</p>
+<pre>// #include &lt;stdio.h&gt;
+// #include &lt;errno.h&gt;
+import &#34;C&#34;
+</pre>
+<p>
+The preamble may contain any C code, including function and variable
+declarations and definitions.  These may then be referred to from Go
+code as though they were defined in the package &#34;C&#34;.  All names
+declared in the preamble may be used, even if they start with a
+lower-case letter.  Exception: static variables in the preamble may
+not be referenced from Go code; static functions are permitted.
+</p>
+<p>
+See $GOROOT/misc/cgo/stdio and $GOROOT/misc/cgo/gmp for examples.  See
+&#34;C? Go? Cgo!&#34; for an introduction to using cgo:
+<a href="https://golang.org/doc/articles/c_go_cgo.html">https://golang.org/doc/articles/c_go_cgo.html</a>.
+</p>
+<p>
+CFLAGS, CPPFLAGS, CXXFLAGS and LDFLAGS may be defined with pseudo #cgo
+directives within these comments to tweak the behavior of the C or C++
+compiler.  Values defined in multiple directives are concatenated
+together.  The directive can include a list of build constraints limiting its
+effect to systems satisfying one of the constraints
+(see <a href="https://golang.org/pkg/go/build/#hdr-Build_Constraints">https://golang.org/pkg/go/build/#hdr-Build_Constraints</a> for details about the constraint syntax).
+For example:
+</p>
+<pre>// #cgo CFLAGS: -DPNG_DEBUG=1
+// #cgo amd64 386 CFLAGS: -DX86=1
+// #cgo LDFLAGS: -lpng
+// #include &lt;png.h&gt;
+import &#34;C&#34;
+</pre>
+<p>
+Alternatively, CPPFLAGS and LDFLAGS may be obtained via the pkg-config
+tool using a &#39;#cgo pkg-config:&#39; directive followed by the package names.
+For example:
+</p>
+<pre>// #cgo pkg-config: png cairo
+// #include &lt;png.h&gt;
+import &#34;C&#34;
+</pre>
+<p>
+When building, the CGO_CFLAGS, CGO_CPPFLAGS, CGO_CXXFLAGS and
+CGO_LDFLAGS environment variables are added to the flags derived from
+these directives.  Package-specific flags should be set using the
+directives, not the environment variables, so that builds work in
+unmodified environments.
+</p>
+<p>
+All the cgo CPPFLAGS and CFLAGS directives in a package are concatenated and
+used to compile C files in that package.  All the CPPFLAGS and CXXFLAGS
+directives in a package are concatenated and used to compile C++ files in that
+package.  All the LDFLAGS directives in any package in the program are
+concatenated and used at link time.  All the pkg-config directives are
+concatenated and sent to pkg-config simultaneously to add to each appropriate
+set of command-line flags.
+</p>
+<p>
+When the cgo directives are parsed, any occurrence of the string ${SRCDIR}
+will be replaced by the absolute path to the directory containing the source
+file. This allows pre-compiled static libraries to be included in the package
+directory and linked properly.
+For example if package foo is in the directory /go/src/foo:
+</p>
+<pre>// #cgo LDFLAGS: -L${SRCDIR}/libs -lfoo
+</pre>
+<p>
+Will be expanded to:
+</p>
+<pre>// #cgo LDFLAGS: -L/go/src/foo/libs -lfoo
+</pre>
+<p>
+When the Go tool sees that one or more Go files use the special import
+&#34;C&#34;, it will look for other non-Go files in the directory and compile
+them as part of the Go package.  Any .c, .s, or .S files will be
+compiled with the C compiler.  Any .cc, .cpp, or .cxx files will be
+compiled with the C++ compiler.  Any .h, .hh, .hpp, or .hxx files will
+not be compiled separately, but, if these header files are changed,
+the C and C++ files will be recompiled.  The default C and C++
+compilers may be changed by the CC and CXX environment variables,
+respectively; those environment variables may include command line
+options.
+</p>
+<p>
+The cgo tool is enabled by default for native builds on systems where
+it is expected to work.  It is disabled by default when
+cross-compiling.  You can control this by setting the CGO_ENABLED
+environment variable when running the go tool: set it to 1 to enable
+the use of cgo, and to 0 to disable it.  The go tool will set the
+build constraint &#34;cgo&#34; if cgo is enabled.
+</p>
+<p>
+When cross-compiling, you must specify a C cross-compiler for cgo to
+use.  You can do this by setting the CC_FOR_TARGET environment
+variable when building the toolchain using make.bash, or by setting
+the CC environment variable any time you run the go tool.  The
+CXX_FOR_TARGET and CXX environment variables work in a similar way for
+C++ code.
+</p>
+<h3 id="hdr-Go_references_to_C">Go references to C</h3>
+<p>
+Within the Go file, C&#39;s struct field names that are keywords in Go
+can be accessed by prefixing them with an underscore: if x points at a C
+struct with a field named &#34;type&#34;, x._type accesses the field.
+C struct fields that cannot be expressed in Go, such as bit fields
+or misaligned data, are omitted in the Go struct, replaced by
+appropriate padding to reach the next field or the end of the struct.
+</p>
+<p>
+The standard C numeric types are available under the names
+C.char, C.schar (signed char), C.uchar (unsigned char),
+C.short, C.ushort (unsigned short), C.int, C.uint (unsigned int),
+C.long, C.ulong (unsigned long), C.longlong (long long),
+C.ulonglong (unsigned long long), C.float, C.double,
+C.complexfloat (complex float), and C.complexdouble (complex double).
+The C type void* is represented by Go&#39;s unsafe.Pointer.
+The C types __int128_t and __uint128_t are represented by [16]byte.
+</p>
+<p>
+To access a struct, union, or enum type directly, prefix it with
+struct_, union_, or enum_, as in C.struct_stat.
+</p>
+<p>
+The size of any C type T is available as C.sizeof_T, as in
+C.sizeof_struct_stat.
+</p>
+<p>
+As Go doesn&#39;t have support for C&#39;s union type in the general case,
+C&#39;s union types are represented as a Go byte array with the same length.
+</p>
+<p>
+Go structs cannot embed fields with C types.
+</p>
+<p>
+Go code can not refer to zero-sized fields that occur at the end of
+non-empty C structs.  To get the address of such a field (which is the
+only operation you can do with a zero-sized field) you must take the
+address of the struct and add the size of the struct.
+</p>
+<p>
+Cgo translates C types into equivalent unexported Go types.
+Because the translations are unexported, a Go package should not
+expose C types in its exported API: a C type used in one Go package
+is different from the same C type used in another.
+</p>
+<p>
+Any C function (even void functions) may be called in a multiple
+assignment context to retrieve both the return value (if any) and the
+C errno variable as an error (use _ to skip the result value if the
+function returns void).  For example:
+</p>
+<pre>n, err := C.sqrt(-1)
+_, err := C.voidFunc()
+</pre>
+<p>
+Calling C function pointers is currently not supported, however you can
+declare Go variables which hold C function pointers and pass them
+back and forth between Go and C. C code may call function pointers
+received from Go. For example:
+</p>
+<pre>package main
+
+// typedef int (*intFunc) ();
+//
+// int
+// bridge_int_func(intFunc f)
+// {
+//		return f();
+// }
+//
+// int fortytwo()
+// {
+//	    return 42;
+// }
+import &#34;C&#34;
+import &#34;fmt&#34;
+
+func main() {
+	f := C.intFunc(C.fortytwo)
+	fmt.Println(int(C.bridge_int_func(f)))
+	// Output: 42
+}
+</pre>
+<p>
+In C, a function argument written as a fixed size array
+actually requires a pointer to the first element of the array.
+C compilers are aware of this calling convention and adjust
+the call accordingly, but Go cannot.  In Go, you must pass
+the pointer to the first element explicitly: C.f(&amp;C.x[0]).
+</p>
+<p>
+A few special functions convert between Go and C types
+by making copies of the data.  In pseudo-Go definitions:
+</p>
+<pre>// Go string to C string
+// The C string is allocated in the C heap using malloc.
+// It is the caller&#39;s responsibility to arrange for it to be
+// freed, such as by calling C.free (be sure to include stdlib.h
+// if C.free is needed).
+func C.CString(string) *C.char
+
+// C string to Go string
+func C.GoString(*C.char) string
+
+// C data with explicit length to Go string
+func C.GoStringN(*C.char, C.int) string
+
+// C data with explicit length to Go []byte
+func C.GoBytes(unsafe.Pointer, C.int) []byte
+</pre>
+<h3 id="hdr-C_references_to_Go">C references to Go</h3>
+<p>
+Go functions can be exported for use by C code in the following way:
+</p>
+<pre>//export MyFunction
+func MyFunction(arg1, arg2 int, arg3 string) int64 {...}
+
+//export MyFunction2
+func MyFunction2(arg1, arg2 int, arg3 string) (int64, *C.char) {...}
+</pre>
+<p>
+They will be available in the C code as:
+</p>
+<pre>extern int64 MyFunction(int arg1, int arg2, GoString arg3);
+extern struct MyFunction2_return MyFunction2(int arg1, int arg2, GoString arg3);
+</pre>
+<p>
+found in the _cgo_export.h generated header, after any preambles
+copied from the cgo input files. Functions with multiple
+return values are mapped to functions returning a struct.
+Not all Go types can be mapped to C types in a useful way.
+</p>
+<p>
+Using //export in a file places a restriction on the preamble:
+since it is copied into two different C output files, it must not
+contain any definitions, only declarations. If a file contains both
+definitions and declarations, then the two output files will produce
+duplicate symbols and the linker will fail. To avoid this, definitions
+must be placed in preambles in other files, or in C source files.
+</p>
+<h3 id="hdr-Passing_pointers">Passing pointers</h3>
+<p>
+Go is a garbage collected language, and the garbage collector needs to
+know the location of every pointer to Go memory.  Because of this,
+there are restrictions on passing pointers between Go and C.
+</p>
+<p>
+In this section the term Go pointer means a pointer to memory
+allocated by Go (such as by using the &amp; operator or calling the
+predefined new function) and the term C pointer means a pointer to
+memory allocated by C (such as by a call to C.malloc).  Whether a
+pointer is a Go pointer or a C pointer is a dynamic property
+determined by how the memory was allocated; it has nothing to do with
+the type of the pointer.
+</p>
+<p>
+Go code may pass a Go pointer to C provided the Go memory to which it
+points does not contain any Go pointers.  The C code must preserve
+this property: it must not store any Go pointers in Go memory, even
+temporarily.  When passing a pointer to a field in a struct, the Go
+memory in question is the memory occupied by the field, not the entire
+struct.  When passing a pointer to an element in an array or slice,
+the Go memory in question is the entire array or the entire backing
+array of the slice.
+</p>
+<p>
+C code may not keep a copy of a Go pointer after the call returns.
+</p>
+<p>
+A Go function called by C code may not return a Go pointer.  A Go
+function called by C code may take C pointers as arguments, and it may
+store non-pointer or C pointer data through those pointers, but it may
+not store a Go pointer in memory pointed to by a C pointer.  A Go
+function called by C code may take a Go pointer as an argument, but it
+must preserve the property that the Go memory to which it points does
+not contain any Go pointers.
+</p>
+<p>
+Go code may not store a Go pointer in C memory.  C code may store Go
+pointers in C memory, subject to the rule above: it must stop storing
+the Go pointer when the C function returns.
+</p>
+<p>
+These rules are checked dynamically at runtime.  The checking is
+controlled by the cgocheck setting of the GODEBUG environment
+variable.  The default setting is GODEBUG=cgocheck=1, which implements
+reasonably cheap dynamic checks.  These checks may be disabled
+entirely using GODEBUG=cgocheck=0.  Complete checking of pointer
+handling, at some cost in run time, is available via GODEBUG=cgocheck=2.
+</p>
+<p>
+It is possible to defeat this enforcement by using the unsafe package,
+and of course there is nothing stopping the C code from doing anything
+it likes.  However, programs that break these rules are likely to fail
+in unexpected and unpredictable ways.
+</p>
+<h3 id="hdr-Using_cgo_directly">Using cgo directly</h3>
+<p>
+Usage:
+</p>
+<pre>go tool cgo [cgo options] [-- compiler options] gofiles...
+</pre>
+<p>
+Cgo transforms the specified input Go source files into several output
+Go and C source files.
+</p>
+<p>
+The compiler options are passed through uninterpreted when
+invoking the C compiler to compile the C parts of the package.
+</p>
+<p>
+The following options are available when running cgo directly:
+</p>
+<pre>-dynimport file
+	Write list of symbols imported by file. Write to
+	-dynout argument or to standard output. Used by go
+	build when building a cgo package.
+-dynout file
+	Write -dynimport output to file.
+-dynpackage package
+	Set Go package for -dynimport output.
+-dynlinker
+	Write dynamic linker as part of -dynimport output.
+-godefs
+	Write out input file in Go syntax replacing C package
+	names with real values. Used to generate files in the
+	syscall package when bootstrapping a new target.
+-objdir directory
+	Put all generated files in directory.
+-importpath string
+	The import path for the Go package. Optional; used for
+	nicer comments in the generated files.
+-exportheader file
+	If there are any exported functions, write the
+	generated export declarations to file.
+	C code can #include this to see the declarations.
+-gccgo
+	Generate output for the gccgo compiler rather than the
+	gc compiler.
+-gccgoprefix prefix
+	The -fgo-prefix option to be used with gccgo.
+-gccgopkgpath path
+	The -fgo-pkgpath option to be used with gccgo.
+-import_runtime_cgo
+	If set (which it is by default) import runtime/cgo in
+	generated output.
+-import_syscall
+	If set (which it is by default) import syscall in
+	generated output.
+-debug-define
+	Debugging option. Print #defines.
+-debug-gcc
+	Debugging option. Trace C compiler execution and output.
+</pre>
+
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

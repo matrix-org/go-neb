@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>memcache - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package memcache</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/bradfitz/gomemcache/memcache"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package memcache provides a client for the memcached cache server.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="index.html#pkg-constants">Constants</a></dd>
+			
+			
+				<dd><a href="index.html#pkg-variables">Variables</a></dd>
+			
+			
+			
+				
+				<dd><a href="index.html#Client">type Client</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#New">func New(server ...string) *Client</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewFromSelector">func NewFromSelector(ss ServerSelector) *Client</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.Add">func (c *Client) Add(item *Item) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.CompareAndSwap">func (c *Client) CompareAndSwap(item *Item) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.Decrement">func (c *Client) Decrement(key string, delta uint64) (newValue uint64, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.Delete">func (c *Client) Delete(key string) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.DeleteAll">func (c *Client) DeleteAll() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.FlushAll">func (c *Client) FlushAll() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.Get">func (c *Client) Get(key string) (item *Item, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.GetMulti">func (c *Client) GetMulti(keys []string) (map[string]*Item, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.Increment">func (c *Client) Increment(key string, delta uint64) (newValue uint64, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.Replace">func (c *Client) Replace(item *Item) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.Set">func (c *Client) Set(item *Item) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Client.Touch">func (c *Client) Touch(key string, seconds int32) (err error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#ConnectTimeoutError">type ConnectTimeoutError</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ConnectTimeoutError.Error">func (cte *ConnectTimeoutError) Error() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Item">type Item</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#ServerList">type ServerList</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ServerList.Each">func (ss *ServerList) Each(f func(net.Addr) error) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ServerList.PickServer">func (ss *ServerList) PickServer(key string) (net.Addr, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#ServerList.SetServers">func (ss *ServerList) SetServers(servers ...string) error</a></dd>
+				
+			
+				
+				<dd><a href="index.html#ServerSelector">type ServerSelector</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/bradfitz/gomemcache/memcache/memcache.go">memcache.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/bradfitz/gomemcache/memcache/selector.go">selector.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const <span id="DefaultTimeout">DefaultTimeout</span> = 100 * <a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Millisecond">Millisecond</a></pre>
+				<p>
+DefaultTimeout is the default socket read/write timeout.
+</p>
+
+			
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var (
+    <span class="comment">// ErrCacheMiss means that a Get failed because the item wasn&#39;t present.</span>
+    <span id="ErrCacheMiss">ErrCacheMiss</span> = <a href="../../../../errors/index.html">errors</a>.<a href="../../../../errors/index.html#New">New</a>(&#34;memcache: cache miss&#34;)
+
+    <span class="comment">// ErrCASConflict means that a CompareAndSwap call failed due to the</span>
+    <span class="comment">// cached value being modified between the Get and the CompareAndSwap.</span>
+    <span class="comment">// If the cached value was simply evicted rather than replaced,</span>
+    <span class="comment">// ErrNotStored will be returned instead.</span>
+    <span id="ErrCASConflict">ErrCASConflict</span> = <a href="../../../../errors/index.html">errors</a>.<a href="../../../../errors/index.html#New">New</a>(&#34;memcache: compare-and-swap conflict&#34;)
+
+    <span class="comment">// ErrNotStored means that a conditional write operation (i.e. Add or</span>
+    <span class="comment">// CompareAndSwap) failed because the condition was not satisfied.</span>
+    <span id="ErrNotStored">ErrNotStored</span> = <a href="../../../../errors/index.html">errors</a>.<a href="../../../../errors/index.html#New">New</a>(&#34;memcache: item not stored&#34;)
+
+    <span class="comment">// ErrServer means that a server error occurred.</span>
+    <span id="ErrServerError">ErrServerError</span> = <a href="../../../../errors/index.html">errors</a>.<a href="../../../../errors/index.html#New">New</a>(&#34;memcache: server error&#34;)
+
+    <span class="comment">// ErrNoStats means that no statistics were available.</span>
+    <span id="ErrNoStats">ErrNoStats</span> = <a href="../../../../errors/index.html">errors</a>.<a href="../../../../errors/index.html#New">New</a>(&#34;memcache: no statistics available&#34;)
+
+    <span class="comment">// ErrMalformedKey is returned when an invalid key is used.</span>
+    <span class="comment">// Keys must be at maximum 250 bytes long, ASCII, and not</span>
+    <span class="comment">// contain whitespace or control characters.</span>
+    <span id="ErrMalformedKey">ErrMalformedKey</span> = <a href="../../../../errors/index.html">errors</a>.<a href="../../../../errors/index.html#New">New</a>(&#34;malformed: key is too long or contains invalid characters&#34;)
+
+    <span class="comment">// ErrNoServers is returned when no servers are configured or available.</span>
+    <span id="ErrNoServers">ErrNoServers</span> = <a href="../../../../errors/index.html">errors</a>.<a href="../../../../errors/index.html#New">New</a>(&#34;memcache: no servers configured or available&#34;)
+)</pre>
+				
+			
+		
+		
+		
+			
+			
+			<h2 id="Client">type <a href="http://localhost:6060/src/github.com/bradfitz/gomemcache/memcache/memcache.go?s=4015:4227#L121">Client</a></h2>
+			<pre>type Client struct {
+    <span class="comment">// Timeout specifies the socket read/write timeout.</span>
+    <span class="comment">// If zero, DefaultTimeout is used.</span>
+    Timeout <a href="../../../../time/index.html">time</a>.<a href="../../../../time/index.html#Duration">Duration</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Client is a memcache client.
+It is safe for unlocked use by multiple concurrent goroutines.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="New">func <a href="http://localhost:6060/src/github.com/bradfitz/gomemcache/memcache/memcache.go?s=3642:3676#L108">New</a></h3>
+				<pre>func New(server ...<a href="../../../../builtin/index.html#string">string</a>) *<a href="index.html#Client">Client</a></pre>
+				<p>
+New returns a memcache client using the provided server(s)
+with equal weight. If a server is listed multiple times,
+it gets a proportional amount of weight.
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewFromSelector">func <a href="http://localhost:6060/src/github.com/bradfitz/gomemcache/memcache/memcache.go?s=3834:3881#L115">NewFromSelector</a></h3>
+				<pre>func NewFromSelector(ss <a href="index.html#ServerSelector">ServerSelector</a>) *<a href="index.html#Client">Client</a></pre>
+				<p>
+NewFromSelector returns a new Client using the provided ServerSelector.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Client.Add">func (*Client) <a href="http://localhost:6060/src/github.com/bradfitz/gomemcache/memcache/memcache.go?s=13419:13457#L495">Add</a></h3>
+				<pre>func (c *<a href="index.html#Client">Client</a>) Add(item *<a href="index.html#Item">Item</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Add writes the given item, if no value already exists for its
+key. ErrNotStored is returned if that condition is not met.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Client.CompareAndSwap">func (*Client) <a href="http://localhost:6060/src/github.com/bradfitz/gomemcache/memcache/memcache.go?s=14325:14374#L520">CompareAndSwap</a></h3>
+				<pre>func (c *<a href="index.html#Client">Client</a>) CompareAndSwap(item *<a href="index.html#Item">Item</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+CompareAndSwap writes the given item that was previously returned
+by Get, if the value was neither modified or evicted between the
+Get and the CompareAndSwap calls. The item&#39;s Key should not change
+between calls but all other item fields may differ. ErrCASConflict
+is returned if the value was modified in between the
+calls. ErrNotStored is returned if the value was evicted in between
+the calls.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Client.Decrement">func (*Client) <a href="http://localhost:6060/src/github.com/bradfitz/gomemcache/memcache/memcache.go?s=17737:17818#L631">Decrement</a></h3>
+				<pre>func (c *<a href="index.html#Client">Client</a>) Decrement(key <a href="../../../../builtin/index.html#string">string</a>, delta <a href="../../../../builtin/index.html#uint64">uint64</a>) (newValue <a href="../../../../builtin/index.html#uint64">uint64</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Decrement atomically decrements key by delta. The return value is
+the new value after being decremented or an error. If the value
+didn&#39;t exist in memcached the error is ErrCacheMiss. The value in
+memcached must be an decimal number, or an error will be returned.
+On underflow, the new value is capped at zero and does not wrap
+around.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Client.Delete">func (*Client) <a href="http://localhost:6060/src/github.com/bradfitz/gomemcache/memcache/memcache.go?s=16552:16593#L603">Delete</a></h3>
+				<pre>func (c *<a href="index.html#Client">Client</a>) Delete(key <a href="../../../../builtin/index.html#string">string</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Delete deletes the item with the provided key. The error ErrCacheMiss is
+returned if the item didn&#39;t already exist in the cache.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Client.DeleteAll">func (*Client) <a href="http://localhost:6060/src/github.com/bradfitz/gomemcache/memcache/memcache.go?s=16771:16805#L610">DeleteAll</a></h3>
+				<pre>func (c *<a href="index.html#Client">Client</a>) DeleteAll() <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+DeleteAll deletes all items in the cache.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Client.FlushAll">func (*Client) <a href="http://localhost:6060/src/github.com/bradfitz/gomemcache/memcache/memcache.go?s=7611:7644#L283">FlushAll</a></h3>
+				<pre>func (c *<a href="index.html#Client">Client</a>) FlushAll() <a href="../../../../builtin/index.html#error">error</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Client.Get">func (*Client) <a href="http://localhost:6060/src/github.com/bradfitz/gomemcache/memcache/memcache.go?s=7834:7890#L289">Get</a></h3>
+				<pre>func (c *<a href="index.html#Client">Client</a>) Get(key <a href="../../../../builtin/index.html#string">string</a>) (item *<a href="index.html#Item">Item</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Get gets the item for the given key. ErrCacheMiss is returned for a
+memcache cache miss. The key must be at most 250 bytes in length.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Client.GetMulti">func (*Client) <a href="http://localhost:6060/src/github.com/bradfitz/gomemcache/memcache/memcache.go?s=11104:11170#L403">GetMulti</a></h3>
+				<pre>func (c *<a href="index.html#Client">Client</a>) GetMulti(keys []<a href="../../../../builtin/index.html#string">string</a>) (map[<a href="../../../../builtin/index.html#string">string</a>]*<a href="index.html#Item">Item</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+GetMulti is a batch version of Get. The returned map from keys to
+items may have fewer elements than the input slice, due to memcache
+cache misses. Each key must be at most 250 bytes in length.
+If no error is returned, the returned map will also be non-nil.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Client.Increment">func (*Client) <a href="http://localhost:6060/src/github.com/bradfitz/gomemcache/memcache/memcache.go?s=17258:17339#L621">Increment</a></h3>
+				<pre>func (c *<a href="index.html#Client">Client</a>) Increment(key <a href="../../../../builtin/index.html#string">string</a>, delta <a href="../../../../builtin/index.html#uint64">uint64</a>) (newValue <a href="../../../../builtin/index.html#uint64">uint64</a>, err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Increment atomically increments key by delta. The return value is
+the new value after being incremented or an error. If the value
+didn&#39;t exist in memcached the error is ErrCacheMiss. The value in
+memcached must be an decimal number, or an error will be returned.
+On 64-bit overflow, the new value wraps around.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Client.Replace">func (*Client) <a href="http://localhost:6060/src/github.com/bradfitz/gomemcache/memcache/memcache.go?s=13704:13746#L505">Replace</a></h3>
+				<pre>func (c *<a href="index.html#Client">Client</a>) Replace(item *<a href="index.html#Item">Item</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Replace writes the given item, but only if the server *does*
+already hold data for this key
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Client.Set">func (*Client) <a href="http://localhost:6060/src/github.com/bradfitz/gomemcache/memcache/memcache.go?s=13104:13142#L485">Set</a></h3>
+				<pre>func (c *<a href="index.html#Client">Client</a>) Set(item *<a href="index.html#Item">Item</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Set writes the given item, unconditionally.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Client.Touch">func (*Client) <a href="http://localhost:6060/src/github.com/bradfitz/gomemcache/memcache/memcache.go?s=8410:8471#L303">Touch</a></h3>
+				<pre>func (c *<a href="index.html#Client">Client</a>) Touch(key <a href="../../../../builtin/index.html#string">string</a>, seconds <a href="../../../../builtin/index.html#int32">int32</a>) (err <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				<p>
+Touch updates the expiry for the given key. The seconds parameter is either
+a Unix timestamp or, if seconds is less than 1 month, the number of seconds
+into the future at which time the item will expire. ErrCacheMiss is returned if the
+key is not in the cache. The key must be at most 250 bytes in length.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ConnectTimeoutError">type <a href="http://localhost:6060/src/github.com/bradfitz/gomemcache/memcache/memcache.go?s=6402:6452#L221">ConnectTimeoutError</a></h2>
+			<pre>type ConnectTimeoutError struct {
+    Addr <a href="../../../../net/index.html">net</a>.<a href="../../../../net/index.html#Addr">Addr</a>
+}</pre>
+			<p>
+ConnectTimeoutError is the error type used when it takes
+too long to connect to the desired host. This level of
+detail can generally be ignored.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ConnectTimeoutError.Error">func (*ConnectTimeoutError) <a href="http://localhost:6060/src/github.com/bradfitz/gomemcache/memcache/memcache.go?s=6454:6500#L225">Error</a></h3>
+				<pre>func (cte *<a href="index.html#ConnectTimeoutError">ConnectTimeoutError</a>) Error() <a href="../../../../builtin/index.html#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Item">type <a href="http://localhost:6060/src/github.com/bradfitz/gomemcache/memcache/memcache.go?s=4291:4762#L133">Item</a></h2>
+			<pre>type Item struct {
+    <span class="comment">// Key is the Item&#39;s key (250 bytes maximum).</span>
+    Key <a href="../../../../builtin/index.html#string">string</a>
+
+    <span class="comment">// Value is the Item&#39;s value.</span>
+    Value []<a href="../../../../builtin/index.html#byte">byte</a>
+
+    <span class="comment">// Flags are server-opaque flags whose semantics are entirely</span>
+    <span class="comment">// up to the app.</span>
+    Flags <a href="../../../../builtin/index.html#uint32">uint32</a>
+
+    <span class="comment">// Expiration is the cache expiration time, in seconds: either a relative</span>
+    <span class="comment">// time from now (up to 1 month), or an absolute Unix epoch time.</span>
+    <span class="comment">// Zero means the Item has no expiration time.</span>
+    Expiration <a href="../../../../builtin/index.html#int32">int32</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Item is an item to be got or stored in a memcached server.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ServerList">type <a href="http://localhost:6060/src/github.com/bradfitz/gomemcache/memcache/selector.go?s=1098:1162#L29">ServerList</a></h2>
+			<pre>type ServerList struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+ServerList is a simple ServerSelector. Its zero value is usable.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ServerList.Each">func (*ServerList) <a href="http://localhost:6060/src/github.com/bradfitz/gomemcache/memcache/selector.go?s=2129:2185#L68">Each</a></h3>
+				<pre>func (ss *<a href="index.html#ServerList">ServerList</a>) Each(f func(<a href="../../../../net/index.html">net</a>.<a href="../../../../net/index.html#Addr">Addr</a>) <a href="../../../../builtin/index.html#error">error</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Each iterates over each server calling the given function
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ServerList.PickServer">func (*ServerList) <a href="http://localhost:6060/src/github.com/bradfitz/gomemcache/memcache/selector.go?s=2615:2677#L89">PickServer</a></h3>
+				<pre>func (ss *<a href="index.html#ServerList">ServerList</a>) PickServer(key <a href="../../../../builtin/index.html#string">string</a>) (<a href="../../../../net/index.html">net</a>.<a href="../../../../net/index.html#Addr">Addr</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="ServerList.SetServers">func (*ServerList) <a href="http://localhost:6060/src/github.com/bradfitz/gomemcache/memcache/selector.go?s=1584:1641#L43">SetServers</a></h3>
+				<pre>func (ss *<a href="index.html#ServerList">ServerList</a>) SetServers(servers ...<a href="../../../../builtin/index.html#string">string</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
+				<p>
+SetServers changes a ServerList&#39;s set of servers at runtime and is
+safe for concurrent use by multiple goroutines.
+</p>
+<p>
+Each server is given equal weight. A server is given more weight
+if it&#39;s listed multiple times.
+</p>
+<p>
+SetServers returns an error if any of the server names fail to
+resolve. No attempt is made to connect to the server. If any error
+is returned, no changes are made to the ServerList.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ServerSelector">type <a href="http://localhost:6060/src/github.com/bradfitz/gomemcache/memcache/selector.go?s=832:1028#L21">ServerSelector</a></h2>
+			<pre>type ServerSelector interface {
+    <span class="comment">// PickServer returns the server address that a given item</span>
+    <span class="comment">// should be shared onto.</span>
+    PickServer(key <a href="../../../../builtin/index.html#string">string</a>) (<a href="../../../../net/index.html">net</a>.<a href="../../../../net/index.html#Addr">Addr</a>, <a href="../../../../builtin/index.html#error">error</a>)
+    Each(func(<a href="../../../../net/index.html">net</a>.<a href="../../../../net/index.html#Addr">Addr</a>) <a href="../../../../builtin/index.html#error">error</a>) <a href="../../../../builtin/index.html#error">error</a>
+}</pre>
+			<p>
+ServerSelector is the interface that selects a memcache server
+as a function of the item&#39;s key.
+</p>
+<p>
+All ServerSelector implementations must be safe for concurrent use
+by multiple goroutines.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+
