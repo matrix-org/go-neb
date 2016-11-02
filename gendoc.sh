@@ -17,7 +17,8 @@ wget -r -m -k -E -p --include-directories="/pkg,/lib" --exclude-directories="*" 
 # Stop the godoc server
 kill -9 $DOC_PID
 
-# Delete the old directory or else mv will put the localhost dir into .godoc
+# Delete the old directory or else mv will put the localhost dir into
+# the DOC_DIR if it already exists.
 rm -rf $DOC_DIR
 mv localhost\:6060 $DOC_DIR
 
