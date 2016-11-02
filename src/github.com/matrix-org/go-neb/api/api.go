@@ -1,5 +1,7 @@
-// Package api contains the fundamental data types used by Go-NEB. Most HTTP API calls
-// and/or config file sections are just ways of representing these data types.
+// Package api contains the fundamental data types used by Go-NEB.
+//
+// Most HTTP API calls and/or config file sections are just ways of representing these
+// data types.
 //
 // See also
 //
@@ -74,7 +76,7 @@ type ClientConfig struct {
 	DisplayName string
 }
 
-// SessionRequest is usually multi-stage so this type only exists for the config form
+// SessionRequests are usually multi-stage things so this type only exists for the config form
 // for use with ConfigFile.
 type SessionRequest struct {
 	SessionID string
