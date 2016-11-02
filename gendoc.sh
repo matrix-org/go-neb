@@ -1,5 +1,7 @@
 #!/bin/bash
 
+DOC_DIR=godoc
+
 # Run a godoc server which we will scrape. Clobber the GOPATH to include
 # only our dependencies.
 GOPATH=$(pwd):$(pwd)/vendor godoc -http=localhost:6060 &
@@ -15,6 +17,9 @@ wget -r -m -k -E -p --include-directories="/pkg,/lib" --exclude-directories="*" 
 # Stop the godoc server
 kill -9 $DOC_PID
 
-mv localhost\:6060 .godoc
-echo "Docs can be found in .godoc"
+# Delete the old directory or else mv will put the localhost dir into .godoc
+rm -rf $DOC_DIR
+mv localhost\:6060 $DOC_DIR
+
+echo "Docs can be found in $DOC_DIR"
 echo "Replace /lib and /pkg in the gh-pages branch to update gh-pages"
