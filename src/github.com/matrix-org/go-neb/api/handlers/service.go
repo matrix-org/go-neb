@@ -16,6 +16,7 @@ import (
 	"github.com/matrix-org/go-neb/types"
 )
 
+// ConfigureService represents an HTTP handler which can process /admin/configureService requests.
 type ConfigureService struct {
 	db               *database.ServiceDB
 	clients          *clients.Clients
@@ -23,6 +24,7 @@ type ConfigureService struct {
 	mutexByServiceID map[string]*sync.Mutex
 }
 
+// NewConfigureService creates a new ConfigureService handler
 func NewConfigureService(db *database.ServiceDB, clients *clients.Clients) *ConfigureService {
 	return &ConfigureService{
 		db:               db,
@@ -45,6 +47,32 @@ func (s *ConfigureService) getMutexForServiceID(serviceID string) *sync.Mutex {
 	return m
 }
 
+// OnIncomingRequest handles POST requests to /admin/configureService.
+//
+// The request body MUST be of type "api.ConfigureServiceRequest".
+//
+// Request:
+//  POST /admin/configureService
+//  {
+//      "ID": "my_service_id",
+//      "Type": "service-type",
+//      "UserID": "@my_bot:localhost",
+//      "Config": {
+//          // service-specific config information
+//      }
+//  }
+// Response:
+//  HTTP/1.1 200 OK
+//  {
+//      "ID": "my_service_id",
+//      "Type": "service-type",
+//      "OldConfig": {
+//          // old service-specific config information
+//      },
+//      "NewConfig": {
+//          // new service-specific config information
+//      },
+//  }
 func (s *ConfigureService) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError) {
 	if req.Method != "POST" {
 		return nil, &errors.HTTPError{nil, "Unsupported Method", 405}
@@ -123,10 +151,30 @@ func (s *ConfigureService) createService(req *http.Request) (types.Service, *err
 	return service, nil
 }
 
+// GetService represents an HTTP handler which can process /admin/getService requests.
 type GetService struct {
 	Db *database.ServiceDB
 }
 
+// OnIncomingRequest handles POST requests to /admin/getService.
+//
+// The request body MUST be a JSON body which has an "ID" key which represents
+// the service ID to get.
+//
+// Request:
+//  POST /admin/getService
+//  {
+//      "ID": "my_service_id"
+//  }
+// Response:
+//  HTTP/1.1 200 OK
+//  {
+//      "ID": "my_service_id",
+//      "Type": "github",
+//      "Config": {
+//          // service-specific config information
+//      }
+//  }
 func (h *GetService) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError) {
 	if req.Method != "POST" {
 		return nil, &errors.HTTPError{nil, "Unsupported Method", 405}
