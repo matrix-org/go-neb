@@ -16,7 +16,8 @@
 
 # The list of clients which Go-NEB is aware of.
 # Delete or modify this list as appropriate.
-# See the docs for /configureClient for the full list of options.
+# See the docs for /configureClient for the full list of options:
+# https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/api/index.html#ClientConfig
 clients:
   - UserID: "@goneb:localhost"
     AccessToken: "MDASDASJDIASDJASDAFGFRGER"
@@ -34,7 +35,8 @@ clients:
 
 # The list of realms which Go-NEB is aware of.
 # Delete or modify this list as appropriate.
-# See the docs for /configureAuthRealm for the full list of options.
+# See the docs for /configureAuthRealm for the full list of options:
+# https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/api/index.html#ConfigureAuthRealmRequest
 realms:
   - ID: "github_realm"
     Type: "github"
@@ -44,6 +46,7 @@ realms:
 # Delete or modify this list as appropriate.
 # The full list of options are shown below: there is no single HTTP endpoint
 # which maps to this section.
+# https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/api/index.html#Session
 sessions:
   - SessionID: "your_github_session"
     RealmID: "github_realm"
@@ -56,7 +59,8 @@ sessions:
 
 # The list of services which Go-NEB is aware of.
 # Delete or modify this list as appropriate.
-# See the docs for /configureService for the full list of options.
+# See the docs for /configureService for the full list of options:
+# https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/api/index.html#ConfigureServiceRequest
 services:
   - ID: "giphy_service"
     Type: "giphy"
