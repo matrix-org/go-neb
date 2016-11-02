@@ -1,4 +1,5 @@
 #!/bin/bash
+set -u
 
 DOC_DIR=godoc
 
@@ -8,7 +9,14 @@ GOPATH=$(pwd):$(pwd)/vendor godoc -http=localhost:6060 &
 DOC_PID=$!
 
 # Wait for the server to init
-sleep 1
+while :
+do
+    curl -s "http://localhost:6060" > /dev/null
+    if [ $? -eq 0 ] # exit code is 0 if we connected
+    then
+        break
+    fi
+done
 
 # Scrape the pkg directory for the API docs. Scrap lib for the CSS/JS. Ignore everything else.
 # The output is dumped to the directory "localhost:6060".
