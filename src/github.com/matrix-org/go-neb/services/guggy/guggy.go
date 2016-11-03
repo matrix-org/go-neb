@@ -4,14 +4,14 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	log "github.com/Sirupsen/logrus"
-	"github.com/matrix-org/go-neb/matrix"
-	"github.com/matrix-org/go-neb/plugin"
-	"github.com/matrix-org/go-neb/types"
 	"io/ioutil"
 	"math"
 	"net/http"
 	"strings"
+
+	log "github.com/Sirupsen/logrus"
+	"github.com/matrix-org/go-neb/matrix"
+	"github.com/matrix-org/go-neb/types"
 )
 
 type guggyQuery struct {
@@ -39,14 +39,12 @@ func (s *guggyService) ServiceUserID() string { return s.serviceUserID }
 func (s *guggyService) ServiceID() string     { return s.id }
 func (s *guggyService) ServiceType() string   { return "guggy" }
 
-func (s *guggyService) Plugin(client *matrix.Client, roomID string) plugin.Plugin {
-	return plugin.Plugin{
-		Commands: []plugin.Command{
-			plugin.Command{
-				Path: []string{"guggy"},
-				Command: func(roomID, userID string, args []string) (interface{}, error) {
-					return s.cmdGuggy(client, roomID, userID, args)
-				},
+func (s *guggyService) Commands(client *matrix.Client, roomID string) []types.Command {
+	return []types.Command{
+		types.Command{
+			Path: []string{"guggy"},
+			Command: func(roomID, userID string, args []string) (interface{}, error) {
+				return s.cmdGuggy(client, roomID, userID, args)
 			},
 		},
 	}

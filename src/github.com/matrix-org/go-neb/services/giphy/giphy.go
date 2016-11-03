@@ -13,7 +13,6 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/matrix-org/go-neb/matrix"
-	"github.com/matrix-org/go-neb/plugin"
 	"github.com/matrix-org/go-neb/types"
 )
 
@@ -50,14 +49,12 @@ func (s *Service) ServiceUserID() string { return s.serviceUserID }
 func (s *Service) ServiceID() string     { return s.id }
 func (s *Service) ServiceType() string   { return ServiceType }
 
-func (s *Service) Plugin(client *matrix.Client, roomID string) plugin.Plugin {
-	return plugin.Plugin{
-		Commands: []plugin.Command{
-			plugin.Command{
-				Path: []string{"giphy"},
-				Command: func(roomID, userID string, args []string) (interface{}, error) {
-					return s.cmdGiphy(client, roomID, userID, args)
-				},
+func (s *Service) Commands(client *matrix.Client, roomID string) []types.Command {
+	return []types.Command{
+		types.Command{
+			Path: []string{"giphy"},
+			Command: func(roomID, userID string, args []string) (interface{}, error) {
+				return s.cmdGiphy(client, roomID, userID, args)
 			},
 		},
 	}

@@ -4,19 +4,19 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	log "github.com/Sirupsen/logrus"
-	"github.com/andygrunwald/go-jira"
-	"github.com/matrix-org/go-neb/database"
-	"github.com/matrix-org/go-neb/matrix"
-	"github.com/matrix-org/go-neb/plugin"
-	"github.com/matrix-org/go-neb/realms/jira"
-	"github.com/matrix-org/go-neb/realms/jira/urls"
-	"github.com/matrix-org/go-neb/services/jira/webhook"
-	"github.com/matrix-org/go-neb/types"
 	"html"
 	"net/http"
 	"regexp"
 	"strings"
+
+	log "github.com/Sirupsen/logrus"
+	jira "github.com/andygrunwald/go-jira"
+	"github.com/matrix-org/go-neb/database"
+	"github.com/matrix-org/go-neb/matrix"
+	"github.com/matrix-org/go-neb/realms/jira"
+	"github.com/matrix-org/go-neb/realms/jira/urls"
+	"github.com/matrix-org/go-neb/services/jira/webhook"
+	"github.com/matrix-org/go-neb/types"
 )
 
 // Matches alphas then a -, then a number. E.g "FOO-123"
@@ -199,22 +199,23 @@ func (s *jiraService) expandIssue(roomID, userID string, issueKeyGroups []string
 	)
 }
 
-func (s *jiraService) Plugin(cli *matrix.Client, roomID string) plugin.Plugin {
-	return plugin.Plugin{
-		Commands: []plugin.Command{
-			plugin.Command{
-				Path: []string{"jira", "create"},
-				Command: func(roomID, userID string, args []string) (interface{}, error) {
-					return s.cmdJiraCreate(roomID, userID, args)
-				},
+func (s *jiraService) Commands(cli *matrix.Client, roomID string) []types.Command {
+	return []types.Command{
+		types.Command{
+			Path: []string{"jira", "create"},
+			Command: func(roomID, userID string, args []string) (interface{}, error) {
+				return s.cmdJiraCreate(roomID, userID, args)
 			},
 		},
-		Expansions: []plugin.Expansion{
-			plugin.Expansion{
-				Regexp: issueKeyRegex,
-				Expand: func(roomID, userID string, issueKeyGroups []string) interface{} {
-					return s.expandIssue(roomID, userID, issueKeyGroups)
-				},
+	}
+}
+
+func (s *jiraService) Expansions(cli *matrix.Client, roomID string) []types.Expansion {
+	return []types.Expansion{
+		types.Expansion{
+			Regexp: issueKeyRegex,
+			Expand: func(roomID, userID string, issueKeyGroups []string) interface{} {
+				return s.expandIssue(roomID, userID, issueKeyGroups)
 			},
 		},
 	}
