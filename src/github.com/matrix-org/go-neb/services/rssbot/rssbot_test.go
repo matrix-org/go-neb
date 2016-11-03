@@ -1,12 +1,9 @@
-package services
+package rssbot
 
 import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"github.com/matrix-org/go-neb/database"
-	"github.com/matrix-org/go-neb/matrix"
-	"github.com/matrix-org/go-neb/types"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -14,6 +11,10 @@ import (
 	"sync"
 	"testing"
 	"time"
+
+	"github.com/matrix-org/go-neb/database"
+	"github.com/matrix-org/go-neb/matrix"
+	"github.com/matrix-org/go-neb/types"
 )
 
 const rssFeedXML = `
@@ -66,7 +67,7 @@ func TestHTMLEntities(t *testing.T) {
 	if err != nil {
 		t.Fatal("Failed to create RSS bot: ", err)
 	}
-	rssbot := srv.(*rssBotService)
+	rssbot := srv.(*Service)
 
 	// Configure the service to force OnPoll to query the RSS feed and attempt to send results
 	// to the right room.

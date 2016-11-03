@@ -1,4 +1,8 @@
-package services
+// Package github implements a command service and a webhook service for interacting with Github.
+//
+// The command service is a service which adds !commands and issue expansions for Github. The
+// webhook service adds Github webhook support.
+package github
 
 import (
 	"database/sql"
@@ -16,22 +20,23 @@ import (
 	"github.com/matrix-org/go-neb/types"
 )
 
+// ServiceType of the Github service
+const ServiceType = "github"
+
 // Matches alphanumeric then a /, then more alphanumeric then a #, then a number.
 // E.g. owner/repo#11 (issue/PR numbers) - Captured groups for owner/repo/number
 var ownerRepoIssueRegex = regexp.MustCompile(`(([A-z0-9-_]+)/([A-z0-9-_]+))?#([0-9]+)`)
 var ownerRepoRegex = regexp.MustCompile(`^([A-z0-9-_]+)/([A-z0-9-_]+)$`)
 
-type githubService struct {
+// Service contains the Config fields for this service.
+type Service struct {
 	types.DefaultService
-	id            string
-	serviceUserID string
-	RealmID       string
+	// The ID of an existing "github" realm. This realm will be used to obtain
+	// credentials of users when they create issues on Github.
+	RealmID string
 }
 
-func (s *githubService) ServiceUserID() string { return s.serviceUserID }
-func (s *githubService) ServiceID() string     { return s.id }
-func (s *githubService) ServiceType() string   { return "github" }
-func (s *githubService) cmdGithubCreate(roomID, userID string, args []string) (interface{}, error) {
+func (s *Service) cmdGithubCreate(roomID, userID string, args []string) (interface{}, error) {
 	cli := s.githubClientFor(userID, false)
 	if cli == nil {
 		r, err := database.GetServiceDB().LoadAuthRealm(s.RealmID)
@@ -107,7 +112,7 @@ func (s *githubService) cmdGithubCreate(roomID, userID string, args []string) (i
 	return matrix.TextMessage{"m.notice", fmt.Sprintf("Created issue: %s", *issue.HTMLURL)}, nil
 }
 
-func (s *githubService) expandIssue(roomID, userID, owner, repo string, issueNum int) interface{} {
+func (s *Service) expandIssue(roomID, userID, owner, repo string, issueNum int) interface{} {
 	cli := s.githubClientFor(userID, true)
 
 	i, _, err := cli.Issues.Get(owner, repo, issueNum)
@@ -126,7 +131,12 @@ func (s *githubService) expandIssue(roomID, userID, owner, repo string, issueNum
 	}
 }
 
-func (s *githubService) Commands(cli *matrix.Client, roomID string) []types.Command {
+// Commands supported:
+//    !github create owner/repo "issue title" "optional issue description"
+// Responds with the outcome of the issue creation request. This command requires
+// a Github account to be linked to the Matrix user ID issuing the command. If there
+// is no link, it will return a Starter Link instead.
+func (s *Service) Commands(cli *matrix.Client, roomID string) []types.Command {
 	return []types.Command{
 		types.Command{
 			Path: []string{"github", "create"},
@@ -137,7 +147,13 @@ func (s *githubService) Commands(cli *matrix.Client, roomID string) []types.Comm
 	}
 }
 
-func (s *githubService) Expansions(cli *matrix.Client, roomID string) []types.Expansion {
+// Expansions expands strings of the form:
+//   owner/repo#12
+// Where #12 is an issue number or pull request. If there is a default repository set on the room,
+// it will also expand strings of the form:
+//   #12
+// using the default repository.
+func (s *Service) Expansions(cli *matrix.Client, roomID string) []types.Expansion {
 	return []types.Expansion{
 		types.Expansion{
 			Regexp: ownerRepoIssueRegex,
@@ -195,7 +211,7 @@ func (s *githubService) Expansions(cli *matrix.Client, roomID string) []types.Ex
 //
 // Hooks can get out of sync if a user manually deletes a hook in the Github UI. In this case, toggling the repo configuration will
 // force NEB to recreate the hook.
-func (s *githubService) Register(oldService types.Service, client *matrix.Client) error {
+func (s *Service) Register(oldService types.Service, client *matrix.Client) error {
 	if s.RealmID == "" {
 		return fmt.Errorf("RealmID is required")
 	}
@@ -214,12 +230,12 @@ func (s *githubService) Register(oldService types.Service, client *matrix.Client
 }
 
 // defaultRepo returns the default repo for the given room, or an empty string.
-func (s *githubService) defaultRepo(roomID string) string {
+func (s *Service) defaultRepo(roomID string) string {
 	logger := log.WithFields(log.Fields{
 		"room_id":     roomID,
-		"bot_user_id": s.serviceUserID,
+		"bot_user_id": s.ServiceUserID(),
 	})
-	opts, err := database.GetServiceDB().LoadBotOptions(s.serviceUserID, roomID)
+	opts, err := database.GetServiceDB().LoadBotOptions(s.ServiceUserID(), roomID)
 	if err != nil {
 		if err != sql.ErrNoRows {
 			logger.WithError(err).Error("Failed to load bot options")
@@ -243,7 +259,7 @@ func (s *githubService) defaultRepo(roomID string) string {
 	return defaultRepo
 }
 
-func (s *githubService) githubClientFor(userID string, allowUnauth bool) *github.Client {
+func (s *Service) githubClientFor(userID string, allowUnauth bool) *github.Client {
 	token, err := getTokenForUser(s.RealmID, userID)
 	if err != nil {
 		log.WithFields(log.Fields{
@@ -287,9 +303,8 @@ func getTokenForUser(realmID, userID string) (string, error) {
 
 func init() {
 	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
-		return &githubService{
-			id:            serviceID,
-			serviceUserID: serviceUserID,
+		return &Service{
+			DefaultService: types.NewDefaultService(serviceID, serviceUserID, ServiceType),
 		}
 	})
 }

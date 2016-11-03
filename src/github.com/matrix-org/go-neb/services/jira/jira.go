@@ -1,4 +1,7 @@
-package services
+// Package jira implements a command and webhook service for interacting with JIRA.
+//
+// The service adds !commands and issue expansions, in addition to JIRA webhook support.
+package jira
 
 import (
 	"database/sql"
@@ -19,30 +22,39 @@ import (
 	"github.com/matrix-org/go-neb/types"
 )
 
+// ServiceType of the JIRA Service
+const ServiceType = "jira"
+
 // Matches alphas then a -, then a number. E.g "FOO-123"
 var issueKeyRegex = regexp.MustCompile("([A-z]+)-([0-9]+)")
 var projectKeyRegex = regexp.MustCompile("^[A-z]+$")
 
-type jiraService struct {
+// Service contains the Config fields for this service.
+type Service struct {
 	types.DefaultService
-	id                 string
-	serviceUserID      string
 	webhookEndpointURL string
-	ClientUserID       string
-	Rooms              map[string]struct { // room_id => {}
-		Realms map[string]struct { // realm_id => {}  Determines the JIRA endpoint
-			Projects map[string]struct { // SYN => {}
+	// The user ID to create issues as, or to create/delete webhooks as. This user
+	// is also used to look up issues for expansions.
+	ClientUserID string
+	// A map from Matrix room ID to JIRA realms and project keys.
+	Rooms map[string]struct {
+		// A map of realm IDs to project keys. The realm IDs determine the JIRA
+		// endpoint used.
+		Realms map[string]struct {
+			// A map of project keys e.g. "SYN" to config options.
+			Projects map[string]struct {
+				// True to expand issues with this key e.g "SYN-123" will be expanded.
 				Expand bool
-				Track  bool
+				// True to add a webhook to this project and send updates into the room.
+				Track bool
 			}
 		}
 	}
 }
 
-func (s *jiraService) ServiceUserID() string { return s.serviceUserID }
-func (s *jiraService) ServiceID() string     { return s.id }
-func (s *jiraService) ServiceType() string   { return "jira" }
-func (s *jiraService) Register(oldService types.Service, client *matrix.Client) error {
+// Register ensures that the given realm IDs are valid JIRA realms and registers webhooks
+// with those JIRA endpoints.
+func (s *Service) Register(oldService types.Service, client *matrix.Client) error {
 	// We only ever make 1 JIRA webhook which listens for all projects and then filter
 	// on receive. So we simply need to know if we need to make a webhook or not. We
 	// need to do this for each unique realm.
@@ -63,7 +75,7 @@ func (s *jiraService) Register(oldService types.Service, client *matrix.Client) 
 	return nil
 }
 
-func (s *jiraService) cmdJiraCreate(roomID, userID string, args []string) (interface{}, error) {
+func (s *Service) cmdJiraCreate(roomID, userID string, args []string) (interface{}, error) {
 	// E.g jira create PROJ "Issue title" "Issue desc"
 	if len(args) <= 1 {
 		return nil, errors.New("Missing project key (e.g 'ABC') and/or title")
@@ -139,7 +151,7 @@ func (s *jiraService) cmdJiraCreate(roomID, userID string, args []string) (inter
 	}, nil
 }
 
-func (s *jiraService) expandIssue(roomID, userID string, issueKeyGroups []string) interface{} {
+func (s *Service) expandIssue(roomID, userID string, issueKeyGroups []string) interface{} {
 	// issueKeyGroups => ["SYN-123", "SYN", "123"]
 	if len(issueKeyGroups) != 3 {
 		log.WithField("groups", issueKeyGroups).Error("Bad number of groups")
@@ -199,7 +211,16 @@ func (s *jiraService) expandIssue(roomID, userID string, issueKeyGroups []string
 	)
 }
 
-func (s *jiraService) Commands(cli *matrix.Client, roomID string) []types.Command {
+// Commands supported:
+//    !jira create KEY "issue title" "optional issue description"
+// Responds with the outcome of the issue creation request. This command requires
+// a JIRA account to be linked to the Matrix user ID issuing the command. It also
+// requires there to be a project with the given project key (e.g. "KEY") to exist
+// on the linked JIRA account. If there are multiple JIRA accounts which contain the
+// same project key, which project is chosen is undefined. If there
+// is no JIRA account linked to the Matrix user ID, it will return a Starter Link
+// if there is a known public project with that project key.
+func (s *Service) Commands(cli *matrix.Client, roomID string) []types.Command {
 	return []types.Command{
 		types.Command{
 			Path: []string{"jira", "create"},
@@ -210,7 +231,13 @@ func (s *jiraService) Commands(cli *matrix.Client, roomID string) []types.Comman
 	}
 }
 
-func (s *jiraService) Expansions(cli *matrix.Client, roomID string) []types.Expansion {
+// Expansions expands JIRA issues represented as:
+//    KEY-12
+// Where "KEY" is the project key and 12" is an issue number. The Service Config will be used
+// to map the project key to a realm, and subsequently the JIRA endpoint to hit.
+// If there are multiple projects with the same project key in the Service Config, one will
+// be chosen arbitrarily.
+func (s *Service) Expansions(cli *matrix.Client, roomID string) []types.Expansion {
 	return []types.Expansion{
 		types.Expansion{
 			Regexp: issueKeyRegex,
@@ -221,7 +248,8 @@ func (s *jiraService) Expansions(cli *matrix.Client, roomID string) []types.Expa
 	}
 }
 
-func (s *jiraService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client) {
+// OnReceiveWebhook receives requests from JIRA and possibly sends requests to Matrix as a result.
+func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client) {
 	eventProjectKey, event, httpErr := webhook.OnReceiveRequest(req)
 	if httpErr != nil {
 		log.WithError(httpErr).Print("Failed to handle JIRA webhook")
@@ -265,7 +293,7 @@ func (s *jiraService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request,
 	w.WriteHeader(200)
 }
 
-func (s *jiraService) realmIDForProject(roomID, projectKey string) string {
+func (s *Service) realmIDForProject(roomID, projectKey string) string {
 	// TODO: Multiple realms with the same pkey will be randomly chosen.
 	for r, realmConfig := range s.Rooms[roomID].Realms {
 		for pkey, projectConfig := range realmConfig.Projects {
@@ -277,7 +305,7 @@ func (s *jiraService) realmIDForProject(roomID, projectKey string) string {
 	return ""
 }
 
-func (s *jiraService) projectToRealm(userID, pkey string) (*realms.JIRARealm, error) {
+func (s *Service) projectToRealm(userID, pkey string) (*realms.JIRARealm, error) {
 	// We don't know which JIRA installation this project maps to, so:
 	//  - Get all known JIRA realms and f.e query their endpoints with the
 	//    given user ID's credentials (so if it is a private project they
@@ -340,7 +368,7 @@ func (s *jiraService) projectToRealm(userID, pkey string) (*realms.JIRARealm, er
 }
 
 // Returns realm_id => [PROJ, ECT, KEYS]
-func projectsAndRealmsToTrack(s *jiraService) map[string][]string {
+func projectsAndRealmsToTrack(s *Service) map[string][]string {
 	ridsToProjects := make(map[string][]string)
 	for _, roomConfig := range s.Rooms {
 		for realmID, realmConfig := range roomConfig.Realms {
@@ -401,9 +429,8 @@ func htmlForEvent(whe *webhook.Event, jiraBaseURL string) string {
 
 func init() {
 	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
-		return &jiraService{
-			id:                 serviceID,
-			serviceUserID:      serviceUserID,
+		return &Service{
+			DefaultService:     types.NewDefaultService(serviceID, serviceUserID, ServiceType),
 			webhookEndpointURL: webhookEndpointURL,
 		}
 	})
