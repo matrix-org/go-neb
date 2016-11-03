@@ -4,11 +4,11 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
-	"github.com/matrix-org/go-neb/matrix"
-	"github.com/matrix-org/go-neb/plugin"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/matrix-org/go-neb/matrix"
 )
 
 // BotOptions for a given bot user in a given room
@@ -34,7 +34,8 @@ type Service interface {
 	ServiceID() string
 	// Return the type of service. This string MUST NOT change.
 	ServiceType() string
-	Plugin(cli *matrix.Client, roomID string) plugin.Plugin
+	Commands(cli *matrix.Client, roomID string) []Command
+	Expansions(cli *matrix.Client, roomID string) []Expansion
 	OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client)
 	// A lifecycle function which is invoked when the service is being registered. The old service, if one exists, is provided,
 	// along with a Client instance for ServiceUserID(). If this function returns an error, the service will not be registered
@@ -51,9 +52,14 @@ type Service interface {
 // DefaultService NO-OPs the implementation of optional Service interface methods. Feel free to override them.
 type DefaultService struct{}
 
-// Plugin returns no plugins.
-func (s *DefaultService) Plugin(cli *matrix.Client, roomID string) plugin.Plugin {
-	return plugin.Plugin{}
+// Commands returns no commands.
+func (s *DefaultService) Commands(cli *matrix.Client, roomID string) []Command {
+	return []Command{}
+}
+
+// Expansions returns no expansions.
+func (s *DefaultService) Expansions(cli *matrix.Client, roomID string) []Expansion {
+	return []Expansion{}
 }
 
 // Register does nothing and returns no error.
@@ -121,52 +127,4 @@ func CreateService(serviceID, serviceType, serviceUserID string, serviceJSON []b
 		return nil, err
 	}
 	return service, nil
-}
-
-// AuthRealm represents a place where a user can authenticate themselves.
-// This may static (like github.com) or a specific domain (like matrix.org/jira)
-type AuthRealm interface {
-	ID() string
-	Type() string
-	Init() error
-	Register() error
-	OnReceiveRedirect(w http.ResponseWriter, req *http.Request)
-	AuthSession(id, userID, realmID string) AuthSession
-	RequestAuthSession(userID string, config json.RawMessage) interface{}
-}
-
-var realmsByType = map[string]func(string, string) AuthRealm{}
-
-// RegisterAuthRealm registers a factory for creating AuthRealm instances.
-func RegisterAuthRealm(factory func(string, string) AuthRealm) {
-	realmsByType[factory("", "").Type()] = factory
-}
-
-// CreateAuthRealm creates an AuthRealm of the given type and realm ID.
-// Returns an error if the realm couldn't be created or the JSON cannot be unmarshalled.
-func CreateAuthRealm(realmID, realmType string, realmJSON []byte) (AuthRealm, error) {
-	f := realmsByType[realmType]
-	if f == nil {
-		return nil, errors.New("Unknown realm type: " + realmType)
-	}
-	base64RealmID := base64.RawURLEncoding.EncodeToString([]byte(realmID))
-	redirectURL := baseURL + "realms/redirects/" + base64RealmID
-	r := f(realmID, redirectURL)
-	if err := json.Unmarshal(realmJSON, r); err != nil {
-		return nil, err
-	}
-	if err := r.Init(); err != nil {
-		return nil, err
-	}
-	return r, nil
-}
-
-// AuthSession represents a single authentication session between a user and
-// an auth realm.
-type AuthSession interface {
-	ID() string
-	UserID() string
-	RealmID() string
-	Authenticated() bool
-	Info() interface{}
 }

@@ -3,17 +3,17 @@ package services
 import (
 	"database/sql"
 	"fmt"
+	"regexp"
+	"strconv"
+	"strings"
+
 	log "github.com/Sirupsen/logrus"
 	"github.com/google/go-github/github"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/matrix"
-	"github.com/matrix-org/go-neb/plugin"
 	"github.com/matrix-org/go-neb/realms/github"
 	"github.com/matrix-org/go-neb/services/github/client"
 	"github.com/matrix-org/go-neb/types"
-	"regexp"
-	"strconv"
-	"strings"
 )
 
 // Matches alphanumeric then a /, then more alphanumeric then a #, then a number.
@@ -126,59 +126,60 @@ func (s *githubService) expandIssue(roomID, userID, owner, repo string, issueNum
 	}
 }
 
-func (s *githubService) Plugin(cli *matrix.Client, roomID string) plugin.Plugin {
-	return plugin.Plugin{
-		Commands: []plugin.Command{
-			plugin.Command{
-				Path: []string{"github", "create"},
-				Command: func(roomID, userID string, args []string) (interface{}, error) {
-					return s.cmdGithubCreate(roomID, userID, args)
-				},
+func (s *githubService) Commands(cli *matrix.Client, roomID string) []types.Command {
+	return []types.Command{
+		types.Command{
+			Path: []string{"github", "create"},
+			Command: func(roomID, userID string, args []string) (interface{}, error) {
+				return s.cmdGithubCreate(roomID, userID, args)
 			},
 		},
-		Expansions: []plugin.Expansion{
-			plugin.Expansion{
-				Regexp: ownerRepoIssueRegex,
-				Expand: func(roomID, userID string, matchingGroups []string) interface{} {
-					// There's an optional group in the regex so matchingGroups can look like:
-					// [foo/bar#55 foo/bar foo bar 55]
-					// [#55                        55]
-					if len(matchingGroups) != 5 {
-						log.WithField("groups", matchingGroups).WithField("len", len(matchingGroups)).Print(
-							"Unexpected number of groups",
-						)
+	}
+}
+
+func (s *githubService) Expansions(cli *matrix.Client, roomID string) []types.Expansion {
+	return []types.Expansion{
+		types.Expansion{
+			Regexp: ownerRepoIssueRegex,
+			Expand: func(roomID, userID string, matchingGroups []string) interface{} {
+				// There's an optional group in the regex so matchingGroups can look like:
+				// [foo/bar#55 foo/bar foo bar 55]
+				// [#55                        55]
+				if len(matchingGroups) != 5 {
+					log.WithField("groups", matchingGroups).WithField("len", len(matchingGroups)).Print(
+						"Unexpected number of groups",
+					)
+					return nil
+				}
+				if matchingGroups[1] == "" && matchingGroups[2] == "" && matchingGroups[3] == "" {
+					// issue only match, this only works if there is a default repo
+					defaultRepo := s.defaultRepo(roomID)
+					if defaultRepo == "" {
 						return nil
 					}
-					if matchingGroups[1] == "" && matchingGroups[2] == "" && matchingGroups[3] == "" {
-						// issue only match, this only works if there is a default repo
-						defaultRepo := s.defaultRepo(roomID)
-						if defaultRepo == "" {
-							return nil
-						}
-						segs := strings.Split(defaultRepo, "/")
-						if len(segs) != 2 {
-							log.WithFields(log.Fields{
-								"room_id":      roomID,
-								"default_repo": defaultRepo,
-							}).Error("Default repo is malformed")
-							return nil
-						}
-						// Fill in the missing fields in matching groups and fall through into ["foo/bar#11", "foo", "bar", "11"]
-						matchingGroups = []string{
-							defaultRepo + matchingGroups[0],
-							defaultRepo,
-							segs[0],
-							segs[1],
-							matchingGroups[4],
-						}
-					}
-					num, err := strconv.Atoi(matchingGroups[4])
-					if err != nil {
-						log.WithField("issue_number", matchingGroups[4]).Print("Bad issue number")
+					segs := strings.Split(defaultRepo, "/")
+					if len(segs) != 2 {
+						log.WithFields(log.Fields{
+							"room_id":      roomID,
+							"default_repo": defaultRepo,
+						}).Error("Default repo is malformed")
 						return nil
 					}
-					return s.expandIssue(roomID, userID, matchingGroups[2], matchingGroups[3], num)
-				},
+					// Fill in the missing fields in matching groups and fall through into ["foo/bar#11", "foo", "bar", "11"]
+					matchingGroups = []string{
+						defaultRepo + matchingGroups[0],
+						defaultRepo,
+						segs[0],
+						segs[1],
+						matchingGroups[4],
+					}
+				}
+				num, err := strconv.Atoi(matchingGroups[4])
+				if err != nil {
+					log.WithField("issue_number", matchingGroups[4]).Print("Bad issue number")
+					return nil
+				}
+				return s.expandIssue(roomID, userID, matchingGroups[2], matchingGroups[3], num)
 			},
 		},
 	}

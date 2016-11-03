@@ -1,16 +1,18 @@
 package clients
 
 import (
-	log "github.com/Sirupsen/logrus"
-	"github.com/matrix-org/go-neb/api"
-	"github.com/matrix-org/go-neb/database"
-	"github.com/matrix-org/go-neb/matrix"
-	"github.com/matrix-org/go-neb/plugin"
-	"github.com/matrix-org/go-neb/types"
 	"net/http"
 	"net/url"
 	"strings"
 	"sync"
+
+	log "github.com/Sirupsen/logrus"
+	"github.com/matrix-org/go-neb/api"
+	"github.com/matrix-org/go-neb/database"
+	"github.com/matrix-org/go-neb/matrix"
+	"github.com/matrix-org/go-neb/metrics"
+	"github.com/matrix-org/go-neb/types"
+	shellwords "github.com/mattn/go-shellwords"
 )
 
 type nextBatchStore struct {
@@ -179,11 +181,111 @@ func (c *Clients) onMessageEvent(client *matrix.Client, event *matrix.Event) {
 			"service_user_id": client.UserID,
 		}).Warn("Error loading services")
 	}
-	var plugins []plugin.Plugin
-	for _, service := range services {
-		plugins = append(plugins, service.Plugin(client, event.RoomID))
+
+	body, ok := event.Body()
+	if !ok || body == "" {
+		return
 	}
-	plugin.OnMessage(plugins, client, event)
+
+	// filter m.notice to prevent loops
+	if msgtype, ok := event.MessageType(); !ok || msgtype == "m.notice" {
+		return
+	}
+
+	var responses []interface{}
+
+	for _, service := range services {
+		if body[0] == '!' { // message is a command
+			args, err := shellwords.Parse(body[1:])
+			if err != nil {
+				args = strings.Split(body[1:], " ")
+			}
+
+			if response := runCommandForService(service.Commands(client, event.RoomID), event, args); response != nil {
+				responses = append(responses, response)
+			}
+		} else { // message isn't a command, it might need expanding
+			expansions := runExpansionsForService(service.Expansions(client, event.RoomID), event, body)
+			responses = append(responses, expansions...)
+		}
+	}
+
+	for _, content := range responses {
+		if _, err := client.SendMessageEvent(event.RoomID, "m.room.message", content); err != nil {
+			log.WithFields(log.Fields{
+				log.ErrorKey: err,
+				"room_id":    event.RoomID,
+				"user_id":    event.Sender,
+				"content":    content,
+			}).Print("Failed to send command response")
+		}
+	}
+}
+
+// runCommandForService runs a single command read from a matrix event. Runs
+// the matching command with the longest path. Returns the JSON encodable
+// content of a single matrix message event to use as a response or nil if no
+// response is appropriate.
+func runCommandForService(cmds []types.Command, event *matrix.Event, arguments []string) interface{} {
+	var bestMatch *types.Command
+	for _, command := range cmds {
+		matches := command.Matches(arguments)
+		betterMatch := bestMatch == nil || len(bestMatch.Path) < len(command.Path)
+		if matches && betterMatch {
+			bestMatch = &command
+		}
+	}
+
+	if bestMatch == nil {
+		return nil
+	}
+
+	cmdArgs := arguments[len(bestMatch.Path):]
+	log.WithFields(log.Fields{
+		"room_id": event.RoomID,
+		"user_id": event.Sender,
+		"command": bestMatch.Path,
+	}).Info("Executing command")
+	content, err := bestMatch.Command(event.RoomID, event.Sender, cmdArgs)
+	if err != nil {
+		if content != nil {
+			log.WithFields(log.Fields{
+				log.ErrorKey: err,
+				"room_id":    event.RoomID,
+				"user_id":    event.Sender,
+				"command":    bestMatch.Path,
+				"args":       cmdArgs,
+			}).Warn("Command returned both error and content.")
+		}
+		metrics.IncrementCommand(bestMatch.Path[0], metrics.StatusFailure)
+		content = matrix.TextMessage{"m.notice", err.Error()}
+	} else {
+		metrics.IncrementCommand(bestMatch.Path[0], metrics.StatusSuccess)
+	}
+
+	return content
+}
+
+// run the expansions for a matrix event.
+func runExpansionsForService(expans []types.Expansion, event *matrix.Event, body string) []interface{} {
+	var responses []interface{}
+
+	for _, expansion := range expans {
+		matches := map[string]bool{}
+		for _, matchingGroups := range expansion.Regexp.FindAllStringSubmatch(body, -1) {
+			matchingText := matchingGroups[0] // first element is always the complete match
+			if matches[matchingText] {
+				// Only expand the first occurance of a matching string
+				continue
+			}
+			matches[matchingText] = true
+			if response := expansion.Expand(event.RoomID, event.Sender, matchingGroups); response != nil {
+				responses = append(responses, response)
+			}
+		}
+	}
+
+	return responses
 }
 
 func (c *Clients) onBotOptionsEvent(client *matrix.Client, event *matrix.Event) {
