@@ -1,17 +1,23 @@
-package services
+// Package giphy implements a Service which adds !commands for Giphy.
+//
+// Commands are of the form: "!giphy some search query".
+package giphy
 
 import (
 	"encoding/json"
 	"errors"
-	log "github.com/Sirupsen/logrus"
-	"github.com/matrix-org/go-neb/matrix"
-	"github.com/matrix-org/go-neb/plugin"
-	"github.com/matrix-org/go-neb/types"
 	"net/http"
 	"net/url"
 	"strconv"
 	"strings"
+
+	log "github.com/Sirupsen/logrus"
+	"github.com/matrix-org/go-neb/matrix"
+	"github.com/matrix-org/go-neb/plugin"
+	"github.com/matrix-org/go-neb/types"
 )
+
+const ServiceType = "giphy"
 
 type result struct {
 	Slug   string `json:"slug"`
@@ -30,18 +36,21 @@ type giphySearch struct {
 	Data []result
 }
 
-type giphyService struct {
+// Service contains the Config fields for this service.
+type Service struct {
 	types.DefaultService
 	id            string
 	serviceUserID string
-	APIKey        string `json:"api_key"` // beta key is dc6zaTOxFJmzC
+	// The Giphy API key to use when making HTTP requests to Giphy. The public beta
+	// API key is "dc6zaTOxFJmzC".
+	APIKey string `json:"api_key"`
 }
 
-func (s *giphyService) ServiceUserID() string { return s.serviceUserID }
-func (s *giphyService) ServiceID() string     { return s.id }
-func (s *giphyService) ServiceType() string   { return "giphy" }
+func (s *Service) ServiceUserID() string { return s.serviceUserID }
+func (s *Service) ServiceID() string     { return s.id }
+func (s *Service) ServiceType() string   { return ServiceType }
 
-func (s *giphyService) Plugin(client *matrix.Client, roomID string) plugin.Plugin {
+func (s *Service) Plugin(client *matrix.Client, roomID string) plugin.Plugin {
 	return plugin.Plugin{
 		Commands: []plugin.Command{
 			plugin.Command{
@@ -53,7 +62,7 @@ func (s *giphyService) Plugin(client *matrix.Client, roomID string) plugin.Plugi
 		},
 	}
 }
-func (s *giphyService) cmdGiphy(client *matrix.Client, roomID, userID string, args []string) (interface{}, error) {
+func (s *Service) cmdGiphy(client *matrix.Client, roomID, userID string, args []string) (interface{}, error) {
 	// only 1 arg which is the text to search for.
 	query := strings.Join(args, " ")
 	gifResult, err := s.searchGiphy(query)
@@ -79,7 +88,7 @@ func (s *giphyService) cmdGiphy(client *matrix.Client, roomID, userID string, ar
 }
 
 // searchGiphy returns info about a gif
-func (s *giphyService) searchGiphy(query string) (*result, error) {
+func (s *Service) searchGiphy(query string) (*result, error) {
 	log.Info("Searching giphy for ", query)
 	u, err := url.Parse("http://api.giphy.com/v1/gifs/search")
 	if err != nil {
@@ -116,7 +125,7 @@ func asInt(strInt string) uint {
 
 func init() {
 	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
-		return &giphyService{
+		return &Service{
 			id:            serviceID,
 			serviceUserID: serviceUserID,
 		}
