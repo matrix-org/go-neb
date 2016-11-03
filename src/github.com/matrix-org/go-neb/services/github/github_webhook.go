@@ -1,7 +1,11 @@
-package services
+package github
 
 import (
 	"fmt"
+	"net/http"
+	"sort"
+	"strings"
+
 	log "github.com/Sirupsen/logrus"
 	"github.com/google/go-github/github"
 	"github.com/matrix-org/go-neb/database"
@@ -10,30 +14,43 @@ import (
 	"github.com/matrix-org/go-neb/services/github/webhook"
 	"github.com/matrix-org/go-neb/types"
 	"github.com/matrix-org/go-neb/util"
-	"net/http"
-	"sort"
-	"strings"
 )
 
-type githubWebhookService struct {
+// WebhookServiceType of the Github Webhook service.
+const WebhookServiceType = "github-webhook"
+
+// WebhookService contains the Config fields for this service.
+type WebhookService struct {
 	types.DefaultService
-	id                 string
-	serviceUserID      string
 	webhookEndpointURL string
-	ClientUserID       string
-	RealmID            string
-	SecretToken        string
-	Rooms              map[string]struct { // room_id => {}
+	// The user ID to create/delete webhooks as.
+	ClientUserID string
+	// The ID of an existing "github" realm. This realm will be used to obtain
+	// the Github credentials of the ClientUserID.
+	RealmID string
+	// A map from Matrix room ID to Github "owner/repo"-style repositories.
+	Rooms map[string]struct {
+		// A map of "owner/repo"-style repositories to the events to listen for.
 		Repos map[string]struct { // owner/repo => { events: ["push","issue","pull_request"] }
+			// The webhook events to listen for. Currently supported:
+			//    push, pull_request, issues, issue_comment, pull_request_review_comment
+			// Full list: https://developer.github.com/webhooks/#events
 			Events []string
 		}
 	}
+	// Optional. The secret token to supply when creating the webhook.
+	SecretToken string
 }
 
-func (s *githubWebhookService) ServiceUserID() string { return s.serviceUserID }
-func (s *githubWebhookService) ServiceID() string     { return s.id }
-func (s *githubWebhookService) ServiceType() string   { return "github-webhook" }
-func (s *githubWebhookService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client) {
+// OnReceiveWebhook receives requests from Github and possibly sends requests to Matrix as a result.
+//
+// If the "owner/repo" string in the webhook request case-insensitively matches a repo in this Service
+// config AND the event type matches an event type registered for that repo, then a message will be sent
+// into Matrix.
+//
+// If the "owner/repo" string doesn't exist in this Service config, then the webhook will be deleted from
+// Github.
+func (s *WebhookService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client) {
 	evType, repo, msg, err := webhook.OnReceiveRequest(req, s.SecretToken)
 	if err != nil {
 		w.WriteHeader(err.Code)
@@ -98,7 +115,7 @@ func (s *githubWebhookService) OnReceiveWebhook(w http.ResponseWriter, req *http
 //
 // Hooks can get out of sync if a user manually deletes a hook in the Github UI. In this case, toggling the repo configuration will
 // force NEB to recreate the hook.
-func (s *githubWebhookService) Register(oldService types.Service, client *matrix.Client) error {
+func (s *WebhookService) Register(oldService types.Service, client *matrix.Client) error {
 	if s.RealmID == "" || s.ClientUserID == "" {
 		return fmt.Errorf("RealmID and ClientUserID is required")
 	}
@@ -117,12 +134,12 @@ func (s *githubWebhookService) Register(oldService types.Service, client *matrix
 	// Fetch the old service list and work out the difference between the two services.
 	var oldRepos []string
 	if oldService != nil {
-		old, ok := oldService.(*githubWebhookService)
+		old, ok := oldService.(*WebhookService)
 		if !ok {
 			log.WithFields(log.Fields{
 				"service_id":   oldService.ServiceID(),
 				"service_type": oldService.ServiceType(),
-			}).Print("Cannot cast old github service to GithubWebhookService")
+			}).Print("Cannot cast old github service to WebhookService")
 			// non-fatal though, we'll just make the hooks
 		} else {
 			oldRepos = old.repoList()
@@ -158,19 +175,18 @@ func (s *githubWebhookService) Register(oldService types.Service, client *matrix
 	return nil
 }
 
-func (s *githubWebhookService) PostRegister(oldService types.Service) {
-	// Clean up removed repositories from the old service by working out the delta between
-	// the old and new hooks.
-
+// PostRegister cleans up removed repositories from the old service by
+// working out the delta between the old and new hooks.
+func (s *WebhookService) PostRegister(oldService types.Service) {
 	// Fetch the old service list
 	var oldRepos []string
 	if oldService != nil {
-		old, ok := oldService.(*githubWebhookService)
+		old, ok := oldService.(*WebhookService)
 		if !ok {
 			log.WithFields(log.Fields{
 				"service_id":   oldService.ServiceID(),
 				"service_type": oldService.ServiceType(),
-			}).Print("Cannot cast old github service to GithubWebhookService")
+			}).Print("Cannot cast old github service to WebhookService")
 			return
 		}
 		oldRepos = old.repoList()
@@ -205,7 +221,7 @@ func (s *githubWebhookService) PostRegister(oldService types.Service) {
 	}
 }
 
-func (s *githubWebhookService) joinWebhookRooms(client *matrix.Client) error {
+func (s *WebhookService) joinWebhookRooms(client *matrix.Client) error {
 	for roomID := range s.Rooms {
 		if _, err := client.JoinRoom(roomID, "", ""); err != nil {
 			// TODO: Leave the rooms we successfully joined?
@@ -216,7 +232,7 @@ func (s *githubWebhookService) joinWebhookRooms(client *matrix.Client) error {
 }
 
 // Returns a list of "owner/repos"
-func (s *githubWebhookService) repoList() []string {
+func (s *WebhookService) repoList() []string {
 	var repos []string
 	if s.Rooms == nil {
 		return repos
@@ -242,7 +258,7 @@ func (s *githubWebhookService) repoList() []string {
 	return repos
 }
 
-func (s *githubWebhookService) createHook(cli *github.Client, ownerRepo string) error {
+func (s *WebhookService) createHook(cli *github.Client, ownerRepo string) error {
 	o := strings.Split(ownerRepo, "/")
 	owner := o[0]
 	repo := o[1]
@@ -279,7 +295,7 @@ func (s *githubWebhookService) createHook(cli *github.Client, ownerRepo string) 
 	return err
 }
 
-func (s *githubWebhookService) deleteHook(owner, repo string) error {
+func (s *WebhookService) deleteHook(owner, repo string) error {
 	logger := log.WithFields(log.Fields{
 		"endpoint": s.webhookEndpointURL,
 		"repo":     owner + "/" + repo,
@@ -322,8 +338,8 @@ func (s *githubWebhookService) deleteHook(owner, repo string) error {
 	return err
 }
 
-func sameRepos(a *githubWebhookService, b *githubWebhookService) bool {
-	getRepos := func(s *githubWebhookService) []string {
+func sameRepos(a *WebhookService, b *WebhookService) bool {
+	getRepos := func(s *WebhookService) []string {
 		r := make(map[string]bool)
 		for _, roomConfig := range s.Rooms {
 			for ownerRepo := range roomConfig.Repos {
@@ -353,7 +369,7 @@ func sameRepos(a *githubWebhookService, b *githubWebhookService) bool {
 	return true
 }
 
-func (s *githubWebhookService) githubClientFor(userID string, allowUnauth bool) *github.Client {
+func (s *WebhookService) githubClientFor(userID string, allowUnauth bool) *github.Client {
 	token, err := getTokenForUser(s.RealmID, userID)
 	if err != nil {
 		log.WithFields(log.Fields{
@@ -371,7 +387,7 @@ func (s *githubWebhookService) githubClientFor(userID string, allowUnauth bool) 
 	}
 }
 
-func (s *githubWebhookService) loadRealm() (types.AuthRealm, error) {
+func (s *WebhookService) loadRealm() (types.AuthRealm, error) {
 	if s.RealmID == "" {
 		return nil, fmt.Errorf("Missing RealmID")
 	}
@@ -389,9 +405,8 @@ func (s *githubWebhookService) loadRealm() (types.AuthRealm, error) {
 
 func init() {
 	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
-		return &githubWebhookService{
-			id:                 serviceID,
-			serviceUserID:      serviceUserID,
+		return &WebhookService{
+			DefaultService:     types.NewDefaultService(serviceID, serviceUserID, ServiceType),
 			webhookEndpointURL: webhookEndpointURL,
 		}
 	})

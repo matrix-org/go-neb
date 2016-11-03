@@ -1,4 +1,5 @@
-package services
+// Package echo implements a Service which echoes back !commands.
+package echo
 
 import (
 	"strings"
@@ -7,16 +8,18 @@ import (
 	"github.com/matrix-org/go-neb/types"
 )
 
-type echoService struct {
+// ServiceType of the Echo service
+const ServiceType = "echo"
+
+// Service represents the Echo service. It has no Config fields.
+type Service struct {
 	types.DefaultService
-	id            string
-	serviceUserID string
 }
 
-func (e *echoService) ServiceUserID() string { return e.serviceUserID }
-func (e *echoService) ServiceID() string     { return e.id }
-func (e *echoService) ServiceType() string   { return "echo" }
-func (e *echoService) Commands(cli *matrix.Client, roomID string) []types.Command {
+// Commands supported:
+//    !echo some message
+// Responds with a notice of "some message".
+func (e *Service) Commands(cli *matrix.Client, roomID string) []types.Command {
 	return []types.Command{
 		types.Command{
 			Path: []string{"echo"},
@@ -29,6 +32,8 @@ func (e *echoService) Commands(cli *matrix.Client, roomID string) []types.Comman
 
 func init() {
 	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
-		return &echoService{id: serviceID, serviceUserID: serviceUserID}
+		return &Service{
+			DefaultService: types.NewDefaultService(serviceID, serviceUserID, ServiceType),
+		}
 	})
 }

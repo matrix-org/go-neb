@@ -1,8 +1,15 @@
-package services
+// Package rssbot implements a Service capable of reading Atom/RSS feeds.
+package rssbot
 
 import (
 	"errors"
 	"fmt"
+	"html"
+	"net/http"
+	"net/url"
+	"strconv"
+	"time"
+
 	log "github.com/Sirupsen/logrus"
 	"github.com/die-net/lrucache"
 	"github.com/gregjones/httpcache"
@@ -12,12 +19,10 @@ import (
 	"github.com/matrix-org/go-neb/types"
 	"github.com/mmcdole/gofeed"
 	"github.com/prometheus/client_golang/prometheus"
-	"html"
-	"net/http"
-	"net/url"
-	"strconv"
-	"time"
 )
+
+// ServiceType of the RSS Bot service
+const ServiceType = "rssbot"
 
 var cachingClient *http.Client
 
@@ -30,32 +35,36 @@ var (
 
 const minPollingIntervalSeconds = 60 * 5 // 5 min (News feeds can be genuinely spammy)
 
-type rssBotService struct {
+// Service contains the Config fields for this service.
+type Service struct {
 	types.DefaultService
-	id            string
-	serviceUserID string
-	Feeds         map[string]struct { // feed_url => { }
-		PollIntervalMins         int      `json:"poll_interval_mins"`
-		Rooms                    []string `json:"rooms"`
-		IsFailing                bool     `json:"is_failing"`           // True if rss bot is unable to poll this feed
-		FeedUpdatedTimestampSecs int64    `json:"last_updated_ts_secs"` // The time of the last successful poll
-		NextPollTimestampSecs    int64    // Internal: When we should poll again
-		RecentGUIDs              []string // Internal: The most recently seen GUIDs. Sized to the number of items in the feed.
+	// Feeds is a map of feed URL to configuration options for this feed.
+	Feeds map[string]struct {
+		// The time to wait between polls. If this is less than minPollingIntervalSeconds, it is ignored.
+		PollIntervalMins int `json:"poll_interval_mins"`
+		// The list of rooms to send feed updates into. This cannot be empty.
+		Rooms []string `json:"rooms"`
+		// True if rss bot is unable to poll this feed. This is populated by Go-NEB. Use /getService to
+		// retrieve this value.
+		IsFailing bool `json:"is_failing"`
+		// The time of the last successful poll. This is populated by Go-NEB. Use /getService to retrieve
+		// this value.
+		FeedUpdatedTimestampSecs int64 `json:"last_updated_ts_secs"`
+		// Internal field. When we should poll again.
+		NextPollTimestampSecs int64
+		// Internal field. The most recently seen GUIDs. Sized to the number of items in the feed.
+		RecentGUIDs []string
 	} `json:"feeds"`
 }
 
-func (s *rssBotService) ServiceUserID() string { return s.serviceUserID }
-func (s *rssBotService) ServiceID() string     { return s.id }
-func (s *rssBotService) ServiceType() string   { return "rssbot" }
-
 // Register will check the liveness of each RSS feed given. If all feeds check out okay, no error is returned.
-func (s *rssBotService) Register(oldService types.Service, client *matrix.Client) error {
+func (s *Service) Register(oldService types.Service, client *matrix.Client) error {
 	if len(s.Feeds) == 0 {
 		// this is an error UNLESS the old service had some feeds in which case they are deleting us :(
 		var numOldFeeds int
-		oldFeedService, ok := oldService.(*rssBotService)
+		oldFeedService, ok := oldService.(*Service)
 		if !ok {
-			log.WithField("service", oldService).Error("Old service isn't a rssBotService")
+			log.WithField("service", oldService).Error("Old service isn't an rssbot.Service")
 		} else {
 			numOldFeeds = len(oldFeedService.Feeds)
 		}
@@ -80,7 +89,7 @@ func (s *rssBotService) Register(oldService types.Service, client *matrix.Client
 	return nil
 }
 
-func (s *rssBotService) joinRooms(client *matrix.Client) {
+func (s *Service) joinRooms(client *matrix.Client) {
 	roomSet := make(map[string]bool)
 	for _, feedInfo := range s.Feeds {
 		for _, roomID := range feedInfo.Rooms {
@@ -99,7 +108,8 @@ func (s *rssBotService) joinRooms(client *matrix.Client) {
 	}
 }
 
-func (s *rssBotService) PostRegister(oldService types.Service) {
+// PostRegister deletes this service if there are no feeds remaining.
+func (s *Service) PostRegister(oldService types.Service) {
 	if len(s.Feeds) == 0 { // bye-bye :(
 		logger := log.WithFields(log.Fields{
 			"service_id":   s.ServiceID(),
@@ -113,7 +123,17 @@ func (s *rssBotService) PostRegister(oldService types.Service) {
 	}
 }
 
-func (s *rssBotService) OnPoll(cli *matrix.Client) time.Time {
+// OnPoll rechecks RSS feeds which are due to be polled.
+//
+// In order for a feed to be polled, the current time must be greater than NextPollTimestampSecs.
+// In order for an item on a feed to be sent to Matrix, the item's GUID must not exist in RecentGUIDs.
+// The GUID for an item is created according to the following rules:
+//   - If there is a GUID field, use it.
+//   - Else if there is a Link field, use it as the GUID.
+//   - Else if there is a Title field, use it as the GUID.
+//
+// Returns a timestamp representing when this Service should have OnPoll called again.
+func (s *Service) OnPoll(cli *matrix.Client) time.Time {
 	logger := log.WithFields(log.Fields{
 		"service_id":   s.ServiceID(),
 		"service_type": s.ServiceType(),
@@ -182,7 +202,7 @@ func incrementMetrics(urlStr string, err error) {
 	}
 }
 
-func (s *rssBotService) nextTimestamp() time.Time {
+func (s *Service) nextTimestamp() time.Time {
 	// return the earliest next poll ts
 	var earliestNextTs int64
 	for _, feedInfo := range s.Feeds {
@@ -202,7 +222,7 @@ func (s *rssBotService) nextTimestamp() time.Time {
 }
 
 // Query the given feed, update relevant timestamps and return NEW items
-func (s *rssBotService) queryFeed(feedURL string) (*gofeed.Feed, []gofeed.Item, error) {
+func (s *Service) queryFeed(feedURL string) (*gofeed.Feed, []gofeed.Item, error) {
 	log.WithField("feed_url", feedURL).Info("Querying feed")
 	var items []gofeed.Item
 	fp := gofeed.NewParser()
@@ -262,7 +282,7 @@ func (s *rssBotService) queryFeed(feedURL string) (*gofeed.Feed, []gofeed.Item, 
 	return feed, items, nil
 }
 
-func (s *rssBotService) newItems(feedURL string, allItems []*gofeed.Item) (items []gofeed.Item) {
+func (s *Service) newItems(feedURL string, allItems []*gofeed.Item) (items []gofeed.Item) {
 	for _, i := range allItems {
 		if i == nil {
 			continue
@@ -293,7 +313,7 @@ func (s *rssBotService) newItems(feedURL string, allItems []*gofeed.Item) (items
 	return
 }
 
-func (s *rssBotService) sendToRooms(cli *matrix.Client, feedURL string, feed *gofeed.Feed, item gofeed.Item) error {
+func (s *Service) sendToRooms(cli *matrix.Client, feedURL string, feed *gofeed.Feed, item gofeed.Item) error {
 	logger := log.WithField("feed_url", feedURL).WithField("title", item.Title)
 	logger.Info("New feed item")
 	for _, roomID := range s.Feeds[feedURL].Rooms {
@@ -327,9 +347,8 @@ func init() {
 		Transport: userAgentRoundTripper{httpcache.NewTransport(lruCache)},
 	}
 	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
-		r := &rssBotService{
-			id:            serviceID,
-			serviceUserID: serviceUserID,
+		r := &Service{
+			DefaultService: types.NewDefaultService(serviceID, serviceUserID, ServiceType),
 		}
 		return r
 	})

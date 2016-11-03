@@ -1,6 +1,4 @@
 // Package giphy implements a Service which adds !commands for Giphy.
-//
-// Commands are of the form: "!giphy some search query".
 package giphy
 
 import (
@@ -16,7 +14,7 @@ import (
 	"github.com/matrix-org/go-neb/types"
 )
 
-// ServiceType of the Giphy service
+// ServiceType of the Giphy service.
 const ServiceType = "giphy"
 
 type result struct {
@@ -39,8 +37,8 @@ type giphySearch struct {
 // Service contains the Config fields for this service.
 type Service struct {
 	types.DefaultService
-	// The Giphy API key to use when making HTTP requests to Giphy. The public beta
-	// API key is "dc6zaTOxFJmzC".
+	// The Giphy API key to use when making HTTP requests to Giphy.
+	// The public beta API key is "dc6zaTOxFJmzC".
 	APIKey string `json:"api_key"`
 }
 

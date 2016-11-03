@@ -1,4 +1,5 @@
-package services
+// Package guggy implements a Service which adds !commands for Guggy.
+package guggy
 
 import (
 	"bytes"
@@ -14,6 +15,9 @@ import (
 	"github.com/matrix-org/go-neb/types"
 )
 
+// ServiceType of the Guggy service
+const ServiceType = "guggy"
+
 type guggyQuery struct {
 	// "mp4" or "gif"
 	Format string `json:"format"`
@@ -28,18 +32,17 @@ type guggyGifResult struct {
 	Height float64 `json:"height"`
 }
 
-type guggyService struct {
+// Service contains the Config fields for this service.
+type Service struct {
 	types.DefaultService
-	id            string
-	serviceUserID string
-	APIKey        string `json:"api_key"`
+	// The Guggy API key to use when making HTTP requests to Guggy.
+	APIKey string `json:"api_key"`
 }
 
-func (s *guggyService) ServiceUserID() string { return s.serviceUserID }
-func (s *guggyService) ServiceID() string     { return s.id }
-func (s *guggyService) ServiceType() string   { return "guggy" }
-
-func (s *guggyService) Commands(client *matrix.Client, roomID string) []types.Command {
+// Commands supported:
+//    !guggy some search query without quotes
+// Responds with a suitable GIF into the same room as the command.
+func (s *Service) Commands(client *matrix.Client, roomID string) []types.Command {
 	return []types.Command{
 		types.Command{
 			Path: []string{"guggy"},
@@ -49,7 +52,7 @@ func (s *guggyService) Commands(client *matrix.Client, roomID string) []types.Co
 		},
 	}
 }
-func (s *guggyService) cmdGuggy(client *matrix.Client, roomID, userID string, args []string) (interface{}, error) {
+func (s *Service) cmdGuggy(client *matrix.Client, roomID, userID string, args []string) (interface{}, error) {
 	// only 1 arg which is the text to search for.
 	querySentence := strings.Join(args, " ")
 	gifResult, err := s.text2gifGuggy(querySentence)
@@ -82,7 +85,7 @@ func (s *guggyService) cmdGuggy(client *matrix.Client, roomID, userID string, ar
 }
 
 // text2gifGuggy returns info about a gif
-func (s *guggyService) text2gifGuggy(querySentence string) (*guggyGifResult, error) {
+func (s *Service) text2gifGuggy(querySentence string) (*guggyGifResult, error) {
 	log.Info("Transforming to GIF query ", querySentence)
 
 	client := &http.Client{}
@@ -135,9 +138,8 @@ func (s *guggyService) text2gifGuggy(querySentence string) (*guggyGifResult, err
 
 func init() {
 	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
-		return &guggyService{
-			id:            serviceID,
-			serviceUserID: serviceUserID,
+		return &Service{
+			DefaultService: types.NewDefaultService(serviceID, serviceUserID, ServiceType),
 		}
 	})
 }

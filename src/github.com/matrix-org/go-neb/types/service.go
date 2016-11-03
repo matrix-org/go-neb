@@ -61,18 +61,22 @@ func NewDefaultService(serviceID, serviceUserID, serviceType string) DefaultServ
 	return DefaultService{serviceID, serviceUserID, serviceType}
 }
 
-// ServiceID returns the service's ID.
+// ServiceID returns the service's ID. In order for this to return the ID, DefaultService MUST have been
+// initialised by NewDefaultService, the zero-initialiser is NOT enough.
 func (s *DefaultService) ServiceID() string {
 	return s.id
 }
 
-// ServiceUserID returns the user ID that the service sends events as.
+// ServiceUserID returns the user ID that the service sends events as. In order for this to return the
+// service user ID, DefaultService MUST have been initialised by NewDefaultService, the zero-initialiser
+// is NOT enough.
 func (s *DefaultService) ServiceUserID() string {
 	return s.serviceUserID
 }
 
 // ServiceType returns the type of service. See each individual service package for the ServiceType constant
-// to find out what this value actually is.
+// to find out what this value actually is. In order for this to return the Type, DefaultService MUST have been
+// initialised by NewDefaultService, the zero-initialiser is NOT enough.
 func (s *DefaultService) ServiceType() string {
 	return s.serviceType
 }
