@@ -16,6 +16,7 @@ import (
 	"github.com/matrix-org/go-neb/types"
 )
 
+// ServiceType of the Giphy service
 const ServiceType = "giphy"
 
 type result struct {
@@ -38,17 +39,14 @@ type giphySearch struct {
 // Service contains the Config fields for this service.
 type Service struct {
 	types.DefaultService
-	id            string
-	serviceUserID string
 	// The Giphy API key to use when making HTTP requests to Giphy. The public beta
 	// API key is "dc6zaTOxFJmzC".
 	APIKey string `json:"api_key"`
 }
 
-func (s *Service) ServiceUserID() string { return s.serviceUserID }
-func (s *Service) ServiceID() string     { return s.id }
-func (s *Service) ServiceType() string   { return ServiceType }
-
+// Commands supported:
+//   !giphy some search query without quotes
+// Responds with a suitable GIF into the same room as the command.
 func (s *Service) Commands(client *matrix.Client, roomID string) []types.Command {
 	return []types.Command{
 		types.Command{
@@ -59,6 +57,7 @@ func (s *Service) Commands(client *matrix.Client, roomID string) []types.Command
 		},
 	}
 }
+
 func (s *Service) cmdGiphy(client *matrix.Client, roomID, userID string, args []string) (interface{}, error) {
 	// only 1 arg which is the text to search for.
 	query := strings.Join(args, " ")
@@ -123,8 +122,7 @@ func asInt(strInt string) uint {
 func init() {
 	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
 		return &Service{
-			id:            serviceID,
-			serviceUserID: serviceUserID,
+			DefaultService: types.NewDefaultService(serviceID, serviceUserID, ServiceType),
 		}
 	})
 }

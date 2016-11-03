@@ -50,7 +50,32 @@ type Service interface {
 }
 
 // DefaultService NO-OPs the implementation of optional Service interface methods. Feel free to override them.
-type DefaultService struct{}
+type DefaultService struct {
+	id            string
+	serviceUserID string
+	serviceType   string
+}
+
+// NewDefaultService creates a new service with implementations for ServiceID(), ServiceType() and ServiceUserID()
+func NewDefaultService(serviceID, serviceUserID, serviceType string) DefaultService {
+	return DefaultService{serviceID, serviceUserID, serviceType}
+}
+
+// ServiceID returns the service's ID.
+func (s *DefaultService) ServiceID() string {
+	return s.id
+}
+
+// ServiceUserID returns the user ID that the service sends events as.
+func (s *DefaultService) ServiceUserID() string {
+	return s.serviceUserID
+}
+
+// ServiceType returns the type of service. See each individual service package for the ServiceType constant
+// to find out what this value actually is.
+func (s *DefaultService) ServiceType() string {
+	return s.serviceType
+}
 
 // Commands returns no commands.
 func (s *DefaultService) Commands(cli *matrix.Client, roomID string) []Command {
