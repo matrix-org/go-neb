@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#375EAB">
 
-  <title>services - The Go Programming Language</title>
+  <title>guggy - The Go Programming Language</title>
 
 <link type="text/css" rel="stylesheet" href="../../../../../../lib/godoc/style.css">
 
@@ -42,7 +42,7 @@
 <div class="container">
 
 
-  <h1>Package services</h1>
+  <h1>Package guggy</h1>
 
 
 
@@ -87,7 +87,10 @@
 			</div>
 			<div class="expanded">
 				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
-				
+				<p>
+Package guggy implements a Service which adds !commands for Guggy.
+</p>
+
 			</div>
 		</div>
 		
@@ -103,8 +106,18 @@
 			<div id="manual-nav">
 			<dl>
 			
+				<dd><a href="index.html#pkg-constants">Constants</a></dd>
 			
 			
+			
+			
+				
+				<dd><a href="index.html#Service">type Service</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Service.Commands">func (s *Service) Commands(client *matrix.Client, roomID string) []types.Command</a></dd>
+				
 			
 			
 			</dl>
@@ -163,8 +176,65 @@
 		</div> <!-- #pkg-callgraph -->
 
 		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const <span id="ServiceType">ServiceType</span> = &#34;guggy&#34;</pre>
+				<p>
+ServiceType of the Guggy service
+</p>
+
+			
 		
 		
+		
+		
+			
+			
+			<h2 id="Service">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/guggy/guggy.go?s=768:910#L31">Service</a></h2>
+			<pre>type Service struct {
+    <a href="../../types/index.html">types</a>.<a href="../../types/index.html#DefaultService">DefaultService</a>
+    <span class="comment">// The Guggy API key to use when making HTTP requests to Guggy.</span>
+    APIKey <a href="../../../../../builtin/index.html#string">string</a> `json:&#34;api_key&#34;`
+}</pre>
+			<p>
+Service contains the Config fields for the Guggy service.
+</p>
+<p>
+Example:
+</p>
+<pre>{
+    &#34;api_key&#34;: &#34;fkweugfyuwegfweyg&#34;
+}
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Service.Commands">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/guggy/guggy.go?s=1048:1128#L40">Commands</a></h3>
+				<pre>func (s *<a href="index.html#Service">Service</a>) Commands(client *<a href="../../matrix/index.html">matrix</a>.<a href="../../matrix/index.html#Client">Client</a>, roomID <a href="../../../../../builtin/index.html#string">string</a>) []<a href="../../types/index.html">types</a>.<a href="../../types/index.html#Command">Command</a></pre>
+				<p>
+Commands supported:
+</p>
+<pre>!guggy some search query without quotes
+</pre>
+<p>
+Responds with a suitable GIF into the same room as the command.
+</p>
+
+				
+				
+				
+			
 		
 	
 

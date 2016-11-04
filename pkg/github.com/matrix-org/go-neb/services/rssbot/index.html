@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#375EAB">
 
-  <title>services - The Go Programming Language</title>
+  <title>rssbot - The Go Programming Language</title>
 
 <link type="text/css" rel="stylesheet" href="../../../../../../lib/godoc/style.css">
 
@@ -42,7 +42,7 @@
 <div class="container">
 
 
-  <h1>Package services</h1>
+  <h1>Package rssbot</h1>
 
 
 
@@ -87,7 +87,10 @@
 			</div>
 			<div class="expanded">
 				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
-				
+				<p>
+Package rssbot implements a Service capable of reading Atom/RSS feeds.
+</p>
+
 			</div>
 		</div>
 		
@@ -103,8 +106,24 @@
 			<div id="manual-nav">
 			<dl>
 			
+				<dd><a href="index.html#pkg-constants">Constants</a></dd>
 			
 			
+			
+			
+				
+				<dd><a href="index.html#Service">type Service</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Service.OnPoll">func (s *Service) OnPoll(cli *matrix.Client) time.Time</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Service.PostRegister">func (s *Service) PostRegister(oldService types.Service)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Service.Register">func (s *Service) Register(oldService types.Service, client *matrix.Client) error</a></dd>
+				
 			
 			
 			</dl>
@@ -163,8 +182,117 @@
 		</div> <!-- #pkg-callgraph -->
 
 		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const <span id="ServiceType">ServiceType</span> = &#34;rssbot&#34;</pre>
+				<p>
+ServiceType of the RSS Bot service
+</p>
+
+			
 		
 		
+		
+		
+			
+			
+			<h2 id="Service">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/rssbot/rssbot.go?s=1294:2255#L42">Service</a></h2>
+			<pre>type Service struct {
+    <a href="../../types/index.html">types</a>.<a href="../../types/index.html#DefaultService">DefaultService</a>
+    <span class="comment">// Feeds is a map of feed URL to configuration options for this feed.</span>
+    Feeds map[<a href="../../../../../builtin/index.html#string">string</a>]struct {
+        <span class="comment">// Optional. The time to wait between polls. If this is less than minPollingIntervalSeconds, it is ignored.</span>
+        PollIntervalMins <a href="../../../../../builtin/index.html#int">int</a> `json:&#34;poll_interval_mins&#34;`
+        <span class="comment">// The list of rooms to send feed updates into. This cannot be empty.</span>
+        Rooms []<a href="../../../../../builtin/index.html#string">string</a> `json:&#34;rooms&#34;`
+        <span class="comment">// True if rss bot is unable to poll this feed. This is populated by Go-NEB. Use /getService to</span>
+        <span class="comment">// retrieve this value.</span>
+        IsFailing <a href="../../../../../builtin/index.html#bool">bool</a> `json:&#34;is_failing&#34;`
+        <span class="comment">// The time of the last successful poll. This is populated by Go-NEB. Use /getService to retrieve</span>
+        <span class="comment">// this value.</span>
+        FeedUpdatedTimestampSecs <a href="../../../../../builtin/index.html#int64">int64</a> `json:&#34;last_updated_ts_secs&#34;`
+        <span class="comment">// Internal field. When we should poll again.</span>
+        NextPollTimestampSecs <a href="../../../../../builtin/index.html#int64">int64</a>
+        <span class="comment">// Internal field. The most recently seen GUIDs. Sized to the number of items in the feed.</span>
+        RecentGUIDs []<a href="../../../../../builtin/index.html#string">string</a>
+    } `json:&#34;feeds&#34;`
+}</pre>
+			<p>
+Service contains the Config fields for this service.
+</p>
+<p>
+Example:
+</p>
+<pre>{
+    feeds: {
+        &#34;<a href="http://rss.cnn.com/rss/edition.rss">http://rss.cnn.com/rss/edition.rss</a>&#34;: {
+             poll_interval_mins: 60,
+             rooms: [&#34;!cBrPbzWazCtlkMNQSF:localhost&#34;]
+        },
+        &#34;<a href="https://www.wired.com/feed/">https://www.wired.com/feed/</a>&#34;: {
+             rooms: [&#34;!qmElAGdFYCHoCJuaNt:localhost&#34;]
+        }
+    }
+}
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Service.OnPoll">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/rssbot/rssbot.go?s=4838:4892#L139">OnPoll</a></h3>
+				<pre>func (s *<a href="index.html#Service">Service</a>) OnPoll(cli *<a href="../../matrix/index.html">matrix</a>.<a href="../../matrix/index.html#Client">Client</a>) <a href="../../../../../time/index.html">time</a>.<a href="../../../../../time/index.html#Time">Time</a></pre>
+				<p>
+OnPoll rechecks RSS feeds which are due to be polled.
+</p>
+<p>
+In order for a feed to be polled, the current time must be greater than NextPollTimestampSecs.
+In order for an item on a feed to be sent to Matrix, the item&#39;s GUID must not exist in RecentGUIDs.
+The GUID for an item is created according to the following rules:
+</p>
+<pre>- If there is a GUID field, use it.
+- Else if there is a Link field, use it as the GUID.
+- Else if there is a Title field, use it as the GUID.
+</pre>
+<p>
+Returns a timestamp representing when this Service should have OnPoll called again.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Service.PostRegister">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/rssbot/rssbot.go?s=3821:3877#L115">PostRegister</a></h3>
+				<pre>func (s *<a href="index.html#Service">Service</a>) PostRegister(oldService <a href="../../types/index.html">types</a>.<a href="../../types/index.html#Service">Service</a>)</pre>
+				<p>
+PostRegister deletes this service if there are no feeds remaining.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Service.Register">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/rssbot/rssbot.go?s=2368:2449#L64">Register</a></h3>
+				<pre>func (s *<a href="index.html#Service">Service</a>) Register(oldService <a href="../../types/index.html">types</a>.<a href="../../types/index.html#Service">Service</a>, client *<a href="../../matrix/index.html">matrix</a>.<a href="../../matrix/index.html#Client">Client</a>) <a href="../../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Register will check the liveness of each RSS feed given. If all feeds check out okay, no error is returned.
+</p>
+
+				
+				
+				
+			
 		
 	
 

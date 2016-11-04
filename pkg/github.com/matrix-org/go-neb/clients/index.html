@@ -185,7 +185,7 @@
 		
 			
 			
-			<h2 id="Clients">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/clients/clients.go?s=963:1124#L32">Clients</a></h2>
+			<h2 id="Clients">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/clients/clients.go?s=1010:1171#L34">Clients</a></h2>
 			<pre>type Clients struct {
     <span class="comment">// contains filtered or unexported fields</span>
 }</pre>
@@ -204,7 +204,7 @@ A Clients is a collection of clients used for bot services.
 
 			
 				
-				<h3 id="New">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/clients/clients.go?s=1174:1233#L41">New</a></h3>
+				<h3 id="New">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/clients/clients.go?s=1221:1280#L43">New</a></h3>
 				<pre>func New(db *<a href="../database/index.html">database</a>.<a href="../database/index.html#ServiceDB">ServiceDB</a>, cli *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Client">Client</a>) *<a href="index.html#Clients">Clients</a></pre>
 				<p>
 New makes a new collection of matrix clients
@@ -216,7 +216,7 @@ New makes a new collection of matrix clients
 
 			
 				
-				<h3 id="Clients.Client">func (*Clients) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/clients/clients.go?s=1426:1489#L51">Client</a></h3>
+				<h3 id="Clients.Client">func (*Clients) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/clients/clients.go?s=1473:1536#L53">Client</a></h3>
 				<pre>func (c *<a href="index.html#Clients">Clients</a>) Client(userID <a href="../../../../builtin/index.html#string">string</a>) (*<a href="../matrix/index.html">matrix</a>.<a href="../matrix/index.html#Client">Client</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
 				<p>
 Client gets a client for the userID
@@ -227,7 +227,7 @@ Client gets a client for the userID
 				
 			
 				
-				<h3 id="Clients.Start">func (*Clients) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/clients/clients.go?s=1889:1920#L67">Start</a></h3>
+				<h3 id="Clients.Start">func (*Clients) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/clients/clients.go?s=1936:1967#L69">Start</a></h3>
 				<pre>func (c *<a href="index.html#Clients">Clients</a>) Start() <a href="../../../../builtin/index.html#error">error</a></pre>
 				<p>
 Start listening on client /sync streams
@@ -238,7 +238,7 @@ Start listening on client /sync streams
 				
 			
 				
-				<h3 id="Clients.Update">func (*Clients) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/clients/clients.go?s=1698:1773#L61">Update</a></h3>
+				<h3 id="Clients.Update">func (*Clients) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/clients/clients.go?s=1745:1820#L63">Update</a></h3>
 				<pre>func (c *<a href="index.html#Clients">Clients</a>) Update(config <a href="../api/index.html">api</a>.<a href="../api/index.html#ClientConfig">ClientConfig</a>) (<a href="../api/index.html">api</a>.<a href="../api/index.html#ClientConfig">ClientConfig</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
 				<p>
 Update updates the config for a matrix client

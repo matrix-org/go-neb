@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#375EAB">
 
-  <title>services - The Go Programming Language</title>
+  <title>jira - The Go Programming Language</title>
 
 <link type="text/css" rel="stylesheet" href="../../../../../../lib/godoc/style.css">
 
@@ -42,7 +42,7 @@
 <div class="container">
 
 
-  <h1>Package services</h1>
+  <h1>Package jira</h1>
 
 
 
@@ -89,7 +89,13 @@
 			</div>
 			<div class="expanded">
 				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
-				
+				<p>
+Package jira implements a command and webhook service for interacting with JIRA.
+</p>
+<p>
+The service adds !commands and issue expansions, in addition to JIRA webhook support.
+</p>
+
 			</div>
 		</div>
 		
@@ -105,8 +111,27 @@
 			<div id="manual-nav">
 			<dl>
 			
+				<dd><a href="index.html#pkg-constants">Constants</a></dd>
 			
 			
+			
+			
+				
+				<dd><a href="index.html#Service">type Service</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Service.Commands">func (s *Service) Commands(cli *matrix.Client, roomID string) []types.Command</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Service.Expansions">func (s *Service) Expansions(cli *matrix.Client, roomID string) []types.Expansion</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Service.OnReceiveWebhook">func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Service.Register">func (s *Service) Register(oldService types.Service, client *matrix.Client) error</a></dd>
+				
 			
 			
 			</dl>
@@ -165,8 +190,144 @@
 		</div> <!-- #pkg-callgraph -->
 
 		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const <span id="ServiceType">ServiceType</span> = &#34;jira&#34;</pre>
+				<p>
+ServiceType of the JIRA Service
+</p>
+
+			
 		
 		
+		
+		
+			
+			
+			<h2 id="Service">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/jira/jira.go?s=1402:2124#L41">Service</a></h2>
+			<pre>type Service struct {
+    <a href="../../types/index.html">types</a>.<a href="../../types/index.html#DefaultService">DefaultService</a>
+
+    <span class="comment">// The user ID to create issues as, or to create/delete webhooks as. This user</span>
+    <span class="comment">// is also used to look up issues for expansions.</span>
+    ClientUserID <a href="../../../../../builtin/index.html#string">string</a>
+    <span class="comment">// A map from Matrix room ID to JIRA realms and project keys.</span>
+    Rooms map[<a href="../../../../../builtin/index.html#string">string</a>]struct {
+        <span class="comment">// A map of realm IDs to project keys. The realm IDs determine the JIRA</span>
+        <span class="comment">// endpoint used.</span>
+        Realms map[<a href="../../../../../builtin/index.html#string">string</a>]struct {
+            <span class="comment">// A map of project keys e.g. &#34;SYN&#34; to config options.</span>
+            Projects map[<a href="../../../../../builtin/index.html#string">string</a>]struct {
+                <span class="comment">// True to expand issues with this key e.g &#34;SYN-123&#34; will be expanded.</span>
+                Expand <a href="../../../../../builtin/index.html#bool">bool</a>
+                <span class="comment">// True to add a webhook to this project and send updates into the room.</span>
+                Track <a href="../../../../../builtin/index.html#bool">bool</a>
+            }
+        }
+    }
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Service contains the Config fields for the JIRA service.
+</p>
+<p>
+Before you can set up a JIRA Service, you need to set up a JIRA Realm.
+</p>
+<p>
+Example:
+</p>
+<pre>{
+    Rooms: {
+        &#34;!qmElAGdFYCHoCJuaNt:localhost&#34;: {
+            Realms: {
+                &#34;jira-realm-id&#34;: {
+                    Projects: {
+                        &#34;SYN&#34;: { Expand: true },
+                        &#34;BOTS&#34;: { Expand: true, Track: true }
+                    }
+                }
+            }
+        }
+    }
+}
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Service.Commands">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/jira/jira.go?s=7320:7397#L231">Commands</a></h3>
+				<pre>func (s *<a href="index.html#Service">Service</a>) Commands(cli *<a href="../../matrix/index.html">matrix</a>.<a href="../../matrix/index.html#Client">Client</a>, roomID <a href="../../../../../builtin/index.html#string">string</a>) []<a href="../../types/index.html">types</a>.<a href="../../types/index.html#Command">Command</a></pre>
+				<p>
+Commands supported:
+</p>
+<pre>!jira create KEY &#34;issue title&#34; &#34;optional issue description&#34;
+</pre>
+<p>
+Responds with the outcome of the issue creation request. This command requires
+a JIRA account to be linked to the Matrix user ID issuing the command. It also
+requires there to be a project with the given project key (e.g. &#34;KEY&#34;) to exist
+on the linked JIRA account. If there are multiple JIRA accounts which contain the
+same project key, which project is chosen is undefined. If there
+is no JIRA account linked to the Matrix user ID, it will return a Starter Link
+if there is a known public project with that project key.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Service.Expansions">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/jira/jira.go?s=7979:8060#L248">Expansions</a></h3>
+				<pre>func (s *<a href="index.html#Service">Service</a>) Expansions(cli *<a href="../../matrix/index.html">matrix</a>.<a href="../../matrix/index.html#Client">Client</a>, roomID <a href="../../../../../builtin/index.html#string">string</a>) []<a href="../../types/index.html">types</a>.<a href="../../types/index.html#Expansion">Expansion</a></pre>
+				<p>
+Expansions expands JIRA issues represented as:
+</p>
+<pre>KEY-12
+</pre>
+<p>
+Where &#34;KEY&#34; is the project key and 12&#34; is an issue number. The Service Config will be used
+to map the project key to a realm, and subsequently the JIRA endpoint to hit.
+If there are multiple projects with the same project key in the Service Config, one will
+be chosen arbitrarily.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Service.OnReceiveWebhook">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/jira/jira.go?s=8386:8482#L260">OnReceiveWebhook</a></h3>
+				<pre>func (s *<a href="index.html#Service">Service</a>) OnReceiveWebhook(w <a href="../../../../../net/http/index.html">http</a>.<a href="../../../../../net/http/index.html#ResponseWriter">ResponseWriter</a>, req *<a href="../../../../../net/http/index.html">http</a>.<a href="../../../../../net/http/index.html#Request">Request</a>, cli *<a href="../../matrix/index.html">matrix</a>.<a href="../../matrix/index.html#Client">Client</a>)</pre>
+				<p>
+OnReceiveWebhook receives requests from JIRA and possibly sends requests to Matrix as a result.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Service.Register">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/jira/jira.go?s=2246:2327#L65">Register</a></h3>
+				<pre>func (s *<a href="index.html#Service">Service</a>) Register(oldService <a href="../../types/index.html">types</a>.<a href="../../types/index.html#Service">Service</a>, client *<a href="../../matrix/index.html">matrix</a>.<a href="../../matrix/index.html#Client">Client</a>) <a href="../../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Register ensures that the given realm IDs are valid JIRA realms and registers webhooks
+with those JIRA endpoints.
+</p>
+
+				
+				
+				
+			
 		
 	
 
