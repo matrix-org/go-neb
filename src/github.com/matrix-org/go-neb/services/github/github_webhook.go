@@ -433,7 +433,7 @@ func (s *WebhookService) loadRealm() (types.AuthRealm, error) {
 func init() {
 	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
 		return &WebhookService{
-			DefaultService:     types.NewDefaultService(serviceID, serviceUserID, ServiceType),
+			DefaultService:     types.NewDefaultService(serviceID, serviceUserID, WebhookServiceType),
 			webhookEndpointURL: webhookEndpointURL,
 		}
 	})
