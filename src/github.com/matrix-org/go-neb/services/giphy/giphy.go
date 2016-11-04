@@ -36,7 +36,7 @@ type giphySearch struct {
 
 // Service contains the Config fields for the Giphy Service.
 //
-// Example:
+// Example request:
 //   {
 //       "api_key": "dc6zaTOxFJmzC"
 //   }

@@ -34,7 +34,7 @@ type guggyGifResult struct {
 
 // Service contains the Config fields for the Guggy service.
 //
-// Example:
+// Example request:
 //   {
 //       "api_key": "fkweugfyuwegfweyg"
 //   }

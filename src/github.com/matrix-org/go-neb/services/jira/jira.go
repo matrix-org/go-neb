@@ -33,7 +33,7 @@ var projectKeyRegex = regexp.MustCompile("^[A-z]+$")
 //
 // Before you can set up a JIRA Service, you need to set up a JIRA Realm.
 //
-// Example:
+// Example request:
 //   {
 //       Rooms: {
 //           "!qmElAGdFYCHoCJuaNt:localhost": {

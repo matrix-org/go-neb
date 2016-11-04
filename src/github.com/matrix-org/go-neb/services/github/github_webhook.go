@@ -28,7 +28,7 @@ const WebhookServiceType = "github-webhook"
 // to it. It requires a public domain which Github can reach. Notices will be sent
 // as the service user ID, not the ClientUserID.
 //
-// Example:
+// Example request:
 //   {
 //       ClientUserID: "@alice:localhost",
 //       RealmID: "github-realm-id",

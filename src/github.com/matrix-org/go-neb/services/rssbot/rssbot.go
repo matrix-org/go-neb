@@ -37,7 +37,7 @@ const minPollingIntervalSeconds = 60 * 5 // 5 min (News feeds can be genuinely s
 
 // Service contains the Config fields for this service.
 //
-// Example:
+// Example request:
 //   {
 //       feeds: {
 //           "http://rss.cnn.com/rss/edition.rss": {
