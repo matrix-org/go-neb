@@ -26,6 +26,7 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 
 	if len(segments) < 2 {
 		w.WriteHeader(400)
+		return
 	}
 
 	hookID := segments[len(segments)-2]
@@ -37,17 +38,18 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 
 	slackMessage, err := getSlackMessage(*req)
 	if err != nil {
+		w.WriteHeader(500)
 		return
 	}
 	htmlMessage, err := slackMessageToHTMLMessage(slackMessage)
 	if err != nil {
+		w.WriteHeader(500)
 		return
 	}
 	htmlMessage.MsgType = messageType
 	cli.SendMessageEvent(
-		roomID,
-		"m.room.message",
-		htmlMessage)
+		roomID, "m.room.message", htmlMessage,
+	)
 	w.WriteHeader(200)
 }
 

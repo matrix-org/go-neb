@@ -5,15 +5,16 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	log "github.com/Sirupsen/logrus"
-	"github.com/matrix-org/go-neb/matrix"
-	"github.com/russross/blackfriday"
 	"html/template"
 	"io/ioutil"
 	"mime"
 	"net/http"
 	"regexp"
 	"time"
+
+	log "github.com/Sirupsen/logrus"
+	"github.com/matrix-org/go-neb/matrix"
+	"github.com/russross/blackfriday"
 )
 
 type slackAttachment struct {
@@ -84,6 +85,7 @@ var netClient = &http.Client{
 	Timeout: time.Second * 10,
 }
 
+// TODO: What does this do?
 var linkRegex, _ = regexp.Compile("<([^|]+)(\\|([^>]+))?>")
 
 func getSlackMessage(req http.Request) (message slackMessage, err error) {
@@ -95,7 +97,6 @@ func getSlackMessage(req http.Request) (message slackMessage, err error) {
 		payload := req.Form.Get("payload")
 		err = json.Unmarshal([]byte(payload), &message)
 	} else if ct == "application/json" {
-		log.Info("Parsing as JSON")
 		decoder := json.NewDecoder(req.Body)
 		err = decoder.Decode(&message)
 	} else {
@@ -110,12 +111,13 @@ func linkifyString(text string) string {
 	return linkRegex.ReplaceAllString(text, "<a href=\"$1\">$3</a>")
 }
 
+// Convert a Slack colour (defined at https://api.slack.com/docs/message-attachments )
+// into an HTML color.
 func getColor(color *string) string {
 	if color == nil {
 		return "black"
 	}
 
-	// https://api.slack.com/docs/message-attachments defines these aliases
 	mappedColor, ok := map[string]string{
 		"good":    "green",
 		"warning": "yellow",
@@ -124,11 +126,13 @@ func getColor(color *string) string {
 	if ok {
 		return mappedColor
 	}
+
+	// HTML color= attributes support any arbitrary string, so just pass through.
 	return *color
 }
 
 // fetches an image and encodes it as a data URL
-// returns nil if fetch fails
+// returns an empty string if fetch fails
 func fetchAndEncodeImage(url *string) (data template.URL) {
 	if url == nil {
 		return
@@ -136,21 +140,24 @@ func fetchAndEncodeImage(url *string) (data template.URL) {
 
 	var resp *http.Response
 	resp, err := netClient.Get(*url)
-	if err == nil {
-		var (
-			body        []byte
-			contentType string
-		)
-
-		if body, err = ioutil.ReadAll(resp.Body); err != nil {
-			return
-		}
-		if contentType, _, err = mime.ParseMediaType(resp.Header.Get("Content-Type")); err != nil {
-			return
-		}
-		base64Body := base64.StdEncoding.EncodeToString(body)
-		data = template.URL(fmt.Sprintf("data:%s;base64,%s", contentType, base64Body))
+	if err != nil {
+		log.WithError(err).WithField("url", url).Error("Failed to GET URL")
+		return
 	}
+
+	var (
+		body        []byte
+		contentType string
+	)
+
+	if body, err = ioutil.ReadAll(resp.Body); err != nil {
+		return
+	}
+	if contentType, _, err = mime.ParseMediaType(resp.Header.Get("Content-Type")); err != nil {
+		return
+	}
+	base64Body := base64.StdEncoding.EncodeToString(body)
+	data = template.URL(fmt.Sprintf("data:%s;base64,%s", contentType, base64Body))
 
 	return
 }
@@ -182,7 +189,6 @@ func renderSlackAttachment(attachment *slackAttachment) {
 		}
 
 		if targetField != nil && srcField != nil {
-			log.Info(targetField)
 			*targetField = template.HTML(
 				blackfriday.MarkdownBasic([]byte(linkifyString(*srcField))))
 		}
