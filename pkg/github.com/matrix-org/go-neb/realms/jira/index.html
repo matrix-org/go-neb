@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#375EAB">
 
-  <title>realms - The Go Programming Language</title>
+  <title>jira - The Go Programming Language</title>
 
 <link type="text/css" rel="stylesheet" href="../../../../../../lib/godoc/style.css">
 
@@ -42,7 +42,7 @@
 <div class="container">
 
 
-  <h1>Package realms</h1>
+  <h1>Package jira</h1>
 
 
 
@@ -89,7 +89,10 @@
 			</div>
 			<div class="expanded">
 				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
-				
+				<p>
+Package jira implements OAuth1.0a support for arbitrary JIRA installations.
+</p>
+
 			</div>
 		</div>
 		
@@ -105,59 +108,71 @@
 			<div id="manual-nav">
 			<dl>
 			
+				<dd><a href="index.html#pkg-constants">Constants</a></dd>
 			
 			
 			
+			
 				
-				<dd><a href="index.html#JIRARealm">type JIRARealm</a></dd>
+				<dd><a href="index.html#AuthRequest">type AuthRequest</a></dd>
 				
-				
-					
-					<dd>&nbsp; &nbsp; <a href="index.html#JIRARealm.AuthSession">func (r *JIRARealm) AuthSession(id, userID, realmID string) types.AuthSession</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="index.html#JIRARealm.ID">func (r *JIRARealm) ID() string</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="index.html#JIRARealm.Init">func (r *JIRARealm) Init() error</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="index.html#JIRARealm.JIRAClient">func (r *JIRARealm) JIRAClient(userID string, allowUnauth bool) (*jira.Client, error)</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="index.html#JIRARealm.OnReceiveRedirect">func (r *JIRARealm) OnReceiveRedirect(w http.ResponseWriter, req *http.Request)</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="index.html#JIRARealm.ProjectKeyExists">func (r *JIRARealm) ProjectKeyExists(userID, projectKey string) (bool, error)</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="index.html#JIRARealm.Register">func (r *JIRARealm) Register() error</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="index.html#JIRARealm.RequestAuthSession">func (r *JIRARealm) RequestAuthSession(userID string, req json.RawMessage) interface{}</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="index.html#JIRARealm.Type">func (r *JIRARealm) Type() string</a></dd>
 				
 			
 				
-				<dd><a href="index.html#JIRASession">type JIRASession</a></dd>
+				<dd><a href="index.html#AuthResponse">type AuthResponse</a></dd>
+				
+				
+			
+				
+				<dd><a href="index.html#Realm">type Realm</a></dd>
 				
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#JIRASession.Authenticated">func (s *JIRASession) Authenticated() bool</a></dd>
+					<dd>&nbsp; &nbsp; <a href="index.html#Realm.AuthSession">func (r *Realm) AuthSession(id, userID, realmID string) types.AuthSession</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#JIRASession.ID">func (s *JIRASession) ID() string</a></dd>
+					<dd>&nbsp; &nbsp; <a href="index.html#Realm.ID">func (r *Realm) ID() string</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#JIRASession.Info">func (s *JIRASession) Info() interface{}</a></dd>
+					<dd>&nbsp; &nbsp; <a href="index.html#Realm.Init">func (r *Realm) Init() error</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#JIRASession.RealmID">func (s *JIRASession) RealmID() string</a></dd>
+					<dd>&nbsp; &nbsp; <a href="index.html#Realm.JIRAClient">func (r *Realm) JIRAClient(userID string, allowUnauth bool) (*jira.Client, error)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#JIRASession.UserID">func (s *JIRASession) UserID() string</a></dd>
+					<dd>&nbsp; &nbsp; <a href="index.html#Realm.OnReceiveRedirect">func (r *Realm) OnReceiveRedirect(w http.ResponseWriter, req *http.Request)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Realm.ProjectKeyExists">func (r *Realm) ProjectKeyExists(userID, projectKey string) (bool, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Realm.Register">func (r *Realm) Register() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Realm.RequestAuthSession">func (r *Realm) RequestAuthSession(userID string, req json.RawMessage) interface{}</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Realm.Type">func (r *Realm) Type() string</a></dd>
+				
+			
+				
+				<dd><a href="index.html#Session">type Session</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Session.Authenticated">func (s *Session) Authenticated() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Session.ID">func (s *Session) ID() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Session.Info">func (s *Session) Info() interface{}</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Session.RealmID">func (s *Session) RealmID() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Session.UserID">func (s *Session) UserID() string</a></dd>
 				
 			
 			
@@ -217,27 +232,27 @@
 		</div> <!-- #pkg-callgraph -->
 
 		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const <span id="RealmType">RealmType</span> = &#34;jira&#34;</pre>
+				<p>
+RealmType of the JIRA realm
+</p>
+
+			
+		
 		
 		
 		
 			
 			
-			<h2 id="JIRARealm">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=467:944#L13">JIRARealm</a></h2>
-			<pre>type JIRARealm struct {
-    JIRAEndpoint   <a href="../../../../../builtin/index.html#string">string</a>
-    Server         <a href="../../../../../builtin/index.html#string">string</a> <span class="comment">// clobbered based on /serverInfo request</span>
-    Version        <a href="../../../../../builtin/index.html#string">string</a> <span class="comment">// clobbered based on /serverInfo request</span>
-    ConsumerName   <a href="../../../../../builtin/index.html#string">string</a>
-    ConsumerKey    <a href="../../../../../builtin/index.html#string">string</a>
-    ConsumerSecret <a href="../../../../../builtin/index.html#string">string</a>
-    PublicKeyPEM   <a href="../../../../../builtin/index.html#string">string</a> <span class="comment">// clobbered based on PrivateKeyPEM</span>
-    PrivateKeyPEM  <a href="../../../../../builtin/index.html#string">string</a>
-    HasWebhook     <a href="../../../../../builtin/index.html#bool">bool</a> <span class="comment">// clobbered based on NEB</span>
-    StarterLink    <a href="../../../../../builtin/index.html#string">string</a>
-    <span class="comment">// contains filtered or unexported fields</span>
+			<h2 id="AuthRequest">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=3573:3679#L92">AuthRequest</a></h2>
+			<pre>type AuthRequest struct {
+    <span class="comment">// Optional. The URL to redirect to after authentication.</span>
+    RedirectURL <a href="../../../../../builtin/index.html#string">string</a>
 }</pre>
 			<p>
-JIRARealm is an AuthRealm which can process JIRA installations
+AuthRequest is a request for authenticating with JIRA
 </p>
 
 
@@ -252,9 +267,106 @@ JIRARealm is an AuthRealm which can process JIRA installations
 			
 
 			
+		
+			
+			
+			<h2 id="AuthResponse">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=3730:3835#L98">AuthResponse</a></h2>
+			<pre>type AuthResponse struct {
+    <span class="comment">// The URL to visit to perform OAuth on this JIRA installation.</span>
+    URL <a href="../../../../../builtin/index.html#string">string</a>
+}</pre>
+			<p>
+AuthResponse is a response to an AuthRequest.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Realm">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=971:2932#L27">Realm</a></h2>
+			<pre>type Realm struct {
+
+    <span class="comment">// The HTTPS URL of the JIRA installation to authenticate with.</span>
+    JIRAEndpoint <a href="../../../../../builtin/index.html#string">string</a>
+    <span class="comment">// The desired &#34;Consumer Name&#34; field of the &#34;Application Links&#34; admin page on JIRA.</span>
+    <span class="comment">// Generally this is the name of the service. Users will need to enter this string</span>
+    <span class="comment">// into their JIRA admin web form.</span>
+    ConsumerName <a href="../../../../../builtin/index.html#string">string</a>
+    <span class="comment">// The desired &#34;Consumer Key&#34; field of the &#34;Application Links&#34; admin page on JIRA.</span>
+    <span class="comment">// Generally this is the name of the service. Users will need to enter this string</span>
+    <span class="comment">// into their JIRA admin web form.</span>
+    ConsumerKey <a href="../../../../../builtin/index.html#string">string</a>
+    <span class="comment">// The desired &#34;Consumer Secret&#34; field of the &#34;Application Links&#34; admin page on JIRA.</span>
+    <span class="comment">// This should be a random long string. Users will need to enter this string into</span>
+    <span class="comment">// their JIRA admin web form.</span>
+    ConsumerSecret <a href="../../../../../builtin/index.html#string">string</a>
+    <span class="comment">// A string which contains the private key for performing OAuth 1.0 requests.</span>
+    <span class="comment">// This MUST be in PEM format. It must NOT have a password. Go-NEB will convert this</span>
+    <span class="comment">// into a public key in PEM format and return this to users. Users will need to enter</span>
+    <span class="comment">// the *public* key into their JIRA admin web form.</span>
+    <span class="comment">//</span>
+    <span class="comment">// To generate a private key PEM: (JIRA does not support bit lengths &gt;2048):</span>
+    <span class="comment">//    $ openssl genrsa -out privkey.pem 2048</span>
+    <span class="comment">//    $ cat privkey.pem</span>
+    PrivateKeyPEM <a href="../../../../../builtin/index.html#string">string</a>
+    <span class="comment">// Optional. If supplied, !jira commands will return this link whenever someone is</span>
+    <span class="comment">// prompted to login to JIRA.</span>
+    StarterLink <a href="../../../../../builtin/index.html#string">string</a>
+
+    <span class="comment">// The server name of the JIRA installation from /serverInfo.</span>
+    <span class="comment">// This is an informational field populated by Go-NEB post-creation.</span>
+    Server <a href="../../../../../builtin/index.html#string">string</a>
+    <span class="comment">// The JIRA version string from /serverInfo.</span>
+    <span class="comment">// This is an informational field populated by Go-NEB post-creation.</span>
+    Version <a href="../../../../../builtin/index.html#string">string</a>
+    <span class="comment">// The public key for the given private key. This is populated by Go-NEB.</span>
+    PublicKeyPEM <a href="../../../../../builtin/index.html#string">string</a>
+
+    <span class="comment">// Internal field. True if this realm has already registered a webhook with the JIRA installation.</span>
+    HasWebhook <a href="../../../../../builtin/index.html#bool">bool</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Realm is an AuthRealm which can process JIRA installations.
+</p>
+<p>
+Example request:
+</p>
+<pre>{
+     &#34;JIRAEndpoint&#34;: &#34;matrix.org/jira/&#34;,
+     &#34;ConsumerName&#34;: &#34;goneb&#34;,
+     &#34;ConsumerKey&#34;: &#34;goneb&#34;,
+     &#34;ConsumerSecret&#34;: &#34;random_long_string&#34;,
+     &#34;PrivateKeyPEM&#34;: &#34;-----BEGIN RSA PRIVATE KEY-----\r\nMIIEowIBAAKCAQEA39UhbOvQHEkBP9fGnhU+eSObTAwX9req2l1NiuNaPU9rE7tf6Bk\r\n-----END RSA PRIVATE KEY-----&#34;
+}
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
 				
-				<h3 id="JIRARealm.AuthSession">func (*JIRARealm) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=6730:6807#L223">AuthSession</a></h3>
-				<pre>func (r *<a href="index.html#JIRARealm">JIRARealm</a>) AuthSession(id, userID, realmID <a href="../../../../../builtin/index.html#string">string</a>) <a href="../../types/index.html">types</a>.<a href="../../types/index.html#AuthSession">AuthSession</a></pre>
+				<h3 id="Realm.AuthSession">func (*Realm) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=9437:9510#L291">AuthSession</a></h3>
+				<pre>func (r *<a href="index.html#Realm">Realm</a>) AuthSession(id, userID, realmID <a href="../../../../../builtin/index.html#string">string</a>) <a href="../../types/index.html">types</a>.<a href="../../types/index.html#AuthSession">AuthSession</a></pre>
 				<p>
 AuthSession returns a JIRASession with the given parameters
 </p>
@@ -264,8 +376,8 @@ AuthSession returns a JIRASession with the given parameters
 				
 			
 				
-				<h3 id="JIRARealm.ID">func (*JIRARealm) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=2075:2106#L68">ID</a></h3>
-				<pre>func (r *<a href="index.html#JIRARealm">JIRARealm</a>) ID() <a href="../../../../../builtin/index.html#string">string</a></pre>
+				<h3 id="Realm.ID">func (*Realm) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=4526:4553#L130">ID</a></h3>
+				<pre>func (r *<a href="index.html#Realm">Realm</a>) ID() <a href="../../../../../builtin/index.html#string">string</a></pre>
 				<p>
 ID returns the ID of this JIRA realm.
 </p>
@@ -275,8 +387,8 @@ ID returns the ID of this JIRA realm.
 				
 			
 				
-				<h3 id="JIRARealm.Init">func (*JIRARealm) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=2279:2311#L78">Init</a></h3>
-				<pre>func (r *<a href="index.html#JIRARealm">JIRARealm</a>) Init() <a href="../../../../../builtin/index.html#error">error</a></pre>
+				<h3 id="Realm.Init">func (*Realm) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=4725:4753#L140">Init</a></h3>
+				<pre>func (r *<a href="index.html#Realm">Realm</a>) Init() <a href="../../../../../builtin/index.html#error">error</a></pre>
 				<p>
 Init initialises the private key for this JIRA realm.
 </p>
@@ -286,8 +398,8 @@ Init initialises the private key for this JIRA realm.
 				
 			
 				
-				<h3 id="JIRARealm.JIRAClient">func (*JIRARealm) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=8077:8162#L269">JIRAClient</a></h3>
-				<pre>func (r *<a href="index.html#JIRARealm">JIRARealm</a>) JIRAClient(userID <a href="../../../../../builtin/index.html#string">string</a>, allowUnauth <a href="../../../../../builtin/index.html#bool">bool</a>) (*jira.<a href="index.html#Client">Client</a>, <a href="../../../../../builtin/index.html#error">error</a>)</pre>
+				<h3 id="Realm.JIRAClient">func (*Realm) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=10772:10853#L337">JIRAClient</a></h3>
+				<pre>func (r *<a href="index.html#Realm">Realm</a>) JIRAClient(userID <a href="../../../../../builtin/index.html#string">string</a>, allowUnauth <a href="../../../../../builtin/index.html#bool">bool</a>) (*<a href="../../../../andygrunwald/go-jira/index.html">jira</a>.<a href="../../../../andygrunwald/go-jira/index.html#Client">Client</a>, <a href="../../../../../builtin/index.html#error">error</a>)</pre>
 				<p>
 JIRAClient returns an authenticated jira.Client for the given userID. Returns an unauthenticated
 client if allowUnauth is true and no authenticated session is found, else returns an error.
@@ -298,8 +410,8 @@ client if allowUnauth is true and no authenticated session is found, else return
 				
 			
 				
-				<h3 id="JIRARealm.OnReceiveRedirect">func (*JIRARealm) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=4893:4972#L167">OnReceiveRedirect</a></h3>
-				<pre>func (r *<a href="index.html#JIRARealm">JIRARealm</a>) OnReceiveRedirect(w <a href="../../../../../net/http/index.html">http</a>.<a href="../../../../../net/http/index.html#ResponseWriter">ResponseWriter</a>, req *<a href="../../../../../net/http/index.html">http</a>.<a href="../../../../../net/http/index.html#Request">Request</a>)</pre>
+				<h3 id="Realm.OnReceiveRedirect">func (*Realm) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=7608:7683#L235">OnReceiveRedirect</a></h3>
+				<pre>func (r *<a href="index.html#Realm">Realm</a>) OnReceiveRedirect(w <a href="../../../../../net/http/index.html">http</a>.<a href="../../../../../net/http/index.html#ResponseWriter">ResponseWriter</a>, req *<a href="../../../../../net/http/index.html">http</a>.<a href="../../../../../net/http/index.html#Request">Request</a>)</pre>
 				<p>
 OnReceiveRedirect is called when JIRA installations redirect back to NEB
 </p>
@@ -309,8 +421,8 @@ OnReceiveRedirect is called when JIRA installations redirect back to NEB
 				
 			
 				
-				<h3 id="JIRARealm.ProjectKeyExists">func (*JIRARealm) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=7154:7231#L235">ProjectKeyExists</a></h3>
-				<pre>func (r *<a href="index.html#JIRARealm">JIRARealm</a>) ProjectKeyExists(userID, projectKey <a href="../../../../../builtin/index.html#string">string</a>) (<a href="../../../../../builtin/index.html#bool">bool</a>, <a href="../../../../../builtin/index.html#error">error</a>)</pre>
+				<h3 id="Realm.ProjectKeyExists">func (*Realm) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=9853:9926#L303">ProjectKeyExists</a></h3>
+				<pre>func (r *<a href="index.html#Realm">Realm</a>) ProjectKeyExists(userID, projectKey <a href="../../../../../builtin/index.html#string">string</a>) (<a href="../../../../../builtin/index.html#bool">bool</a>, <a href="../../../../../builtin/index.html#error">error</a>)</pre>
 				<p>
 ProjectKeyExists returns true if the given project key exists on this JIRA realm.
 An authenticated client for userID will be used if one exists, else an
@@ -323,8 +435,8 @@ of projects.
 				
 			
 				
-				<h3 id="JIRARealm.Register">func (*JIRARealm) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=2749:2785#L94">Register</a></h3>
-				<pre>func (r *<a href="index.html#JIRARealm">JIRARealm</a>) Register() <a href="../../../../../builtin/index.html#error">error</a></pre>
+				<h3 id="Realm.Register">func (*Realm) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=5191:5223#L156">Register</a></h3>
+				<pre>func (r *<a href="index.html#Realm">Realm</a>) Register() <a href="../../../../../builtin/index.html#error">error</a></pre>
 				<p>
 Register is called when this realm is being created from an external entity
 </p>
@@ -334,19 +446,34 @@ Register is called when this realm is being created from an external entity
 				
 			
 				
-				<h3 id="JIRARealm.RequestAuthSession">func (*JIRARealm) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=3647:3733#L124">RequestAuthSession</a></h3>
-				<pre>func (r *<a href="index.html#JIRARealm">JIRARealm</a>) RequestAuthSession(userID <a href="../../../../../builtin/index.html#string">string</a>, req <a href="../../../../../encoding/json/index.html">json</a>.<a href="../../../../../encoding/json/index.html#RawMessage">RawMessage</a>) interface{}</pre>
+				<h3 id="Realm.RequestAuthSession">func (*Realm) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=6403:6485#L196">RequestAuthSession</a></h3>
+				<pre>func (r *<a href="index.html#Realm">Realm</a>) RequestAuthSession(userID <a href="../../../../../builtin/index.html#string">string</a>, req <a href="../../../../../encoding/json/index.html">json</a>.<a href="../../../../../encoding/json/index.html#RawMessage">RawMessage</a>) interface{}</pre>
 				<p>
-RequestAuthSession is called by a user wishing to auth with this JIRA realm
+RequestAuthSession is called by a user wishing to auth with this JIRA realm.
+The request body is of type &#34;jira.AuthRequest&#34;. Returns a &#34;jira.AuthResponse&#34;.
 </p>
+<p>
+Request example:
+</p>
+<pre>{
+    &#34;RedirectURL&#34;: &#34;<a href="https://somewhere.somehow">https://somewhere.somehow</a>&#34;
+}
+</pre>
+<p>
+Response example:
+</p>
+<pre>{
+    &#34;URL&#34;: &#34;<a href="https://jira.somewhere.com/plugins/servlet/oauth/authorize?oauth_token=7yeuierbgweguiegrTbOT">https://jira.somewhere.com/plugins/servlet/oauth/authorize?oauth_token=7yeuierbgweguiegrTbOT</a>&#34;
+}
+</pre>
 
 				
 				
 				
 			
 				
-				<h3 id="JIRARealm.Type">func (*JIRARealm) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=2168:2201#L73">Type</a></h3>
-				<pre>func (r *<a href="index.html#JIRARealm">JIRARealm</a>) Type() <a href="../../../../../builtin/index.html#string">string</a></pre>
+				<h3 id="Realm.Type">func (*Realm) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=4615:4644#L135">Type</a></h3>
+				<pre>func (r *<a href="index.html#Realm">Realm</a>) Type() <a href="../../../../../builtin/index.html#string">string</a></pre>
 				<p>
 Type returns the type of realm this is.
 </p>
@@ -358,16 +485,21 @@ Type returns the type of realm this is.
 		
 			
 			
-			<h2 id="JIRASession">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=1085:1364#L31">JIRASession</a></h2>
-			<pre>type JIRASession struct {
-    RequestSecret      <a href="../../../../../builtin/index.html#string">string</a>
-    AccessToken        <a href="../../../../../builtin/index.html#string">string</a>
-    AccessSecret       <a href="../../../../../builtin/index.html#string">string</a>
-    ClientsRedirectURL <a href="../../../../../builtin/index.html#string">string</a> <span class="comment">// where to redirect the client to after auth</span>
+			<h2 id="Session">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=3069:3514#L74">Session</a></h2>
+			<pre>type Session struct {
+
+    <span class="comment">// The secret obtained when requesting an authentication session with JIRA.</span>
+    RequestSecret <a href="../../../../../builtin/index.html#string">string</a>
+    <span class="comment">// A JIRA access token for a Matrix user ID.</span>
+    AccessToken <a href="../../../../../builtin/index.html#string">string</a>
+    <span class="comment">// A JIRA access secret for a Matrix user ID.</span>
+    AccessSecret <a href="../../../../../builtin/index.html#string">string</a>
+    <span class="comment">// Optional. The URL to redirect the client to after authentication.</span>
+    ClientsRedirectURL <a href="../../../../../builtin/index.html#string">string</a>
     <span class="comment">// contains filtered or unexported fields</span>
 }</pre>
 			<p>
-JIRASession represents a single authentication session between a user and a JIRA endpoint.
+Session represents a single authentication session between a user and a JIRA endpoint.
 The endpoint is dictated by the realm ID.
 </p>
 
@@ -384,8 +516,8 @@ The endpoint is dictated by the realm ID.
 
 			
 				
-				<h3 id="JIRASession.Authenticated">func (*JIRASession) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=1439:1481#L42">Authenticated</a></h3>
-				<pre>func (s *<a href="index.html#JIRASession">JIRASession</a>) Authenticated() <a href="../../../../../builtin/index.html#bool">bool</a></pre>
+				<h3 id="Session.Authenticated">func (*Session) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=3910:3948#L104">Authenticated</a></h3>
+				<pre>func (s *<a href="index.html#Session">Session</a>) Authenticated() <a href="../../../../../builtin/index.html#bool">bool</a></pre>
 				<p>
 Authenticated returns true if the user has completed the auth process
 </p>
@@ -395,8 +527,8 @@ Authenticated returns true if the user has completed the auth process
 				
 			
 				
-				<h3 id="JIRASession.ID">func (*JIRASession) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=1982:2015#L63">ID</a></h3>
-				<pre>func (s *<a href="index.html#JIRASession">JIRASession</a>) ID() <a href="../../../../../builtin/index.html#string">string</a></pre>
+				<h3 id="Session.ID">func (*Session) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=4437:4466#L125">ID</a></h3>
+				<pre>func (s *<a href="index.html#Session">Session</a>) ID() <a href="../../../../../builtin/index.html#string">string</a></pre>
 				<p>
 ID returns the OAuth1 request_token which is used when looking up sessions in the redirect
 handler.
@@ -407,8 +539,8 @@ handler.
 				
 			
 				
-				<h3 id="JIRASession.Info">func (*JIRASession) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=1563:1603#L47">Info</a></h3>
-				<pre>func (s *<a href="index.html#JIRASession">JIRASession</a>) Info() interface{}</pre>
+				<h3 id="Session.Info">func (*Session) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=4030:4066#L109">Info</a></h3>
+				<pre>func (s *<a href="index.html#Session">Session</a>) Info() interface{}</pre>
 				<p>
 Info returns nothing
 </p>
@@ -418,8 +550,8 @@ Info returns nothing
 				
 			
 				
-				<h3 id="JIRASession.RealmID">func (*JIRASession) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=1814:1852#L57">RealmID</a></h3>
-				<pre>func (s *<a href="index.html#JIRASession">JIRASession</a>) RealmID() <a href="../../../../../builtin/index.html#string">string</a></pre>
+				<h3 id="Session.RealmID">func (*Session) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=4273:4307#L119">RealmID</a></h3>
+				<pre>func (s *<a href="index.html#Session">Session</a>) RealmID() <a href="../../../../../builtin/index.html#string">string</a></pre>
 				<p>
 RealmID returns the JIRA realm ID which created this session.
 </p>
@@ -429,8 +561,8 @@ RealmID returns the JIRA realm ID which created this session.
 				
 			
 				
-				<h3 id="JIRASession.UserID">func (*JIRASession) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=1689:1726#L52">UserID</a></h3>
-				<pre>func (s *<a href="index.html#JIRASession">JIRASession</a>) UserID() <a href="../../../../../builtin/index.html#string">string</a></pre>
+				<h3 id="Session.UserID">func (*Session) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/realms/jira/jira.go?s=4152:4185#L114">UserID</a></h3>
+				<pre>func (s *<a href="index.html#Session">Session</a>) UserID() <a href="../../../../../builtin/index.html#string">string</a></pre>
 				<p>
 UserID returns the ID of the user performing the authentication.
 </p>

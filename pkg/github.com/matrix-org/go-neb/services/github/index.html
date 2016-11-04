@@ -122,10 +122,10 @@ webhook service adds Github webhook support.
 				
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#Service.Commands">func (s *Service) Commands(cli *matrix.Client, roomID string) []types.Command</a></dd>
+					<dd>&nbsp; &nbsp; <a href="index.html#Service.Commands">func (s *Service) Commands(cli *matrix.Client) []types.Command</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#Service.Expansions">func (s *Service) Expansions(cli *matrix.Client, roomID string) []types.Expansion</a></dd>
+					<dd>&nbsp; &nbsp; <a href="index.html#Service.Expansions">func (s *Service) Expansions(cli *matrix.Client) []types.Expansion</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="index.html#Service.Register">func (s *Service) Register(oldService types.Service, client *matrix.Client) error</a></dd>
@@ -224,7 +224,7 @@ WebhookServiceType of the Github Webhook service.
 		
 			
 			
-			<h2 id="Service">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/github/github.go?s=1569:1766#L41">Service</a></h2>
+			<h2 id="Service">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/github/github.go?s=1543:1740#L40">Service</a></h2>
 			<pre>type Service struct {
     <a href="../../types/index.html">types</a>.<a href="../../types/index.html#DefaultService">DefaultService</a>
     <span class="comment">// The ID of an existing &#34;github&#34; realm. This realm will be used to obtain</span>
@@ -235,8 +235,7 @@ WebhookServiceType of the Github Webhook service.
 Service contains the Config fields for the Github service.
 </p>
 <p>
-Before you can set up a Github Service, you need to set up a Github Realm. This
-service requires a syncing client.
+Before you can set up a Github Service, you need to set up a Github Realm.
 </p>
 <p>
 You can set a &#34;default repository&#34; for a Matrix room by sending a `m.room.bot.options` state event
@@ -252,7 +251,7 @@ which has the following `content`:
 This will allow the &#34;owner/repo&#34; to be omitted when creating/expanding issues.
 </p>
 <p>
-Example:
+Example request:
 </p>
 <pre>{
     &#34;RealmID&#34;: &#34;github-realm-id&#34;
@@ -272,8 +271,8 @@ Example:
 
 			
 				
-				<h3 id="Service.Commands">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/github/github.go?s=5003:5080#L148">Commands</a></h3>
-				<pre>func (s *<a href="index.html#Service">Service</a>) Commands(cli *<a href="../../matrix/index.html">matrix</a>.<a href="../../matrix/index.html#Client">Client</a>, roomID <a href="../../../../../builtin/index.html#string">string</a>) []<a href="../../types/index.html">types</a>.<a href="../../types/index.html#Command">Command</a></pre>
+				<h3 id="Service.Commands">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/github/github.go?s=4973:5035#L147">Commands</a></h3>
+				<pre>func (s *<a href="index.html#Service">Service</a>) Commands(cli *<a href="../../matrix/index.html">matrix</a>.<a href="../../matrix/index.html#Client">Client</a>) []<a href="../../types/index.html">types</a>.<a href="../../types/index.html#Command">Command</a></pre>
 				<p>
 Commands supported:
 </p>
@@ -290,8 +289,8 @@ is no link, it will return a Starter Link instead.
 				
 			
 				
-				<h3 id="Service.Expansions">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/github/github.go?s=5557:5638#L165">Expansions</a></h3>
-				<pre>func (s *<a href="index.html#Service">Service</a>) Expansions(cli *<a href="../../matrix/index.html">matrix</a>.<a href="../../matrix/index.html#Client">Client</a>, roomID <a href="../../../../../builtin/index.html#string">string</a>) []<a href="../../types/index.html">types</a>.<a href="../../types/index.html#Expansion">Expansion</a></pre>
+				<h3 id="Service.Expansions">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/github/github.go?s=5512:5578#L164">Expansions</a></h3>
+				<pre>func (s *<a href="index.html#Service">Service</a>) Expansions(cli *<a href="../../matrix/index.html">matrix</a>.<a href="../../matrix/index.html#Client">Client</a>) []<a href="../../types/index.html">types</a>.<a href="../../types/index.html#Expansion">Expansion</a></pre>
 				<p>
 Expansions expands strings of the form:
 </p>
@@ -312,7 +311,7 @@ using the default repository.
 				
 			
 				
-				<h3 id="Service.Register">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/github/github.go?s=7243:7324#L214">Register</a></h3>
+				<h3 id="Service.Register">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/github/github.go?s=7183:7264#L213">Register</a></h3>
 				<pre>func (s *<a href="index.html#Service">Service</a>) Register(oldService <a href="../../types/index.html">types</a>.<a href="../../types/index.html#Service">Service</a>, client *<a href="../../matrix/index.html">matrix</a>.<a href="../../matrix/index.html#Client">Client</a>) <a href="../../../../../builtin/index.html#error">error</a></pre>
 				<p>
 Register makes sure that the given realm ID maps to a github realm.
@@ -325,7 +324,7 @@ Register makes sure that the given realm ID maps to a github realm.
 		
 			
 			
-			<h2 id="WebhookService">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/github/github_webhook.go?s=1314:2534#L35">WebhookService</a></h2>
+			<h2 id="WebhookService">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/github/github_webhook.go?s=1331:2551#L35">WebhookService</a></h2>
 			<pre>type WebhookService struct {
     <a href="../../types/index.html">types</a>.<a href="../../types/index.html#DefaultService">DefaultService</a>
 
@@ -366,7 +365,7 @@ to it. It requires a public domain which Github can reach. Notices will be sent
 as the service user ID, not the ClientUserID.
 </p>
 <p>
-Example:
+Example request:
 </p>
 <pre>{
     ClientUserID: &#34;@alice:localhost&#34;,
@@ -396,7 +395,7 @@ Example:
 
 			
 				
-				<h3 id="WebhookService.OnReceiveWebhook">func (*WebhookService) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/github/github_webhook.go?s=2984:3087#L70">OnReceiveWebhook</a></h3>
+				<h3 id="WebhookService.OnReceiveWebhook">func (*WebhookService) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/github/github_webhook.go?s=3001:3104#L70">OnReceiveWebhook</a></h3>
 				<pre>func (s *<a href="index.html#WebhookService">WebhookService</a>) OnReceiveWebhook(w <a href="../../../../../net/http/index.html">http</a>.<a href="../../../../../net/http/index.html#ResponseWriter">ResponseWriter</a>, req *<a href="../../../../../net/http/index.html">http</a>.<a href="../../../../../net/http/index.html#Request">Request</a>, cli *<a href="../../matrix/index.html">matrix</a>.<a href="../../matrix/index.html#Client">Client</a>)</pre>
 				<p>
 OnReceiveWebhook receives requests from Github and possibly sends requests to Matrix as a result.
@@ -416,7 +415,7 @@ Github.
 				
 			
 				
-				<h3 id="WebhookService.PostRegister">func (*WebhookService) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/github/github_webhook.go?s=7141:7204#L197">PostRegister</a></h3>
+				<h3 id="WebhookService.PostRegister">func (*WebhookService) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/github/github_webhook.go?s=7158:7221#L197">PostRegister</a></h3>
 				<pre>func (s *<a href="index.html#WebhookService">WebhookService</a>) PostRegister(oldService <a href="../../types/index.html">types</a>.<a href="../../types/index.html#Service">Service</a>)</pre>
 				<p>
 PostRegister cleans up removed repositories from the old service by
@@ -428,7 +427,7 @@ working out the delta between the old and new hooks.
 				
 			
 				
-				<h3 id="WebhookService.Register">func (*WebhookService) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/github/github_webhook.go?s=5139:5227#L135">Register</a></h3>
+				<h3 id="WebhookService.Register">func (*WebhookService) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/github/github_webhook.go?s=5156:5244#L135">Register</a></h3>
 				<pre>func (s *<a href="index.html#WebhookService">WebhookService</a>) Register(oldService <a href="../../types/index.html">types</a>.<a href="../../types/index.html#Service">Service</a>, client *<a href="../../matrix/index.html">matrix</a>.<a href="../../matrix/index.html#Client">Client</a>) <a href="../../../../../builtin/index.html#error">error</a></pre>
 				<p>
 Register will create webhooks for the repos specified in Rooms

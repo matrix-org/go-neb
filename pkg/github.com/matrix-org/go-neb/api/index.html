@@ -226,7 +226,7 @@ Package &#34;api.handlers&#34; for information on the HTTP API calls.
 		
 			
 			
-			<h2 id="ClientConfig">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/api.go?s=2222:3382#L47">ClientConfig</a></h2>
+			<h2 id="ClientConfig">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/api.go?s=2222:3414#L47">ClientConfig</a></h2>
 			<pre>type ClientConfig struct {
     <span class="comment">// The matrix User ID to connect with. E.g. @alice:matrix.org</span>
     UserID <a href="../../../../builtin/index.html#string">string</a>
@@ -234,8 +234,8 @@ Package &#34;api.handlers&#34; for information on the HTTP API calls.
     HomeserverURL <a href="../../../../builtin/index.html#string">string</a>
     <span class="comment">// The matrix access token to authenticate the requests with.</span>
     AccessToken <a href="../../../../builtin/index.html#string">string</a>
-    <span class="comment">// True to start a sync stream for this user. If false, no /sync goroutine will be</span>
-    <span class="comment">// created and this client won&#39;t listen for new events from Matrix. For services</span>
+    <span class="comment">// True to start a sync stream for this user, making this a &#34;syncing client&#34;. If false, no</span>
+    <span class="comment">// /sync goroutine will be created and this client won&#39;t listen for new events from Matrix. For services</span>
     <span class="comment">// which only SEND events into Matrix, it may be desirable to set Sync to false to reduce the</span>
     <span class="comment">// number of goroutines Go-NEB has to maintain. For services which respond to !commands,</span>
     <span class="comment">// Sync MUST be set to true in order to receive those commands.</span>
@@ -266,7 +266,7 @@ Go-NEB can drive it. It forms the HTTP body to /configureClient requests.
 
 			
 				
-				<h3 id="ClientConfig.Check">func (*ClientConfig) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/api.go?s=4651:4687#L111">Check</a></h3>
+				<h3 id="ClientConfig.Check">func (*ClientConfig) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/api.go?s=4683:4719#L111">Check</a></h3>
 				<pre>func (c *<a href="index.html#ClientConfig">ClientConfig</a>) Check() <a href="../../../../builtin/index.html#error">error</a></pre>
 				<p>
 Check that the client has supplied the correct fields.
@@ -279,7 +279,7 @@ Check that the client has supplied the correct fields.
 		
 			
 			
-			<h2 id="ConfigFile">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/api.go?s=3672:3817#L79">ConfigFile</a></h2>
+			<h2 id="ConfigFile">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/api.go?s=3704:3849#L79">ConfigFile</a></h2>
 			<pre>type ConfigFile struct {
     Clients  []<a href="index.html#ClientConfig">ClientConfig</a>
     Realms   []<a href="index.html#ConfigureAuthRealmRequest">ConfigureAuthRealmRequest</a>
@@ -333,7 +333,7 @@ ConfigureAuthRealmRequest is a request to /configureAuthRealm
 
 			
 				
-				<h3 id="ConfigureAuthRealmRequest.Check">func (*ConfigureAuthRealmRequest) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/api.go?s=4137:4186#L95">Check</a></h3>
+				<h3 id="ConfigureAuthRealmRequest.Check">func (*ConfigureAuthRealmRequest) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/api.go?s=4169:4218#L95">Check</a></h3>
 				<pre>func (c *<a href="index.html#ConfigureAuthRealmRequest">ConfigureAuthRealmRequest</a>) Check() <a href="../../../../builtin/index.html#error">error</a></pre>
 				<p>
 Check validates the /configureAuthRealm request
@@ -377,7 +377,7 @@ ConfigureServiceRequest is a request to /configureService
 
 			
 				
-				<h3 id="ConfigureServiceRequest.Check">func (*ConfigureServiceRequest) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/api.go?s=3868:3915#L87">Check</a></h3>
+				<h3 id="ConfigureServiceRequest.Check">func (*ConfigureServiceRequest) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/api.go?s=3900:3947#L87">Check</a></h3>
 				<pre>func (c *<a href="index.html#ConfigureServiceRequest">ConfigureServiceRequest</a>) Check() <a href="../../../../builtin/index.html#error">error</a></pre>
 				<p>
 Check validates the /configureService request
@@ -417,7 +417,7 @@ RequestAuthSessionRequest is a request to /requestAuthSession
 
 			
 				
-				<h3 id="RequestAuthSessionRequest.Check">func (*RequestAuthSessionRequest) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/api.go?s=4971:5020#L122">Check</a></h3>
+				<h3 id="RequestAuthSessionRequest.Check">func (*RequestAuthSessionRequest) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/api.go?s=5003:5052#L122">Check</a></h3>
 				<pre>func (r *<a href="index.html#RequestAuthSessionRequest">RequestAuthSessionRequest</a>) Check() <a href="../../../../builtin/index.html#error">error</a></pre>
 				<p>
 Check that the request is valid.
@@ -430,7 +430,7 @@ Check that the request is valid.
 		
 			
 			
-			<h2 id="Session">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/api.go?s=3522:3626#L71">Session</a></h2>
+			<h2 id="Session">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/api.go?s=3554:3658#L71">Session</a></h2>
 			<pre>type Session struct {
     SessionID <a href="../../../../builtin/index.html#string">string</a>
     RealmID   <a href="../../../../builtin/index.html#string">string</a>
@@ -455,7 +455,7 @@ They are created for use with ConfigFile.
 
 			
 				
-				<h3 id="Session.Check">func (*Session) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/api.go?s=4372:4403#L103">Check</a></h3>
+				<h3 id="Session.Check">func (*Session) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/api/api.go?s=4404:4435#L103">Check</a></h3>
 				<pre>func (c *<a href="index.html#Session">Session</a>) Check() <a href="../../../../builtin/index.html#error">error</a></pre>
 				<p>
 Check validates the session config request

@@ -116,7 +116,7 @@ Package giphy implements a Service which adds !commands for Giphy.
 				
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#Service.Commands">func (s *Service) Commands(client *matrix.Client, roomID string) []types.Command</a></dd>
+					<dd>&nbsp; &nbsp; <a href="index.html#Service.Commands">func (s *Service) Commands(client *matrix.Client) []types.Command</a></dd>
 				
 			
 			
@@ -190,7 +190,7 @@ ServiceType of the Giphy service.
 		
 			
 			
-			<h2 id="Service">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/giphy/giphy.go?s=809:999#L33">Service</a></h2>
+			<h2 id="Service">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/giphy/giphy.go?s=817:1007#L33">Service</a></h2>
 			<pre>type Service struct {
     <a href="../../types/index.html">types</a>.<a href="../../types/index.html#DefaultService">DefaultService</a>
     <span class="comment">// The Giphy API key to use when making HTTP requests to Giphy.</span>
@@ -201,7 +201,7 @@ ServiceType of the Giphy service.
 Service contains the Config fields for the Giphy Service.
 </p>
 <p>
-Example:
+Example request:
 </p>
 <pre>{
     &#34;api_key&#34;: &#34;dc6zaTOxFJmzC&#34;
@@ -221,8 +221,8 @@ Example:
 
 			
 				
-				<h3 id="Service.Commands">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/giphy/giphy.go?s=1136:1216#L43">Commands</a></h3>
-				<pre>func (s *<a href="index.html#Service">Service</a>) Commands(client *<a href="../../matrix/index.html">matrix</a>.<a href="../../matrix/index.html#Client">Client</a>, roomID <a href="../../../../../builtin/index.html#string">string</a>) []<a href="../../types/index.html">types</a>.<a href="../../types/index.html#Command">Command</a></pre>
+				<h3 id="Service.Commands">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/giphy/giphy.go?s=1144:1209#L43">Commands</a></h3>
+				<pre>func (s *<a href="index.html#Service">Service</a>) Commands(client *<a href="../../matrix/index.html">matrix</a>.<a href="../../matrix/index.html#Client">Client</a>) []<a href="../../types/index.html">types</a>.<a href="../../types/index.html#Command">Command</a></pre>
 				<p>
 Commands supported:
 </p>

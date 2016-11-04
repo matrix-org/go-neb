@@ -121,10 +121,10 @@ The service adds !commands and issue expansions, in addition to JIRA webhook sup
 				
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#Service.Commands">func (s *Service) Commands(cli *matrix.Client, roomID string) []types.Command</a></dd>
+					<dd>&nbsp; &nbsp; <a href="index.html#Service.Commands">func (s *Service) Commands(cli *matrix.Client) []types.Command</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#Service.Expansions">func (s *Service) Expansions(cli *matrix.Client, roomID string) []types.Expansion</a></dd>
+					<dd>&nbsp; &nbsp; <a href="index.html#Service.Expansions">func (s *Service) Expansions(cli *matrix.Client) []types.Expansion</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="index.html#Service.OnReceiveWebhook">func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client)</a></dd>
@@ -204,7 +204,7 @@ ServiceType of the JIRA Service
 		
 			
 			
-			<h2 id="Service">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/jira/jira.go?s=1402:2124#L41">Service</a></h2>
+			<h2 id="Service">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/jira/jira.go?s=1412:2134#L41">Service</a></h2>
 			<pre>type Service struct {
     <a href="../../types/index.html">types</a>.<a href="../../types/index.html#DefaultService">DefaultService</a>
 
@@ -234,7 +234,7 @@ Service contains the Config fields for the JIRA service.
 Before you can set up a JIRA Service, you need to set up a JIRA Realm.
 </p>
 <p>
-Example:
+Example request:
 </p>
 <pre>{
     Rooms: {
@@ -265,8 +265,8 @@ Example:
 
 			
 				
-				<h3 id="Service.Commands">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/jira/jira.go?s=7320:7397#L231">Commands</a></h3>
-				<pre>func (s *<a href="index.html#Service">Service</a>) Commands(cli *<a href="../../matrix/index.html">matrix</a>.<a href="../../matrix/index.html#Client">Client</a>, roomID <a href="../../../../../builtin/index.html#string">string</a>) []<a href="../../types/index.html">types</a>.<a href="../../types/index.html#Command">Command</a></pre>
+				<h3 id="Service.Commands">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/jira/jira.go?s=7327:7389#L231">Commands</a></h3>
+				<pre>func (s *<a href="index.html#Service">Service</a>) Commands(cli *<a href="../../matrix/index.html">matrix</a>.<a href="../../matrix/index.html#Client">Client</a>) []<a href="../../types/index.html">types</a>.<a href="../../types/index.html#Command">Command</a></pre>
 				<p>
 Commands supported:
 </p>
@@ -287,8 +287,8 @@ if there is a known public project with that project key.
 				
 			
 				
-				<h3 id="Service.Expansions">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/jira/jira.go?s=7979:8060#L248">Expansions</a></h3>
-				<pre>func (s *<a href="index.html#Service">Service</a>) Expansions(cli *<a href="../../matrix/index.html">matrix</a>.<a href="../../matrix/index.html#Client">Client</a>, roomID <a href="../../../../../builtin/index.html#string">string</a>) []<a href="../../types/index.html">types</a>.<a href="../../types/index.html#Expansion">Expansion</a></pre>
+				<h3 id="Service.Expansions">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/jira/jira.go?s=7971:8037#L248">Expansions</a></h3>
+				<pre>func (s *<a href="index.html#Service">Service</a>) Expansions(cli *<a href="../../matrix/index.html">matrix</a>.<a href="../../matrix/index.html#Client">Client</a>) []<a href="../../types/index.html">types</a>.<a href="../../types/index.html#Expansion">Expansion</a></pre>
 				<p>
 Expansions expands JIRA issues represented as:
 </p>
@@ -306,7 +306,7 @@ be chosen arbitrarily.
 				
 			
 				
-				<h3 id="Service.OnReceiveWebhook">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/jira/jira.go?s=8386:8482#L260">OnReceiveWebhook</a></h3>
+				<h3 id="Service.OnReceiveWebhook">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/jira/jira.go?s=8363:8459#L260">OnReceiveWebhook</a></h3>
 				<pre>func (s *<a href="index.html#Service">Service</a>) OnReceiveWebhook(w <a href="../../../../../net/http/index.html">http</a>.<a href="../../../../../net/http/index.html#ResponseWriter">ResponseWriter</a>, req *<a href="../../../../../net/http/index.html">http</a>.<a href="../../../../../net/http/index.html#Request">Request</a>, cli *<a href="../../matrix/index.html">matrix</a>.<a href="../../matrix/index.html#Client">Client</a>)</pre>
 				<p>
 OnReceiveWebhook receives requests from JIRA and possibly sends requests to Matrix as a result.
@@ -317,7 +317,7 @@ OnReceiveWebhook receives requests from JIRA and possibly sends requests to Matr
 				
 			
 				
-				<h3 id="Service.Register">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/jira/jira.go?s=2246:2327#L65">Register</a></h3>
+				<h3 id="Service.Register">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/jira/jira.go?s=2256:2337#L65">Register</a></h3>
 				<pre>func (s *<a href="index.html#Service">Service</a>) Register(oldService <a href="../../types/index.html">types</a>.<a href="../../types/index.html#Service">Service</a>, client *<a href="../../matrix/index.html">matrix</a>.<a href="../../matrix/index.html#Client">Client</a>) <a href="../../../../../builtin/index.html#error">error</a></pre>
 				<p>
 Register ensures that the given realm IDs are valid JIRA realms and registers webhooks

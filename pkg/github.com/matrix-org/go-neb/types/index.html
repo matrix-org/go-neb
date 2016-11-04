@@ -152,10 +152,10 @@
 				
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#DefaultService.Commands">func (s *DefaultService) Commands(cli *matrix.Client, roomID string) []Command</a></dd>
+					<dd>&nbsp; &nbsp; <a href="index.html#DefaultService.Commands">func (s *DefaultService) Commands(cli *matrix.Client) []Command</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#DefaultService.Expansions">func (s *DefaultService) Expansions(cli *matrix.Client, roomID string) []Expansion</a></dd>
+					<dd>&nbsp; &nbsp; <a href="index.html#DefaultService.Expansions">func (s *DefaultService) Expansions(cli *matrix.Client) []Expansion</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="index.html#DefaultService.OnReceiveWebhook">func (s *DefaultService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client)</a></dd>
@@ -259,7 +259,7 @@
 		
 			
 			
-			<h2 id="BaseURL">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/service.go?s=4311:4339#L99">BaseURL</a></h2>
+			<h2 id="BaseURL">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/service.go?s=4251:4279#L99">BaseURL</a></h2>
 			<pre>func BaseURL(u <a href="../../../../builtin/index.html#string">string</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
 			<p>
 BaseURL sets the base URL of NEB to the url given. This URL must be accessible from the
@@ -272,7 +272,7 @@ public internet.
 		
 			
 			
-			<h2 id="PollingServiceTypes">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/service.go?s=5116:5159#L127">PollingServiceTypes</a></h2>
+			<h2 id="PollingServiceTypes">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/service.go?s=5056:5099#L127">PollingServiceTypes</a></h2>
 			<pre>func PollingServiceTypes() (types []<a href="../../../../builtin/index.html#string">string</a>)</pre>
 			<p>
 PollingServiceTypes returns a list of service types which meet the Poller interface
@@ -296,7 +296,7 @@ RegisterAuthRealm registers a factory for creating AuthRealm instances.
 		
 			
 			
-			<h2 id="RegisterService">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/service.go?s=4806:4872#L117">RegisterService</a></h2>
+			<h2 id="RegisterService">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/service.go?s=4746:4812#L117">RegisterService</a></h2>
 			<pre>func RegisterService(factory func(<a href="../../../../builtin/index.html#string">string</a>, <a href="../../../../builtin/index.html#string">string</a>, <a href="../../../../builtin/index.html#string">string</a>) <a href="index.html#Service">Service</a>)</pre>
 			<p>
 RegisterService registers a factory for creating Service instances.
@@ -444,7 +444,7 @@ Matches if the arguments start with the path of the command.
 		
 			
 			
-			<h2 id="DefaultService">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/service.go?s=2186:2282#L43">DefaultService</a></h2>
+			<h2 id="DefaultService">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/service.go?s=2156:2252#L43">DefaultService</a></h2>
 			<pre>type DefaultService struct {
     <span class="comment">// contains filtered or unexported fields</span>
 }</pre>
@@ -463,7 +463,7 @@ DefaultService NO-OPs the implementation of optional Service interface methods. 
 
 			
 				
-				<h3 id="NewDefaultService">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/service.go?s=2399:2482#L50">NewDefaultService</a></h3>
+				<h3 id="NewDefaultService">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/service.go?s=2369:2452#L50">NewDefaultService</a></h3>
 				<pre>func NewDefaultService(serviceID, serviceUserID, serviceType <a href="../../../../builtin/index.html#string">string</a>) <a href="index.html#DefaultService">DefaultService</a></pre>
 				<p>
 NewDefaultService creates a new service with implementations for ServiceID(), ServiceType() and ServiceUserID()
@@ -475,8 +475,8 @@ NewDefaultService creates a new service with implementations for ServiceID(), Se
 
 			
 				
-				<h3 id="DefaultService.Commands">func (*DefaultService) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/service.go?s=3493:3571#L75">Commands</a></h3>
-				<pre>func (s *<a href="index.html#DefaultService">DefaultService</a>) Commands(cli *<a href="../matrix/index.html">matrix</a>.<a href="../matrix/index.html#Client">Client</a>, roomID <a href="../../../../builtin/index.html#string">string</a>) []<a href="index.html#Command">Command</a></pre>
+				<h3 id="DefaultService.Commands">func (*DefaultService) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/service.go?s=3463:3526#L75">Commands</a></h3>
+				<pre>func (s *<a href="index.html#DefaultService">DefaultService</a>) Commands(cli *<a href="../matrix/index.html">matrix</a>.<a href="../matrix/index.html#Client">Client</a>) []<a href="index.html#Command">Command</a></pre>
 				<p>
 Commands returns no commands.
 </p>
@@ -486,8 +486,8 @@ Commands returns no commands.
 				
 			
 				
-				<h3 id="DefaultService.Expansions">func (*DefaultService) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/service.go?s=3634:3716#L80">Expansions</a></h3>
-				<pre>func (s *<a href="index.html#DefaultService">DefaultService</a>) Expansions(cli *<a href="../matrix/index.html">matrix</a>.<a href="../matrix/index.html#Client">Client</a>, roomID <a href="../../../../builtin/index.html#string">string</a>) []<a href="index.html#Expansion">Expansion</a></pre>
+				<h3 id="DefaultService.Expansions">func (*DefaultService) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/service.go?s=3589:3656#L80">Expansions</a></h3>
+				<pre>func (s *<a href="index.html#DefaultService">DefaultService</a>) Expansions(cli *<a href="../matrix/index.html">matrix</a>.<a href="../matrix/index.html#Client">Client</a>) []<a href="index.html#Expansion">Expansion</a></pre>
 				<p>
 Expansions returns no expansions.
 </p>
@@ -497,7 +497,7 @@ Expansions returns no expansions.
 				
 			
 				
-				<h3 id="DefaultService.OnReceiveWebhook">func (*DefaultService) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/service.go?s=4039:4142#L91">OnReceiveWebhook</a></h3>
+				<h3 id="DefaultService.OnReceiveWebhook">func (*DefaultService) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/service.go?s=3979:4082#L91">OnReceiveWebhook</a></h3>
 				<pre>func (s *<a href="index.html#DefaultService">DefaultService</a>) OnReceiveWebhook(w <a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#ResponseWriter">ResponseWriter</a>, req *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Request">Request</a>, cli *<a href="../matrix/index.html">matrix</a>.<a href="../matrix/index.html#Client">Client</a>)</pre>
 				<p>
 OnReceiveWebhook does nothing but 200 OK the request.
@@ -508,7 +508,7 @@ OnReceiveWebhook does nothing but 200 OK the request.
 				
 			
 				
-				<h3 id="DefaultService.PostRegister">func (*DefaultService) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/service.go?s=3920:3977#L88">PostRegister</a></h3>
+				<h3 id="DefaultService.PostRegister">func (*DefaultService) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/service.go?s=3860:3917#L88">PostRegister</a></h3>
 				<pre>func (s *<a href="index.html#DefaultService">DefaultService</a>) PostRegister(oldService <a href="index.html#Service">Service</a>)</pre>
 				<p>
 PostRegister does nothing.
@@ -519,7 +519,7 @@ PostRegister does nothing.
 				
 			
 				
-				<h3 id="DefaultService.Register">func (*DefaultService) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/service.go?s=3791:3873#L85">Register</a></h3>
+				<h3 id="DefaultService.Register">func (*DefaultService) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/service.go?s=3731:3813#L85">Register</a></h3>
 				<pre>func (s *<a href="index.html#DefaultService">DefaultService</a>) Register(oldService <a href="index.html#Service">Service</a>, client *<a href="../matrix/index.html">matrix</a>.<a href="../matrix/index.html#Client">Client</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
 				<p>
 Register does nothing and returns no error.
@@ -530,7 +530,7 @@ Register does nothing and returns no error.
 				
 			
 				
-				<h3 id="DefaultService.ServiceID">func (*DefaultService) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/service.go?s=2728:2771#L56">ServiceID</a></h3>
+				<h3 id="DefaultService.ServiceID">func (*DefaultService) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/service.go?s=2698:2741#L56">ServiceID</a></h3>
 				<pre>func (s *<a href="index.html#DefaultService">DefaultService</a>) ServiceID() <a href="../../../../builtin/index.html#string">string</a></pre>
 				<p>
 ServiceID returns the service&#39;s ID. In order for this to return the ID, DefaultService MUST have been
@@ -542,7 +542,7 @@ initialised by NewDefaultService, the zero-initialiser is NOT enough.
 				
 			
 				
-				<h3 id="DefaultService.ServiceType">func (*DefaultService) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/service.go?s=3387:3432#L70">ServiceType</a></h3>
+				<h3 id="DefaultService.ServiceType">func (*DefaultService) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/service.go?s=3357:3402#L70">ServiceType</a></h3>
 				<pre>func (s *<a href="index.html#DefaultService">DefaultService</a>) ServiceType() <a href="../../../../builtin/index.html#string">string</a></pre>
 				<p>
 ServiceType returns the type of service. See each individual service package for the ServiceType constant
@@ -555,7 +555,7 @@ initialised by NewDefaultService, the zero-initialiser is NOT enough.
 				
 			
 				
-				<h3 id="DefaultService.ServiceUserID">func (*DefaultService) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/service.go?s=3016:3063#L63">ServiceUserID</a></h3>
+				<h3 id="DefaultService.ServiceUserID">func (*DefaultService) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/service.go?s=2986:3033#L63">ServiceUserID</a></h3>
 				<pre>func (s *<a href="index.html#DefaultService">DefaultService</a>) ServiceUserID() <a href="../../../../builtin/index.html#string">string</a></pre>
 				<p>
 ServiceUserID returns the user ID that the service sends events as. In order for this to return the
@@ -622,7 +622,7 @@ Poller represents a thing which can poll. Services should implement this method 
 		
 			
 			
-			<h2 id="Service">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/service.go?s=697:2073#L20">Service</a></h2>
+			<h2 id="Service">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/service.go?s=697:2043#L20">Service</a></h2>
 			<pre>type Service interface {
     <span class="comment">// Return the user ID of this service.</span>
     ServiceUserID() <a href="../../../../builtin/index.html#string">string</a>
@@ -630,8 +630,8 @@ Poller represents a thing which can poll. Services should implement this method 
     ServiceID() <a href="../../../../builtin/index.html#string">string</a>
     <span class="comment">// Return the type of service. This string MUST NOT change.</span>
     ServiceType() <a href="../../../../builtin/index.html#string">string</a>
-    Commands(cli *<a href="../matrix/index.html">matrix</a>.<a href="../matrix/index.html#Client">Client</a>, roomID <a href="../../../../builtin/index.html#string">string</a>) []<a href="index.html#Command">Command</a>
-    Expansions(cli *<a href="../matrix/index.html">matrix</a>.<a href="../matrix/index.html#Client">Client</a>, roomID <a href="../../../../builtin/index.html#string">string</a>) []<a href="index.html#Expansion">Expansion</a>
+    Commands(cli *<a href="../matrix/index.html">matrix</a>.<a href="../matrix/index.html#Client">Client</a>) []<a href="index.html#Command">Command</a>
+    Expansions(cli *<a href="../matrix/index.html">matrix</a>.<a href="../matrix/index.html#Client">Client</a>) []<a href="index.html#Expansion">Expansion</a>
     OnReceiveWebhook(w <a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#ResponseWriter">ResponseWriter</a>, req *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Request">Request</a>, cli *<a href="../matrix/index.html">matrix</a>.<a href="../matrix/index.html#Client">Client</a>)
     <span class="comment">// A lifecycle function which is invoked when the service is being registered. The old service, if one exists, is provided,</span>
     <span class="comment">// along with a Client instance for ServiceUserID(). If this function returns an error, the service will not be registered</span>
@@ -659,7 +659,7 @@ A Service is the configuration for a bot service.
 
 			
 				
-				<h3 id="CreateService">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/service.go?s=5367:5468#L136">CreateService</a></h3>
+				<h3 id="CreateService">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/types/service.go?s=5307:5408#L136">CreateService</a></h3>
 				<pre>func CreateService(serviceID, serviceType, serviceUserID <a href="../../../../builtin/index.html#string">string</a>, serviceJSON []<a href="../../../../builtin/index.html#byte">byte</a>) (<a href="index.html#Service">Service</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
 				<p>
 CreateService creates a Service of the given type and serviceID.

@@ -196,7 +196,7 @@ ServiceType of the RSS Bot service
 		
 			
 			
-			<h2 id="Service">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/rssbot/rssbot.go?s=1294:2255#L42">Service</a></h2>
+			<h2 id="Service">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/rssbot/rssbot.go?s=1302:2263#L42">Service</a></h2>
 			<pre>type Service struct {
     <a href="../../types/index.html">types</a>.<a href="../../types/index.html#DefaultService">DefaultService</a>
     <span class="comment">// Feeds is a map of feed URL to configuration options for this feed.</span>
@@ -221,7 +221,7 @@ ServiceType of the RSS Bot service
 Service contains the Config fields for this service.
 </p>
 <p>
-Example:
+Example request:
 </p>
 <pre>{
     feeds: {
@@ -249,7 +249,7 @@ Example:
 
 			
 				
-				<h3 id="Service.OnPoll">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/rssbot/rssbot.go?s=4838:4892#L139">OnPoll</a></h3>
+				<h3 id="Service.OnPoll">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/rssbot/rssbot.go?s=4846:4900#L139">OnPoll</a></h3>
 				<pre>func (s *<a href="index.html#Service">Service</a>) OnPoll(cli *<a href="../../matrix/index.html">matrix</a>.<a href="../../matrix/index.html#Client">Client</a>) <a href="../../../../../time/index.html">time</a>.<a href="../../../../../time/index.html#Time">Time</a></pre>
 				<p>
 OnPoll rechecks RSS feeds which are due to be polled.
@@ -272,7 +272,7 @@ Returns a timestamp representing when this Service should have OnPoll called aga
 				
 			
 				
-				<h3 id="Service.PostRegister">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/rssbot/rssbot.go?s=3821:3877#L115">PostRegister</a></h3>
+				<h3 id="Service.PostRegister">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/rssbot/rssbot.go?s=3829:3885#L115">PostRegister</a></h3>
 				<pre>func (s *<a href="index.html#Service">Service</a>) PostRegister(oldService <a href="../../types/index.html">types</a>.<a href="../../types/index.html#Service">Service</a>)</pre>
 				<p>
 PostRegister deletes this service if there are no feeds remaining.
@@ -283,7 +283,7 @@ PostRegister deletes this service if there are no feeds remaining.
 				
 			
 				
-				<h3 id="Service.Register">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/rssbot/rssbot.go?s=2368:2449#L64">Register</a></h3>
+				<h3 id="Service.Register">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/rssbot/rssbot.go?s=2376:2457#L64">Register</a></h3>
 				<pre>func (s *<a href="index.html#Service">Service</a>) Register(oldService <a href="../../types/index.html">types</a>.<a href="../../types/index.html#Service">Service</a>, client *<a href="../../matrix/index.html">matrix</a>.<a href="../../matrix/index.html#Client">Client</a>) <a href="../../../../../builtin/index.html#error">error</a></pre>
 				<p>
 Register will check the liveness of each RSS feed given. If all feeds check out okay, no error is returned.

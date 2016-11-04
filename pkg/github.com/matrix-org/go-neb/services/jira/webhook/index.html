@@ -109,7 +109,7 @@
 				<dd><a href="index.html#OnReceiveRequest">func OnReceiveRequest(req *http.Request) (string, *Event, *errors.HTTPError)</a></dd>
 			
 				
-				<dd><a href="index.html#RegisterHook">func RegisterHook(jrealm *realms.JIRARealm, projects []string, userID, webhookEndpointURL string) error</a></dd>
+				<dd><a href="index.html#RegisterHook">func RegisterHook(jrealm *jira.Realm, projects []string, userID, webhookEndpointURL string) error</a></dd>
 			
 			
 				
@@ -178,7 +178,7 @@
 		
 			
 			
-			<h2 id="OnReceiveRequest">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/jira/webhook/webhook.go?s=4003:4079#L93">OnReceiveRequest</a></h2>
+			<h2 id="OnReceiveRequest">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/jira/webhook/webhook.go?s=4013:4089#L94">OnReceiveRequest</a></h2>
 			<pre>func OnReceiveRequest(req *<a href="../../../../../../net/http/index.html">http</a>.<a href="../../../../../../net/http/index.html#Request">Request</a>) (<a href="../../../../../../builtin/index.html#string">string</a>, *<a href="index.html#Event">Event</a>, *<a href="../../../errors/index.html">errors</a>.<a href="../../../errors/index.html#HTTPError">HTTPError</a>)</pre>
 			<p>
 OnReceiveRequest is called when JIRA hits NEB with an update.
@@ -191,8 +191,8 @@ Returns the project key and webhook event, or an error.
 		
 			
 			
-			<h2 id="RegisterHook">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/jira/webhook/webhook.go?s=896:999#L24">RegisterHook</a></h2>
-			<pre>func RegisterHook(jrealm *realms.<a href="index.html#JIRARealm">JIRARealm</a>, projects []<a href="../../../../../../builtin/index.html#string">string</a>, userID, webhookEndpointURL <a href="../../../../../../builtin/index.html#string">string</a>) <a href="../../../../../../builtin/index.html#error">error</a></pre>
+			<h2 id="RegisterHook">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/jira/webhook/webhook.go?s=912:1009#L25">RegisterHook</a></h2>
+			<pre>func RegisterHook(jrealm *<a href="../../../realms/jira/index.html">jira</a>.<a href="../../../realms/jira/index.html#Realm">Realm</a>, projects []<a href="../../../../../../builtin/index.html#string">string</a>, userID, webhookEndpointURL <a href="../../../../../../builtin/index.html#string">string</a>) <a href="../../../../../../builtin/index.html#error">error</a></pre>
 			<p>
 RegisterHook checks to see if this user is allowed to track the given projects and then tracks them.
 </p>
@@ -204,12 +204,12 @@ RegisterHook checks to see if this user is allowed to track the given projects a
 		
 			
 			
-			<h2 id="Event">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/jira/webhook/webhook.go?s=599:790#L16">Event</a></h2>
+			<h2 id="Event">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/jira/webhook/webhook.go?s=607:806#L17">Event</a></h2>
 			<pre>type Event struct {
-    WebhookEvent <a href="../../../../../../builtin/index.html#string">string</a>     `json:&#34;webhookEvent&#34;`
-    Timestamp    <a href="../../../../../../builtin/index.html#int64">int64</a>      `json:&#34;timestamp&#34;`
-    User         <a href="../../../realms/jira/index.html">jira</a>.<a href="../../../realms/jira/index.html#User">User</a>  `json:&#34;user&#34;`
-    Issue        <a href="../../../realms/jira/index.html">jira</a>.<a href="../../../realms/jira/index.html#Issue">Issue</a> `json:&#34;issue&#34;`
+    WebhookEvent <a href="../../../../../../builtin/index.html#string">string</a>       `json:&#34;webhookEvent&#34;`
+    Timestamp    <a href="../../../../../../builtin/index.html#int64">int64</a>        `json:&#34;timestamp&#34;`
+    User         <a href="../../../../../andygrunwald/go-jira/index.html">gojira</a>.<a href="../../../../../andygrunwald/go-jira/index.html#User">User</a>  `json:&#34;user&#34;`
+    Issue        <a href="../../../../../andygrunwald/go-jira/index.html">gojira</a>.<a href="../../../../../andygrunwald/go-jira/index.html#Issue">Issue</a> `json:&#34;issue&#34;`
 }</pre>
 			<p>
 Event represents an incoming JIRA webhook event

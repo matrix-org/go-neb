@@ -298,7 +298,7 @@ processing goroutine.
 		
 			
 			
-			<h2 id="Client">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=1645:2042#L39">Client</a></h2>
+			<h2 id="Client">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=1682:2113#L41">Client</a></h2>
 			<pre>type Client struct {
     HomeserverURL *<a href="../../../../net/url/index.html">url</a>.<a href="../../../../net/url/index.html#URL">URL</a>
     Prefix        <a href="../../../../builtin/index.html#string">string</a>
@@ -308,6 +308,7 @@ processing goroutine.
     Worker        *<a href="index.html#Worker">Worker</a>
 
     NextBatchStorer <a href="index.html#NextBatchStorer">NextBatchStorer</a>
+    ClientConfig    <a href="../api/index.html">api</a>.<a href="../api/index.html#ClientConfig">ClientConfig</a>
     <span class="comment">// contains filtered or unexported fields</span>
 }</pre>
 			<p>
@@ -325,7 +326,7 @@ Client represents a Matrix client.
 
 			
 				
-				<h3 id="NewClient">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=13235:13334#L414">NewClient</a></h3>
+				<h3 id="NewClient">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=13306:13405#L417">NewClient</a></h3>
 				<pre>func NewClient(httpClient *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Client">Client</a>, homeserverURL *<a href="../../../../net/url/index.html">url</a>.<a href="../../../../net/url/index.html#URL">URL</a>, accessToken, userID <a href="../../../../builtin/index.html#string">string</a>) *<a href="index.html#Client">Client</a></pre>
 				<p>
 NewClient creates a new Matrix Client ready for syncing
@@ -337,7 +338,7 @@ NewClient creates a new Matrix Client ready for syncing
 
 			
 				
-				<h3 id="Client.JoinRoom">func (*Client) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=3187:3280#L86">JoinRoom</a></h3>
+				<h3 id="Client.JoinRoom">func (*Client) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=3258:3351#L89">JoinRoom</a></h3>
 				<pre>func (cli *<a href="index.html#Client">Client</a>) JoinRoom(roomIDorAlias, serverName, invitingUserID <a href="../../../../builtin/index.html#string">string</a>) (<a href="../../../../builtin/index.html#string">string</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
 				<p>
 JoinRoom joins the client to a room ID or alias. If serverName is specified, this will be added as a query param
@@ -350,7 +351,7 @@ inserted into the content of the join request. Returns a room ID.
 				
 			
 				
-				<h3 id="Client.SendMessageEvent">func (*Client) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=4377:4486#L124">SendMessageEvent</a></h3>
+				<h3 id="Client.SendMessageEvent">func (*Client) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=4448:4557#L127">SendMessageEvent</a></h3>
 				<pre>func (cli *<a href="index.html#Client">Client</a>) SendMessageEvent(roomID <a href="../../../../builtin/index.html#string">string</a>, eventType <a href="../../../../builtin/index.html#string">string</a>, contentJSON interface{}) (<a href="../../../../builtin/index.html#string">string</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
 				<p>
 SendMessageEvent sends a message event into a room, returning the event_id on success.
@@ -362,7 +363,7 @@ contentJSON should be a pointer to something that can be encoded as JSON using j
 				
 			
 				
-				<h3 id="Client.SendText">func (*Client) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=4979:5043#L139">SendText</a></h3>
+				<h3 id="Client.SendText">func (*Client) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=5050:5114#L142">SendText</a></h3>
 				<pre>func (cli *<a href="index.html#Client">Client</a>) SendText(roomID, text <a href="../../../../builtin/index.html#string">string</a>) (<a href="../../../../builtin/index.html#string">string</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
 				<p>
 SendText sends an m.room.message event into the given room with a msgtype of m.text
@@ -373,7 +374,7 @@ SendText sends an m.room.message event into the given room with a msgtype of m.t
 				
 			
 				
-				<h3 id="Client.SetDisplayName">func (*Client) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=3934:3993#L113">SetDisplayName</a></h3>
+				<h3 id="Client.SetDisplayName">func (*Client) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=4005:4064#L116">SetDisplayName</a></h3>
 				<pre>func (cli *<a href="index.html#Client">Client</a>) SetDisplayName(displayName <a href="../../../../builtin/index.html#string">string</a>) <a href="../../../../builtin/index.html#error">error</a></pre>
 				<p>
 SetDisplayName sets the user&#39;s profile display name
@@ -384,7 +385,7 @@ SetDisplayName sets the user&#39;s profile display name
 				
 			
 				
-				<h3 id="Client.StopSync">func (*Client) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=10684:10713#L316">StopSync</a></h3>
+				<h3 id="Client.StopSync">func (*Client) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=10755:10784#L319">StopSync</a></h3>
 				<pre>func (cli *<a href="index.html#Client">Client</a>) StopSync()</pre>
 				<p>
 StopSync stops the ongoing sync started by Sync.
@@ -395,7 +396,7 @@ StopSync stops the ongoing sync started by Sync.
 				
 			
 				
-				<h3 id="Client.Sync">func (*Client) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=6578:6603#L189">Sync</a></h3>
+				<h3 id="Client.Sync">func (*Client) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=6649:6674#L192">Sync</a></h3>
 				<pre>func (cli *<a href="index.html#Client">Client</a>) Sync()</pre>
 				<p>
 Sync starts syncing with the provided Homeserver. This function will be invoked continually.
@@ -407,7 +408,7 @@ If Sync is called twice then the first sync will be stopped.
 				
 			
 				
-				<h3 id="Client.UploadLink">func (*Client) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=5198:5256#L145">UploadLink</a></h3>
+				<h3 id="Client.UploadLink">func (*Client) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=5269:5327#L148">UploadLink</a></h3>
 				<pre>func (cli *<a href="index.html#Client">Client</a>) UploadLink(link <a href="../../../../builtin/index.html#string">string</a>) (<a href="../../../../builtin/index.html#string">string</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
 				<p>
 UploadLink uploads an HTTP URL and then returns an MXC URI.
@@ -418,7 +419,7 @@ UploadLink uploads an HTTP URL and then returns an MXC URI.
 				
 			
 				
-				<h3 id="Client.UploadToContentRepo">func (*Client) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=5562:5676#L157">UploadToContentRepo</a></h3>
+				<h3 id="Client.UploadToContentRepo">func (*Client) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=5633:5747#L160">UploadToContentRepo</a></h3>
 				<pre>func (cli *<a href="index.html#Client">Client</a>) UploadToContentRepo(content <a href="../../../../io/index.html">io</a>.<a href="../../../../io/index.html#Reader">Reader</a>, contentType <a href="../../../../builtin/index.html#string">string</a>, contentLength <a href="../../../../builtin/index.html#int64">int64</a>) (<a href="../../../../builtin/index.html#string">string</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
 				<p>
 UploadToContentRepo uploads the given bytes to the content repository and returns an MXC URI.
@@ -573,7 +574,7 @@ ImageMessage is an m.image event
 		
 			
 			
-			<h2 id="NextBatchStorer">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=1130:1372#L25">NextBatchStorer</a></h2>
+			<h2 id="NextBatchStorer">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=1167:1409#L27">NextBatchStorer</a></h2>
 			<pre>type NextBatchStorer interface {
     <span class="comment">// Save a next_batch token for a given user. Best effort.</span>
     Save(userID, nextBatch <a href="../../../../builtin/index.html#string">string</a>)
