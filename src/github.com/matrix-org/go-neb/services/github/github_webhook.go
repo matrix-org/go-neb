@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	log "github.com/Sirupsen/logrus"
-	"github.com/google/go-github/github"
+	gogithub "github.com/google/go-github/github"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/services/github/client"
@@ -285,7 +285,7 @@ func (s *WebhookService) repoList() []string {
 	return repos
 }
 
-func (s *WebhookService) createHook(cli *github.Client, ownerRepo string) error {
+func (s *WebhookService) createHook(cli *gogithub.Client, ownerRepo string) error {
 	o := strings.Split(ownerRepo, "/")
 	owner := o[0]
 	repo := o[1]
@@ -299,14 +299,14 @@ func (s *WebhookService) createHook(cli *github.Client, ownerRepo string) error 
 		cfg["secret"] = s.SecretToken
 	}
 	events := []string{"push", "pull_request", "issues", "issue_comment", "pull_request_review_comment"}
-	_, res, err := cli.Repositories.CreateHook(owner, repo, &github.Hook{
+	_, res, err := cli.Repositories.CreateHook(owner, repo, &gogithub.Hook{
 		Name:   &name,
 		Config: cfg,
 		Events: events,
 	})
 
 	if res.StatusCode == 422 {
-		errResponse, ok := err.(*github.ErrorResponse)
+		errResponse, ok := err.(*gogithub.ErrorResponse)
 		if !ok {
 			return err
 		}
@@ -341,7 +341,7 @@ func (s *WebhookService) deleteHook(owner, repo string) error {
 	if err != nil {
 		return err
 	}
-	var hook *github.Hook
+	var hook *gogithub.Hook
 	for _, h := range hooks {
 		if h.Config["url"] == nil {
 			logger.Print("Ignoring nil config.url")
@@ -396,7 +396,7 @@ func sameRepos(a *WebhookService, b *WebhookService) bool {
 	return true
 }
 
-func (s *WebhookService) githubClientFor(userID string, allowUnauth bool) *github.Client {
+func (s *WebhookService) githubClientFor(userID string, allowUnauth bool) *gogithub.Client {
 	token, err := getTokenForUser(s.RealmID, userID)
 	if err != nil {
 		log.WithFields(log.Fields{

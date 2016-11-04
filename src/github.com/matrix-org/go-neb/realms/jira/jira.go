@@ -1,4 +1,5 @@
-package realms
+// Package jira implements OAuth1.0a support for arbitrary JIRA installations.
+package jira
 
 import (
 	"crypto/rsa"
@@ -8,84 +9,145 @@ import (
 	"encoding/pem"
 	"errors"
 	"fmt"
+	"net/http"
+	"strings"
+
 	log "github.com/Sirupsen/logrus"
-	"github.com/andygrunwald/go-jira"
+	jira "github.com/andygrunwald/go-jira"
 	"github.com/dghubble/oauth1"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/realms/jira/urls"
 	"github.com/matrix-org/go-neb/types"
 	"golang.org/x/net/context"
-	"net/http"
-	"strings"
 )
 
-// JIRARealm is an AuthRealm which can process JIRA installations
-type JIRARealm struct {
-	id             string
-	redirectURL    string
-	privateKey     *rsa.PrivateKey
-	JIRAEndpoint   string
-	Server         string // clobbered based on /serverInfo request
-	Version        string // clobbered based on /serverInfo request
-	ConsumerName   string
-	ConsumerKey    string
+// RealmType of the JIRA realm
+const RealmType = "jira"
+
+// Realm is an AuthRealm which can process JIRA installations.
+//
+// Example request:
+//   {
+//        "JIRAEndpoint": "matrix.org/jira/",
+//        "ConsumerName": "goneb",
+//        "ConsumerKey": "goneb",
+//        "ConsumerSecret": "random_long_string",
+//        "PrivateKeyPEM": "-----BEGIN RSA PRIVATE KEY-----\r\nMIIEowIBAAKCAQEA39UhbOvQHEkBP9fGnhU+eSObTAwX9req2l1NiuNaPU9rE7tf6Bk\r\n-----END RSA PRIVATE KEY-----"
+//   }
+type Realm struct {
+	id          string
+	redirectURL string
+	privateKey  *rsa.PrivateKey
+
+	// The HTTPS URL of the JIRA installation to authenticate with.
+	JIRAEndpoint string
+	// The desired "Consumer Name" field of the "Application Links" admin page on JIRA.
+	// Generally this is the name of the service. Users will need to enter this string
+	// into their JIRA admin web form.
+	ConsumerName string
+	// The desired "Consumer Key" field of the "Application Links" admin page on JIRA.
+	// Generally this is the name of the service. Users will need to enter this string
+	// into their JIRA admin web form.
+	ConsumerKey string
+	// The desired "Consumer Secret" field of the "Application Links" admin page on JIRA.
+	// This should be a random long string. Users will need to enter this string into
+	// their JIRA admin web form.
 	ConsumerSecret string
-	PublicKeyPEM   string // clobbered based on PrivateKeyPEM
-	PrivateKeyPEM  string
-	HasWebhook     bool // clobbered based on NEB
-	StarterLink    string
+	// A string which contains the private key for performing OAuth 1.0 requests.
+	// This MUST be in PEM format. It must NOT have a password. Go-NEB will convert this
+	// into a public key in PEM format and return this to users. Users will need to enter
+	// the *public* key into their JIRA admin web form.
+	//
+	// To generate a private key PEM: (JIRA does not support bit lengths >2048):
+	//    $ openssl genrsa -out privkey.pem 2048
+	//    $ cat privkey.pem
+	PrivateKeyPEM string
+	// Optional. If supplied, !jira commands will return this link whenever someone is
+	// prompted to login to JIRA.
+	StarterLink string
+
+	// The server name of the JIRA installation from /serverInfo.
+	// This is an informational field populated by Go-NEB post-creation.
+	Server string
+	// The JIRA version string from /serverInfo.
+	// This is an informational field populated by Go-NEB post-creation.
+	Version string
+	// The public key for the given private key. This is populated by Go-NEB.
+	PublicKeyPEM string
+
+	// Internal field. True if this realm has already registered a webhook with the JIRA installation.
+	HasWebhook bool
 }
 
-// JIRASession represents a single authentication session between a user and a JIRA endpoint.
+// Session represents a single authentication session between a user and a JIRA endpoint.
 // The endpoint is dictated by the realm ID.
-type JIRASession struct {
-	id                 string // request token
-	userID             string
-	realmID            string
-	RequestSecret      string
-	AccessToken        string
-	AccessSecret       string
-	ClientsRedirectURL string // where to redirect the client to after auth
+type Session struct {
+	id      string // request token
+	userID  string
+	realmID string
+
+	// Configuration fields
+
+	// The secret obtained when requesting an authentication session with JIRA.
+	RequestSecret string
+	// A JIRA access token for a Matrix user ID.
+	AccessToken string
+	// A JIRA access secret for a Matrix user ID.
+	AccessSecret string
+	// Optional. The URL to redirect the client to after authentication.
+	ClientsRedirectURL string
+}
+
+// AuthRequest is a request for authenticating with JIRA
+type AuthRequest struct {
+	// Optional. The URL to redirect to after authentication.
+	RedirectURL string
+}
+
+// AuthResponse is a response to an AuthRequest.
+type AuthResponse struct {
+	// The URL to visit to perform OAuth on this JIRA installation.
+	URL string
 }
 
 // Authenticated returns true if the user has completed the auth process
-func (s *JIRASession) Authenticated() bool {
+func (s *Session) Authenticated() bool {
 	return s.AccessToken != "" && s.AccessSecret != ""
 }
 
 // Info returns nothing
-func (s *JIRASession) Info() interface{} {
+func (s *Session) Info() interface{} {
 	return nil
 }
 
 // UserID returns the ID of the user performing the authentication.
-func (s *JIRASession) UserID() string {
+func (s *Session) UserID() string {
 	return s.userID
 }
 
 // RealmID returns the JIRA realm ID which created this session.
-func (s *JIRASession) RealmID() string {
+func (s *Session) RealmID() string {
 	return s.realmID
 }
 
 // ID returns the OAuth1 request_token which is used when looking up sessions in the redirect
 // handler.
-func (s *JIRASession) ID() string {
+func (s *Session) ID() string {
 	return s.id
 }
 
 // ID returns the ID of this JIRA realm.
-func (r *JIRARealm) ID() string {
+func (r *Realm) ID() string {
 	return r.id
 }
 
 // Type returns the type of realm this is.
-func (r *JIRARealm) Type() string {
-	return "jira"
+func (r *Realm) Type() string {
+	return RealmType
 }
 
 // Init initialises the private key for this JIRA realm.
-func (r *JIRARealm) Init() error {
+func (r *Realm) Init() error {
 	if err := r.parsePrivateKey(); err != nil {
 		log.WithError(err).Print("Failed to parse private key")
 		return err
@@ -101,7 +163,7 @@ func (r *JIRARealm) Init() error {
 }
 
 // Register is called when this realm is being created from an external entity
-func (r *JIRARealm) Register() error {
+func (r *Realm) Register() error {
 	if r.ConsumerName == "" || r.ConsumerKey == "" || r.ConsumerSecret == "" || r.PrivateKeyPEM == "" {
 		return errors.New("ConsumerName, ConsumerKey, ConsumerSecret, PrivateKeyPEM must be specified.")
 	}
@@ -130,14 +192,22 @@ func (r *JIRARealm) Register() error {
 	return nil
 }
 
-// RequestAuthSession is called by a user wishing to auth with this JIRA realm
-func (r *JIRARealm) RequestAuthSession(userID string, req json.RawMessage) interface{} {
+// RequestAuthSession is called by a user wishing to auth with this JIRA realm.
+// The request body is of type "jira.AuthRequest". Returns a "jira.AuthResponse".
+//
+// Request example:
+//   {
+//       "RedirectURL": "https://somewhere.somehow"
+//   }
+// Response example:
+//   {
+//       "URL": "https://jira.somewhere.com/plugins/servlet/oauth/authorize?oauth_token=7yeuierbgweguiegrTbOT"
+//   }
+func (r *Realm) RequestAuthSession(userID string, req json.RawMessage) interface{} {
 	logger := log.WithField("jira_url", r.JIRAEndpoint)
 
 	// check if they supplied a redirect URL
-	var reqBody struct {
-		RedirectURL string
-	}
+	var reqBody AuthRequest
 	if err := json.Unmarshal(req, &reqBody); err != nil {
 		log.WithError(err).Print("Failed to decode request body")
 		return nil
@@ -156,7 +226,7 @@ func (r *JIRARealm) RequestAuthSession(userID string, req json.RawMessage) inter
 		return nil
 	}
 
-	_, err = database.GetServiceDB().StoreAuthSession(&JIRASession{
+	_, err = database.GetServiceDB().StoreAuthSession(&Session{
 		id:                 reqToken,
 		userID:             userID,
 		realmID:            r.id,
@@ -168,13 +238,11 @@ func (r *JIRARealm) RequestAuthSession(userID string, req json.RawMessage) inter
 		return nil
 	}
 
-	return &struct {
-		URL string
-	}{authURL.String()}
+	return &AuthResponse{authURL.String()}
 }
 
 // OnReceiveRedirect is called when JIRA installations redirect back to NEB
-func (r *JIRARealm) OnReceiveRedirect(w http.ResponseWriter, req *http.Request) {
+func (r *Realm) OnReceiveRedirect(w http.ResponseWriter, req *http.Request) {
 	logger := log.WithField("jira_url", r.JIRAEndpoint)
 
 	requestToken, verifier, err := oauth1.ParseAuthorizationCallback(req)
@@ -190,7 +258,7 @@ func (r *JIRARealm) OnReceiveRedirect(w http.ResponseWriter, req *http.Request) 
 		failWith(logger, w, 400, "Unrecognised request token", err)
 		return
 	}
-	jiraSession, ok := session.(*JIRASession)
+	jiraSession, ok := session.(*Session)
 	if !ok {
 		failWith(logger, w, 500, "Unexpected session type found.", nil)
 		return
@@ -230,8 +298,8 @@ func (r *JIRARealm) OnReceiveRedirect(w http.ResponseWriter, req *http.Request) 
 }
 
 // AuthSession returns a JIRASession with the given parameters
-func (r *JIRARealm) AuthSession(id, userID, realmID string) types.AuthSession {
-	return &JIRASession{
+func (r *Realm) AuthSession(id, userID, realmID string) types.AuthSession {
+	return &Session{
 		id:      id,
 		userID:  userID,
 		realmID: realmID,
@@ -242,7 +310,7 @@ func (r *JIRARealm) AuthSession(id, userID, realmID string) types.AuthSession {
 // An authenticated client for userID will be used if one exists, else an
 // unauthenticated client will be used, which may not be able to see the complete list
 // of projects.
-func (r *JIRARealm) ProjectKeyExists(userID, projectKey string) (bool, error) {
+func (r *Realm) ProjectKeyExists(userID, projectKey string) (bool, error) {
 	cli, err := r.JIRAClient(userID, true)
 	if err != nil {
 		return false, err
@@ -276,7 +344,7 @@ func (r *JIRARealm) ProjectKeyExists(userID, projectKey string) (bool, error) {
 
 // JIRAClient returns an authenticated jira.Client for the given userID. Returns an unauthenticated
 // client if allowUnauth is true and no authenticated session is found, else returns an error.
-func (r *JIRARealm) JIRAClient(userID string, allowUnauth bool) (*jira.Client, error) {
+func (r *Realm) JIRAClient(userID string, allowUnauth bool) (*jira.Client, error) {
 	// Check if user has an auth session.
 	session, err := database.GetServiceDB().LoadAuthSessionByUser(r.id, userID)
 	if err != nil {
@@ -289,9 +357,9 @@ func (r *JIRARealm) JIRAClient(userID string, allowUnauth bool) (*jira.Client, e
 		return nil, err
 	}
 
-	jsession, ok := session.(*JIRASession)
+	jsession, ok := session.(*Session)
 	if !ok {
-		return nil, errors.New("Failed to cast user session to a JIRASession")
+		return nil, errors.New("Failed to cast user session to a Session")
 	}
 	// Make sure they finished the auth process
 	if jsession.AccessSecret == "" || jsession.AccessToken == "" {
@@ -310,7 +378,7 @@ func (r *JIRARealm) JIRAClient(userID string, allowUnauth bool) (*jira.Client, e
 	return jira.NewClient(httpClient, r.JIRAEndpoint)
 }
 
-func (r *JIRARealm) parsePrivateKey() error {
+func (r *Realm) parsePrivateKey() error {
 	if r.privateKey != nil {
 		return nil
 	}
@@ -327,7 +395,7 @@ func (r *JIRARealm) parsePrivateKey() error {
 	return nil
 }
 
-func (r *JIRARealm) oauth1Config(jiraBaseURL string) *oauth1.Config {
+func (r *Realm) oauth1Config(jiraBaseURL string) *oauth1.Config {
 	return &oauth1.Config{
 		ConsumerKey:    r.ConsumerKey,
 		ConsumerSecret: r.ConsumerSecret,
@@ -402,6 +470,6 @@ func failWith(logger *log.Entry, w http.ResponseWriter, code int, msg string, er
 
 func init() {
 	types.RegisterAuthRealm(func(realmID, redirectURL string) types.AuthRealm {
-		return &JIRARealm{id: realmID, redirectURL: redirectURL}
+		return &Realm{id: realmID, redirectURL: redirectURL}
 	})
 }

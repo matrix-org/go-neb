@@ -122,7 +122,7 @@ service you're interested in for the additional keys, if any.
  - [HTTP API Docs](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/api/handlers/index.html#ConfigureService.OnIncomingRequest)
  - [JSON Request Body Docs](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/api/index.html#ConfigureServiceRequest)
 
-List of services:
+List of Services:
  - [Echo](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/services/echo/) - An example service
  - [Giphy](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/services/giphy/) - A GIF bot
  - [Github](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/services/github/) - A Github bot
@@ -138,102 +138,21 @@ Realms are how Go-NEB authenticates users on third-party websites.
  - [HTTP API Docs](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/api/handlers/index.html#ConfigureAuthRealm.OnIncomingRequest)
  - [JSON Request Body Docs](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/api/index.html#ConfigureAuthRealmRequest)
 
-### Github Realm
-This has the `Type` of `github`. To set up this realm:
-```bash
-curl -X POST localhost:4050/admin/configureAuthRealm --data-binary '{
-    "ID": "mygithubrealm",
-    "Type": "github",
-    "Config": {
-        "ClientSecret": "YOUR_CLIENT_SECRET",
-        "ClientID": "YOUR_CLIENT_ID",
-        "StarterLink": "https://example.com/requestGithubOAuthToken"
-    }
-}'
-```
- - `ClientSecret`: Your Github application client secret
- - `ClientID`: Your Github application client ID
- - `StarterLink`: Optional. If supplied, `!github` commands will return this link whenever someone is prompted to login to Github.
+### Github
+ - [Realm configuration](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/realms/github/index.html#Realm)
 
-#### Github authentication
-Once you have configured a Github realm, you can associate any Matrix user ID with any Github user. To do this:
-```bash
-curl -X POST localhost:4050/admin/requestAuthSession --data-binary '{
-    "RealmID": "mygithubrealm",
-    "UserID": "@real_matrix_user:localhost",
-    "Config": {
-        "RedirectURL": "https://optional-url.com/to/redirect/to/after/auth"
-    }
-}'
-```
- - `UserID`: The Matrix user ID to associate with.
- - `RedirectURL`: Optional. The URL to redirect to after authentication.
+#### Authentication of Matrix users
 
-This request will return an OAuth URL:
-```json
-{
-  "URL": "https://github.com/login/oauth/authorize?client_id=abcdef&client_secret=acascacac...."
-}
-```
+ * [Configuration for config file](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/realms/github/index.html#Session)
+ * [Configuration for HTTP](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/realms/github/index.html#Realm.RequestAuthSession)
 
-Follow this link to associate this user ID with this Github account. Once this is complete, Go-NEB will have an OAuth token for this user ID and will be able to create issues as their real Github account.
+### JIRA
+ - [Realm configuration](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/realms/jira/index.html#Realm)
 
-To remove this session:
+#### Authentication of Matrix users
+ * [Configuration for config file](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/realms/jira/index.html#Session)
+ * [Configuration for HTTP](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/realms/jira/index.html#Realm.RequestAuthSession)
 
-```bash
-curl -X POST localhost:4050/admin/removeAuthSession --data-binary '{
-    "RealmID": "mygithubrealm",
-    "UserID": "@real_matrix_user:localhost",
-    "Config": {}
-}'
-```
- 
-### JIRA Realm
-This has the `Type` of `jira`. To set up this realm:
-```bash
-curl -X POST localhost:4050/admin/configureAuthRealm --data-binary '{
-    "ID": "jirarealm",
-    "Type": "jira",
-    "Config": {
-        "JIRAEndpoint": "matrix.org/jira/",
-        "ConsumerName": "goneb",
-        "ConsumerKey": "goneb",
-        "ConsumerSecret": "random_long_string",
-        "PrivateKeyPEM": "-----BEGIN RSA PRIVATE KEY-----\r\nMIIEowIBAAKCAQEA39UhbOvQHEkBP9fGnhU+eSObTWBDGWygVYzbcONOlqEOTJUN\r\n8gmnellWqJO45S4jB1vLLnuXiHqEWnmaShIvbUem3QnDDqghu0gfqXHMlQr5R8ZP\r\norTt1F2idWy1wk5rVXeLKSG7uriYhDVOVS69WuefoW5v55b5YZV283v2jROjxHuj\r\ngAsJA7k6tvpYiSXApUl6YHmECfBoiwG9bwItkHwhZ\/fG9i4H8\/aOyr3WlaWbVeKX\r\n+m38lmYZvzQFRAk5ab1vzCGz4cyc\r\nTk2qmZpcjHRd1ijcOkgC23KF8lHWF5Zx0tySR+DWL1JeGm8NJxKMRJZuE8MIkJYF\r\nryE7kjspNItk6npkA3\/A4PWwElhddI4JpiuK+29mMNipRcYYy9e0vH\/igejv7ayd\r\nPLCRMQKBgBDSNWlZT0nNd2DXVqTW9p+MG72VKhDgmEwFB1acOw0lpu1XE8R1wmwG\r\nZRl\/xzri3LOW2Gpc77xu6fs3NIkzQw3v1ifYhX3OrVsCIRBbDjPQI3yYjkhGx24s\r\nVhhZ5S\/TkGk3Kw59bDC6KGqAuQAwX9req2l1NiuNaPU9rE7tf6Bk\r\n-----END RSA PRIVATE KEY-----"
-    }
-}'
-```
- - `JIRAEndpoint`: The base URL of the JIRA installation you wish to talk to.
- - `ConsumerName`: The desired "Consumer Name" field of the "Application Links" admin page on JIRA. Generally this is the name of the service. Users will need to enter this string into their JIRA admin web form.
- - `ConsumerKey`: The desired "Consumer Key" field of the "Application Links" admin page on JIRA. Generally this is the name of the service. Users will need to enter this string into their JIRA admin web form.
- - `ConsumerSecret`: The desired "Consumer Secret" field of the "Application Links" admin page on JIRA. This should be a random long string. Users will need to enter this string into their JIRA admin web form.
- - `PrivateKeyPEM`: A string which contains the private key for performing OAuth 1.0 requests. This MUST be in PEM format. It must NOT have a password. Go-NEB will convert this into a **public** key in PEM format and return this to users. Users will need to enter the public key into their JIRA admin web form.
- - `StarterLink`: Optional. If supplied, `!jira` commands will return this link whenever someone is prompted to login to JIRA.
-
-To generate a private key PEM: (JIRA does not support bit lengths >2048)
-```bash
-openssl genrsa -out privkey.pem 2048
-cat privkey.pem
-```
-
-#### JIRA authentication
-
-```
-curl -X POST localhost:4050/admin/requestAuthSession --data-binary '{
-    "RealmID": "jirarealm",
-    "UserID": "@example:localhost",
-    "Config": {
-        "RedirectURL": "https://optional-url.com/to/redirect/to/after/auth"
-    }
-}'
-```
-
-Returns:
-```json
-{
-    "URL":"https://jira.somewhere.com/plugins/servlet/oauth/authorize?oauth_token=7yeuierbgweguiegrTbOT"
-}
-```
 
 # Developing
 There's a bunch more tools this project uses when developing in order to do
