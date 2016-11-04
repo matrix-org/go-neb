@@ -43,6 +43,11 @@ var ownerRepoRegex = regexp.MustCompile(`^([A-z0-9-_]+)/([A-z0-9-_]+)$`)
 //  }
 //
 // This will allow the "owner/repo" to be omitted when creating/expanding issues.
+//
+// Example:
+//   {
+//       "RealmID": "github-realm-id"
+//   }
 type Service struct {
 	types.DefaultService
 	// The ID of an existing "github" realm. This realm will be used to obtain

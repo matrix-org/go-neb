@@ -32,7 +32,12 @@ type guggyGifResult struct {
 	Height float64 `json:"height"`
 }
 
-// Service contains the Config fields for this service.
+// Service contains the Config fields for the Guggy service.
+//
+// Example:
+//   {
+//       "api_key": "fkweugfyuwegfweyg"
+//   }
 type Service struct {
 	types.DefaultService
 	// The Guggy API key to use when making HTTP requests to Guggy.

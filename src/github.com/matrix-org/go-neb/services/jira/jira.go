@@ -32,6 +32,22 @@ var projectKeyRegex = regexp.MustCompile("^[A-z]+$")
 // Service contains the Config fields for the JIRA service.
 //
 // Before you can set up a JIRA Service, you need to set up a JIRA Realm.
+//
+// Example:
+//   {
+//       Rooms: {
+//           "!qmElAGdFYCHoCJuaNt:localhost": {
+//               Realms: {
+//                   "jira-realm-id": {
+//                       Projects: {
+//                           "SYN": { Expand: true },
+//                           "BOTS": { Expand: true, Track: true }
+//                       }
+//                   }
+//               }
+//           }
+//       }
+//   }
 type Service struct {
 	types.DefaultService
 	webhookEndpointURL string

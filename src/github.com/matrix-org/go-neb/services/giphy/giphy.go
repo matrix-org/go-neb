@@ -34,7 +34,12 @@ type giphySearch struct {
 	Data []result
 }
 
-// Service contains the Config fields for this service.
+// Service contains the Config fields for the Giphy Service.
+//
+// Example:
+//   {
+//       "api_key": "dc6zaTOxFJmzC"
+//   }
 type Service struct {
 	types.DefaultService
 	// The Giphy API key to use when making HTTP requests to Giphy.

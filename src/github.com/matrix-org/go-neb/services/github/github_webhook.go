@@ -27,6 +27,21 @@ const WebhookServiceType = "github-webhook"
 // This service will send notices into a Matrix room when Github sends webhook events
 // to it. It requires a public domain which Github can reach. Notices will be sent
 // as the service user ID, not the ClientUserID.
+//
+// Example:
+//   {
+//       ClientUserID: "@alice:localhost",
+//       RealmID: "github-realm-id",
+//       Rooms: {
+//           "!qmElAGdFYCHoCJuaNt:localhost": {
+//               Repos: {
+//                   "matrix-org/go-neb": {
+//                       Events: ["push", "issues", "pull_request"]
+//                   }
+//               }
+//           }
+//       }
+//   }
 type WebhookService struct {
 	types.DefaultService
 	webhookEndpointURL string
