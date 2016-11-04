@@ -238,7 +238,7 @@ func (s *Service) expandIssue(roomID, userID string, issueKeyGroups []string) in
 // same project key, which project is chosen is undefined. If there
 // is no JIRA account linked to the Matrix user ID, it will return a Starter Link
 // if there is a known public project with that project key.
-func (s *Service) Commands(cli *matrix.Client, roomID string) []types.Command {
+func (s *Service) Commands(cli *matrix.Client) []types.Command {
 	return []types.Command{
 		types.Command{
 			Path: []string{"jira", "create"},
@@ -255,7 +255,7 @@ func (s *Service) Commands(cli *matrix.Client, roomID string) []types.Command {
 // to map the project key to a realm, and subsequently the JIRA endpoint to hit.
 // If there are multiple projects with the same project key in the Service Config, one will
 // be chosen arbitrarily.
-func (s *Service) Expansions(cli *matrix.Client, roomID string) []types.Expansion {
+func (s *Service) Expansions(cli *matrix.Client) []types.Expansion {
 	return []types.Expansion{
 		types.Expansion{
 			Regexp: issueKeyRegex,

@@ -34,8 +34,8 @@ type Service interface {
 	ServiceID() string
 	// Return the type of service. This string MUST NOT change.
 	ServiceType() string
-	Commands(cli *matrix.Client, roomID string) []Command
-	Expansions(cli *matrix.Client, roomID string) []Expansion
+	Commands(cli *matrix.Client) []Command
+	Expansions(cli *matrix.Client) []Expansion
 	OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client)
 	// A lifecycle function which is invoked when the service is being registered. The old service, if one exists, is provided,
 	// along with a Client instance for ServiceUserID(). If this function returns an error, the service will not be registered
@@ -82,12 +82,12 @@ func (s *DefaultService) ServiceType() string {
 }
 
 // Commands returns no commands.
-func (s *DefaultService) Commands(cli *matrix.Client, roomID string) []Command {
+func (s *DefaultService) Commands(cli *matrix.Client) []Command {
 	return []Command{}
 }
 
 // Expansions returns no expansions.
-func (s *DefaultService) Expansions(cli *matrix.Client, roomID string) []Expansion {
+func (s *DefaultService) Expansions(cli *matrix.Client) []Expansion {
 	return []Expansion{}
 }
 

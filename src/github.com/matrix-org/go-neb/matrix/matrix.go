@@ -15,8 +15,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	log "github.com/Sirupsen/logrus"
-	"github.com/matrix-org/go-neb/errors"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -25,6 +23,10 @@ import (
 	"strconv"
 	"sync"
 	"time"
+
+	log "github.com/Sirupsen/logrus"
+	"github.com/matrix-org/go-neb/api"
+	"github.com/matrix-org/go-neb/errors"
 )
 
 var (
@@ -58,6 +60,7 @@ type Client struct {
 	httpClient      *http.Client
 	filterID        string
 	NextBatchStorer NextBatchStorer
+	ClientConfig    api.ClientConfig
 }
 
 func (cli *Client) buildURL(urlPath ...string) string {

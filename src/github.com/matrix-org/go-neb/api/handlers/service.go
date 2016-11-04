@@ -3,6 +3,7 @@ package handlers
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"sync"
 
@@ -11,6 +12,7 @@ import (
 	"github.com/matrix-org/go-neb/clients"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/errors"
+	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/metrics"
 	"github.com/matrix-org/go-neb/polling"
 	"github.com/matrix-org/go-neb/types"
@@ -101,6 +103,10 @@ func (s *ConfigureService) OnIncomingRequest(req *http.Request) (interface{}, *e
 	client, err := s.clients.Client(service.ServiceUserID())
 	if err != nil {
 		return nil, &errors.HTTPError{err, "Unknown matrix client", 400}
+	}
+
+	if err := checkClientForService(service, client); err != nil {
+		return nil, &errors.HTTPError{err, err.Error(), 400}
 	}
 
 	if err = service.Register(old, client); err != nil {
@@ -203,4 +209,19 @@ func (h *GetService) OnIncomingRequest(req *http.Request) (interface{}, *errors.
 		Type   string
 		Config types.Service
 	}{srv.ServiceID(), srv.ServiceType(), srv}, nil
+}
+
+func checkClientForService(service types.Service, client *matrix.Client) error {
+	// If there are any commands or expansions for this Service then the service user ID
+	// MUST be a syncing client or else the Service will never get the incoming command/expansion!
+	cmds := service.Commands(client)
+	expans := service.Expansions(client)
+	if len(cmds) > 0 || len(expans) > 0 {
+		if !client.ClientConfig.Sync {
+			return fmt.Errorf(
+				"Service type '%s' requires a syncing client", service.ServiceType(),
+			)
+		}
+	}
+	return nil
 }

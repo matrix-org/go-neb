@@ -61,8 +61,8 @@ type ClientConfig struct {
 	HomeserverURL string
 	// The matrix access token to authenticate the requests with.
 	AccessToken string
-	// True to start a sync stream for this user. If false, no /sync goroutine will be
-	// created and this client won't listen for new events from Matrix. For services
+	// True to start a sync stream for this user, making this a "syncing client". If false, no
+	// /sync goroutine will be created and this client won't listen for new events from Matrix. For services
 	// which only SEND events into Matrix, it may be desirable to set Sync to false to reduce the
 	// number of goroutines Go-NEB has to maintain. For services which respond to !commands,
 	// Sync MUST be set to true in order to receive those commands.
