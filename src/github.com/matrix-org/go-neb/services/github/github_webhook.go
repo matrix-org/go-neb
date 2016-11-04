@@ -19,7 +19,14 @@ import (
 // WebhookServiceType of the Github Webhook service.
 const WebhookServiceType = "github-webhook"
 
-// WebhookService contains the Config fields for this service.
+// WebhookService contains the Config fields for the Github Webhook Service.
+//
+// Before you can set up a Github Service, you need to set up a Github Realm. This
+// service does not require a syncing client.
+//
+// This service will send notices into a Matrix room when Github sends webhook events
+// to it. It requires a public domain which Github can reach. Notices will be sent
+// as the service user ID, not the ClientUserID.
 type WebhookService struct {
 	types.DefaultService
 	webhookEndpointURL string
@@ -33,12 +40,17 @@ type WebhookService struct {
 		// A map of "owner/repo"-style repositories to the events to listen for.
 		Repos map[string]struct { // owner/repo => { events: ["push","issue","pull_request"] }
 			// The webhook events to listen for. Currently supported:
-			//    push, pull_request, issues, issue_comment, pull_request_review_comment
+			//    push : When users push to this repository.
+			//    pull_request : When a pull request is made to this repository.
+			//    issues : When an issue is opened/closed.
+			//    issue_comment : When an issue or pull request is commented on.
+			//    pull_request_review_comment : When a line comment is made on a pull request.
 			// Full list: https://developer.github.com/webhooks/#events
 			Events []string
 		}
 	}
-	// Optional. The secret token to supply when creating the webhook.
+	// Optional. The secret token to supply when creating the webhook. If supplied,
+	// Go-NEB will perform security checks on incoming webhook requests using this token.
 	SecretToken string
 }
 

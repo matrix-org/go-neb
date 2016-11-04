@@ -28,7 +28,21 @@ const ServiceType = "github"
 var ownerRepoIssueRegex = regexp.MustCompile(`(([A-z0-9-_]+)/([A-z0-9-_]+))?#([0-9]+)`)
 var ownerRepoRegex = regexp.MustCompile(`^([A-z0-9-_]+)/([A-z0-9-_]+)$`)
 
-// Service contains the Config fields for this service.
+// Service contains the Config fields for the Github service.
+//
+// Before you can set up a Github Service, you need to set up a Github Realm. This
+// service requires a syncing client.
+//
+// You can set a "default repository" for a Matrix room by sending a `m.room.bot.options` state event
+// which has the following `content`:
+//
+//  {
+//    "github": {
+//      "default_repo": "owner/repo"
+//    }
+//  }
+//
+// This will allow the "owner/repo" to be omitted when creating/expanding issues.
 type Service struct {
 	types.DefaultService
 	// The ID of an existing "github" realm. This realm will be used to obtain
@@ -201,16 +215,7 @@ func (s *Service) Expansions(cli *matrix.Client, roomID string) []types.Expansio
 	}
 }
 
-// Register will create webhooks for the repos specified in Rooms
-//
-// The hooks made are a delta between the old service and the current configuration. If all webhooks are made,
-// Register() succeeds. If any webhook fails to be created, Register() fails. A delta is used to allow clients to incrementally
-// build up the service config without recreating the hooks every time a change is made.
-//
-// Hooks are deleted when this service receives a webhook event from Github for a repo which has no user configurations.
-//
-// Hooks can get out of sync if a user manually deletes a hook in the Github UI. In this case, toggling the repo configuration will
-// force NEB to recreate the hook.
+// Register makes sure that the given realm ID maps to a github realm.
 func (s *Service) Register(oldService types.Service, client *matrix.Client) error {
 	if s.RealmID == "" {
 		return fmt.Errorf("RealmID is required")
