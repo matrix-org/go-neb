@@ -36,11 +36,24 @@ var (
 const minPollingIntervalSeconds = 60 * 5 // 5 min (News feeds can be genuinely spammy)
 
 // Service contains the Config fields for this service.
+//
+// Example request:
+//   {
+//       feeds: {
+//           "http://rss.cnn.com/rss/edition.rss": {
+//                poll_interval_mins: 60,
+//                rooms: ["!cBrPbzWazCtlkMNQSF:localhost"]
+//           },
+//           "https://www.wired.com/feed/": {
+//                rooms: ["!qmElAGdFYCHoCJuaNt:localhost"]
+//           }
+//       }
+//   }
 type Service struct {
 	types.DefaultService
 	// Feeds is a map of feed URL to configuration options for this feed.
 	Feeds map[string]struct {
-		// The time to wait between polls. If this is less than minPollingIntervalSeconds, it is ignored.
+		// Optional. The time to wait between polls. If this is less than minPollingIntervalSeconds, it is ignored.
 		PollIntervalMins int `json:"poll_interval_mins"`
 		// The list of rooms to send feed updates into. This cannot be empty.
 		Rooms []string `json:"rooms"`

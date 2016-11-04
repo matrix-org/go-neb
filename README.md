@@ -116,163 +116,27 @@ Go-NEB needs to connect as a matrix user to receive messages. Go-NEB can listen 
 ## Configuring Services
 Services contain all the useful functionality in Go-NEB. They require a client to operate. Services are configured using an HTTP API and the config is stored in the database. Services use one of the matrix users configured on Go-NEB to send/receive matrix messages.
 
+Every service has an "ID", "type" and "user ID". Services may specify additional "config" keys: see the specific
+service you're interested in for the additional keys, if any.
+
  - [HTTP API Docs](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/api/handlers/index.html#ConfigureService.OnIncomingRequest)
  - [JSON Request Body Docs](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/api/index.html#ConfigureServiceRequest)
 
-### Echo Service
-The simplest service. This will echo back any `!echo` command. To configure one:
-```bash
-curl -X POST localhost:4050/admin/configureService --data-binary '{
-    "Type": "echo",
-    "Id": "myserviceid",
-    "UserID": "@goneb:localhost:8448",
-    "Config": {
-    }
-}'
-```
+List of services:
+ - [Echo](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/services/echo/) - An example service
+ - [Giphy](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/services/giphy/) - A GIF bot
+ - [Github](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/services/github/) - A Github bot
+ - [Github Webhook](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/services/github/index.html#WebhookService) - A Github notification bot
+ - [Guggy](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/services/guggy/) - A GIF bot
+ - [JIRA](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/services/jira/) - Integration with JIRA
+ - [RSS Bot](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/services/rssbot/) - An Atom/RSS feed reader
 
-Then invite `@goneb:localhost:8448` to any Matrix room and it will automatically join (if the client was configured to do so). Then try typing `!echo hello world` and the bot will respond with `hello world`.
-
-### Github Service
-*Before you can set up a Github Service, you need to set up a [Github Realm](#github-realm).*
-
-*This service [requires a client](#configuring-clients) which has `Sync: true`.*
-
-This service will add the following command for [users who have associated their account with Github](#github-authentication):
-```
-!github create owner/repo "Some title" "Some description"
-```
-
-This service will also expand the following string into a short summary of the Github issue:
-```
-owner/repo#1234
-```
-
-You can create this service like so:
-
-```bash
-curl -X POST localhost:4050/admin/configureService --data-binary '{
-    "Type": "github",
-    "Id": "githubcommands",
-    "UserID": "@goneb:localhost",
-    "Config": {
-      "RealmID": "mygithubrealm"
-    }
-}'
-```
- - `RealmID`: The ID of the Github Realm you created earlier.
- 
-You can set a "default repository" for a Matrix room by sending a `m.room.bot.options` state event which has the following `content`:
-```json
-{
-  "github": {
-    "default_repo": "owner/repo"
-  }
-}
-```
-This will allow you to omit the `owner/repo` from both commands and expansions e.g `#12` will be treated as `owner/repo#12`.
-
-### Github Webhook Service
-*Before you can set up a Github Webhook Service, you need to set up a [Github Realm](#github-realm).*
-
-This service will send notices into a Matrix room when Github sends webhook events to it. It requires a public domain which Github can reach. This service does not require a syncing client. Notices will be sent as the given `UserID`. To create this service:
-
-```bash
-curl -X POST localhost:4050/admin/configureService --data-binary '{
-    "Type": "github-webhook",
-    "Id": "ghwebhooks",
-    "UserID": "@goneb:localhost",
-    "Config": {
-      "RealmID": "mygithubrealm",
-      "SecretToken": "a random string",
-      "ClientUserID": "@a_real_user:localhost",
-      "Rooms": {
-        "!wefiuwegfiuwhe:localhost": {
-          "Repos": {
-            "owner/repo": {
-              "Events": ["push"]
-            },
-            "owner/another-repo": {
-              "Events": ["issues"]
-            }
-          }
-        }
-      }
-    }
-}'
-```
- - `RealmID`: The ID of the Github realm you created earlier.
- - `SecretToken`: Optional. If supplied, Go-NEB will perform security checks on incoming webhook requests using this token.
- - `ClientUserID`: The user ID of the Github user to setup webhooks as. This user MUST have [associated their user ID with a Github account](#github-authentication). Webhooks will be created using their OAuth token.
- - `Rooms`: A map of room IDs to room info.
-    - `Repos`: A map of repositories to repo info.
-       - `Events`: A list of webhook events to send into this room. Can be any of:
-          - `push`: When users push to this repository.
-          - `pull_request`: When a pull request is made to this repository.
-          - `issues`: When an issue is opened/closed.
-          - `issue_comment`: When an issue or pull request is commented on.
-          - `pull_request_review_comment`: When a line comment is made on a pull request.
-
-### JIRA Service
-*Before you can set up a JIRA Service, you need to set up a [JIRA Realm](#jira-realm).*
-
-TODO: Expand this section.
-
-```
-curl -X POST localhost:4050/admin/configureService --data-binary '{
-    "Type": "jira",
-    "Id": "jid",
-    "UserID": "@goneb:localhost",
-    "Config": {
-        "ClientUserID": "@example:localhost",
-        "Rooms": {
-            "!EmwxeXCVubhskuWvaw:localhost": {
-                "Realms": {
-                    "jira_realm_id": {
-                        "Projects": {
-                            "BOTS": {
-                                "Expand": true,
-                                "Track": true
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}'
-```
-
-### Giphy Service
-A simple service that adds the ability to use the `!giphy` command. To configure one:
-```bash
-curl -X POST localhost:4050/admin/configureService --data-binary '{
-    "Type": "giphy",
-    "Id": "giphyid",
-    "UserID": "@goneb:localhost",
-    "Config": {
-        "APIKey": "YOUR_API_KEY"
-    }
-}'
-```
-Then invite the user into a room and type `!giphy food` and it will respond with a GIF.
 
 ## Configuring Realms
-Realms are how Go-NEB authenticates users on third-party websites. Every realm MUST have the following fields:
- - `ID` : An arbitrary string you can use to remember what the realm is.
- - `Type`: The type of realm. This determines what code gets executed.
- - `Config`: A JSON object. The contents depends on the realm `Type`.
+Realms are how Go-NEB authenticates users on third-party websites.
 
-They are configured like so:
-```bash
-curl -X POST localhost:4050/admin/configureAuthRealm --data-binary '{
-    "ID": "some_arbitrary_string",
-    "Type": "some_realm_type",
-    "Config": {
-        ...
-    }
-}'
-```
+ - [HTTP API Docs](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/api/handlers/index.html#ConfigureAuthRealm.OnIncomingRequest)
+ - [JSON Request Body Docs](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/api/index.html#ConfigureAuthRealmRequest)
 
 ### Github Realm
 This has the `Type` of `github`. To set up this realm:
@@ -420,6 +284,8 @@ Auth Session = An individual authentication session /requestAuthSession makes th
 
 
 ## Viewing the API docs
+
+The full docs can be found on [Github Pages](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb). Alternatively, you can locally host the API docs:
 
 ```
 # Start a documentation server listening on :6060
