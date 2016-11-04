@@ -12,7 +12,7 @@ import (
 	"strings"
 
 	log "github.com/Sirupsen/logrus"
-	"github.com/google/go-github/github"
+	gogithub "github.com/google/go-github/github"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/realms/github"
@@ -61,7 +61,7 @@ func (s *Service) cmdGithubCreate(roomID, userID string, args []string) (interfa
 		if err != nil {
 			return nil, err
 		}
-		ghRealm, ok := r.(*realms.GithubRealm)
+		ghRealm, ok := r.(*github.Realm)
 		if !ok {
 			return nil, fmt.Errorf("Failed to cast realm %s into a GithubRealm", s.RealmID)
 		}
@@ -115,7 +115,7 @@ func (s *Service) cmdGithubCreate(roomID, userID string, args []string) (interfa
 		title = &joinedTitle
 	}
 
-	issue, res, err := cli.Issues.Create(ownerRepoGroups[1], ownerRepoGroups[2], &github.IssueRequest{
+	issue, res, err := cli.Issues.Create(ownerRepoGroups[1], ownerRepoGroups[2], &gogithub.IssueRequest{
 		Title: title,
 		Body:  desc,
 	})
@@ -268,7 +268,7 @@ func (s *Service) defaultRepo(roomID string) string {
 	return defaultRepo
 }
 
-func (s *Service) githubClientFor(userID string, allowUnauth bool) *github.Client {
+func (s *Service) githubClientFor(userID string, allowUnauth bool) *gogithub.Client {
 	token, err := getTokenForUser(s.RealmID, userID)
 	if err != nil {
 		log.WithFields(log.Fields{
@@ -300,7 +300,7 @@ func getTokenForUser(realmID, userID string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	ghSession, ok := session.(*realms.GithubSession)
+	ghSession, ok := session.(*github.Session)
 	if !ok {
 		return "", fmt.Errorf("Session is not a github session: %s", session.ID())
 	}

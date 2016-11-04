@@ -3,13 +3,14 @@ package webhook
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
+	"strings"
+
 	log "github.com/Sirupsen/logrus"
-	"github.com/andygrunwald/go-jira"
+	gojira "github.com/andygrunwald/go-jira"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/errors"
 	"github.com/matrix-org/go-neb/realms/jira"
-	"net/http"
-	"strings"
 )
 
 type jiraWebhook struct {
@@ -24,14 +25,14 @@ type jiraWebhook struct {
 
 // Event represents an incoming JIRA webhook event
 type Event struct {
-	WebhookEvent string     `json:"webhookEvent"`
-	Timestamp    int64      `json:"timestamp"`
-	User         jira.User  `json:"user"`
-	Issue        jira.Issue `json:"issue"`
+	WebhookEvent string       `json:"webhookEvent"`
+	Timestamp    int64        `json:"timestamp"`
+	User         gojira.User  `json:"user"`
+	Issue        gojira.Issue `json:"issue"`
 }
 
 // RegisterHook checks to see if this user is allowed to track the given projects and then tracks them.
-func RegisterHook(jrealm *realms.JIRARealm, projects []string, userID, webhookEndpointURL string) error {
+func RegisterHook(jrealm *jira.Realm, projects []string, userID, webhookEndpointURL string) error {
 	// Tracking means that a webhook may need to be created on the remote JIRA installation.
 	// We need to make sure that the user has permission to do this. If they don't, it may still be okay if
 	// there is an existing webhook set up for this installation by someone else, *PROVIDED* that the projects
@@ -117,7 +118,7 @@ func OnReceiveRequest(req *http.Request) (string, *Event, *errors.HTTPError) {
 	return projKey, &whe, nil
 }
 
-func createWebhook(jrealm *realms.JIRARealm, webhookEndpointURL, userID string) error {
+func createWebhook(jrealm *jira.Realm, webhookEndpointURL, userID string) error {
 	cli, err := jrealm.JIRAClient(userID, false)
 	if err != nil {
 		return err
@@ -152,7 +153,7 @@ func createWebhook(jrealm *realms.JIRARealm, webhookEndpointURL, userID string) 
 	return err
 }
 
-func getWebhook(cli *jira.Client, webhookEndpointURL string) (*jiraWebhook, *errors.HTTPError) {
+func getWebhook(cli *gojira.Client, webhookEndpointURL string) (*jiraWebhook, *errors.HTTPError) {
 	req, err := cli.NewRequest("GET", "rest/webhooks/1.0/webhook", nil)
 	if err != nil {
 		return nil, &errors.HTTPError{err, "Failed to prepare webhook request", 500}
@@ -180,7 +181,7 @@ func getWebhook(cli *jira.Client, webhookEndpointURL string) (*jiraWebhook, *err
 	return nebWH, nil
 }
 
-func checkProjectsArePublic(jrealm *realms.JIRARealm, projects []string, userID string) *errors.HTTPError {
+func checkProjectsArePublic(jrealm *jira.Realm, projects []string, userID string) *errors.HTTPError {
 	publicCli, err := jrealm.JIRAClient("", true)
 	if err != nil {
 		return &errors.HTTPError{err, "Cannot create public JIRA client", 500}

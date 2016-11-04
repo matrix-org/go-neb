@@ -13,7 +13,7 @@ import (
 	"strings"
 
 	log "github.com/Sirupsen/logrus"
-	jira "github.com/andygrunwald/go-jira"
+	gojira "github.com/andygrunwald/go-jira"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/realms/jira"
@@ -81,7 +81,7 @@ func (s *Service) Register(oldService types.Service, client *matrix.Client) erro
 		if err != nil {
 			return err
 		}
-		jrealm, ok := realm.(*realms.JIRARealm)
+		jrealm, ok := realm.(*jira.Realm)
 		if !ok {
 			return errors.New("Realm ID doesn't map to a JIRA realm")
 		}
@@ -123,15 +123,15 @@ func (s *Service) cmdJiraCreate(roomID, userID string, args []string) (interface
 		return nil, errors.New("No known project exists with that project key.")
 	}
 
-	iss := jira.Issue{
-		Fields: &jira.IssueFields{
+	iss := gojira.Issue{
+		Fields: &gojira.IssueFields{
 			Summary:     title,
 			Description: desc,
-			Project: jira.Project{
+			Project: gojira.Project{
 				Key: pkey,
 			},
 			// FIXME: This may vary depending on the JIRA install!
-			Type: jira.IssueType{
+			Type: gojira.IssueType{
 				Name: "Bug",
 			},
 		},
@@ -192,10 +192,10 @@ func (s *Service) expandIssue(roomID, userID string, issueKeyGroups []string) in
 		}).Print("Failed to load realm")
 		return nil
 	}
-	jrealm, ok := r.(*realms.JIRARealm)
+	jrealm, ok := r.(*jira.Realm)
 	if !ok {
 		logger.WithField("realm_id", realmID).Print(
-			"Realm cannot be typecast to JIRARealm",
+			"Realm cannot be typecast to jira.Realm",
 		)
 	}
 	logger.WithFields(log.Fields{
@@ -323,7 +323,7 @@ func (s *Service) realmIDForProject(roomID, projectKey string) string {
 	return ""
 }
 
-func (s *Service) projectToRealm(userID, pkey string) (*realms.JIRARealm, error) {
+func (s *Service) projectToRealm(userID, pkey string) (*jira.Realm, error) {
 	// We don't know which JIRA installation this project maps to, so:
 	//  - Get all known JIRA realms and f.e query their endpoints with the
 	//    given user ID's credentials (so if it is a private project they
@@ -341,13 +341,13 @@ func (s *Service) projectToRealm(userID, pkey string) (*realms.JIRARealm, error)
 		return nil, err
 	}
 	// typecast and move ones which the user has authed with to the front of the queue
-	var queue []*realms.JIRARealm
-	var unauthRealms []*realms.JIRARealm
+	var queue []*jira.Realm
+	var unauthRealms []*jira.Realm
 	for _, r := range knownRealms {
-		jrealm, ok := r.(*realms.JIRARealm)
+		jrealm, ok := r.(*jira.Realm)
 		if !ok {
 			logger.WithField("realm_id", r.ID()).Print(
-				"Failed to type-cast 'jira' type realm into JIRARealm",
+				"Failed to type-cast 'jira' type realm into jira.Realm",
 			)
 			continue
 		}
@@ -402,7 +402,7 @@ func projectsAndRealmsToTrack(s *Service) map[string][]string {
 	return ridsToProjects
 }
 
-func htmlSummaryForIssue(issue *jira.Issue) string {
+func htmlSummaryForIssue(issue *gojira.Issue) string {
 	// form a summary of the issue being affected e.g:
 	//   "Flibble Wibble [P1, In Progress]"
 	status := html.EscapeString(issue.Fields.Status.Name)
