@@ -30,8 +30,7 @@ var ownerRepoRegex = regexp.MustCompile(`^([A-z0-9-_]+)/([A-z0-9-_]+)$`)
 
 // Service contains the Config fields for the Github service.
 //
-// Before you can set up a Github Service, you need to set up a Github Realm. This
-// service requires a syncing client.
+// Before you can set up a Github Service, you need to set up a Github Realm.
 //
 // You can set a "default repository" for a Matrix room by sending a `m.room.bot.options` state event
 // which has the following `content`:
@@ -155,7 +154,7 @@ func (s *Service) expandIssue(roomID, userID, owner, repo string, issueNum int) 
 // Responds with the outcome of the issue creation request. This command requires
 // a Github account to be linked to the Matrix user ID issuing the command. If there
 // is no link, it will return a Starter Link instead.
-func (s *Service) Commands(cli *matrix.Client, roomID string) []types.Command {
+func (s *Service) Commands(cli *matrix.Client) []types.Command {
 	return []types.Command{
 		types.Command{
 			Path: []string{"github", "create"},
@@ -172,7 +171,7 @@ func (s *Service) Commands(cli *matrix.Client, roomID string) []types.Command {
 // it will also expand strings of the form:
 //   #12
 // using the default repository.
-func (s *Service) Expansions(cli *matrix.Client, roomID string) []types.Expansion {
+func (s *Service) Expansions(cli *matrix.Client) []types.Expansion {
 	return []types.Expansion{
 		types.Expansion{
 			Regexp: ownerRepoIssueRegex,

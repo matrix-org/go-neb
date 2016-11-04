@@ -47,7 +47,7 @@ type Service struct {
 // Commands supported:
 //    !guggy some search query without quotes
 // Responds with a suitable GIF into the same room as the command.
-func (s *Service) Commands(client *matrix.Client, roomID string) []types.Command {
+func (s *Service) Commands(client *matrix.Client) []types.Command {
 	return []types.Command{
 		types.Command{
 			Path: []string{"guggy"},

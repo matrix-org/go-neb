@@ -201,11 +201,11 @@ func (c *Clients) onMessageEvent(client *matrix.Client, event *matrix.Event) {
 				args = strings.Split(body[1:], " ")
 			}
 
-			if response := runCommandForService(service.Commands(client, event.RoomID), event, args); response != nil {
+			if response := runCommandForService(service.Commands(client), event, args); response != nil {
 				responses = append(responses, response)
 			}
 		} else { // message isn't a command, it might need expanding
-			expansions := runExpansionsForService(service.Expansions(client, event.RoomID), event, body)
+			expansions := runExpansionsForService(service.Expansions(client), event, body)
 			responses = append(responses, expansions...)
 		}
 	}
@@ -345,6 +345,7 @@ func (c *Clients) newClient(config api.ClientConfig) (*matrix.Client, error) {
 
 	client := matrix.NewClient(c.httpClient, homeserverURL, config.AccessToken, config.UserID)
 	client.NextBatchStorer = nextBatchStore{c.db}
+	client.ClientConfig = config
 
 	// TODO: Check that the access token is valid for the userID by peforming
 	// a request against the server.
