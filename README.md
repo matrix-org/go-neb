@@ -8,17 +8,10 @@ Go-NEB is a [Matrix](https://matrix.org) bot written in Go. It is the successor 
  * [Installing](#installing)
  * [Running](#running)
     * [Configuration file](#configuration-file)
+ * [API](#api)
     * [Configuring clients](#configuring-clients)
     * [Configuring services](#configuring-services)
-        * [Echo Service](#echo-service)
-        * [Github Service](#github-service)
-        * [Github Webhook Service](#github-webhook-service)
-        * [JIRA Service](#jira-service)
-        * [Giphy Service](#giphy-service)
     * [Configuring realms](#configuring-realms)
-        * [Github Realm](#github-realm)
-           * [Github Authentication](#github-authentication)
-        * [JIRA Realm](#jira-realm)
  * [Developing](#developing)
     * [Architecture](#architecture)
     * [API Docs](#viewing-the-api-docs)
@@ -75,6 +68,8 @@ Invite the bot user into a Matrix room and type `!echo hello world`. It will rep
 
 ### Giphy
  - Ability to query Giphy's "text-to-gif" engine.
+ 
+### Guggy
 
 
 # Installing
@@ -107,6 +102,14 @@ Go-NEB needs to be "configured" with clients and services before it will do anyt
 ## Configuration file
 If you run Go-NEB with a `CONFIG_FILE` environment variable, it will load that file and use it for services, clients, etc. There is a [sample configuration file](config.sample.yaml) which explains all the options. In most cases, these are *direct mappings* to the corresponding HTTP API.
 
+# API
+The API is documented in sections using godoc. The sections consists of:
+ - An HTTP API (the path and method to use)
+ - A "JSON request body" (the JSON that is inside the HTTP request body)
+ - "Configuration" information (any additional information that is specific to what you're creating)
+ 
+To form the complete API, you need to combine the HTTP API with the JSON request body, and the "Configuration" information (which is always under a JSON key called `Config`). In addition, most APIs have a `Type` which determines which piece of code to load. To find out what the right type is for the thing you're creating, check the constants defined in godoc.
+
 ## Configuring Clients
 Go-NEB needs to connect as a matrix user to receive messages. Go-NEB can listen for messages as multiple matrix users. The users are configured using an HTTP API and the config is stored in the database.
 
@@ -138,21 +141,17 @@ Realms are how Go-NEB authenticates users on third-party websites.
  - [HTTP API Docs](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/api/handlers/index.html#ConfigureAuthRealm.OnIncomingRequest)
  - [JSON Request Body Docs](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/api/index.html#ConfigureAuthRealmRequest)
 
-### Github
- - [Realm configuration](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/realms/github/index.html#Realm)
+List of Realms:
+ - [Github](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/realms/github/index.html#Realm)
+ - [JIRA](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/realms/jira/index.html#Realm)
+ 
+Authentication via HTTP:
+ - [Github](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/realms/github/index.html#Realm.RequestAuthSession)
+ - [JIRA](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/realms/jira/index.html#Realm.RequestAuthSession)
 
-#### Authentication of Matrix users
-
- * [Configuration for config file](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/realms/github/index.html#Session)
- * [Configuration for HTTP](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/realms/github/index.html#Realm.RequestAuthSession)
-
-### JIRA
- - [Realm configuration](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/realms/jira/index.html#Realm)
-
-#### Authentication of Matrix users
- * [Configuration for config file](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/realms/jira/index.html#Session)
- * [Configuration for HTTP](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/realms/jira/index.html#Realm.RequestAuthSession)
-
+Authentication via the config file:
+ - [Github](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/realms/github/index.html#Session)
+ - [JIRA](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/realms/jira/index.html#Session)
 
 # Developing
 There's a bunch more tools this project uses when developing in order to do
