@@ -18,6 +18,8 @@ import (
 // ServiceType of the Guggy service
 const ServiceType = "guggy"
 
+var httpClient = &http.Client{}
+
 type guggyQuery struct {
 	// "mp4" or "gif"
 	Format string `json:"format"`
@@ -93,8 +95,6 @@ func (s *Service) cmdGuggy(client *matrix.Client, roomID, userID string, args []
 func (s *Service) text2gifGuggy(querySentence string) (*guggyGifResult, error) {
 	log.Info("Transforming to GIF query ", querySentence)
 
-	client := &http.Client{}
-
 	var query guggyQuery
 	query.Format = "gif"
 	query.Sentence = querySentence
@@ -114,7 +114,7 @@ func (s *Service) text2gifGuggy(querySentence string) (*guggyGifResult, error) {
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("apiKey", s.APIKey)
 
-	res, err := client.Do(req)
+	res, err := httpClient.Do(req)
 	if res != nil {
 		defer res.Body.Close()
 	}
