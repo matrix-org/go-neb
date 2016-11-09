@@ -156,7 +156,7 @@ func (cli *Client) SendText(roomID, text string) (string, error) {
 
 // UploadLink uploads an HTTP URL and then returns an MXC URI.
 func (cli *Client) UploadLink(link string) (string, error) {
-	res, err := http.Get(link)
+	res, err := cli.httpClient.Get(link)
 	if res != nil {
 		defer res.Body.Close()
 	}
