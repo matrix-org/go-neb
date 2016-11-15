@@ -1,9 +1,13 @@
 package travisci
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"regexp"
+	"strconv"
+	"strings"
+	"time"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/matrix-org/go-neb/database"
@@ -75,22 +79,23 @@ type Service struct {
 
 // The payload from Travis-CI
 type webhookNotification struct {
-	Number         string `json:"number"`
-	Status         string `json:"status"`
-	StartedAt      string `json:"started_at"`
-	FinishedAt     string `json:"finished_at"`
-	StatusMessage  string `json:"status_message"`
-	Commit         string `json:"commit"`
-	Branch         string `json:"branch"`
-	Message        string `json:"message"`
-	CompareURL     string `json:"compare_url"`
-	CommittedAt    string `json:"committed_at"`
-	CommitterName  string `json:"committer_name"`
-	CommitterEmail string `json:"committer_email"`
-	AuthorName     string `json:"author_name"`
-	AuthorEmail    string `json:"author_email"`
-	Type           string `json:"type"`
-	BuildURL       string `json:"build_url"`
+	ID             int     `json:"id"`
+	Number         string  `json:"number"`
+	Status         *string `json:"status"`
+	StartedAt      *string `json:"started_at"`
+	FinishedAt     *string `json:"finished_at"`
+	StatusMessage  string  `json:"status_message"`
+	Commit         string  `json:"commit"`
+	Branch         string  `json:"branch"`
+	Message        string  `json:"message"`
+	CompareURL     string  `json:"compare_url"`
+	CommittedAt    string  `json:"committed_at"`
+	CommitterName  string  `json:"committer_name"`
+	CommitterEmail string  `json:"committer_email"`
+	AuthorName     string  `json:"author_name"`
+	AuthorEmail    string  `json:"author_email"`
+	Type           string  `json:"type"`
+	BuildURL       string  `json:"build_url"`
 	Repository     struct {
 		Name      string `json:"name"`
 		OwnerName string `json:"owner_name"`
@@ -117,6 +122,50 @@ type notificationTemplate struct {
 	BuildURL       string
 }
 
+func notifToTemplate(n webhookNotification) (t notificationTemplate) {
+	t.RepositorySlug = n.Repository.OwnerName + "/" + n.Repository.Name
+	t.RepositoryName = n.Repository.Name
+	t.BuildNumber = n.Number
+	t.BuildID = strconv.Itoa(n.ID)
+	t.Branch = n.Branch
+	t.Commit = n.Commit
+	t.Author = n.CommitterName // author: commit author name
+	// commit_message: commit message of build
+	// commit_subject: first line of the commit message
+	t.CommitMessage = n.Message
+	subjAndMsg := strings.SplitN(n.Message, "\n", 2)
+	t.CommitSubject = subjAndMsg[0]
+	if n.Status != nil {
+		t.Result = *n.Status
+	}
+	t.Message = n.StatusMessage
+
+	if n.StartedAt != nil && n.FinishedAt != nil {
+		// duration: total duration of all builds in the matrix -- TODO
+		// elapsed_time: time between build start and finish
+		// Example from docs: "2011-11-11T11: 11: 11Z"
+		start, err := time.Parse("2006-01-02T15: 04: 05Z", *n.StartedAt)
+		finish, err2 := time.Parse("2006-01-02T15: 04: 05Z", *n.FinishedAt)
+		if err != nil || err2 != nil {
+			log.WithFields(log.Fields{
+				"started_at":  *n.StartedAt,
+				"finished_at": *n.FinishedAt,
+			}).Warn("Failed to parse Travis-CI start/finish times.")
+		} else {
+			t.Duration = finish.Sub(start).String()
+			t.ElapsedTime = t.Duration
+		}
+	}
+
+	t.CompareURL = n.CompareURL
+	t.BuildURL = n.BuildURL
+	return
+}
+
+func travisToGoTemplate(travisTmpl string) (goTmpl string) {
+	return
+}
+
 // OnReceiveWebhook receives requests from Travis-CI and possibly sends requests to Matrix as a result.
 //
 // If the "repository.url" matches a known Github repository, a notification will be formed from the
@@ -129,7 +178,40 @@ type notificationTemplate struct {
 //
 // See https://docs.travis-ci.com/user/notifications#Webhook-notifications for more information.
 func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client) {
-	return
+	var notif webhookNotification
+	if err := json.NewDecoder(req.Body).Decode(&notif); err != nil {
+		w.WriteHeader(400)
+		return
+	}
+	if notif.Repository.URL == "" || notif.Repository.OwnerName == "" || notif.Repository.Name == "" {
+		w.WriteHeader(400)
+		return
+	}
+	whForRepo := notif.Repository.OwnerName + "/" + notif.Repository.Name
+	// TODO tmplData := notifToTemplate(notif)
+
+	logger := log.WithFields(log.Fields{
+		"repo": whForRepo,
+	})
+
+	for roomID, roomData := range s.Rooms {
+		for ownerRepo, repoData := range roomData.Repos {
+			if ownerRepo != whForRepo {
+				continue
+			}
+			tmpl := travisToGoTemplate(repoData.Template)
+			msg := tmpl // TODO
+
+			logger.WithFields(log.Fields{
+				"msg":     msg,
+				"room_id": roomID,
+			}).Print("Sending Travis-CI notification to room")
+			if _, e := cli.SendMessageEvent(roomID, "m.room.message", msg); e != nil {
+				logger.WithError(e).WithField("room_id", roomID).Print(
+					"Failed to send Travis-CI notification to room.")
+			}
+		}
+	}
 }
 
 // Register makes sure the Config information supplied is valid.
