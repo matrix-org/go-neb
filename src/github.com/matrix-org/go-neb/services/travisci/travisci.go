@@ -3,20 +3,24 @@ package travisci
 import (
 	"fmt"
 	"net/http"
-	"sort"
-	"strings"
+	"regexp"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/matrix"
-	"github.com/matrix-org/go-neb/services/github/client"
-	"github.com/matrix-org/go-neb/services/github/webhook"
 	"github.com/matrix-org/go-neb/types"
-	"github.com/matrix-org/go-neb/util"
 )
 
 // ServiceType of the Travis-CI service.
 const ServiceType = "travis-ci"
+
+// DefaultTemplate contains the template that will be used if none is supplied.
+// This matches the default mentioned at: https://docs.travis-ci.com/user/notifications#Customizing-slack-notifications
+const DefaultTemplate = (`%{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{message}
+	Change view : %{compare_url}
+	Build details : %{build_url}`)
+
+var ownerRepoRegex = regexp.MustCompile(`^([A-z0-9-_.]+)/([A-z0-9-_.]+)$`)
 
 // Service contains the Config fields for the Travis-CI service.
 //
@@ -69,6 +73,50 @@ type Service struct {
 	} `json:"rooms"`
 }
 
+// The payload from Travis-CI
+type webhookNotification struct {
+	Number         string `json:"number"`
+	Status         string `json:"status"`
+	StartedAt      string `json:"started_at"`
+	FinishedAt     string `json:"finished_at"`
+	StatusMessage  string `json:"status_message"`
+	Commit         string `json:"commit"`
+	Branch         string `json:"branch"`
+	Message        string `json:"message"`
+	CompareURL     string `json:"compare_url"`
+	CommittedAt    string `json:"committed_at"`
+	CommitterName  string `json:"committer_name"`
+	CommitterEmail string `json:"committer_email"`
+	AuthorName     string `json:"author_name"`
+	AuthorEmail    string `json:"author_email"`
+	Type           string `json:"type"`
+	BuildURL       string `json:"build_url"`
+	Repository     struct {
+		Name      string `json:"name"`
+		OwnerName string `json:"owner_name"`
+		URL       string `json:"url"`
+	} `json:"repository"`
+}
+
+// The template variables a user can use in their messages
+type notificationTemplate struct {
+	RepositorySlug string
+	RepositoryName string
+	BuildNumber    string
+	BuildID        string
+	Branch         string
+	Commit         string
+	Author         string
+	CommitMessage  string
+	CommitSubject  string
+	Result         string
+	Message        string
+	Duration       string
+	ElapsedTime    string
+	CompareURL     string
+	BuildURL       string
+}
+
 // OnReceiveWebhook receives requests from Travis-CI and possibly sends requests to Matrix as a result.
 //
 // If the "repository.url" matches a known Github repository, a notification will be formed from the
@@ -86,7 +134,33 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 
 // Register makes sure the Config information supplied is valid.
 func (s *Service) Register(oldService types.Service, client *matrix.Client) error {
+	for _, roomData := range s.Rooms {
+		for repo := range roomData.Repos {
+			match := ownerRepoRegex.FindStringSubmatch(repo)
+			if len(match) == 0 {
+				return fmt.Errorf("Repository '%s' is not a valid repository name.", repo)
+			}
+		}
+	}
 	return nil
+}
+
+// PostRegister deletes this service if there are no registered repos.
+func (s *Service) PostRegister(oldService types.Service) {
+	for _, roomData := range s.Rooms {
+		for _ = range roomData.Repos {
+			return // at least 1 repo exists
+		}
+	}
+	// Delete this service since no repos are configured
+	logger := log.WithFields(log.Fields{
+		"service_type": s.ServiceType(),
+		"service_id":   s.ServiceID(),
+	})
+	logger.Info("Removing service as no repositories are registered.")
+	if err := database.GetServiceDB().DeleteService(s.ServiceID()); err != nil {
+		logger.WithError(err).Error("Failed to delete service")
+	}
 }
 
 func init() {
