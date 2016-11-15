@@ -3,7 +3,6 @@ package travisci
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -85,7 +84,7 @@ type Service struct {
 type webhookNotification struct {
 	ID             int     `json:"id"`
 	Number         string  `json:"number"`
-	Status         *string `json:"status"` // 0 (success) or 1 (incomplete/fail).
+	Status         *int    `json:"status"` // 0 (success) or 1 (incomplete/fail).
 	StartedAt      *string `json:"started_at"`
 	FinishedAt     *string `json:"finished_at"`
 	StatusMessage  string  `json:"status_message"`
@@ -110,6 +109,7 @@ type webhookNotification struct {
 // The template variables a user can use in their messages
 type notificationTemplate struct {
 	RepositorySlug string
+	Repository     string // Deprecated: alias for RepositorySlug
 	RepositoryName string
 	BuildNumber    string
 	BuildID        string
@@ -128,6 +128,7 @@ type notificationTemplate struct {
 
 func notifToTemplate(n webhookNotification) (t notificationTemplate) {
 	t.RepositorySlug = n.Repository.OwnerName + "/" + n.Repository.Name
+	t.Repository = t.RepositorySlug
 	t.RepositoryName = n.Repository.Name
 	t.BuildNumber = n.Number
 	t.BuildID = strconv.Itoa(n.ID)
@@ -140,7 +141,7 @@ func notifToTemplate(n webhookNotification) (t notificationTemplate) {
 	subjAndMsg := strings.SplitN(n.Message, "\n", 2)
 	t.CommitSubject = subjAndMsg[0]
 	if n.Status != nil {
-		t.Result = *n.Status
+		t.Result = strconv.Itoa(*n.Status)
 	}
 	t.Message = n.StatusMessage
 
@@ -182,13 +183,18 @@ func travisToGoTemplate(travisTmpl string) (goTmpl string) {
 //
 // See https://docs.travis-ci.com/user/notifications#Webhook-notifications for more information.
 func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client) {
-	payload, err := ioutil.ReadAll(req.Body)
-	if err != nil {
-		log.WithError(err).Error("Failed to read incoming Travis-CI webhook")
-		w.WriteHeader(500)
+	if err := req.ParseForm(); err != nil {
+		log.WithError(err).Error("Failed to read incoming Travis-CI webhook form")
+		w.WriteHeader(400)
 		return
 	}
-	if err := verifyOrigin(req.Host, payload, req.Header.Get("Signature")); err != nil {
+	payload := req.PostFormValue("payload")
+	if payload == "" {
+		log.Error("Travis-CI webhook is missing payload= form value")
+		w.WriteHeader(400)
+		return
+	}
+	if err := verifyOrigin([]byte(payload), req.Header.Get("Signature")); err != nil {
 		log.WithFields(log.Fields{
 			"Signature":  req.Header.Get("Signature"),
 			log.ErrorKey: err,
@@ -198,11 +204,13 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 	}
 
 	var notif webhookNotification
-	if err := json.Unmarshal(payload, &notif); err != nil {
+	if err := json.Unmarshal([]byte(payload), &notif); err != nil {
+		log.WithError(err).Error("Travis-CI webhook received an invalid JSON payload=")
 		w.WriteHeader(400)
 		return
 	}
-	if notif.Repository.URL == "" || notif.Repository.OwnerName == "" || notif.Repository.Name == "" {
+	if notif.Repository.OwnerName == "" || notif.Repository.Name == "" {
+		log.WithField("repo", notif.Repository).Error("Travis-CI webhook missing repository fields")
 		w.WriteHeader(400)
 		return
 	}
@@ -231,6 +239,7 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 			}
 		}
 	}
+	w.WriteHeader(200)
 }
 
 // Register makes sure the Config information supplied is valid.
