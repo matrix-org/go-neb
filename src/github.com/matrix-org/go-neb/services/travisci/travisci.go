@@ -3,6 +3,7 @@ package travisci
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -24,7 +25,10 @@ const DefaultTemplate = (`%{repository}#%{build_number} (%{branch} - %{commit} :
 	Change view : %{compare_url}
 	Build details : %{build_url}`)
 
+// Matches 'owner/repo'
 var ownerRepoRegex = regexp.MustCompile(`^([A-z0-9-_.]+)/([A-z0-9-_.]+)$`)
+
+var httpClient = &http.Client{}
 
 // Service contains the Config fields for the Travis-CI service.
 //
@@ -81,7 +85,7 @@ type Service struct {
 type webhookNotification struct {
 	ID             int     `json:"id"`
 	Number         string  `json:"number"`
-	Status         *string `json:"status"`
+	Status         *string `json:"status"` // 0 (success) or 1 (incomplete/fail).
 	StartedAt      *string `json:"started_at"`
 	FinishedAt     *string `json:"finished_at"`
 	StatusMessage  string  `json:"status_message"`
@@ -178,8 +182,23 @@ func travisToGoTemplate(travisTmpl string) (goTmpl string) {
 //
 // See https://docs.travis-ci.com/user/notifications#Webhook-notifications for more information.
 func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client) {
+	payload, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		log.WithError(err).Error("Failed to read incoming Travis-CI webhook")
+		w.WriteHeader(500)
+		return
+	}
+	if err := verifyOrigin(req.Host, payload, req.Header.Get("Signature")); err != nil {
+		log.WithFields(log.Fields{
+			"Signature":  req.Header.Get("Signature"),
+			log.ErrorKey: err,
+		}).Warn("Received unauthorised Travis-CI webhook request.")
+		w.WriteHeader(403)
+		return
+	}
+
 	var notif webhookNotification
-	if err := json.NewDecoder(req.Body).Decode(&notif); err != nil {
+	if err := json.Unmarshal(payload, &notif); err != nil {
 		w.WriteHeader(400)
 		return
 	}
