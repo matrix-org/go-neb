@@ -125,7 +125,7 @@ func notifToTemplate(n webhookNotification) map[string]string {
 	if n.Status != nil {
 		t["result"] = strconv.Itoa(*n.Status)
 	}
-	t["message"] = n.StatusMessage
+	t["message"] = n.StatusMessage // message: Travis CI message to the build
 
 	if n.StartedAt != nil && n.FinishedAt != nil {
 		// duration: total duration of all builds in the matrix -- TODO

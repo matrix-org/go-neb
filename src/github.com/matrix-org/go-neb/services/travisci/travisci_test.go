@@ -73,6 +73,17 @@ var travisTests = []struct {
 		"%{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{message}",
 		"Kegsay/flow-jsdoc#18 (master - 3a092c3a6032ebb50384c99b445f947e9ce86e2a : Kegan Dougal): Passed",
 	},
+	{
+		"obviously_invalid_signature", false, exampleBody,
+		"%{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{message}",
+		"Kegsay/flow-jsdoc#18 (master - 3a092c3a6032ebb50384c99b445f947e9ce86e2a : Kegan Dougal): Passed",
+	},
+	{
+		// Payload is valid but doesn't match signature now
+		exampleSignature, false, strings.TrimSuffix(exampleBody, "%7D") + "%2C%22EXTRA_KEY%22%3Anull%7D",
+		"%{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{message}",
+		"Kegsay/flow-jsdoc#18 (master - 3a092c3a6032ebb50384c99b445f947e9ce86e2a : Kegan Dougal): Passed",
+	},
 }
 
 type MockTransport struct {
@@ -151,17 +162,30 @@ func TestTravisCI(t *testing.T) {
 		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 		travis.OnReceiveWebhook(mockWriter, req, matrixCli)
 
-		if mockWriter.Code != 200 {
-			t.Errorf("TestTravisCI OnReceiveWebhook want code %d, got %d", 200, mockWriter.Code)
-		}
-		if len(msgs) != 1 {
-			t.Errorf("TestTravisCI want sent messages %d, got %d ", 1, len(msgs))
-			continue
-		}
-		if msgs[0].Body != test.ExpectedOutput {
-			t.Errorf("TestTravisCI want matrix body '%s', got '%s'", test.ExpectedOutput, msgs[0].Body)
+		if test.ValidSignature {
+			if !assertResponse(t, mockWriter, msgs, 200, 1) {
+				continue
+			}
+
+			if msgs[0].Body != test.ExpectedOutput {
+				t.Errorf("TestTravisCI want matrix body '%s', got '%s'", test.ExpectedOutput, msgs[0].Body)
+			}
+		} else {
+			assertResponse(t, mockWriter, msgs, 403, 0)
 		}
 	}
+}
+
+func assertResponse(t *testing.T, w *httptest.ResponseRecorder, msgs []matrix.TextMessage, expectCode int, expectMsgLength int) bool {
+	if w.Code != expectCode {
+		t.Errorf("TestTravisCI OnReceiveWebhook want HTTP code %d, got %d", expectCode, w.Code)
+		return false
+	}
+	if len(msgs) != expectMsgLength {
+		t.Errorf("TestTravisCI want %d sent messages, got %d ", expectMsgLength, len(msgs))
+		return false
+	}
+	return true
 }
 
 func makeService(t *testing.T, template string) *Service {
