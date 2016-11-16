@@ -26,6 +26,7 @@ import (
 	_ "github.com/matrix-org/go-neb/services/guggy"
 	_ "github.com/matrix-org/go-neb/services/jira"
 	_ "github.com/matrix-org/go-neb/services/rssbot"
+	_ "github.com/matrix-org/go-neb/services/travisci"
 	"github.com/matrix-org/go-neb/types"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/prometheus/client_golang/prometheus"

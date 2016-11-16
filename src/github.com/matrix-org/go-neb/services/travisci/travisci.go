@@ -152,6 +152,9 @@ func notifToTemplate(n webhookNotification) map[string]string {
 }
 
 func outputForTemplate(travisTmpl string, tmpl map[string]string) (out string) {
+	if travisTmpl == "" {
+		travisTmpl = DefaultTemplate
+	}
 	out = travisTmpl
 	for tmplVar, tmplValue := range tmpl {
 		out = strings.Replace(out, "%{"+tmplVar+"}", tmplValue, -1)
