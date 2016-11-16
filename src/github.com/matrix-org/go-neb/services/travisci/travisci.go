@@ -106,44 +106,26 @@ type webhookNotification struct {
 	} `json:"repository"`
 }
 
-// The template variables a user can use in their messages
-type notificationTemplate struct {
-	RepositorySlug string
-	Repository     string // Deprecated: alias for RepositorySlug
-	RepositoryName string
-	BuildNumber    string
-	BuildID        string
-	Branch         string
-	Commit         string
-	Author         string
-	CommitMessage  string
-	CommitSubject  string
-	Result         string
-	Message        string
-	Duration       string
-	ElapsedTime    string
-	CompareURL     string
-	BuildURL       string
-}
-
-func notifToTemplate(n webhookNotification) (t notificationTemplate) {
-	t.RepositorySlug = n.Repository.OwnerName + "/" + n.Repository.Name
-	t.Repository = t.RepositorySlug
-	t.RepositoryName = n.Repository.Name
-	t.BuildNumber = n.Number
-	t.BuildID = strconv.Itoa(n.ID)
-	t.Branch = n.Branch
-	t.Commit = n.Commit
-	t.Author = n.CommitterName // author: commit author name
+// Converts a webhook notification into a map of template var name to value
+func notifToTemplate(n webhookNotification) map[string]string {
+	t := make(map[string]string)
+	t["repository_slug"] = n.Repository.OwnerName + "/" + n.Repository.Name
+	t["repository"] = t["repository_slug"] // Deprecated form but still used everywhere in people's templates
+	t["repository_name"] = n.Repository.Name
+	t["build_number"] = n.Number
+	t["build_id"] = strconv.Itoa(n.ID)
+	t["branch"] = n.Branch
+	t["commit"] = n.Commit
+	t["author"] = n.CommitterName // author: commit author name
 	// commit_message: commit message of build
 	// commit_subject: first line of the commit message
-	t.CommitMessage = n.Message
+	t["commit_message"] = n.Message
 	subjAndMsg := strings.SplitN(n.Message, "\n", 2)
-	t.CommitSubject = subjAndMsg[0]
+	t["commit_subject"] = subjAndMsg[0]
 	if n.Status != nil {
-		t.Result = strconv.Itoa(*n.Status)
+		t["result"] = strconv.Itoa(*n.Status)
 	}
-	t.Message = n.StatusMessage
+	t["message"] = n.StatusMessage
 
 	if n.StartedAt != nil && n.FinishedAt != nil {
 		// duration: total duration of all builds in the matrix -- TODO
@@ -157,18 +139,22 @@ func notifToTemplate(n webhookNotification) (t notificationTemplate) {
 				"finished_at": *n.FinishedAt,
 			}).Warn("Failed to parse Travis-CI start/finish times.")
 		} else {
-			t.Duration = finish.Sub(start).String()
-			t.ElapsedTime = t.Duration
+			t["duration"] = finish.Sub(start).String()
+			t["elapsed_time"] = t["duration"]
 		}
 	}
 
-	t.CompareURL = n.CompareURL
-	t.BuildURL = n.BuildURL
-	return
+	t["compare_url"] = n.CompareURL
+	t["build_url"] = n.BuildURL
+	return t
 }
 
-func travisToGoTemplate(travisTmpl string) (goTmpl string) {
-	return
+func outputForTemplate(travisTmpl string, tmpl map[string]string) (out string) {
+	out = travisTmpl
+	for tmplVar, tmplValue := range tmpl {
+		out = strings.Replace(out, "%{"+tmplVar+"}", tmplValue, -1)
+	}
+	return out
 }
 
 // OnReceiveWebhook receives requests from Travis-CI and possibly sends requests to Matrix as a result.
@@ -215,7 +201,7 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 		return
 	}
 	whForRepo := notif.Repository.OwnerName + "/" + notif.Repository.Name
-	// TODO tmplData := notifToTemplate(notif)
+	tmplData := notifToTemplate(notif)
 
 	logger := log.WithFields(log.Fields{
 		"repo": whForRepo,
@@ -226,8 +212,10 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 			if ownerRepo != whForRepo {
 				continue
 			}
-			tmpl := travisToGoTemplate(repoData.Template)
-			msg := tmpl // TODO
+			msg := matrix.TextMessage{
+				Body:    outputForTemplate(repoData.Template, tmplData),
+				MsgType: "m.notice",
+			}
 
 			logger.WithFields(log.Fields{
 				"msg":     msg,

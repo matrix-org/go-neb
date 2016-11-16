@@ -4,15 +4,16 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/matrix-org/go-neb/database"
-	"github.com/matrix-org/go-neb/matrix"
-	"github.com/matrix-org/go-neb/types"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
 	"strings"
 	"testing"
+
+	"github.com/matrix-org/go-neb/database"
+	"github.com/matrix-org/go-neb/matrix"
+	"github.com/matrix-org/go-neb/types"
 )
 
 const travisOrgPEMPublicKey = (`-----BEGIN PUBLIC KEY-----
@@ -70,7 +71,7 @@ var travisTests = []struct {
 	{
 		exampleSignature, true, exampleBody,
 		"%{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{message}",
-		"Kegsay/flow-jsdoc#22 master - 3a092c3a6032ebb50384c99b445f947e9ce86e2a : Kegan Dougal: Test Travis webhook support",
+		"Kegsay/flow-jsdoc#18 (master - 3a092c3a6032ebb50384c99b445f947e9ce86e2a : Kegan Dougal): Passed",
 	},
 }
 
@@ -106,15 +107,15 @@ func TestTravisCI(t *testing.T) {
 	httpClient = &http.Client{Transport: travisTransport}
 
 	// Intercept message sending to Matrix and mock responses
-	msgs := []matrix.HTMLMessage{}
+	msgs := []matrix.TextMessage{}
 	matrixTrans := struct{ MockTransport }{}
 	matrixTrans.roundTrip = func(req *http.Request) (*http.Response, error) {
 		if !strings.Contains(req.URL.String(), "/send/m.room.message") {
 			return nil, fmt.Errorf("Unhandled URL: %s", req.URL.String())
 		}
-		var msg matrix.HTMLMessage
+		var msg matrix.TextMessage
 		if err := json.NewDecoder(req.Body).Decode(&msg); err != nil {
-			return nil, err
+			return nil, fmt.Errorf("Failed to decode request JSON: %s", err)
 		}
 		msgs = append(msgs, msg)
 		return &http.Response{
@@ -128,7 +129,7 @@ func TestTravisCI(t *testing.T) {
 	// BEGIN running the Travis-CI table tests
 	// ---------------------------------------
 	for _, test := range travisTests {
-		msgs = []matrix.HTMLMessage{} // reset sent messages
+		msgs = []matrix.TextMessage{} // reset sent messages
 		mockWriter := httptest.NewRecorder()
 		travis := makeService(t, test.Template)
 		if travis == nil {
@@ -152,6 +153,13 @@ func TestTravisCI(t *testing.T) {
 
 		if mockWriter.Code != 200 {
 			t.Errorf("TestTravisCI OnReceiveWebhook want code %d, got %d", 200, mockWriter.Code)
+		}
+		if len(msgs) != 1 {
+			t.Errorf("TestTravisCI want sent messages %d, got %d ", 1, len(msgs))
+			continue
+		}
+		if msgs[0].Body != test.ExpectedOutput {
+			t.Errorf("TestTravisCI want matrix body '%s', got '%s'", test.ExpectedOutput, msgs[0].Body)
 		}
 	}
 }
