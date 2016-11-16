@@ -1,3 +1,4 @@
+// Package travisci implements a Service capable of processing webhooks from Travis-CI.
 package travisci
 
 import (
@@ -49,7 +50,8 @@ var httpClient = &http.Client{}
 //   }
 type Service struct {
 	types.DefaultService
-	webhookEndpointURL string
+	// The URL which should be added to .travis.yml - Populated by Go-NEB after Service registration.
+	WebhookEndpointURL string
 	// A map from Matrix room ID to Github-style owner/repo repositories.
 	Rooms map[string]struct {
 		// A map of "owner/repo" to configuration information
@@ -159,13 +161,13 @@ func outputForTemplate(travisTmpl string, tmpl map[string]string) (out string) {
 
 // OnReceiveWebhook receives requests from Travis-CI and possibly sends requests to Matrix as a result.
 //
-// If the "repository.url" matches a known Github repository, a notification will be formed from the
+// If the repository matches a known Github repository, a notification will be formed from the
 // template for that repository and a notice will be sent to Matrix.
 //
 // Go-NEB cannot register with Travis-CI for webhooks automatically. The user must manually add the
 // webhook endpoint URL to their .travis.yml file:
 //    notifications:
-//        webhooks: http://your-domain.com/notifications
+//        webhooks: http://go-neb-endpoint.com/notifications
 //
 // See https://docs.travis-ci.com/user/notifications#Webhook-notifications for more information.
 func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client) {
@@ -265,7 +267,7 @@ func init() {
 	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
 		return &Service{
 			DefaultService:     types.NewDefaultService(serviceID, serviceUserID, ServiceType),
-			webhookEndpointURL: webhookEndpointURL,
+			WebhookEndpointURL: webhookEndpointURL,
 		}
 	})
 }
