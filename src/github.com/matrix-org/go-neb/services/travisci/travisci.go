@@ -245,6 +245,7 @@ func (s *Service) Register(oldService types.Service, client *matrix.Client) erro
 			}
 		}
 	}
+	s.joinRooms(client)
 	return nil
 }
 
@@ -263,6 +264,18 @@ func (s *Service) PostRegister(oldService types.Service) {
 	logger.Info("Removing service as no repositories are registered.")
 	if err := database.GetServiceDB().DeleteService(s.ServiceID()); err != nil {
 		logger.WithError(err).Error("Failed to delete service")
+	}
+}
+
+func (s *Service) joinRooms(client *matrix.Client) {
+	for roomID := range s.Rooms {
+		if _, err := client.JoinRoom(roomID, "", ""); err != nil {
+			log.WithFields(log.Fields{
+				log.ErrorKey: err,
+				"room_id":    roomID,
+				"user_id":    client.UserID,
+			}).Error("Failed to join room")
+		}
 	}
 }
 
