@@ -118,8 +118,12 @@ func notifToTemplate(n webhookNotification) map[string]string {
 	t["build_number"] = n.Number
 	t["build_id"] = strconv.Itoa(n.ID)
 	t["branch"] = n.Branch
-	t["commit"] = n.Commit
-	t["author"] = n.CommitterName // author: commit author name
+	shaLength := len(n.Commit)
+	if shaLength > 10 {
+		shaLength = 10
+	}
+	t["commit"] = n.Commit[:shaLength] // shortened commit SHA
+	t["author"] = n.CommitterName      // author: commit author name
 	// commit_message: commit message of build
 	// commit_subject: first line of the commit message
 	t["commit_message"] = n.Message

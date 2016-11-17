@@ -71,18 +71,18 @@ var travisTests = []struct {
 	{
 		exampleSignature, true, exampleBody,
 		"%{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{message}",
-		"Kegsay/flow-jsdoc#18 (master - 3a092c3a6032ebb50384c99b445f947e9ce86e2a : Kegan Dougal): Passed",
+		"Kegsay/flow-jsdoc#18 (master - 3a092c3a60 : Kegan Dougal): Passed",
 	},
 	{
 		"obviously_invalid_signature", false, exampleBody,
 		"%{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{message}",
-		"Kegsay/flow-jsdoc#18 (master - 3a092c3a6032ebb50384c99b445f947e9ce86e2a : Kegan Dougal): Passed",
+		"Kegsay/flow-jsdoc#18 (master - 3a092c3a60 : Kegan Dougal): Passed",
 	},
 	{
 		// Payload is valid but doesn't match signature now
 		exampleSignature, false, strings.TrimSuffix(exampleBody, "%7D") + "%2C%22EXTRA_KEY%22%3Anull%7D",
 		"%{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{message}",
-		"Kegsay/flow-jsdoc#18 (master - 3a092c3a6032ebb50384c99b445f947e9ce86e2a : Kegan Dougal): Passed",
+		"Kegsay/flow-jsdoc#18 (master - 3a092c3a60 : Kegan Dougal): Passed",
 	},
 	{
 		exampleSignature, true, exampleBody,
