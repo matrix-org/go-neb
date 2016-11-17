@@ -133,9 +133,9 @@ func notifToTemplate(n webhookNotification) map[string]string {
 	if n.StartedAt != nil && n.FinishedAt != nil {
 		// duration: total duration of all builds in the matrix -- TODO
 		// elapsed_time: time between build start and finish
-		// Example from docs: "2011-11-11T11: 11: 11Z"
-		start, err := time.Parse("2006-01-02T15: 04: 05Z", *n.StartedAt)
-		finish, err2 := time.Parse("2006-01-02T15: 04: 05Z", *n.FinishedAt)
+		// Example from docs: "2011-11-11T11:11:11Z"
+		start, err := time.Parse("2006-01-02T15:04:05Z", *n.StartedAt)
+		finish, err2 := time.Parse("2006-01-02T15:04:05Z", *n.FinishedAt)
 		if err != nil || err2 != nil {
 			log.WithFields(log.Fields{
 				"started_at":  *n.StartedAt,
