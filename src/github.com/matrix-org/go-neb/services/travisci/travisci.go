@@ -51,7 +51,7 @@ var httpClient = &http.Client{}
 type Service struct {
 	types.DefaultService
 	// The URL which should be added to .travis.yml - Populated by Go-NEB after Service registration.
-	WebhookEndpointURL string
+	WebhookEndpointURL string `json:"webhook_url"`
 	// A map from Matrix room ID to Github-style owner/repo repositories.
 	Rooms map[string]struct {
 		// A map of "owner/repo" to configuration information
