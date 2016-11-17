@@ -86,7 +86,7 @@ var travisTests = []struct {
 	},
 	{
 		exampleSignature, true, exampleBody,
-		"%{repository}#%{build_number} %{duration}",
+		"%{repository}#%{build_number} %{duration}a",
 		"Kegsay/flow-jsdoc#18 32s",
 	},
 }
