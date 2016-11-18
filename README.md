@@ -71,6 +71,14 @@ Invite the bot user into a Matrix room and type `!echo hello world`. It will rep
  - Ability to query Giphy's "text-to-gif" engine.
  
 ### Guggy
+ - Ability to query Guggy's gif engine.
+ 
+### RSS Bot
+ - Ability to read Atom/RSS feeds.
+ 
+### Travis CI
+ - Ability to receive incoming build notifications.
+ - Ability to adjust the message which is sent into the room.
 
 
 # Installing
