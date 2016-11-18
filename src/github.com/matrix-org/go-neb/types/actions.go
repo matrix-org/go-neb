@@ -1,6 +1,9 @@
 package types
 
-import "regexp"
+import (
+	"regexp"
+	"strings"
+)
 
 // A Command is something that a user invokes by sending a message starting with '!'
 // followed by a list of strings that name the command, followed by a list of argument
@@ -28,7 +31,7 @@ func (command *Command) Matches(arguments []string) bool {
 		return false
 	}
 	for i, segment := range command.Path {
-		if segment != arguments[i] {
+		if strings.ToLower(segment) != strings.ToLower(arguments[i]) {
 			return false
 		}
 	}
