@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>travisci - The Go Programming Language</title>
+
+<link type="text/css" rel="stylesheet" href="../../../../../../lib/godoc/style.css">
+
+<link rel="stylesheet" href="../../../../../../lib/godoc/jquery.treeview.css">
+<script type="text/javascript">window.initFuncs = [];</script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6060/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6060/">Go</a></div>
+<a href="index.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6060/search">
+<div id="menu">
+<a href="http://localhost:6060/doc/">Documents</a>
+<a href="http://localhost:6060/pkg/">Packages</a>
+<a href="http://localhost:6060/project/">The Project</a>
+<a href="http://localhost:6060/help/">Help</a>
+<a href="http://localhost:6060/blog/">Blog</a>
+
+<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>Package travisci</h1>
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/matrix-org/go-neb/services/travisci"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="index.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="index.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package travisci implements a Service capable of processing webhooks from Travis-CI.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="index.html#pkg-constants">Constants</a></dd>
+			
+			
+			
+			
+				
+				<dd><a href="index.html#Service">type Service</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Service.OnReceiveWebhook">func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Service.PostRegister">func (s *Service) PostRegister(oldService types.Service)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#Service.Register">func (s *Service) Register(oldService types.Service, client *matrix.Client) error</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/travisci/travisci.go">travisci.go</a>
+			
+				<a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/travisci/verify.go">verify.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const <span id="DefaultTemplate">DefaultTemplate</span> = (`%{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{message}
+    Change view : %{compare_url}
+    Build details : %{build_url}`)</pre>
+				<p>
+DefaultTemplate contains the template that will be used if none is supplied.
+This matches the default mentioned at: <a href="https://docs.travis-ci.com/user/notifications#Customizing-slack-notifications">https://docs.travis-ci.com/user/notifications#Customizing-slack-notifications</a>
+</p>
+
+			
+				<pre>const <span id="ServiceType">ServiceType</span> = &#34;travis-ci&#34;</pre>
+				<p>
+ServiceType of the Travis-CI service.
+</p>
+
+			
+		
+		
+		
+		
+			
+			
+			<h2 id="Service">type <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/travisci/travisci.go?s=1582:3020#L41">Service</a></h2>
+			<pre>type Service struct {
+    <a href="../../types/index.html">types</a>.<a href="../../types/index.html#DefaultService">DefaultService</a>
+
+    <span class="comment">// The URL which should be added to .travis.yml - Populated by Go-NEB after Service registration.</span>
+    WebhookURL <a href="../../../../../builtin/index.html#string">string</a> `json:&#34;webhook_url&#34;`
+    <span class="comment">// A map from Matrix room ID to Github-style owner/repo repositories.</span>
+    Rooms map[<a href="../../../../../builtin/index.html#string">string</a>]struct {
+        <span class="comment">// A map of &#34;owner/repo&#34; to configuration information</span>
+        Repos map[<a href="../../../../../builtin/index.html#string">string</a>]struct {
+            <span class="comment">// The template string to use when creating notifications.</span>
+            <span class="comment">//</span>
+            <span class="comment">// This is identical to the format of Slack Notifications for Travis-CI:</span>
+            <span class="comment">// https://docs.travis-ci.com/user/notifications#Customizing-slack-notifications</span>
+            <span class="comment">//</span>
+            <span class="comment">// The following variables are available:</span>
+            <span class="comment">//   repository_slug: your GitHub repo identifier (like svenfuchs/minimal)</span>
+            <span class="comment">//   repository_name: the slug without the username</span>
+            <span class="comment">//   build_number: build number</span>
+            <span class="comment">//   build_id: build id</span>
+            <span class="comment">//   branch: branch build name</span>
+            <span class="comment">//   commit: shortened commit SHA</span>
+            <span class="comment">//   author: commit author name</span>
+            <span class="comment">//   commit_message: commit message of build</span>
+            <span class="comment">//   commit_subject: first line of the commit message</span>
+            <span class="comment">//   result: result of build</span>
+            <span class="comment">//   message: Travis CI message to the build</span>
+            <span class="comment">//   duration: total duration of all builds in the matrix</span>
+            <span class="comment">//   elapsed_time: time between build start and finish</span>
+            <span class="comment">//   compare_url: commit change view URL</span>
+            <span class="comment">//   build_url: URL of the build detail</span>
+            Template <a href="../../../../../builtin/index.html#string">string</a> `json:&#34;template&#34;`
+        } `json:&#34;repos&#34;`
+    } `json:&#34;rooms&#34;`
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Service contains the Config fields for the Travis-CI service.
+</p>
+<p>
+This service will send notifications into a Matrix room when Travis-CI sends
+webhook events to it. It requires a public domain which Travis-CI can reach.
+Notices will be sent as the service user ID.
+</p>
+<p>
+Example JSON request:
+</p>
+<pre>{
+    rooms: {
+        &#34;!ewfug483gsfe:localhost&#34;: {
+            repos: {
+                &#34;matrix-org/go-neb&#34;: {
+                    template: &#34;%{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{message}\nBuild details : %{build_url}&#34;
+                }
+            }
+        }
+    }
+}
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Service.OnReceiveWebhook">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/travisci/travisci.go?s=6648:6744#L171">OnReceiveWebhook</a></h3>
+				<pre>func (s *<a href="index.html#Service">Service</a>) OnReceiveWebhook(w <a href="../../../../../net/http/index.html">http</a>.<a href="../../../../../net/http/index.html#ResponseWriter">ResponseWriter</a>, req *<a href="../../../../../net/http/index.html">http</a>.<a href="../../../../../net/http/index.html#Request">Request</a>, cli *<a href="../../matrix/index.html">matrix</a>.<a href="../../matrix/index.html#Client">Client</a>)</pre>
+				<p>
+OnReceiveWebhook receives requests from Travis-CI and possibly sends requests to Matrix as a result.
+</p>
+<p>
+If the repository matches a known Github repository, a notification will be formed from the
+template for that repository and a notice will be sent to Matrix.
+</p>
+<p>
+Go-NEB cannot register with Travis-CI for webhooks automatically. The user must manually add the
+webhook endpoint URL to their .travis.yml file:
+</p>
+<pre>notifications:
+    webhooks: <a href="http://go-neb-endpoint.com/notifications">http://go-neb-endpoint.com/notifications</a>
+</pre>
+<p>
+See <a href="https://docs.travis-ci.com/user/notifications#Webhook-notifications">https://docs.travis-ci.com/user/notifications#Webhook-notifications</a> for more information.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Service.PostRegister">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/travisci/travisci.go?s=9069:9125#L249">PostRegister</a></h3>
+				<pre>func (s *<a href="index.html#Service">Service</a>) PostRegister(oldService <a href="../../types/index.html">types</a>.<a href="../../types/index.html#Service">Service</a>)</pre>
+				<p>
+PostRegister deletes this service if there are no registered repos.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Service.Register">func (*Service) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/services/travisci/travisci.go?s=8601:8682#L234">Register</a></h3>
+				<pre>func (s *<a href="index.html#Service">Service</a>) Register(oldService <a href="../../types/index.html">types</a>.<a href="../../types/index.html#Service">Service</a>, client *<a href="../../matrix/index.html">matrix</a>.<a href="../../matrix/index.html#Client">Client</a>) <a href="../../../../../builtin/index.html#error">error</a></pre>
+				<p>
+Register makes sure the Config information supplied is valid.
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.6.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> | 
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+<!-- TODO(adonovan): load these from <head> using "defer" attribute? -->
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.js"></script>
+<script type="text/javascript" src="../../../../../../lib/godoc/jquery.treeview.edit.js"></script>
+
+
+<script type="text/javascript" src="../../../../../../lib/godoc/godocs.js"></script>
+
+</body>
+</html>
+

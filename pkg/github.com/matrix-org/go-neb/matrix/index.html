@@ -326,7 +326,7 @@ Client represents a Matrix client.
 
 			
 				
-				<h3 id="NewClient">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=13306:13405#L417">NewClient</a></h3>
+				<h3 id="NewClient">func <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=13316:13415#L417">NewClient</a></h3>
 				<pre>func NewClient(httpClient *<a href="../../../../net/http/index.html">http</a>.<a href="../../../../net/http/index.html#Client">Client</a>, homeserverURL *<a href="../../../../net/url/index.html">url</a>.<a href="../../../../net/url/index.html#URL">URL</a>, accessToken, userID <a href="../../../../builtin/index.html#string">string</a>) *<a href="index.html#Client">Client</a></pre>
 				<p>
 NewClient creates a new Matrix Client ready for syncing
@@ -385,7 +385,7 @@ SetDisplayName sets the user&#39;s profile display name
 				
 			
 				
-				<h3 id="Client.StopSync">func (*Client) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=10755:10784#L319">StopSync</a></h3>
+				<h3 id="Client.StopSync">func (*Client) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=10765:10794#L319">StopSync</a></h3>
 				<pre>func (cli *<a href="index.html#Client">Client</a>) StopSync()</pre>
 				<p>
 StopSync stops the ongoing sync started by Sync.
@@ -396,7 +396,7 @@ StopSync stops the ongoing sync started by Sync.
 				
 			
 				
-				<h3 id="Client.Sync">func (*Client) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=6649:6674#L192">Sync</a></h3>
+				<h3 id="Client.Sync">func (*Client) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=6659:6684#L192">Sync</a></h3>
 				<pre>func (cli *<a href="index.html#Client">Client</a>) Sync()</pre>
 				<p>
 Sync starts syncing with the provided Homeserver. This function will be invoked continually.
@@ -419,7 +419,7 @@ UploadLink uploads an HTTP URL and then returns an MXC URI.
 				
 			
 				
-				<h3 id="Client.UploadToContentRepo">func (*Client) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=5633:5747#L160">UploadToContentRepo</a></h3>
+				<h3 id="Client.UploadToContentRepo">func (*Client) <a href="http://localhost:6060/src/github.com/matrix-org/go-neb/matrix/matrix.go?s=5643:5757#L160">UploadToContentRepo</a></h3>
 				<pre>func (cli *<a href="index.html#Client">Client</a>) UploadToContentRepo(content <a href="../../../../io/index.html">io</a>.<a href="../../../../io/index.html#Reader">Reader</a>, contentType <a href="../../../../builtin/index.html#string">string</a>, contentLength <a href="../../../../builtin/index.html#int64">int64</a>) (<a href="../../../../builtin/index.html#string">string</a>, <a href="../../../../builtin/index.html#error">error</a>)</pre>
 				<p>
 UploadToContentRepo uploads the given bytes to the content repository and returns an MXC URI.
