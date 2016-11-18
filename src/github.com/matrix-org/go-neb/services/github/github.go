@@ -25,8 +25,8 @@ const ServiceType = "github"
 
 // Matches alphanumeric then a /, then more alphanumeric then a #, then a number.
 // E.g. owner/repo#11 (issue/PR numbers) - Captured groups for owner/repo/number
-var ownerRepoIssueRegex = regexp.MustCompile(`(([A-z0-9-_]+)/([A-z0-9-_]+))?#([0-9]+)`)
-var ownerRepoRegex = regexp.MustCompile(`^([A-z0-9-_]+)/([A-z0-9-_]+)$`)
+var ownerRepoIssueRegex = regexp.MustCompile(`(([A-z0-9-_.]+)/([A-z0-9-_.]+))?#([0-9]+)`)
+var ownerRepoRegex = regexp.MustCompile(`^([A-z0-9-_.]+)/([A-z0-9-_.]+)$`)
 
 // Service contains the Config fields for the Github service.
 //
