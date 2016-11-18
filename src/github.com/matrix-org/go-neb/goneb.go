@@ -227,7 +227,12 @@ func main() {
 			filepath.Join(e.LogDir, "info.log"),
 			filepath.Join(e.LogDir, "warn.log"),
 			filepath.Join(e.LogDir, "error.log"),
-			nil, &dugong.DailyRotationSchedule{GZip: true},
+			&log.TextFormatter{
+				TimestampFormat:  "2006-01-02 15:04:05.000000",
+				DisableColors:    true,
+				DisableTimestamp: false,
+				DisableSorting:   false,
+			}, &dugong.DailyRotationSchedule{GZip: true},
 		))
 	}
 
