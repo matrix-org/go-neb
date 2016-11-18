@@ -142,6 +142,7 @@ List of Services:
  - [Guggy](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/services/guggy/) - A GIF bot
  - [JIRA](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/services/jira/) - Integration with JIRA
  - [RSS Bot](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/services/rssbot/) - An Atom/RSS feed reader
+ - [Travis CI](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/services/travisci/) - Receive build notifications from Travis CI
 
 
 ## Configuring Realms
