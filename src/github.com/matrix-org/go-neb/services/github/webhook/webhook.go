@@ -6,14 +6,15 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	log "github.com/Sirupsen/logrus"
-	"github.com/google/go-github/github"
-	"github.com/matrix-org/go-neb/errors"
-	"github.com/matrix-org/go-neb/matrix"
 	"html"
 	"io/ioutil"
 	"net/http"
 	"strings"
+
+	log "github.com/Sirupsen/logrus"
+	"github.com/google/go-github/github"
+	"github.com/matrix-org/go-neb/errors"
+	"github.com/matrix-org/go-neb/matrix"
 )
 
 // OnReceiveRequest processes incoming github webhook requests and returns a
@@ -148,11 +149,15 @@ func issueHTMLMessage(p github.IssuesEvent) string {
 	if p.Issue.Assignee != nil && p.Issue.Assignee.Login != nil {
 		actionTarget = fmt.Sprintf(" to %s", *p.Issue.Assignee.Login)
 	}
+	action := html.EscapeString(*p.Action)
+	if p.Label != nil && (*p.Action == "labeled" || *p.Action == "unlabeled") {
+		action = *p.Action + " [" + html.EscapeString(*p.Label.Name) + "] to"
+	}
 	return fmt.Sprintf(
 		"[<u>%s</u>] %s %s <b>issue #%d</b>: %s [%s]%s - %s",
 		html.EscapeString(*p.Repo.FullName),
 		html.EscapeString(*p.Sender.Login),
-		html.EscapeString(*p.Action),
+		action,
 		*p.Issue.Number,
 		html.EscapeString(*p.Issue.Title),
 		html.EscapeString(*p.Issue.State),
