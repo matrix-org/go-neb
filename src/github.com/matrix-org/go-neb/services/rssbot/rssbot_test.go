@@ -41,8 +41,7 @@ func TestHTMLEntities(t *testing.T) {
 	database.SetServiceDB(&database.NopStorage{})
 	feedURL := "https://thehappymaskshop.hyrule"
 	// Replace the cachingClient with a mock so we can intercept RSS requests
-	rssTrans := struct{ testutils.MockTransport }{}
-	rssTrans.RT = func(req *http.Request) (*http.Response, error) {
+	rssTrans := testutils.NewRoundTripper(func(req *http.Request) (*http.Response, error) {
 		if req.URL.String() != feedURL {
 			return nil, errors.New("Unknown test URL")
 		}
@@ -50,7 +49,7 @@ func TestHTMLEntities(t *testing.T) {
 			StatusCode: 200,
 			Body:       ioutil.NopCloser(bytes.NewBufferString(rssFeedXML)),
 		}, nil
-	}
+	})
 	cachingClient = &http.Client{Transport: rssTrans}
 
 	// Create the RSS service

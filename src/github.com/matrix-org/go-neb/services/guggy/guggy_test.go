@@ -23,8 +23,7 @@ func TestCommand(t *testing.T) {
 	guggyImageURL := "https://guggy.com/gifs/23ryf872fg"
 
 	// Mock the response from Guggy
-	guggyTrans := struct{ testutils.MockTransport }{}
-	guggyTrans.RT = func(req *http.Request) (*http.Response, error) {
+	guggyTrans := testutils.NewRoundTripper(func(req *http.Request) (*http.Response, error) {
 		guggyURL := "https://text2gif.guggy.com/guggify"
 		if req.URL.String() != guggyURL {
 			t.Fatalf("Bad URL: got %s want %s", req.URL.String(), guggyURL)
@@ -58,7 +57,7 @@ func TestCommand(t *testing.T) {
 			StatusCode: 200,
 			Body:       ioutil.NopCloser(bytes.NewBuffer(b)),
 		}, nil
-	}
+	})
 	// clobber the guggy service http client instance
 	httpClient = &http.Client{Transport: guggyTrans}
 

@@ -99,8 +99,7 @@ func TestTravisCI(t *testing.T) {
 	urlToKey := make(map[string]string)
 	urlToKey["https://api.travis-ci.org/config"] = travisOrgPEMPublicKey
 	urlToKey["https://api.travis-ci.com/config"] = travisComPEMPublicKey
-	travisTransport := struct{ testutils.MockTransport }{}
-	travisTransport.RT = func(req *http.Request) (*http.Response, error) {
+	travisTransport := testutils.NewRoundTripper(func(req *http.Request) (*http.Response, error) {
 		if key := urlToKey[req.URL.String()]; key != "" {
 			escKey, _ := json.Marshal(key)
 			return &http.Response{
@@ -111,7 +110,7 @@ func TestTravisCI(t *testing.T) {
 			}, nil
 		}
 		return nil, fmt.Errorf("Unhandled URL %s", req.URL.String())
-	}
+	})
 	// clobber the http client that the service uses to talk to Travis
 	httpClient = &http.Client{Transport: travisTransport}
 
