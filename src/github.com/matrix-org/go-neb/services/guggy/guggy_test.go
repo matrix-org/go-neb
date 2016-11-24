@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/matrix"
+	"github.com/matrix-org/go-neb/testutils"
 	"github.com/matrix-org/go-neb/types"
 	"io/ioutil"
 	"net/http"
@@ -13,14 +14,6 @@ import (
 	"strings"
 	"testing"
 )
-
-type MockTransport struct {
-	roundTrip func(*http.Request) (*http.Response, error)
-}
-
-func (t MockTransport) RoundTrip(req *http.Request) (*http.Response, error) {
-	return t.roundTrip(req)
-}
 
 // TODO: It would be nice to tabularise this test so we can try failing different combinations of responses to make
 //       sure all cases are handled, rather than just the general case as is here.
@@ -30,8 +23,7 @@ func TestCommand(t *testing.T) {
 	guggyImageURL := "https://guggy.com/gifs/23ryf872fg"
 
 	// Mock the response from Guggy
-	guggyTrans := struct{ MockTransport }{}
-	guggyTrans.roundTrip = func(req *http.Request) (*http.Response, error) {
+	guggyTrans := testutils.NewRoundTripper(func(req *http.Request) (*http.Response, error) {
 		guggyURL := "https://text2gif.guggy.com/guggify"
 		if req.URL.String() != guggyURL {
 			t.Fatalf("Bad URL: got %s want %s", req.URL.String(), guggyURL)
@@ -65,7 +57,7 @@ func TestCommand(t *testing.T) {
 			StatusCode: 200,
 			Body:       ioutil.NopCloser(bytes.NewBuffer(b)),
 		}, nil
-	}
+	})
 	// clobber the guggy service http client instance
 	httpClient = &http.Client{Transport: guggyTrans}
 
@@ -79,8 +71,8 @@ func TestCommand(t *testing.T) {
 	guggy := srv.(*Service)
 
 	// Mock the response from Matrix
-	matrixTrans := struct{ MockTransport }{}
-	matrixTrans.roundTrip = func(req *http.Request) (*http.Response, error) {
+	matrixTrans := struct{ testutils.MockTransport }{}
+	matrixTrans.RT = func(req *http.Request) (*http.Response, error) {
 		if req.URL.String() == guggyImageURL { // getting the guggy image
 			return &http.Response{
 				StatusCode: 200,

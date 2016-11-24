@@ -14,6 +14,7 @@ import (
 
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/matrix"
+	"github.com/matrix-org/go-neb/testutils"
 	"github.com/matrix-org/go-neb/types"
 )
 
@@ -36,20 +37,11 @@ const rssFeedXML = `
 </channel>
 </rss>`
 
-type MockTransport struct {
-	roundTrip func(*http.Request) (*http.Response, error)
-}
-
-func (t MockTransport) RoundTrip(req *http.Request) (*http.Response, error) {
-	return t.roundTrip(req)
-}
-
 func TestHTMLEntities(t *testing.T) {
 	database.SetServiceDB(&database.NopStorage{})
 	feedURL := "https://thehappymaskshop.hyrule"
 	// Replace the cachingClient with a mock so we can intercept RSS requests
-	rssTrans := struct{ MockTransport }{}
-	rssTrans.roundTrip = func(req *http.Request) (*http.Response, error) {
+	rssTrans := testutils.NewRoundTripper(func(req *http.Request) (*http.Response, error) {
 		if req.URL.String() != feedURL {
 			return nil, errors.New("Unknown test URL")
 		}
@@ -57,7 +49,7 @@ func TestHTMLEntities(t *testing.T) {
 			StatusCode: 200,
 			Body:       ioutil.NopCloser(bytes.NewBufferString(rssFeedXML)),
 		}, nil
-	}
+	})
 	cachingClient = &http.Client{Transport: rssTrans}
 
 	// Create the RSS service
@@ -79,8 +71,8 @@ func TestHTMLEntities(t *testing.T) {
 	// Create the Matrix client which will send the notification
 	wg := sync.WaitGroup{}
 	wg.Add(1)
-	matrixTrans := struct{ MockTransport }{}
-	matrixTrans.roundTrip = func(req *http.Request) (*http.Response, error) {
+	matrixTrans := struct{ testutils.MockTransport }{}
+	matrixTrans.RT = func(req *http.Request) (*http.Response, error) {
 		if strings.HasPrefix(req.URL.Path, "/_matrix/client/r0/rooms/!linksroom:hyrule/send/m.room.message") {
 			// Check content body to make sure it is decoded
 			var msg matrix.HTMLMessage
