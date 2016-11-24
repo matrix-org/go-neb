@@ -192,6 +192,12 @@ func (c *Clients) onMessageEvent(client *matrix.Client, event *matrix.Event) {
 		return
 	}
 
+	// replace all smart quotes with their normal counterparts so shellwords can parse it
+	body = strings.Replace(body, `‘`, `'`, -1)
+	body = strings.Replace(body, `’`, `'`, -1)
+	body = strings.Replace(body, `“`, `"`, -1)
+	body = strings.Replace(body, `”`, `"`, -1)
+
 	var responses []interface{}
 
 	for _, service := range services {
