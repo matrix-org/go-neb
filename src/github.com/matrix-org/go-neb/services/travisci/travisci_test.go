@@ -13,6 +13,7 @@ import (
 
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/matrix"
+	"github.com/matrix-org/go-neb/testutils"
 	"github.com/matrix-org/go-neb/types"
 )
 
@@ -91,14 +92,6 @@ var travisTests = []struct {
 	},
 }
 
-type MockTransport struct {
-	roundTrip func(*http.Request) (*http.Response, error)
-}
-
-func (t MockTransport) RoundTrip(req *http.Request) (*http.Response, error) {
-	return t.roundTrip(req)
-}
-
 func TestTravisCI(t *testing.T) {
 	database.SetServiceDB(&database.NopStorage{})
 
@@ -106,8 +99,8 @@ func TestTravisCI(t *testing.T) {
 	urlToKey := make(map[string]string)
 	urlToKey["https://api.travis-ci.org/config"] = travisOrgPEMPublicKey
 	urlToKey["https://api.travis-ci.com/config"] = travisComPEMPublicKey
-	travisTransport := struct{ MockTransport }{}
-	travisTransport.roundTrip = func(req *http.Request) (*http.Response, error) {
+	travisTransport := struct{ testutils.MockTransport }{}
+	travisTransport.RT = func(req *http.Request) (*http.Response, error) {
 		if key := urlToKey[req.URL.String()]; key != "" {
 			escKey, _ := json.Marshal(key)
 			return &http.Response{
@@ -124,8 +117,8 @@ func TestTravisCI(t *testing.T) {
 
 	// Intercept message sending to Matrix and mock responses
 	msgs := []matrix.TextMessage{}
-	matrixTrans := struct{ MockTransport }{}
-	matrixTrans.roundTrip = func(req *http.Request) (*http.Response, error) {
+	matrixTrans := struct{ testutils.MockTransport }{}
+	matrixTrans.RT = func(req *http.Request) (*http.Response, error) {
 		if !strings.Contains(req.URL.String(), "/send/m.room.message") {
 			return nil, fmt.Errorf("Unhandled URL: %s", req.URL.String())
 		}
