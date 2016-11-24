@@ -16,7 +16,7 @@ import (
 )
 
 type nextBatchStore struct {
-	db *database.ServiceDB
+	db database.Storer
 }
 
 func (s nextBatchStore) Save(userID, nextBatch string) {
@@ -42,7 +42,7 @@ func (s nextBatchStore) Load(userID string) string {
 
 // A Clients is a collection of clients used for bot services.
 type Clients struct {
-	db         *database.ServiceDB
+	db         database.Storer
 	httpClient *http.Client
 	dbMutex    sync.Mutex
 	mapMutex   sync.Mutex
@@ -50,7 +50,7 @@ type Clients struct {
 }
 
 // New makes a new collection of matrix clients
-func New(db *database.ServiceDB, cli *http.Client) *Clients {
+func New(db database.Storer, cli *http.Client) *Clients {
 	clients := &Clients{
 		db:         db,
 		httpClient: cli,
@@ -191,6 +191,12 @@ func (c *Clients) onMessageEvent(client *matrix.Client, event *matrix.Event) {
 	if msgtype, ok := event.MessageType(); !ok || msgtype == "m.notice" {
 		return
 	}
+
+	// replace all smart quotes with their normal counterparts so shellwords can parse it
+	body = strings.Replace(body, `‘`, `'`, -1)
+	body = strings.Replace(body, `’`, `'`, -1)
+	body = strings.Replace(body, `“`, `"`, -1)
+	body = strings.Replace(body, `”`, `"`, -1)
 
 	var responses []interface{}
 
