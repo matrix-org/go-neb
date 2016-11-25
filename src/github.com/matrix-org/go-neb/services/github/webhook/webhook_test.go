@@ -10,6 +10,7 @@ var ghtests = []struct {
 	jsonBody    string
 	outHTML     string
 	outFullRepo string
+	outType     string
 }{
 	{"issues",
 		`{
@@ -165,7 +166,7 @@ var ghtests = []struct {
 		  }
 		}`,
 		`[<u>DummyAccount/reponame</u>] DummyAccount closed <b>issue #15</b>: aaaaaa [closed] - https://github.com/DummyAccount/reponame/issues/15`,
-		"DummyAccount/reponame"},
+		"DummyAccount/reponame", "issues"},
 	// ==================================================================
 	{
 		"issue_comment",
@@ -350,7 +351,7 @@ var ghtests = []struct {
 		  }
 		}`,
 		"[<u>DummyAccount/arepo</u>] DummyAccount commented on DummyAccount's <b>issue #15</b>: aaaaaa - https://github.com/DummyAccount/arepo/issues/15",
-		"DummyAccount/arepo",
+		"DummyAccount/arepo", "issue_comment",
 	},
 	// ==================================================================
 	{
@@ -561,7 +562,7 @@ var ghtests = []struct {
 		  }
 		}`,
 		"[<u>matrix-org/sytest</u>] NegativeMjark pushed 2 commits to <b>develop</b>: https://github.com/matrix-org/sytest/commit/4a05c601f6b806110e63160cf7cf41b37787461f<br>NegativeMjark: Fix arguments to postgres connector to work with go<br>NegativeMjark: Add necessary info to the second postgres db",
-		"matrix-org/sytest",
+		"matrix-org/sytest", "push",
 	},
 	// ==================================================================
 	{
@@ -1032,7 +1033,7 @@ var ghtests = []struct {
 		  }
 		}`,
 		"[<u>matrix-org/matrix-react-sdk</u>] richvdh assigned <b>pull request #303</b>: Factor out common parts of room creation [open] to dbkr - https://github.com/matrix-org/matrix-react-sdk/pull/303",
-		"matrix-org/matrix-react-sdk",
+		"matrix-org/matrix-react-sdk", "assign",
 	},
 	// ==================================================================
 	{
@@ -1500,25 +1501,28 @@ var ghtests = []struct {
 		  }
 		}`,
 		"[<u>matrix-org/synapse</u>] erikjohnston made a line comment on negzi's <b>pull request #860</b> (assignee: None): Fix a bug caused by a change in auth_handler function - https://github.com/matrix-org/synapse/pull/860#discussion_r66413356",
-		"matrix-org/synapse",
+		"matrix-org/synapse", "pull_request_review_comment",
 	},
 }
 
 func TestParseGithubEvent(t *testing.T) {
 	for _, gh := range ghtests {
-		outHTML, outRepo, outErr := parseGithubEvent(gh.eventType, []byte(gh.jsonBody))
+		outHTML, outRepo, outType, outErr := parseGithubEvent(gh.eventType, []byte(gh.jsonBody))
 		if outErr != nil {
 			t.Fatal(outErr)
 		}
 		if strings.TrimSpace(outHTML) != strings.TrimSpace(gh.outHTML) {
-			t.Fatalf("ParseGithubEvent(%s) => HTML output does not match. Got:\n%s\n\nExpected:\n%s", gh.eventType,
+			t.Errorf("ParseGithubEvent(%s) => HTML output does not match. Got:\n%s\n\nExpected:\n%s", gh.eventType,
 				strings.TrimSpace(outHTML), strings.TrimSpace(gh.outHTML))
 		}
 		if outRepo == nil {
-			t.Fatalf("ParseGithubEvent(%s) => Repo is nil", gh.eventType)
+			t.Errorf("ParseGithubEvent(%s) => Repo is nil", gh.eventType)
 		}
 		if *outRepo.FullName != gh.outFullRepo {
-			t.Fatalf("ParseGithubEvent(%s) => Repo: Want %s got %s", gh.eventType, gh.outFullRepo, *outRepo.FullName)
+			t.Errorf("ParseGithubEvent(%s) => Repo: Want %s got %s", gh.eventType, gh.outFullRepo, *outRepo.FullName)
+		}
+		if outType != gh.outType {
+			t.Errorf("ParseGithubEvent(%s) => Event type: Want %s got %s", gh.eventType, gh.outType, outType)
 		}
 	}
 }
