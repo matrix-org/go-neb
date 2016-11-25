@@ -61,14 +61,15 @@ func OnReceiveRequest(r *http.Request, secretToken string) (string, *github.Repo
 		return "", nil, nil, &errors.HTTPError{nil, "pong", 200}
 	}
 
-	htmlStr, repo, err := parseGithubEvent(eventType, content)
+	htmlStr, repo, refinedType, err := parseGithubEvent(eventType, content)
 	if err != nil {
 		log.WithError(err).Print("Failed to parse github event")
 		return "", nil, nil, &errors.HTTPError{nil, "Failed to parse github event", 500}
 	}
 
 	msg := matrix.GetHTMLMessage("m.notice", htmlStr)
-	return eventType, repo, &msg, nil
+
+	return refinedType, repo, &msg, nil
 }
 
 // checkMAC reports whether messageMAC is a valid HMAC tag for message.
@@ -80,24 +81,26 @@ func checkMAC(message, messageMAC, key []byte) bool {
 }
 
 // parseGithubEvent parses a github event type and JSON data and returns an explanatory
-// HTML string and the github repository this event affects, or an error.
-func parseGithubEvent(eventType string, data []byte) (string, *github.Repository, error) {
+// HTML string, the github repository and the refined event type, or an error.
+func parseGithubEvent(eventType string, data []byte) (string, *github.Repository, string, error) {
 	if eventType == "pull_request" {
 		var ev github.PullRequestEvent
 		if err := json.Unmarshal(data, &ev); err != nil {
-			return "", nil, err
+			return "", nil, eventType, err
 		}
-		return pullRequestHTMLMessage(ev), ev.Repo, nil
+		refinedEventType := refineEventType(eventType, ev.Action)
+		return pullRequestHTMLMessage(ev), ev.Repo, refinedEventType, nil
 	} else if eventType == "issues" {
 		var ev github.IssuesEvent
 		if err := json.Unmarshal(data, &ev); err != nil {
-			return "", nil, err
+			return "", nil, eventType, err
 		}
-		return issueHTMLMessage(ev), ev.Repo, nil
+		refinedEventType := refineEventType(eventType, ev.Action)
+		return issueHTMLMessage(ev), ev.Repo, refinedEventType, nil
 	} else if eventType == "push" {
 		var ev github.PushEvent
 		if err := json.Unmarshal(data, &ev); err != nil {
-			return "", nil, err
+			return "", nil, eventType, err
 		}
 
 		// The 'push' event repository format is subtly different from normal, so munge the bits we need.
@@ -109,21 +112,36 @@ func parseGithubEvent(eventType string, data []byte) (string, *github.Repository
 			Name:     ev.Repo.Name,
 			FullName: &fullName,
 		}
-		return pushHTMLMessage(ev), &repo, nil
+		return pushHTMLMessage(ev), &repo, eventType, nil
 	} else if eventType == "issue_comment" {
 		var ev github.IssueCommentEvent
 		if err := json.Unmarshal(data, &ev); err != nil {
-			return "", nil, err
+			return "", nil, eventType, err
 		}
-		return issueCommentHTMLMessage(ev), ev.Repo, nil
+		return issueCommentHTMLMessage(ev), ev.Repo, eventType, nil
 	} else if eventType == "pull_request_review_comment" {
 		var ev github.PullRequestReviewCommentEvent
 		if err := json.Unmarshal(data, &ev); err != nil {
-			return "", nil, err
+			return "", nil, eventType, err
 		}
-		return prReviewCommentHTMLMessage(ev), ev.Repo, nil
+		return prReviewCommentHTMLMessage(ev), ev.Repo, eventType, nil
 	}
-	return "", nil, fmt.Errorf("Unrecognized event type")
+	return "", nil, eventType, fmt.Errorf("Unrecognized event type")
+}
+
+func refineEventType(eventType string, action *string) string {
+	if action == nil {
+		return eventType
+	}
+	a := *action
+	if a == "assigned" || a == "unassigned" {
+		return "assignments"
+	} else if a == "milestoned" || a == "demilestoned" {
+		return "milestones"
+	} else if a == "labeled" || a == "unlabeled" {
+		return "labels"
+	}
+	return eventType
 }
 
 func pullRequestHTMLMessage(p github.PullRequestEvent) string {
