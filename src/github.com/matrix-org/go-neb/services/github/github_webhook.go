@@ -62,7 +62,7 @@ type WebhookService struct {
 			//    pull_request_review_comment : When a line comment is made on a pull request.
 			//    labels : When any issue or pull request is labeled/unlabeled. Unique to Go-NEB.
 			//    milestones : When any issue or pull request is milestoned/demilestoned. Unique to Go-NEB.
-			//    assign : When any issue or pull request is assigned/unassigned. Unique to Go-NEB.
+			//    assignments : When any issue or pull request is assigned/unassigned. Unique to Go-NEB.
 			// Most of these events are directly from: https://developer.github.com/webhooks/#events
 			Events []string
 		}

@@ -135,7 +135,7 @@ func refineEventType(eventType string, action *string) string {
 	}
 	a := *action
 	if a == "assigned" || a == "unassigned" {
-		return "assign"
+		return "assignments"
 	} else if a == "milestoned" || a == "demilestoned" {
 		return "milestones"
 	} else if a == "labeled" || a == "unlabeled" {

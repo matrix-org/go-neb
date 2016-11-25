@@ -1033,7 +1033,7 @@ var ghtests = []struct {
 		  }
 		}`,
 		"[<u>matrix-org/matrix-react-sdk</u>] richvdh assigned <b>pull request #303</b>: Factor out common parts of room creation [open] to dbkr - https://github.com/matrix-org/matrix-react-sdk/pull/303",
-		"matrix-org/matrix-react-sdk", "assign",
+		"matrix-org/matrix-react-sdk", "assignments",
 	},
 	// ==================================================================
 	{
