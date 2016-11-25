@@ -3,7 +3,7 @@ package giphy
 
 import (
 	"encoding/json"
-	"errors"
+	"fmt"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -31,7 +31,7 @@ type result struct {
 }
 
 type giphySearch struct {
-	Data []result
+	Data result `json:"data"`
 }
 
 // Service contains the Config fields for the Giphy Service.
@@ -68,6 +68,9 @@ func (s *Service) cmdGiphy(client *matrix.Client, roomID, userID string, args []
 	if err != nil {
 		return nil, err
 	}
+	if gifResult.Images.Original.URL == "" {
+		return nil, fmt.Errorf("No results")
+	}
 	mxc, err := client.UploadLink(gifResult.Images.Original.URL)
 	if err != nil {
 		return nil, err
@@ -89,12 +92,12 @@ func (s *Service) cmdGiphy(client *matrix.Client, roomID, userID string, args []
 // searchGiphy returns info about a gif
 func (s *Service) searchGiphy(query string) (*result, error) {
 	log.Info("Searching giphy for ", query)
-	u, err := url.Parse("http://api.giphy.com/v1/gifs/search")
+	u, err := url.Parse("http://api.giphy.com/v1/gifs/translate")
 	if err != nil {
 		return nil, err
 	}
 	q := u.Query()
-	q.Set("q", query)
+	q.Set("s", query)
 	q.Set("api_key", s.APIKey)
 	u.RawQuery = q.Encode()
 	res, err := http.Get(u.String())
@@ -106,12 +109,11 @@ func (s *Service) searchGiphy(query string) (*result, error) {
 	}
 	var search giphySearch
 	if err := json.NewDecoder(res.Body).Decode(&search); err != nil {
-		return nil, err
+		// Giphy returns a JSON object which has { data: [] } if there are 0 results.
+		// This fails to be deserialised by Go.
+		return nil, fmt.Errorf("No results")
 	}
-	if len(search.Data) == 0 {
-		return nil, errors.New("No results")
-	}
-	return &search.Data[0], nil
+	return &search.Data, nil
 }
 
 func asInt(strInt string) uint {
