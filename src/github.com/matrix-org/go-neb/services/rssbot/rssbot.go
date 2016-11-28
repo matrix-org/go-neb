@@ -243,7 +243,11 @@ func (s *Service) queryFeed(feedURL string) (*gofeed.Feed, []gofeed.Item, error)
 	feed, err := fp.ParseURL(feedURL)
 	// check for no items in addition to any returned errors as it appears some RSS feeds
 	// do not consistently return items.
-	if err != nil || len(feed.Items) == 0 {
+	if err == nil && len(feed.Items) == 0 {
+		err = errors.New("feed has 0 items")
+	}
+
+	if err != nil {
 		f := s.Feeds[feedURL]
 		f.IsFailing = true
 		s.Feeds[feedURL] = f
