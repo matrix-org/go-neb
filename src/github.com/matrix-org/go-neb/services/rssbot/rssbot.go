@@ -175,6 +175,11 @@ func (s *Service) OnPoll(cli *matrix.Client) time.Time {
 			continue
 		}
 		incrementMetrics(u, nil)
+		logger.WithFields(log.Fields{
+			"feed_url":   u,
+			"feed_items": len(feed.Items),
+			"new_items":  len(items),
+		}).Info("Sending new items")
 		// Loop backwards since [0] is the most recent and we want to send in chronological order
 		for i := len(items) - 1; i >= 0; i-- {
 			item := items[i]
@@ -290,8 +295,17 @@ func (s *Service) queryFeed(feedURL string) (*gofeed.Feed, []gofeed.Item, error)
 		guids = append(guids, itm.GUID)
 	}
 
-	// Update the service config to persist the new times
 	f := s.Feeds[feedURL]
+
+	if len(guids) != len(f.RecentGUIDs) {
+		log.WithFields(log.Fields{
+			"new_guids": guids,
+			"old_guids": f.RecentGUIDs,
+			"feed_url":  feedURL,
+		}).Warn("GUID length mismatch")
+	}
+
+	// Update the service config to persist the new times
 	f.NextPollTimestampSecs = nextPollTsSec
 	f.FeedUpdatedTimestampSecs = now
 	f.RecentGUIDs = guids
