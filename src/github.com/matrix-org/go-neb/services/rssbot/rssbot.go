@@ -371,6 +371,7 @@ func (rt userAgentRoundTripper) RoundTrip(req *http.Request) (*http.Response, er
 }
 
 func readFeed(feedURL string) (*gofeed.Feed, error) {
+	// Don't use fp.ParseURL because it leaks on non-2xx responses as of 2016/11/29 (cac19c6c27)
 	fp := gofeed.NewParser()
 	resp, err := cachingClient.Get(feedURL)
 	if resp != nil {
