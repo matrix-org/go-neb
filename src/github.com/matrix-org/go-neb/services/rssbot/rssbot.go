@@ -88,9 +88,7 @@ func (s *Service) Register(oldService types.Service, client *matrix.Client) erro
 	}
 	// Make sure we can parse the feed
 	for feedURL, feedInfo := range s.Feeds {
-		fp := gofeed.NewParser()
-		fp.Client = cachingClient
-		if _, err := fp.ParseURL(feedURL); err != nil {
+		if _, err := readFeed(feedURL); err != nil {
 			return fmt.Errorf("Failed to read URL %s: %s", feedURL, err.Error())
 		}
 		if len(feedInfo.Rooms) == 0 {
@@ -243,9 +241,7 @@ func (s *Service) nextTimestamp() time.Time {
 func (s *Service) queryFeed(feedURL string) (*gofeed.Feed, []gofeed.Item, error) {
 	log.WithField("feed_url", feedURL).Info("Querying feed")
 	var items []gofeed.Item
-	fp := gofeed.NewParser()
-	fp.Client = cachingClient
-	feed, err := fp.ParseURL(feedURL)
+	feed, err := readFeed(feedURL)
 	// check for no items in addition to any returned errors as it appears some RSS feeds
 	// do not consistently return items.
 	if err == nil && len(feed.Items) == 0 {
@@ -372,6 +368,26 @@ type userAgentRoundTripper struct {
 func (rt userAgentRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
 	req.Header.Set("User-Agent", "Go-NEB")
 	return rt.Transport.RoundTrip(req)
+}
+
+func readFeed(feedURL string) (*gofeed.Feed, error) {
+	// Don't use fp.ParseURL because it leaks on non-2xx responses as of 2016/11/29 (cac19c6c27)
+	fp := gofeed.NewParser()
+	resp, err := cachingClient.Get(feedURL)
+	if resp != nil {
+		defer resp.Body.Close()
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		return nil, gofeed.HTTPError{
+			StatusCode: resp.StatusCode,
+			Status:     resp.Status,
+		}
+	}
+	return fp.Parse(resp.Body)
 }
 
 func init() {
