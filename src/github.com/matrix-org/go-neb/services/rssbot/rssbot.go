@@ -297,6 +297,7 @@ func (s *Service) queryFeed(feedURL string) (*gofeed.Feed, []gofeed.Item, error)
 	lastSet := uniqueStrings(f.RecentGUIDs) // e.g. [4,5,6]
 	thisSet := uniqueGuids(feed.Items)      // e.g. [1,2,3]
 	guids := append(thisSet, lastSet...)    // e.g. [1,2,3,4,5,6]
+	guids = uniqueStrings(guids)
 	if len(guids) > maxGuids {
 		// Critically this favours the NEWEST elements, which are the ones we're most likely to see again.
 		guids = guids[0:maxGuids]
@@ -305,7 +306,7 @@ func (s *Service) queryFeed(feedURL string) (*gofeed.Feed, []gofeed.Item, error)
 	// Update the service config to persist the new times
 	f.NextPollTimestampSecs = nextPollTsSec
 	f.FeedUpdatedTimestampSecs = now
-	f.RecentGUIDs = uniqueStrings(guids)
+	f.RecentGUIDs = guids
 	f.IsFailing = false
 	s.Feeds[feedURL] = f
 
