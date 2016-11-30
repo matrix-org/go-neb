@@ -11,8 +11,6 @@ import (
 	"time"
 
 	log "github.com/Sirupsen/logrus"
-	"github.com/die-net/lrucache"
-	"github.com/gregjones/httpcache"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/polling"
@@ -437,9 +435,9 @@ func readFeed(feedURL string) (*gofeed.Feed, error) {
 }
 
 func init() {
-	lruCache := lrucache.New(1024*1024*20, 0) // 20 MB cache, no max-age
+	// lruCache := lrucache.New(1024*1024*20, 0) // 20 MB cache, no max-age
 	cachingClient = &http.Client{
-		Transport: userAgentRoundTripper{httpcache.NewTransport(lruCache)},
+		Transport: userAgentRoundTripper{http.DefaultTransport}, // httpcache.NewTransport(lruCache)
 	}
 	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
 		r := &Service{
