@@ -7,14 +7,13 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
-	"net/url"
 	"strings"
 	"testing"
 
 	"github.com/matrix-org/go-neb/database"
-	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/testutils"
 	"github.com/matrix-org/go-neb/types"
+	"github.com/matrix-org/gomatrix"
 )
 
 const travisOrgPEMPublicKey = (`-----BEGIN PUBLIC KEY-----
@@ -115,13 +114,13 @@ func TestTravisCI(t *testing.T) {
 	httpClient = &http.Client{Transport: travisTransport}
 
 	// Intercept message sending to Matrix and mock responses
-	msgs := []matrix.TextMessage{}
+	msgs := []gomatrix.TextMessage{}
 	matrixTrans := struct{ testutils.MockTransport }{}
 	matrixTrans.RT = func(req *http.Request) (*http.Response, error) {
 		if !strings.Contains(req.URL.String(), "/send/m.room.message") {
 			return nil, fmt.Errorf("Unhandled URL: %s", req.URL.String())
 		}
-		var msg matrix.TextMessage
+		var msg gomatrix.TextMessage
 		if err := json.NewDecoder(req.Body).Decode(&msg); err != nil {
 			return nil, fmt.Errorf("Failed to decode request JSON: %s", err)
 		}
@@ -131,13 +130,13 @@ func TestTravisCI(t *testing.T) {
 			Body:       ioutil.NopCloser(bytes.NewBufferString(`{"event_id":"$yup:event"}`)),
 		}, nil
 	}
-	u, _ := url.Parse("https://hyrule")
-	matrixCli := matrix.NewClient(&http.Client{Transport: matrixTrans}, u, "its_a_secret", "@travisci:hyrule")
+	matrixCli, _ := gomatrix.NewClient("https://hyrule", "@travisci:hyrule", "its_a_secret")
+	matrixCli.Client = &http.Client{Transport: matrixTrans}
 
 	// BEGIN running the Travis-CI table tests
 	// ---------------------------------------
 	for _, test := range travisTests {
-		msgs = []matrix.TextMessage{} // reset sent messages
+		msgs = []gomatrix.TextMessage{} // reset sent messages
 		mockWriter := httptest.NewRecorder()
 		travis := makeService(t, test.Template)
 		if travis == nil {
@@ -173,7 +172,7 @@ func TestTravisCI(t *testing.T) {
 	}
 }
 
-func assertResponse(t *testing.T, w *httptest.ResponseRecorder, msgs []matrix.TextMessage, expectCode int, expectMsgLength int) bool {
+func assertResponse(t *testing.T, w *httptest.ResponseRecorder, msgs []gomatrix.TextMessage, expectCode int, expectMsgLength int) bool {
 	if w.Code != expectCode {
 		t.Errorf("TestTravisCI OnReceiveWebhook want HTTP code %d, got %d", expectCode, w.Code)
 		return false

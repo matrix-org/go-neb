@@ -14,9 +14,9 @@ import (
 	"github.com/die-net/lrucache"
 	"github.com/gregjones/httpcache"
 	"github.com/matrix-org/go-neb/database"
-	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/polling"
 	"github.com/matrix-org/go-neb/types"
+	"github.com/matrix-org/gomatrix"
 	"github.com/mmcdole/gofeed"
 	"github.com/prometheus/client_golang/prometheus"
 )
@@ -71,7 +71,7 @@ type Service struct {
 }
 
 // Register will check the liveness of each RSS feed given. If all feeds check out okay, no error is returned.
-func (s *Service) Register(oldService types.Service, client *matrix.Client) error {
+func (s *Service) Register(oldService types.Service, client *gomatrix.Client) error {
 	if len(s.Feeds) == 0 {
 		// this is an error UNLESS the old service had some feeds in which case they are deleting us :(
 		var numOldFeeds int
@@ -100,7 +100,7 @@ func (s *Service) Register(oldService types.Service, client *matrix.Client) erro
 	return nil
 }
 
-func (s *Service) joinRooms(client *matrix.Client) {
+func (s *Service) joinRooms(client *gomatrix.Client) {
 	roomSet := make(map[string]bool)
 	for _, feedInfo := range s.Feeds {
 		for _, roomID := range feedInfo.Rooms {
@@ -144,7 +144,7 @@ func (s *Service) PostRegister(oldService types.Service) {
 //   - Else if there is a Title field, use it as the GUID.
 //
 // Returns a timestamp representing when this Service should have OnPoll called again.
-func (s *Service) OnPoll(cli *matrix.Client) time.Time {
+func (s *Service) OnPoll(cli *gomatrix.Client) time.Time {
 	logger := log.WithFields(log.Fields{
 		"service_id":   s.ServiceID(),
 		"service_type": s.ServiceType(),
@@ -340,7 +340,7 @@ func (s *Service) newItems(feedURL string, allItems []*gofeed.Item) (items []gof
 	return
 }
 
-func (s *Service) sendToRooms(cli *matrix.Client, feedURL string, feed *gofeed.Feed, item gofeed.Item) error {
+func (s *Service) sendToRooms(cli *gomatrix.Client, feedURL string, feed *gofeed.Feed, item gofeed.Item) error {
 	logger := log.WithFields(log.Fields{
 		"feed_url": feedURL,
 		"title":    item.Title,
@@ -356,8 +356,8 @@ func (s *Service) sendToRooms(cli *matrix.Client, feedURL string, feed *gofeed.F
 }
 
 // SomeOne posted a new article: Title Of The Entry ( https://someurl.com/blag )
-func itemToHTML(feed *gofeed.Feed, item gofeed.Item) matrix.HTMLMessage {
-	return matrix.GetHTMLMessage("m.notice", fmt.Sprintf(
+func itemToHTML(feed *gofeed.Feed, item gofeed.Item) gomatrix.HTMLMessage {
+	return gomatrix.GetHTMLMessage("m.notice", fmt.Sprintf(
 		"<i>%s</i> posted a new article: %s ( %s )",
 		html.EscapeString(feed.Title), html.EscapeString(item.Title), html.EscapeString(item.Link),
 	))

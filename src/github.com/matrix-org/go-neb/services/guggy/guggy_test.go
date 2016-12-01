@@ -4,15 +4,15 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/matrix-org/go-neb/database"
-	"github.com/matrix-org/go-neb/matrix"
-	"github.com/matrix-org/go-neb/testutils"
-	"github.com/matrix-org/go-neb/types"
 	"io/ioutil"
 	"net/http"
-	"net/url"
 	"strings"
 	"testing"
+
+	"github.com/matrix-org/go-neb/database"
+	"github.com/matrix-org/go-neb/testutils"
+	"github.com/matrix-org/go-neb/types"
+	"github.com/matrix-org/gomatrix"
 )
 
 // TODO: It would be nice to tabularise this test so we can try failing different combinations of responses to make
@@ -86,8 +86,8 @@ func TestCommand(t *testing.T) {
 		}
 		return nil, fmt.Errorf("Unknown URL: %s", req.URL.String())
 	}
-	u, _ := url.Parse("https://hyrule")
-	matrixCli := matrix.NewClient(&http.Client{Transport: matrixTrans}, u, "its_a_secret", "@guggybot:hyrule")
+	matrixCli, _ := gomatrix.NewClient("https://hyrule", "@guggybot:hyrule", "its_a_secret")
+	matrixCli.Client = &http.Client{Transport: matrixTrans}
 
 	// Execute the matrix !command
 	cmds := guggy.Commands(matrixCli)

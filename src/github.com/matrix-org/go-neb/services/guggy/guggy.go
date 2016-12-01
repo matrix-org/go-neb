@@ -11,8 +11,8 @@ import (
 	"strings"
 
 	log "github.com/Sirupsen/logrus"
-	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/types"
+	"github.com/matrix-org/gomatrix"
 )
 
 // ServiceType of the Guggy service
@@ -49,7 +49,7 @@ type Service struct {
 // Commands supported:
 //    !guggy some search query without quotes
 // Responds with a suitable GIF into the same room as the command.
-func (s *Service) Commands(client *matrix.Client) []types.Command {
+func (s *Service) Commands(client *gomatrix.Client) []types.Command {
 	return []types.Command{
 		types.Command{
 			Path: []string{"guggy"},
@@ -59,7 +59,7 @@ func (s *Service) Commands(client *matrix.Client) []types.Command {
 		},
 	}
 }
-func (s *Service) cmdGuggy(client *matrix.Client, roomID, userID string, args []string) (interface{}, error) {
+func (s *Service) cmdGuggy(client *gomatrix.Client, roomID, userID string, args []string) (interface{}, error) {
 	// only 1 arg which is the text to search for.
 	querySentence := strings.Join(args, " ")
 	gifResult, err := s.text2gifGuggy(querySentence)
@@ -68,22 +68,22 @@ func (s *Service) cmdGuggy(client *matrix.Client, roomID, userID string, args []
 	}
 
 	if gifResult.GIF == "" {
-		return matrix.TextMessage{
+		return gomatrix.TextMessage{
 			MsgType: "m.text.notice",
 			Body:    "No GIF found!",
 		}, nil
 	}
 
-	mxc, err := client.UploadLink(gifResult.GIF)
+	resUpload, err := client.UploadLink(gifResult.GIF)
 	if err != nil {
 		return nil, fmt.Errorf("Failed to upload Guggy image to matrix: %s", err.Error())
 	}
 
-	return matrix.ImageMessage{
+	return gomatrix.ImageMessage{
 		MsgType: "m.image",
 		Body:    querySentence,
-		URL:     mxc,
-		Info: matrix.ImageInfo{
+		URL:     resUpload.ContentURI,
+		Info: gomatrix.ImageInfo{
 			Height:   uint(math.Floor(gifResult.Height)),
 			Width:    uint(math.Floor(gifResult.Width)),
 			Mimetype: "image/gif",

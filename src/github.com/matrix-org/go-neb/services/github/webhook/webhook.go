@@ -14,14 +14,14 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/google/go-github/github"
 	"github.com/matrix-org/go-neb/errors"
-	"github.com/matrix-org/go-neb/matrix"
+	"github.com/matrix-org/gomatrix"
 )
 
 // OnReceiveRequest processes incoming github webhook requests and returns a
 // matrix message to send, along with parsed repo information.
 // The secretToken, if supplied, will be used to verify the request is from
 // Github. If it isn't, an error is returned.
-func OnReceiveRequest(r *http.Request, secretToken string) (string, *github.Repository, *matrix.HTMLMessage, *errors.HTTPError) {
+func OnReceiveRequest(r *http.Request, secretToken string) (string, *github.Repository, *gomatrix.HTMLMessage, *errors.HTTPError) {
 	// Verify the HMAC signature if NEB was configured with a secret token
 	eventType := r.Header.Get("X-GitHub-Event")
 	signatureSHA1 := r.Header.Get("X-Hub-Signature")
@@ -67,7 +67,7 @@ func OnReceiveRequest(r *http.Request, secretToken string) (string, *github.Repo
 		return "", nil, nil, &errors.HTTPError{nil, "Failed to parse github event", 500}
 	}
 
-	msg := matrix.GetHTMLMessage("m.notice", htmlStr)
+	msg := gomatrix.GetHTMLMessage("m.notice", htmlStr)
 
 	return refinedType, repo, &msg, nil
 }

@@ -136,6 +136,12 @@
 			"branch": "master"
 		},
 		{
+			"importpath": "github.com/matrix-org/gomatrix",
+			"repository": "https://github.com/matrix-org/gomatrix",
+			"revision": "16b47cb061d2bc08761824259f4e453fe5dbd023",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/mattn/go-shellwords",
 			"repository": "https://github.com/mattn/go-shellwords",
 			"revision": "525bedee691b5a8df547cb5cf9f86b7fb1883e24",

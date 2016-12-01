@@ -4,8 +4,8 @@ package echo
 import (
 	"strings"
 
-	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/types"
+	"github.com/matrix-org/gomatrix"
 )
 
 // ServiceType of the Echo service
@@ -19,12 +19,12 @@ type Service struct {
 // Commands supported:
 //    !echo some message
 // Responds with a notice of "some message".
-func (e *Service) Commands(cli *matrix.Client) []types.Command {
+func (e *Service) Commands(cli *gomatrix.Client) []types.Command {
 	return []types.Command{
 		types.Command{
 			Path: []string{"echo"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
-				return &matrix.TextMessage{"m.notice", strings.Join(args, " ")}, nil
+				return &gomatrix.TextMessage{"m.notice", strings.Join(args, " ")}, nil
 			},
 		},
 	}
