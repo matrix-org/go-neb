@@ -359,6 +359,8 @@ func (c *Clients) newClient(config api.ClientConfig) (*gomatrix.Client, error) {
 						"user_id":    config.UserID,
 					}).Error("Fatal Sync() error")
 					time.Sleep(10 * time.Second)
+				} else {
+					return
 				}
 			}
 		}()
