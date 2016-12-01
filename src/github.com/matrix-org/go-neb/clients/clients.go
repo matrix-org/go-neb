@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strings"
 	"sync"
+	"time"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/matrix-org/go-neb/api"
@@ -350,7 +351,17 @@ func (c *Clients) newClient(config api.ClientConfig) (*gomatrix.Client, error) {
 	}
 
 	if config.Sync {
-		go client.Sync()
+		go func() {
+			for {
+				if e := client.Sync(); e != nil {
+					log.WithFields(log.Fields{
+						log.ErrorKey: e,
+						"user_id":    config.UserID,
+					}).Error("Fatal Sync() error")
+					time.Sleep(10 * time.Second)
+				}
+			}
+		}()
 	}
 
 	return client, nil
