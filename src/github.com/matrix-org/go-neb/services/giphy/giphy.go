@@ -10,8 +10,8 @@ import (
 	"strings"
 
 	log "github.com/Sirupsen/logrus"
-	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/types"
+	"github.com/matrix-org/gomatrix"
 )
 
 // ServiceType of the Giphy service.
@@ -50,7 +50,7 @@ type Service struct {
 // Commands supported:
 //   !giphy some search query without quotes
 // Responds with a suitable GIF into the same room as the command.
-func (s *Service) Commands(client *matrix.Client) []types.Command {
+func (s *Service) Commands(client *gomatrix.Client) []types.Command {
 	return []types.Command{
 		types.Command{
 			Path: []string{"giphy"},
@@ -61,7 +61,7 @@ func (s *Service) Commands(client *matrix.Client) []types.Command {
 	}
 }
 
-func (s *Service) cmdGiphy(client *matrix.Client, roomID, userID string, args []string) (interface{}, error) {
+func (s *Service) cmdGiphy(client *gomatrix.Client, roomID, userID string, args []string) (interface{}, error) {
 	// only 1 arg which is the text to search for.
 	query := strings.Join(args, " ")
 	gifResult, err := s.searchGiphy(query)
@@ -71,16 +71,16 @@ func (s *Service) cmdGiphy(client *matrix.Client, roomID, userID string, args []
 	if gifResult.Images.Original.URL == "" {
 		return nil, fmt.Errorf("No results")
 	}
-	mxc, err := client.UploadLink(gifResult.Images.Original.URL)
+	resUpload, err := client.UploadLink(gifResult.Images.Original.URL)
 	if err != nil {
 		return nil, err
 	}
 
-	return matrix.ImageMessage{
+	return gomatrix.ImageMessage{
 		MsgType: "m.image",
 		Body:    gifResult.Slug,
-		URL:     mxc,
-		Info: matrix.ImageInfo{
+		URL:     resUpload.ContentURI,
+		Info: gomatrix.ImageInfo{
 			Height:   asInt(gifResult.Images.Original.Height),
 			Width:    asInt(gifResult.Images.Original.Width),
 			Mimetype: "image/gif",

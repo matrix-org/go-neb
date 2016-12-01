@@ -6,16 +6,15 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
-	"net/url"
 	"strings"
 	"sync"
 	"testing"
 	"time"
 
 	"github.com/matrix-org/go-neb/database"
-	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/testutils"
 	"github.com/matrix-org/go-neb/types"
+	"github.com/matrix-org/gomatrix"
 )
 
 const rssFeedXML = `
@@ -75,7 +74,7 @@ func TestHTMLEntities(t *testing.T) {
 	matrixTrans.RT = func(req *http.Request) (*http.Response, error) {
 		if strings.HasPrefix(req.URL.Path, "/_matrix/client/r0/rooms/!linksroom:hyrule/send/m.room.message") {
 			// Check content body to make sure it is decoded
-			var msg matrix.HTMLMessage
+			var msg gomatrix.HTMLMessage
 			if err := json.NewDecoder(req.Body).Decode(&msg); err != nil {
 				t.Fatal("Failed to decode request JSON: ", err)
 				return nil, errors.New("Error handling matrix client test request")
@@ -95,8 +94,8 @@ func TestHTMLEntities(t *testing.T) {
 		}
 		return nil, errors.New("Unhandled matrix client test request")
 	}
-	u, _ := url.Parse("https://hyrule")
-	matrixClient := matrix.NewClient(&http.Client{Transport: matrixTrans}, u, "its_a_secret", "@happy_mask_salesman:hyrule")
+	matrixClient, _ := gomatrix.NewClient("https://hyrule", "@happy_mask_salesman:hyrule", "its_a_secret")
+	matrixClient.Client = &http.Client{Transport: matrixTrans}
 
 	// Invoke OnPoll to trigger the RSS feed update
 	_ = rssbot.OnPoll(matrixClient)

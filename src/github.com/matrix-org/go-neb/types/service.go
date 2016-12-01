@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/matrix-org/go-neb/matrix"
+	"github.com/matrix-org/gomatrix"
 )
 
 // BotOptions for a given bot user in a given room
@@ -23,7 +23,7 @@ type BotOptions struct {
 type Poller interface {
 	// OnPoll is called when the poller should poll. Return the timestamp when you want to be polled again.
 	// Return 0 to never be polled again.
-	OnPoll(client *matrix.Client) time.Time
+	OnPoll(client *gomatrix.Client) time.Time
 }
 
 // A Service is the configuration for a bot service.
@@ -34,14 +34,14 @@ type Service interface {
 	ServiceID() string
 	// Return the type of service. This string MUST NOT change.
 	ServiceType() string
-	Commands(cli *matrix.Client) []Command
-	Expansions(cli *matrix.Client) []Expansion
-	OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client)
+	Commands(cli *gomatrix.Client) []Command
+	Expansions(cli *gomatrix.Client) []Expansion
+	OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *gomatrix.Client)
 	// A lifecycle function which is invoked when the service is being registered. The old service, if one exists, is provided,
 	// along with a Client instance for ServiceUserID(). If this function returns an error, the service will not be registered
 	// or persisted to the database, and the user's request will fail. This can be useful if you depend on external factors
 	// such as registering webhooks.
-	Register(oldService Service, client *matrix.Client) error
+	Register(oldService Service, client *gomatrix.Client) error
 	// A lifecycle function which is invoked after the service has been successfully registered and persisted to the database.
 	// This function is invoked within the critical section for configuring services, guaranteeing that there will not be
 	// concurrent modifications to this service whilst this function executes. This lifecycle hook should be used to clean
@@ -82,23 +82,23 @@ func (s *DefaultService) ServiceType() string {
 }
 
 // Commands returns no commands.
-func (s *DefaultService) Commands(cli *matrix.Client) []Command {
+func (s *DefaultService) Commands(cli *gomatrix.Client) []Command {
 	return []Command{}
 }
 
 // Expansions returns no expansions.
-func (s *DefaultService) Expansions(cli *matrix.Client) []Expansion {
+func (s *DefaultService) Expansions(cli *gomatrix.Client) []Expansion {
 	return []Expansion{}
 }
 
 // Register does nothing and returns no error.
-func (s *DefaultService) Register(oldService Service, client *matrix.Client) error { return nil }
+func (s *DefaultService) Register(oldService Service, client *gomatrix.Client) error { return nil }
 
 // PostRegister does nothing.
 func (s *DefaultService) PostRegister(oldService Service) {}
 
 // OnReceiveWebhook does nothing but 200 OK the request.
-func (s *DefaultService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client) {
+func (s *DefaultService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *gomatrix.Client) {
 	w.WriteHeader(200) // Do nothing
 }
 

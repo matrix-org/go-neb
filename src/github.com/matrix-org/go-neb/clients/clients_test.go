@@ -2,13 +2,13 @@ package clients
 
 import (
 	"fmt"
-	"github.com/matrix-org/go-neb/database"
-	"github.com/matrix-org/go-neb/matrix"
-	"github.com/matrix-org/go-neb/types"
 	"net/http"
-	"net/url"
 	"reflect"
 	"testing"
+
+	"github.com/matrix-org/go-neb/database"
+	"github.com/matrix-org/go-neb/types"
+	"github.com/matrix-org/gomatrix"
 )
 
 var commandParseTests = []struct {
@@ -28,7 +28,7 @@ type MockService struct {
 	commands []types.Command
 }
 
-func (s *MockService) Commands(cli *matrix.Client) []types.Command {
+func (s *MockService) Commands(cli *gomatrix.Client) []types.Command {
 	return s.commands
 }
 
@@ -72,12 +72,12 @@ func TestCommandParsing(t *testing.T) {
 		Transport: trans,
 	}
 	clients := New(&store, cli)
-	hsURL, _ := url.Parse("https://someplace.somewhere")
-	mxCli := matrix.NewClient(cli, hsURL, "token", "@service:user")
+	mxCli, _ := gomatrix.NewClient("https://someplace.somewhere", "@service:user", "token")
+	mxCli.Client = cli
 
 	for _, input := range commandParseTests {
 		executedCmdArgs = []string{}
-		event := matrix.Event{
+		event := gomatrix.Event{
 			Type:   "m.room.message",
 			Sender: "@someone:somewhere",
 			RoomID: "!foo:bar",

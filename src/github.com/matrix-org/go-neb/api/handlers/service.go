@@ -16,6 +16,7 @@ import (
 	"github.com/matrix-org/go-neb/metrics"
 	"github.com/matrix-org/go-neb/polling"
 	"github.com/matrix-org/go-neb/types"
+	"github.com/matrix-org/gomatrix"
 )
 
 // ConfigureService represents an HTTP handler which can process /admin/configureService requests.
@@ -211,13 +212,14 @@ func (h *GetService) OnIncomingRequest(req *http.Request) (interface{}, *errors.
 	}{srv.ServiceID(), srv.ServiceType(), srv}, nil
 }
 
-func checkClientForService(service types.Service, client *matrix.Client) error {
+func checkClientForService(service types.Service, client *gomatrix.Client) error {
 	// If there are any commands or expansions for this Service then the service user ID
 	// MUST be a syncing client or else the Service will never get the incoming command/expansion!
 	cmds := service.Commands(client)
 	expans := service.Expansions(client)
 	if len(cmds) > 0 || len(expans) > 0 {
-		if !client.ClientConfig.Sync {
+		nebStore := client.Store.(*matrix.NEBStore)
+		if !nebStore.ClientConfig.Sync {
 			return fmt.Errorf(
 				"Service type '%s' requires a syncing client", service.ServiceType(),
 			)
