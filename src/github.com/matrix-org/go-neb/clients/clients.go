@@ -330,12 +330,13 @@ func (c *Clients) newClient(config api.ClientConfig) (*gomatrix.Client, error) {
 	}
 	client.Client = c.httpClient
 	syncer := client.Syncer.(*gomatrix.DefaultSyncer)
-	client.Store = &matrix.NEBStore{
+	nebStore := &matrix.NEBStore{
 		InMemoryStore: *gomatrix.NewInMemoryStore(),
 		Database:      c.db,
 		ClientConfig:  config,
 	}
-	syncer.Store = client.Store
+	client.Store = nebStore
+	syncer.Store = nebStore
 
 	// TODO: Check that the access token is valid for the userID by peforming
 	// a request against the server.
@@ -353,6 +354,13 @@ func (c *Clients) newClient(config api.ClientConfig) (*gomatrix.Client, error) {
 			c.onRoomMemberEvent(client, event)
 		})
 	}
+
+	log.WithFields(log.Fields{
+		"user_id":         config.UserID,
+		"sync":            config.Sync,
+		"auto_join_rooms": config.AutoJoinRooms,
+		"since":           nebStore.LoadNextBatch(config.UserID),
+	}).Info("Created new client")
 
 	if config.Sync {
 		go func() {
