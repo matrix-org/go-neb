@@ -360,6 +360,7 @@ func (c *Clients) newClient(config api.ClientConfig) (*gomatrix.Client, error) {
 					}).Error("Fatal Sync() error")
 					time.Sleep(10 * time.Second)
 				} else {
+					log.WithField("user_id", config.UserID).Info("Stopping Sync()")
 					return
 				}
 			}
