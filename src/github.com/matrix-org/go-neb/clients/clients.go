@@ -311,7 +311,11 @@ func (c *Clients) onRoomMemberEvent(client *gomatrix.Client, event *gomatrix.Eve
 		})
 		logger.Print("Accepting invite from user")
 
-		if _, err := client.JoinRoom(event.RoomID, "", event.Sender); err != nil {
+		content := struct {
+			Inviter string `json:"inviter"`
+		}{event.Sender}
+
+		if _, err := client.JoinRoom(event.RoomID, "", content); err != nil {
 			logger.WithError(err).Print("Failed to join room")
 		} else {
 			logger.Print("Joined room")

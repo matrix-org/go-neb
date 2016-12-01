@@ -253,7 +253,7 @@ func (s *WebhookService) PostRegister(oldService types.Service) {
 
 func (s *WebhookService) joinWebhookRooms(client *gomatrix.Client) error {
 	for roomID := range s.Rooms {
-		if _, err := client.JoinRoom(roomID, "", ""); err != nil {
+		if _, err := client.JoinRoom(roomID, "", nil); err != nil {
 			// TODO: Leave the rooms we successfully joined?
 			return err
 		}

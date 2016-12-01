@@ -109,7 +109,7 @@ func (s *Service) joinRooms(client *gomatrix.Client) {
 	}
 
 	for roomID := range roomSet {
-		if _, err := client.JoinRoom(roomID, "", ""); err != nil {
+		if _, err := client.JoinRoom(roomID, "", nil); err != nil {
 			log.WithFields(log.Fields{
 				log.ErrorKey: err,
 				"room_id":    roomID,
