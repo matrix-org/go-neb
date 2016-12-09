@@ -1,6 +1,8 @@
 package clients
 
 import (
+	"database/sql"
+	"fmt"
 	"net/http"
 	"strings"
 	"sync"
@@ -94,6 +96,9 @@ func (c *Clients) loadClientFromDB(userID string) (entry clientEntry, err error)
 	}
 
 	if entry.config, err = c.db.LoadMatrixClientConfig(userID); err != nil {
+		if err == sql.ErrNoRows {
+			err = fmt.Errorf("client with user ID %s does not exist", userID)
+		}
 		return
 	}
 

@@ -4,9 +4,10 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"time"
+
 	"github.com/matrix-org/go-neb/api"
 	"github.com/matrix-org/go-neb/types"
-	"time"
 )
 
 const schemaSQL = `
