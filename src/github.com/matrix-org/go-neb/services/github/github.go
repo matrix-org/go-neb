@@ -163,6 +163,15 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 				return s.cmdGithubCreate(roomID, userID, args)
 			},
 		},
+		types.Command{
+			Path: []string{"github", "help"},
+			Command: func(roomID, userID string, args []string) (interface{}, error) {
+				return &gomatrix.TextMessage{
+					"m.notice",
+					fmt.Sprintf(`!github create owner/repo "title text" "description text"`),
+				}, nil
+			},
+		},
 	}
 }
 
