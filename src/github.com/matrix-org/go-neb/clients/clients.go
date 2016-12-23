@@ -215,11 +215,11 @@ func (c *Clients) onMessageEvent(client *gomatrix.Client, event *gomatrix.Event)
 // response is appropriate.
 func runCommandForService(cmds []types.Command, event *gomatrix.Event, arguments []string) interface{} {
 	var bestMatch *types.Command
-	for _, command := range cmds {
+	for i, command := range cmds {
 		matches := command.Matches(arguments)
 		betterMatch := bestMatch == nil || len(bestMatch.Path) < len(command.Path)
 		if matches && betterMatch {
-			bestMatch = &command
+			bestMatch = &cmds[i]
 		}
 	}
 
