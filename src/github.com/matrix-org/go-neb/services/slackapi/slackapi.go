@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strings"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/types"
 )
@@ -13,12 +14,11 @@ const ServiceType = "slackapi"
 
 type Service struct {
 	types.DefaultService
-	ClientUserID string
 	// maps from hookID -> roomID
 	Hooks map[string]struct {
-		RoomID      string
-		MessageType string
-	}
+		RoomID      string `json:"room_id"`
+		MessageType string `json:"message_type"`
+	}  `json:"hooks"`
 }
 
 func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client) {
@@ -38,11 +38,14 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 
 	slackMessage, err := getSlackMessage(*req)
 	if err != nil {
+		log.WithFields(log.Fields{"slackMessage":slackMessage, "err":err}).Print("Slack message error")
 		w.WriteHeader(500)
 		return
 	}
+
 	htmlMessage, err := slackMessageToHTMLMessage(slackMessage)
 	if err != nil {
+		log.WithField("err", err).Error("Converting slack message to HTML")
 		w.WriteHeader(500)
 		return
 	}
@@ -51,6 +54,20 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 		roomID, "m.room.message", htmlMessage,
 	)
 	w.WriteHeader(200)
+}
+
+// Register joins all configured rooms
+func (s *Service) Register(oldService types.Service, client *matrix.Client) error {
+	for _, mapping := range s.Hooks {
+		if _, err := client.JoinRoom(mapping.RoomID, "", ""); err != nil {
+			log.WithFields(log.Fields{
+				log.ErrorKey: err,
+				"room_id":    mapping.RoomID,
+				"user_id":    client.UserID,
+			}).Error("Failed to join room")
+		}
+	}
+	return nil
 }
 
 func init() {
