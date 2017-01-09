@@ -38,14 +38,14 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 
 	slackMessage, err := getSlackMessage(*req)
 	if err != nil {
-		log.WithFields(log.Fields{"slackMessage":slackMessage, "err":err}).Print("Slack message error")
+		log.WithFields(log.Fields{"slackMessage":slackMessage, log.ErrorKey:err}).Error("Slack message error")
 		w.WriteHeader(500)
 		return
 	}
 
 	htmlMessage, err := slackMessageToHTMLMessage(slackMessage)
 	if err != nil {
-		log.WithField("err", err).Error("Converting slack message to HTML")
+		log.WithError(err).Error("Converting slack message to HTML")
 		w.WriteHeader(500)
 		return
 	}

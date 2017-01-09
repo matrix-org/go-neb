@@ -111,7 +111,6 @@ services:
 
   - ID: "slackapi_service"
     Type: "slackapi"
-    UserID: "@slackapi:localhost" # requires a Syncing client
     Config:
       Hooks:
         "hook1":
