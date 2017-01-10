@@ -111,6 +111,7 @@ services:
 
   - ID: "slackapi_service"
     Type: "slackapi"
+    UserID: "@slackapi:localhost"
     Config:
       Hooks:
         "hook1":
