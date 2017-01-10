@@ -14,11 +14,11 @@ const ServiceType = "slackapi"
 
 type Service struct {
 	types.DefaultService
-	// maps from hookID -> roomID
-	Hooks map[string]struct {
-		RoomID      string `json:"room_id"`
-		MessageType string `json:"message_type"`
-	}  `json:"hooks"`
+	webhookEndpointURL string
+	// The URL which should be added to .travis.yml - Populated by Go-NEB after Service registration.
+	WebhookURL string `json:"webhook_url"`
+	RoomID      string `json:"room_id"`
+	MessageType string `json:"message_type"`
 }
 
 func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client) {
@@ -29,12 +29,11 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 		return
 	}
 
-	hookID := segments[len(segments)-2]
-	messageType := s.Hooks[hookID].MessageType
+	messageType := s.MessageType
 	if messageType == "" {
 		messageType = "m.text"
 	}
-	roomID := s.Hooks[hookID].RoomID
+	roomID := s.RoomID
 
 	slackMessage, err := getSlackMessage(*req)
 	if err != nil {
@@ -56,16 +55,15 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 	w.WriteHeader(200)
 }
 
-// Register joins all configured rooms
+// Register joins the configured room and sets the public WebhookURL
 func (s *Service) Register(oldService types.Service, client *matrix.Client) error {
-	for _, mapping := range s.Hooks {
-		if _, err := client.JoinRoom(mapping.RoomID, "", ""); err != nil {
-			log.WithFields(log.Fields{
-				log.ErrorKey: err,
-				"room_id":    mapping.RoomID,
-				"user_id":    client.UserID,
-			}).Error("Failed to join room")
-		}
+	s.WebhookURL = s.webhookEndpointURL
+	if _, err := client.JoinRoom(s.RoomID, "", ""); err != nil {
+		log.WithFields(log.Fields{
+			log.ErrorKey: err,
+			"room_id":    s.RoomID,
+			"user_id":    client.UserID,
+		}).Error("Failed to join room")
 	}
 	return nil
 }
@@ -74,6 +72,7 @@ func init() {
 	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
 		return &Service{
 			DefaultService: types.NewDefaultService(serviceID, serviceUserID, ServiceType),
+			webhookEndpointURL: webhookEndpointURL,
 		}
 	})
 }
