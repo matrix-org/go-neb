@@ -15,7 +15,7 @@ const ServiceType = "slackapi"
 type Service struct {
 	types.DefaultService
 	webhookEndpointURL string
-	// The URL which should be added to .travis.yml - Populated by Go-NEB after Service registration.
+	// The URL which should be given to an outgoing slack webhook - Populated by Go-NEB after Service registration.
 	WebhookURL string `json:"webhook_url"`
 	RoomID      string `json:"room_id"`
 	MessageType string `json:"message_type"`
