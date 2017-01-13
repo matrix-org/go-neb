@@ -18,10 +18,10 @@ const ServiceType = "slackapi"
 // hits WebhookURL.
 //
 // Example JSON request:
-//   {
-//       "room_id": "!someroomid:some.domain.com",
-//		 "message_type": "m.text"
-//   }
+// {
+//   "room_id": "!someroomid:some.domain.com",
+//   "message_type": "m.text"
+// }
 type Service struct {
 	types.DefaultService
 	webhookEndpointURL string
