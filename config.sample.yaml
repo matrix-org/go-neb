@@ -55,7 +55,7 @@ sessions:
       # Populate these fields by generating a "Personal Access Token" on github.com
       AccessToken: "YOUR_GITHUB_ACCESS_TOKEN"
       Scopes: "admin:org_hook,admin:repo_hook,repo,user"
-    
+
 
 # The list of services which Go-NEB is aware of.
 # Delete or modify this list as appropriate.
@@ -108,3 +108,12 @@ services:
               Events: ["push", "issues"]
             "matrix-org/dendron":
               Events: ["pull_request"]
+
+  - ID: "slackapi_service"
+    Type: "slackapi"
+    UserID: "@slackapi:localhost"
+    Config:
+      Hooks:
+        "hook1":
+          RoomID: "!someroom:id"
+          MessageType: "m.text" # default is m.text
