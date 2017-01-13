@@ -10,8 +10,7 @@ func TestProtect(t *testing.T) {
 	mockWriter := httptest.NewRecorder()
 	mockReq, _ := http.NewRequest("GET", "http://example.com/foo", nil)
 	h := Protect(func(w http.ResponseWriter, req *http.Request) {
-		var array []string
-		w.Write([]byte(array[5])) // NPE
+		panic("oh noes!")
 	})
 
 	h(mockWriter, mockReq)

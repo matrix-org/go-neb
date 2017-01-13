@@ -6,15 +6,15 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
-	"net/url"
 	"strings"
 	"sync"
 	"testing"
 	"time"
 
 	"github.com/matrix-org/go-neb/database"
-	"github.com/matrix-org/go-neb/matrix"
+	"github.com/matrix-org/go-neb/testutils"
 	"github.com/matrix-org/go-neb/types"
+	"github.com/matrix-org/gomatrix"
 )
 
 const rssFeedXML = `
@@ -36,20 +36,11 @@ const rssFeedXML = `
 </channel>
 </rss>`
 
-type MockTransport struct {
-	roundTrip func(*http.Request) (*http.Response, error)
-}
-
-func (t MockTransport) RoundTrip(req *http.Request) (*http.Response, error) {
-	return t.roundTrip(req)
-}
-
 func TestHTMLEntities(t *testing.T) {
 	database.SetServiceDB(&database.NopStorage{})
 	feedURL := "https://thehappymaskshop.hyrule"
 	// Replace the cachingClient with a mock so we can intercept RSS requests
-	rssTrans := struct{ MockTransport }{}
-	rssTrans.roundTrip = func(req *http.Request) (*http.Response, error) {
+	rssTrans := testutils.NewRoundTripper(func(req *http.Request) (*http.Response, error) {
 		if req.URL.String() != feedURL {
 			return nil, errors.New("Unknown test URL")
 		}
@@ -57,7 +48,7 @@ func TestHTMLEntities(t *testing.T) {
 			StatusCode: 200,
 			Body:       ioutil.NopCloser(bytes.NewBufferString(rssFeedXML)),
 		}, nil
-	}
+	})
 	cachingClient = &http.Client{Transport: rssTrans}
 
 	// Create the RSS service
@@ -79,11 +70,11 @@ func TestHTMLEntities(t *testing.T) {
 	// Create the Matrix client which will send the notification
 	wg := sync.WaitGroup{}
 	wg.Add(1)
-	matrixTrans := struct{ MockTransport }{}
-	matrixTrans.roundTrip = func(req *http.Request) (*http.Response, error) {
+	matrixTrans := struct{ testutils.MockTransport }{}
+	matrixTrans.RT = func(req *http.Request) (*http.Response, error) {
 		if strings.HasPrefix(req.URL.Path, "/_matrix/client/r0/rooms/!linksroom:hyrule/send/m.room.message") {
 			// Check content body to make sure it is decoded
-			var msg matrix.HTMLMessage
+			var msg gomatrix.HTMLMessage
 			if err := json.NewDecoder(req.Body).Decode(&msg); err != nil {
 				t.Fatal("Failed to decode request JSON: ", err)
 				return nil, errors.New("Error handling matrix client test request")
@@ -103,8 +94,8 @@ func TestHTMLEntities(t *testing.T) {
 		}
 		return nil, errors.New("Unhandled matrix client test request")
 	}
-	u, _ := url.Parse("https://hyrule")
-	matrixClient := matrix.NewClient(&http.Client{Transport: matrixTrans}, u, "its_a_secret", "@happy_mask_salesman:hyrule")
+	matrixClient, _ := gomatrix.NewClient("https://hyrule", "@happy_mask_salesman:hyrule", "its_a_secret")
+	matrixClient.Client = &http.Client{Transport: matrixTrans}
 
 	// Invoke OnPoll to trigger the RSS feed update
 	_ = rssbot.OnPoll(matrixClient)

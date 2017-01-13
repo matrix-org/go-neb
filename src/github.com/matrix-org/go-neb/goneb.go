@@ -27,6 +27,7 @@ import (
 	_ "github.com/matrix-org/go-neb/services/jira"
 	_ "github.com/matrix-org/go-neb/services/rssbot"
 	_ "github.com/matrix-org/go-neb/services/slackapi"
+	_ "github.com/matrix-org/go-neb/services/travisci"
 	"github.com/matrix-org/go-neb/types"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/prometheus/client_golang/prometheus"
@@ -227,7 +228,12 @@ func main() {
 			filepath.Join(e.LogDir, "info.log"),
 			filepath.Join(e.LogDir, "warn.log"),
 			filepath.Join(e.LogDir, "error.log"),
-			nil, &dugong.DailyRotationSchedule{GZip: true},
+			&log.TextFormatter{
+				TimestampFormat:  "2006-01-02 15:04:05.000000",
+				DisableColors:    true,
+				DisableTimestamp: false,
+				DisableSorting:   false,
+			}, &dugong.DailyRotationSchedule{GZip: true},
 		))
 	}
 

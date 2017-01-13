@@ -18,6 +18,7 @@ import (
 	"github.com/matrix-org/go-neb/realms/github"
 	"github.com/matrix-org/go-neb/services/github/client"
 	"github.com/matrix-org/go-neb/types"
+	"github.com/matrix-org/gomatrix"
 )
 
 // ServiceType of the Github service
@@ -25,8 +26,8 @@ const ServiceType = "github"
 
 // Matches alphanumeric then a /, then more alphanumeric then a #, then a number.
 // E.g. owner/repo#11 (issue/PR numbers) - Captured groups for owner/repo/number
-var ownerRepoIssueRegex = regexp.MustCompile(`(([A-z0-9-_]+)/([A-z0-9-_]+))?#([0-9]+)`)
-var ownerRepoRegex = regexp.MustCompile(`^([A-z0-9-_]+)/([A-z0-9-_]+)$`)
+var ownerRepoIssueRegex = regexp.MustCompile(`(([A-z0-9-_.]+)/([A-z0-9-_.]+))?#([0-9]+)`)
+var ownerRepoRegex = regexp.MustCompile(`^([A-z0-9-_.]+)/([A-z0-9-_.]+)$`)
 
 // Service contains the Config fields for the Github service.
 //
@@ -71,7 +72,7 @@ func (s *Service) cmdGithubCreate(roomID, userID string, args []string) (interfa
 		}, nil
 	}
 	if len(args) == 0 {
-		return &matrix.TextMessage{"m.notice",
+		return &gomatrix.TextMessage{"m.notice",
 			`Usage: !github create owner/repo "issue title" "description"`}, nil
 	}
 
@@ -85,13 +86,13 @@ func (s *Service) cmdGithubCreate(roomID, userID string, args []string) (interfa
 		// look for a default repo
 		defaultRepo := s.defaultRepo(roomID)
 		if defaultRepo == "" {
-			return &matrix.TextMessage{"m.notice",
+			return &gomatrix.TextMessage{"m.notice",
 				`Usage: !github create owner/repo "issue title" "description"`}, nil
 		}
 		// default repo should pass the regexp
 		ownerRepoGroups = ownerRepoRegex.FindStringSubmatch(defaultRepo)
 		if len(ownerRepoGroups) == 0 {
-			return &matrix.TextMessage{"m.notice",
+			return &gomatrix.TextMessage{"m.notice",
 				`Malformed default repo. Usage: !github create owner/repo "issue title" "description"`}, nil
 		}
 
@@ -127,7 +128,7 @@ func (s *Service) cmdGithubCreate(roomID, userID string, args []string) (interfa
 		return nil, fmt.Errorf("Failed to create issue. HTTP %d", res.StatusCode)
 	}
 
-	return matrix.TextMessage{"m.notice", fmt.Sprintf("Created issue: %s", *issue.HTMLURL)}, nil
+	return gomatrix.TextMessage{"m.notice", fmt.Sprintf("Created issue: %s", *issue.HTMLURL)}, nil
 }
 
 func (s *Service) expandIssue(roomID, userID, owner, repo string, issueNum int) interface{} {
@@ -143,7 +144,7 @@ func (s *Service) expandIssue(roomID, userID, owner, repo string, issueNum int) 
 		return nil
 	}
 
-	return &matrix.TextMessage{
+	return &gomatrix.TextMessage{
 		"m.notice",
 		fmt.Sprintf("%s : %s", *i.HTMLURL, *i.Title),
 	}
@@ -154,12 +155,21 @@ func (s *Service) expandIssue(roomID, userID, owner, repo string, issueNum int) 
 // Responds with the outcome of the issue creation request. This command requires
 // a Github account to be linked to the Matrix user ID issuing the command. If there
 // is no link, it will return a Starter Link instead.
-func (s *Service) Commands(cli *matrix.Client) []types.Command {
+func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 	return []types.Command{
 		types.Command{
 			Path: []string{"github", "create"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				return s.cmdGithubCreate(roomID, userID, args)
+			},
+		},
+		types.Command{
+			Path: []string{"github", "help"},
+			Command: func(roomID, userID string, args []string) (interface{}, error) {
+				return &gomatrix.TextMessage{
+					"m.notice",
+					fmt.Sprintf(`!github create owner/repo "title text" "description text"`),
+				}, nil
 			},
 		},
 	}
@@ -171,7 +181,7 @@ func (s *Service) Commands(cli *matrix.Client) []types.Command {
 // it will also expand strings of the form:
 //   #12
 // using the default repository.
-func (s *Service) Expansions(cli *matrix.Client) []types.Expansion {
+func (s *Service) Expansions(cli *gomatrix.Client) []types.Expansion {
 	return []types.Expansion{
 		types.Expansion{
 			Regexp: ownerRepoIssueRegex,
@@ -220,7 +230,7 @@ func (s *Service) Expansions(cli *matrix.Client) []types.Expansion {
 }
 
 // Register makes sure that the given realm ID maps to a github realm.
-func (s *Service) Register(oldService types.Service, client *matrix.Client) error {
+func (s *Service) Register(oldService types.Service, client *gomatrix.Client) error {
 	if s.RealmID == "" {
 		return fmt.Errorf("RealmID is required")
 	}

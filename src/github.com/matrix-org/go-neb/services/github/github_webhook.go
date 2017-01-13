@@ -9,11 +9,11 @@ import (
 	log "github.com/Sirupsen/logrus"
 	gogithub "github.com/google/go-github/github"
 	"github.com/matrix-org/go-neb/database"
-	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/services/github/client"
 	"github.com/matrix-org/go-neb/services/github/webhook"
 	"github.com/matrix-org/go-neb/types"
 	"github.com/matrix-org/go-neb/util"
+	"github.com/matrix-org/gomatrix"
 )
 
 // WebhookServiceType of the Github Webhook service.
@@ -36,7 +36,7 @@ const WebhookServiceType = "github-webhook"
 //           "!qmElAGdFYCHoCJuaNt:localhost": {
 //               Repos: {
 //                   "matrix-org/go-neb": {
-//                       Events: ["push", "issues", "pull_request"]
+//                       Events: ["push", "issues", "pull_request", "labels"]
 //                   }
 //               }
 //           }
@@ -57,10 +57,13 @@ type WebhookService struct {
 			// The webhook events to listen for. Currently supported:
 			//    push : When users push to this repository.
 			//    pull_request : When a pull request is made to this repository.
-			//    issues : When an issue is opened/closed.
+			//    issues : When an issue is opened/edited/closed/reopened.
 			//    issue_comment : When an issue or pull request is commented on.
 			//    pull_request_review_comment : When a line comment is made on a pull request.
-			// Full list: https://developer.github.com/webhooks/#events
+			//    labels : When any issue or pull request is labeled/unlabeled. Unique to Go-NEB.
+			//    milestones : When any issue or pull request is milestoned/demilestoned. Unique to Go-NEB.
+			//    assignments : When any issue or pull request is assigned/unassigned. Unique to Go-NEB.
+			// Most of these events are directly from: https://developer.github.com/webhooks/#events
 			Events []string
 		}
 	}
@@ -77,7 +80,7 @@ type WebhookService struct {
 //
 // If the "owner/repo" string doesn't exist in this Service config, then the webhook will be deleted from
 // Github.
-func (s *WebhookService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *matrix.Client) {
+func (s *WebhookService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *gomatrix.Client) {
 	evType, repo, msg, err := webhook.OnReceiveRequest(req, s.SecretToken)
 	if err != nil {
 		w.WriteHeader(err.Code)
@@ -142,7 +145,7 @@ func (s *WebhookService) OnReceiveWebhook(w http.ResponseWriter, req *http.Reque
 //
 // Hooks can get out of sync if a user manually deletes a hook in the Github UI. In this case, toggling the repo configuration will
 // force NEB to recreate the hook.
-func (s *WebhookService) Register(oldService types.Service, client *matrix.Client) error {
+func (s *WebhookService) Register(oldService types.Service, client *gomatrix.Client) error {
 	if s.RealmID == "" || s.ClientUserID == "" {
 		return fmt.Errorf("RealmID and ClientUserID is required")
 	}
@@ -248,9 +251,9 @@ func (s *WebhookService) PostRegister(oldService types.Service) {
 	}
 }
 
-func (s *WebhookService) joinWebhookRooms(client *matrix.Client) error {
+func (s *WebhookService) joinWebhookRooms(client *gomatrix.Client) error {
 	for roomID := range s.Rooms {
-		if _, err := client.JoinRoom(roomID, "", ""); err != nil {
+		if _, err := client.JoinRoom(roomID, "", nil); err != nil {
 			// TODO: Leave the rooms we successfully joined?
 			return err
 		}

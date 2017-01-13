@@ -20,7 +20,7 @@ done
 
 # Scrape the pkg directory for the API docs. Scrap lib for the CSS/JS. Ignore everything else.
 # The output is dumped to the directory "localhost:6060".
-wget -r -m -k -E -p --include-directories="/pkg,/lib" --exclude-directories="*" http://localhost:6060/pkg/github.com/matrix-org/go-neb/
+wget -r -m -k -E -p -erobots=off --include-directories="/pkg,/lib" --exclude-directories="*" http://localhost:6060/pkg/github.com/matrix-org/go-neb/
 
 # Stop the godoc server
 kill -9 $DOC_PID

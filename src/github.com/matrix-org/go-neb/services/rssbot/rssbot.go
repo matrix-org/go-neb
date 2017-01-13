@@ -14,9 +14,9 @@ import (
 	"github.com/die-net/lrucache"
 	"github.com/gregjones/httpcache"
 	"github.com/matrix-org/go-neb/database"
-	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/polling"
 	"github.com/matrix-org/go-neb/types"
+	"github.com/matrix-org/gomatrix"
 	"github.com/mmcdole/gofeed"
 	"github.com/prometheus/client_golang/prometheus"
 )
@@ -71,7 +71,7 @@ type Service struct {
 }
 
 // Register will check the liveness of each RSS feed given. If all feeds check out okay, no error is returned.
-func (s *Service) Register(oldService types.Service, client *matrix.Client) error {
+func (s *Service) Register(oldService types.Service, client *gomatrix.Client) error {
 	if len(s.Feeds) == 0 {
 		// this is an error UNLESS the old service had some feeds in which case they are deleting us :(
 		var numOldFeeds int
@@ -88,9 +88,7 @@ func (s *Service) Register(oldService types.Service, client *matrix.Client) erro
 	}
 	// Make sure we can parse the feed
 	for feedURL, feedInfo := range s.Feeds {
-		fp := gofeed.NewParser()
-		fp.Client = cachingClient
-		if _, err := fp.ParseURL(feedURL); err != nil {
+		if _, err := readFeed(feedURL); err != nil {
 			return fmt.Errorf("Failed to read URL %s: %s", feedURL, err.Error())
 		}
 		if len(feedInfo.Rooms) == 0 {
@@ -102,7 +100,7 @@ func (s *Service) Register(oldService types.Service, client *matrix.Client) erro
 	return nil
 }
 
-func (s *Service) joinRooms(client *matrix.Client) {
+func (s *Service) joinRooms(client *gomatrix.Client) {
 	roomSet := make(map[string]bool)
 	for _, feedInfo := range s.Feeds {
 		for _, roomID := range feedInfo.Rooms {
@@ -111,7 +109,7 @@ func (s *Service) joinRooms(client *matrix.Client) {
 	}
 
 	for roomID := range roomSet {
-		if _, err := client.JoinRoom(roomID, "", ""); err != nil {
+		if _, err := client.JoinRoom(roomID, "", nil); err != nil {
 			log.WithFields(log.Fields{
 				log.ErrorKey: err,
 				"room_id":    roomID,
@@ -146,7 +144,7 @@ func (s *Service) PostRegister(oldService types.Service) {
 //   - Else if there is a Title field, use it as the GUID.
 //
 // Returns a timestamp representing when this Service should have OnPoll called again.
-func (s *Service) OnPoll(cli *matrix.Client) time.Time {
+func (s *Service) OnPoll(cli *gomatrix.Client) time.Time {
 	logger := log.WithFields(log.Fields{
 		"service_id":   s.ServiceID(),
 		"service_type": s.ServiceType(),
@@ -175,6 +173,11 @@ func (s *Service) OnPoll(cli *matrix.Client) time.Time {
 			continue
 		}
 		incrementMetrics(u, nil)
+		logger.WithFields(log.Fields{
+			"feed_url":   u,
+			"feed_items": len(feed.Items),
+			"new_items":  len(items),
+		}).Info("Sending new items")
 		// Loop backwards since [0] is the most recent and we want to send in chronological order
 		for i := len(items) - 1; i >= 0; i-- {
 			item := items[i]
@@ -238,9 +241,13 @@ func (s *Service) nextTimestamp() time.Time {
 func (s *Service) queryFeed(feedURL string) (*gofeed.Feed, []gofeed.Item, error) {
 	log.WithField("feed_url", feedURL).Info("Querying feed")
 	var items []gofeed.Item
-	fp := gofeed.NewParser()
-	fp.Client = cachingClient
-	feed, err := fp.ParseURL(feedURL)
+	feed, err := readFeed(feedURL)
+	// check for no items in addition to any returned errors as it appears some RSS feeds
+	// do not consistently return items.
+	if err == nil && len(feed.Items) == 0 {
+		err = errors.New("feed has 0 items")
+	}
+
 	if err != nil {
 		f := s.Feeds[feedURL]
 		f.IsFailing = true
@@ -249,17 +256,7 @@ func (s *Service) queryFeed(feedURL string) (*gofeed.Feed, []gofeed.Item, error)
 	}
 
 	// Patch up the item list: make sure each item has a GUID.
-	for idx := 0; idx < len(feed.Items); idx++ {
-		itm := feed.Items[idx]
-		if itm.GUID == "" {
-			if itm.Link != "" {
-				itm.GUID = itm.Link
-			} else if itm.Title != "" {
-				itm.GUID = itm.Title
-			}
-			feed.Items[idx] = itm
-		}
-	}
+	ensureItemsHaveGUIDs(feed)
 
 	// Work out which items are new, if any (based on the last updated TS we have)
 	// If the TS is 0 then this is the first ever poll, so let's not send 10s of events
@@ -278,14 +275,31 @@ func (s *Service) queryFeed(feedURL string) (*gofeed.Feed, []gofeed.Item, error)
 	// TODO: Handle the 'sy' Syndication extension to control update interval.
 	// See http://www.feedforall.com/syndication.htm and http://web.resource.org/rss/1.0/modules/syndication/
 
-	// map items to guid strings
-	var guids []string
-	for _, itm := range feed.Items {
-		guids = append(guids, itm.GUID)
+	// Work out which GUIDs to remember. We don't want to remember every GUID ever as that leads to completely
+	// unbounded growth of data.
+	f := s.Feeds[feedURL]
+	// Some RSS feeds can return a very small number of items then bounce
+	// back to their "normal" size, so we cannot just clobber the recent GUID list per request or else we'll
+	// forget what we sent and resend it. Instead, we'll keep 2x the max number of items that we've ever
+	// seen from this feed, up to a max of 1000.
+	maxGuids := 2 * len(feed.Items)
+	if len(f.RecentGUIDs) > maxGuids {
+		maxGuids = len(f.RecentGUIDs) // already 2x'd.
+	}
+	if maxGuids > 1000 {
+		maxGuids = 1000
+	}
+
+	lastSet := uniqueStrings(f.RecentGUIDs) // e.g. [4,5,6]
+	thisSet := uniqueGuids(feed.Items)      // e.g. [1,2,3]
+	guids := append(thisSet, lastSet...)    // e.g. [1,2,3,4,5,6]
+	guids = uniqueStrings(guids)
+	if len(guids) > maxGuids {
+		// Critically this favours the NEWEST elements, which are the ones we're most likely to see again.
+		guids = guids[0:maxGuids]
 	}
 
 	// Update the service config to persist the new times
-	f := s.Feeds[feedURL]
 	f.NextPollTimestampSecs = nextPollTsSec
 	f.FeedUpdatedTimestampSecs = now
 	f.RecentGUIDs = guids
@@ -326,9 +340,13 @@ func (s *Service) newItems(feedURL string, allItems []*gofeed.Item) (items []gof
 	return
 }
 
-func (s *Service) sendToRooms(cli *matrix.Client, feedURL string, feed *gofeed.Feed, item gofeed.Item) error {
-	logger := log.WithField("feed_url", feedURL).WithField("title", item.Title)
-	logger.Info("New feed item")
+func (s *Service) sendToRooms(cli *gomatrix.Client, feedURL string, feed *gofeed.Feed, item gofeed.Item) error {
+	logger := log.WithFields(log.Fields{
+		"feed_url": feedURL,
+		"title":    item.Title,
+		"guid":     item.GUID,
+	})
+	logger.Info("Sending new feed item")
 	for _, roomID := range s.Feeds[feedURL].Rooms {
 		if _, err := cli.SendMessageEvent(roomID, "m.room.message", itemToHTML(feed, item)); err != nil {
 			logger.WithError(err).WithField("room_id", roomID).Error("Failed to send to room")
@@ -338,11 +356,55 @@ func (s *Service) sendToRooms(cli *matrix.Client, feedURL string, feed *gofeed.F
 }
 
 // SomeOne posted a new article: Title Of The Entry ( https://someurl.com/blag )
-func itemToHTML(feed *gofeed.Feed, item gofeed.Item) matrix.HTMLMessage {
-	return matrix.GetHTMLMessage("m.notice", fmt.Sprintf(
+func itemToHTML(feed *gofeed.Feed, item gofeed.Item) gomatrix.HTMLMessage {
+	return gomatrix.GetHTMLMessage("m.notice", fmt.Sprintf(
 		"<i>%s</i> posted a new article: %s ( %s )",
 		html.EscapeString(feed.Title), html.EscapeString(item.Title), html.EscapeString(item.Link),
 	))
+}
+
+func ensureItemsHaveGUIDs(feed *gofeed.Feed) {
+	for idx := 0; idx < len(feed.Items); idx++ {
+		itm := feed.Items[idx]
+		if itm.GUID == "" {
+			if itm.Link != "" {
+				itm.GUID = itm.Link
+			} else if itm.Title != "" {
+				itm.GUID = itm.Title
+			}
+			feed.Items[idx] = itm
+		}
+	}
+}
+
+// uniqueStrings returns a new slice of strings with duplicate elements removed.
+// Order is otherwise preserved.
+func uniqueStrings(a []string) []string {
+	ret := []string{}
+	seen := make(map[string]bool)
+	for _, str := range a {
+		if seen[str] {
+			continue
+		}
+		seen[str] = true
+		ret = append(ret, str)
+	}
+	return ret
+}
+
+// uniqueGuids returns a new slice of GUID strings with duplicate elements removed.
+// Order is otherwise preserved.
+func uniqueGuids(a []*gofeed.Item) []string {
+	ret := []string{}
+	seen := make(map[string]bool)
+	for _, item := range a {
+		if seen[item.GUID] {
+			continue
+		}
+		seen[item.GUID] = true
+		ret = append(ret, item.GUID)
+	}
+	return ret
 }
 
 type userAgentRoundTripper struct {
@@ -352,6 +414,26 @@ type userAgentRoundTripper struct {
 func (rt userAgentRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
 	req.Header.Set("User-Agent", "Go-NEB")
 	return rt.Transport.RoundTrip(req)
+}
+
+func readFeed(feedURL string) (*gofeed.Feed, error) {
+	// Don't use fp.ParseURL because it leaks on non-2xx responses as of 2016/11/29 (cac19c6c27)
+	fp := gofeed.NewParser()
+	resp, err := cachingClient.Get(feedURL)
+	if resp != nil {
+		defer resp.Body.Close()
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		return nil, gofeed.HTTPError{
+			StatusCode: resp.StatusCode,
+			Status:     resp.Status,
+		}
+	}
+	return fp.Parse(resp.Body)
 }
 
 func init() {

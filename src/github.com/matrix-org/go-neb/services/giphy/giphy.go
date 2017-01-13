@@ -3,15 +3,15 @@ package giphy
 
 import (
 	"encoding/json"
-	"errors"
+	"fmt"
 	"net/http"
 	"net/url"
 	"strconv"
 	"strings"
 
 	log "github.com/Sirupsen/logrus"
-	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/types"
+	"github.com/matrix-org/gomatrix"
 )
 
 // ServiceType of the Giphy service.
@@ -31,7 +31,7 @@ type result struct {
 }
 
 type giphySearch struct {
-	Data []result
+	Data result `json:"data"`
 }
 
 // Service contains the Config fields for the Giphy Service.
@@ -50,7 +50,7 @@ type Service struct {
 // Commands supported:
 //   !giphy some search query without quotes
 // Responds with a suitable GIF into the same room as the command.
-func (s *Service) Commands(client *matrix.Client) []types.Command {
+func (s *Service) Commands(client *gomatrix.Client) []types.Command {
 	return []types.Command{
 		types.Command{
 			Path: []string{"giphy"},
@@ -61,23 +61,26 @@ func (s *Service) Commands(client *matrix.Client) []types.Command {
 	}
 }
 
-func (s *Service) cmdGiphy(client *matrix.Client, roomID, userID string, args []string) (interface{}, error) {
+func (s *Service) cmdGiphy(client *gomatrix.Client, roomID, userID string, args []string) (interface{}, error) {
 	// only 1 arg which is the text to search for.
 	query := strings.Join(args, " ")
 	gifResult, err := s.searchGiphy(query)
 	if err != nil {
 		return nil, err
 	}
-	mxc, err := client.UploadLink(gifResult.Images.Original.URL)
+	if gifResult.Images.Original.URL == "" {
+		return nil, fmt.Errorf("No results")
+	}
+	resUpload, err := client.UploadLink(gifResult.Images.Original.URL)
 	if err != nil {
 		return nil, err
 	}
 
-	return matrix.ImageMessage{
+	return gomatrix.ImageMessage{
 		MsgType: "m.image",
 		Body:    gifResult.Slug,
-		URL:     mxc,
-		Info: matrix.ImageInfo{
+		URL:     resUpload.ContentURI,
+		Info: gomatrix.ImageInfo{
 			Height:   asInt(gifResult.Images.Original.Height),
 			Width:    asInt(gifResult.Images.Original.Width),
 			Mimetype: "image/gif",
@@ -89,12 +92,12 @@ func (s *Service) cmdGiphy(client *matrix.Client, roomID, userID string, args []
 // searchGiphy returns info about a gif
 func (s *Service) searchGiphy(query string) (*result, error) {
 	log.Info("Searching giphy for ", query)
-	u, err := url.Parse("http://api.giphy.com/v1/gifs/search")
+	u, err := url.Parse("http://api.giphy.com/v1/gifs/translate")
 	if err != nil {
 		return nil, err
 	}
 	q := u.Query()
-	q.Set("q", query)
+	q.Set("s", query)
 	q.Set("api_key", s.APIKey)
 	u.RawQuery = q.Encode()
 	res, err := http.Get(u.String())
@@ -106,12 +109,11 @@ func (s *Service) searchGiphy(query string) (*result, error) {
 	}
 	var search giphySearch
 	if err := json.NewDecoder(res.Body).Decode(&search); err != nil {
-		return nil, err
+		// Giphy returns a JSON object which has { data: [] } if there are 0 results.
+		// This fails to be deserialised by Go.
+		return nil, fmt.Errorf("No results")
 	}
-	if len(search.Data) == 0 {
-		return nil, errors.New("No results")
-	}
-	return &search.Data[0], nil
+	return &search.Data, nil
 }
 
 func asInt(strInt string) uint {

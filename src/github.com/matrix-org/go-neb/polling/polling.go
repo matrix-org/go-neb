@@ -1,13 +1,14 @@
 package polling
 
 import (
+	"runtime/debug"
+	"sync"
+	"time"
+
 	log "github.com/Sirupsen/logrus"
 	"github.com/matrix-org/go-neb/clients"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/types"
-	"runtime/debug"
-	"sync"
-	"time"
 )
 
 // Remember when we first started polling on this service ID. Polling routines will
@@ -107,7 +108,6 @@ func pollLoop(service types.Service, ts int64) {
 			break
 		}
 		now := time.Now()
-		logger.Info("Sleeping for ", nextTime.Sub(now))
 		time.Sleep(nextTime.Sub(now))
 
 		if pollTimeChanged(service, ts) {

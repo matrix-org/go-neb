@@ -1,10 +1,12 @@
 package clients
 
 import (
+	"database/sql"
+	"fmt"
 	"net/http"
-	"net/url"
 	"strings"
 	"sync"
+	"time"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/matrix-org/go-neb/api"
@@ -12,37 +14,13 @@ import (
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/metrics"
 	"github.com/matrix-org/go-neb/types"
+	"github.com/matrix-org/gomatrix"
 	shellwords "github.com/mattn/go-shellwords"
 )
 
-type nextBatchStore struct {
-	db *database.ServiceDB
-}
-
-func (s nextBatchStore) Save(userID, nextBatch string) {
-	if err := s.db.UpdateNextBatch(userID, nextBatch); err != nil {
-		log.WithFields(log.Fields{
-			log.ErrorKey: err,
-			"user_id":    userID,
-			"next_batch": nextBatch,
-		}).Error("Failed to persist next_batch token")
-	}
-}
-func (s nextBatchStore) Load(userID string) string {
-	token, err := s.db.LoadNextBatch(userID)
-	if err != nil {
-		log.WithFields(log.Fields{
-			log.ErrorKey: err,
-			"user_id":    userID,
-		}).Error("Failed to load next_batch token")
-		return ""
-	}
-	return token
-}
-
 // A Clients is a collection of clients used for bot services.
 type Clients struct {
-	db         *database.ServiceDB
+	db         database.Storer
 	httpClient *http.Client
 	dbMutex    sync.Mutex
 	mapMutex   sync.Mutex
@@ -50,7 +28,7 @@ type Clients struct {
 }
 
 // New makes a new collection of matrix clients
-func New(db *database.ServiceDB, cli *http.Client) *Clients {
+func New(db database.Storer, cli *http.Client) *Clients {
 	clients := &Clients{
 		db:         db,
 		httpClient: cli,
@@ -60,7 +38,7 @@ func New(db *database.ServiceDB, cli *http.Client) *Clients {
 }
 
 // Client gets a client for the userID
-func (c *Clients) Client(userID string) (*matrix.Client, error) {
+func (c *Clients) Client(userID string) (*gomatrix.Client, error) {
 	entry := c.getClient(userID)
 	if entry.client != nil {
 		return entry.client, nil
@@ -93,7 +71,7 @@ func (c *Clients) Start() error {
 
 type clientEntry struct {
 	config api.ClientConfig
-	client *matrix.Client
+	client *gomatrix.Client
 }
 
 func (c *Clients) getClient(userID string) clientEntry {
@@ -118,6 +96,9 @@ func (c *Clients) loadClientFromDB(userID string) (entry clientEntry, err error)
 	}
 
 	if entry.config, err = c.db.LoadMatrixClientConfig(userID); err != nil {
+		if err == sql.ErrNoRows {
+			err = fmt.Errorf("client with user ID %s does not exist", userID)
+		}
 		return
 	}
 
@@ -172,7 +153,7 @@ func (c *Clients) updateClientInDB(newConfig api.ClientConfig) (new clientEntry,
 	return
 }
 
-func (c *Clients) onMessageEvent(client *matrix.Client, event *matrix.Event) {
+func (c *Clients) onMessageEvent(client *gomatrix.Client, event *gomatrix.Event) {
 	services, err := c.db.LoadServicesForUser(client.UserID)
 	if err != nil {
 		log.WithFields(log.Fields{
@@ -191,6 +172,12 @@ func (c *Clients) onMessageEvent(client *matrix.Client, event *matrix.Event) {
 	if msgtype, ok := event.MessageType(); !ok || msgtype == "m.notice" {
 		return
 	}
+
+	// replace all smart quotes with their normal counterparts so shellwords can parse it
+	body = strings.Replace(body, `‘`, `'`, -1)
+	body = strings.Replace(body, `’`, `'`, -1)
+	body = strings.Replace(body, `“`, `"`, -1)
+	body = strings.Replace(body, `”`, `"`, -1)
 
 	var responses []interface{}
 
@@ -226,13 +213,13 @@ func (c *Clients) onMessageEvent(client *matrix.Client, event *matrix.Event) {
 // the matching command with the longest path. Returns the JSON encodable
 // content of a single matrix message event to use as a response or nil if no
 // response is appropriate.
-func runCommandForService(cmds []types.Command, event *matrix.Event, arguments []string) interface{} {
+func runCommandForService(cmds []types.Command, event *gomatrix.Event, arguments []string) interface{} {
 	var bestMatch *types.Command
-	for _, command := range cmds {
+	for i, command := range cmds {
 		matches := command.Matches(arguments)
 		betterMatch := bestMatch == nil || len(bestMatch.Path) < len(command.Path)
 		if matches && betterMatch {
-			bestMatch = &command
+			bestMatch = &cmds[i]
 		}
 	}
 
@@ -258,7 +245,7 @@ func runCommandForService(cmds []types.Command, event *matrix.Event, arguments [
 			}).Warn("Command returned both error and content.")
 		}
 		metrics.IncrementCommand(bestMatch.Path[0], metrics.StatusFailure)
-		content = matrix.TextMessage{"m.notice", err.Error()}
+		content = gomatrix.TextMessage{"m.notice", err.Error()}
 	} else {
 		metrics.IncrementCommand(bestMatch.Path[0], metrics.StatusSuccess)
 	}
@@ -267,7 +254,7 @@ func runCommandForService(cmds []types.Command, event *matrix.Event, arguments [
 }
 
 // run the expansions for a matrix event.
-func runExpansionsForService(expans []types.Expansion, event *matrix.Event, body string) []interface{} {
+func runExpansionsForService(expans []types.Expansion, event *gomatrix.Event, body string) []interface{} {
 	var responses []interface{}
 
 	for _, expansion := range expans {
@@ -288,7 +275,7 @@ func runExpansionsForService(expans []types.Expansion, event *matrix.Event, body
 	return responses
 }
 
-func (c *Clients) onBotOptionsEvent(client *matrix.Client, event *matrix.Event) {
+func (c *Clients) onBotOptionsEvent(client *gomatrix.Client, event *gomatrix.Event) {
 	// see if these options are for us. The state key is the user ID with a leading _
 	// to get around restrictions in the HS about having user IDs as state keys.
 	targetUserID := strings.TrimPrefix(event.StateKey, "_")
@@ -312,7 +299,7 @@ func (c *Clients) onBotOptionsEvent(client *matrix.Client, event *matrix.Event) 
 	}
 }
 
-func (c *Clients) onRoomMemberEvent(client *matrix.Client, event *matrix.Event) {
+func (c *Clients) onRoomMemberEvent(client *gomatrix.Client, event *gomatrix.Event) {
 	if event.StateKey != client.UserID {
 		return // not our member event
 	}
@@ -329,7 +316,11 @@ func (c *Clients) onRoomMemberEvent(client *matrix.Client, event *matrix.Event) 
 		})
 		logger.Print("Accepting invite from user")
 
-		if _, err := client.JoinRoom(event.RoomID, "", event.Sender); err != nil {
+		content := struct {
+			Inviter string `json:"inviter"`
+		}{event.Sender}
+
+		if _, err := client.JoinRoom(event.RoomID, "", content); err != nil {
 			logger.WithError(err).Print("Failed to join room")
 		} else {
 			logger.Print("Joined room")
@@ -337,35 +328,60 @@ func (c *Clients) onRoomMemberEvent(client *matrix.Client, event *matrix.Event) 
 	}
 }
 
-func (c *Clients) newClient(config api.ClientConfig) (*matrix.Client, error) {
-	homeserverURL, err := url.Parse(config.HomeserverURL)
+func (c *Clients) newClient(config api.ClientConfig) (*gomatrix.Client, error) {
+	client, err := gomatrix.NewClient(config.HomeserverURL, config.UserID, config.AccessToken)
 	if err != nil {
 		return nil, err
 	}
-
-	client := matrix.NewClient(c.httpClient, homeserverURL, config.AccessToken, config.UserID)
-	client.NextBatchStorer = nextBatchStore{c.db}
-	client.ClientConfig = config
+	client.Client = c.httpClient
+	syncer := client.Syncer.(*gomatrix.DefaultSyncer)
+	nebStore := &matrix.NEBStore{
+		InMemoryStore: *gomatrix.NewInMemoryStore(),
+		Database:      c.db,
+		ClientConfig:  config,
+	}
+	client.Store = nebStore
+	syncer.Store = nebStore
 
 	// TODO: Check that the access token is valid for the userID by peforming
 	// a request against the server.
 
-	client.Worker.OnEventType("m.room.message", func(event *matrix.Event) {
+	syncer.OnEventType("m.room.message", func(event *gomatrix.Event) {
 		c.onMessageEvent(client, event)
 	})
 
-	client.Worker.OnEventType("m.room.bot.options", func(event *matrix.Event) {
+	syncer.OnEventType("m.room.bot.options", func(event *gomatrix.Event) {
 		c.onBotOptionsEvent(client, event)
 	})
 
 	if config.AutoJoinRooms {
-		client.Worker.OnEventType("m.room.member", func(event *matrix.Event) {
+		syncer.OnEventType("m.room.member", func(event *gomatrix.Event) {
 			c.onRoomMemberEvent(client, event)
 		})
 	}
 
+	log.WithFields(log.Fields{
+		"user_id":         config.UserID,
+		"sync":            config.Sync,
+		"auto_join_rooms": config.AutoJoinRooms,
+		"since":           nebStore.LoadNextBatch(config.UserID),
+	}).Info("Created new client")
+
 	if config.Sync {
-		go client.Sync()
+		go func() {
+			for {
+				if e := client.Sync(); e != nil {
+					log.WithFields(log.Fields{
+						log.ErrorKey: e,
+						"user_id":    config.UserID,
+					}).Error("Fatal Sync() error")
+					time.Sleep(10 * time.Second)
+				} else {
+					log.WithField("user_id", config.UserID).Info("Stopping Sync()")
+					return
+				}
+			}
+		}()
 	}
 
 	return client, nil
