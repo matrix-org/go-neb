@@ -13,7 +13,7 @@ import (
 	"time"
 
 	log "github.com/Sirupsen/logrus"
-	"github.com/matrix-org/go-neb/matrix"
+	"github.com/matrix-org/gomatrix"
 	"github.com/russross/blackfriday"
 )
 
@@ -195,7 +195,7 @@ func renderSlackAttachment(attachment *slackAttachment) {
 	}
 }
 
-func slackMessageToHTMLMessage(message slackMessage) (html matrix.HTMLMessage, err error) {
+func slackMessageToHTMLMessage(message slackMessage) (html gomatrix.HTMLMessage, err error) {
 	text := linkifyString(message.Text)
 	if message.Mrkdwn == nil || *message.Mrkdwn == true {
 		message.TextRendered = template.HTML(blackfriday.MarkdownBasic([]byte(text)))
