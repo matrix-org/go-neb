@@ -107,7 +107,7 @@ func (s *WebhookService) OnReceiveWebhook(w http.ResponseWriter, req *http.Reque
 			}
 			if notifyRoom {
 				logger.WithFields(log.Fields{
-					"msg":     msg,
+					"message":     msg,
 					"room_id": roomID,
 				}).Print("Sending notification to room")
 				if _, e := cli.SendMessageEvent(roomID, "m.room.message", msg); e != nil {
