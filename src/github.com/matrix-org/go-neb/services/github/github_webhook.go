@@ -91,7 +91,6 @@ func (s *WebhookService) OnReceiveWebhook(w http.ResponseWriter, req *http.Reque
 		"repo":  *repo.FullName,
 	})
 	repoExistsInConfig := false
-
 	for roomID, roomConfig := range s.Rooms {
 		for ownerRepo, repoConfig := range roomConfig.Repos {
 			if !strings.EqualFold(*repo.FullName, ownerRepo) {
@@ -107,7 +106,7 @@ func (s *WebhookService) OnReceiveWebhook(w http.ResponseWriter, req *http.Reque
 			}
 			if notifyRoom {
 				logger.WithFields(log.Fields{
-					"message":     msg,
+					"message": msg,
 					"room_id": roomID,
 				}).Print("Sending notification to room")
 				if _, e := cli.SendMessageEvent(roomID, "m.room.message", msg); e != nil {

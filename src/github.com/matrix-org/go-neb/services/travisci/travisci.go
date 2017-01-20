@@ -228,7 +228,7 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 			}
 
 			logger.WithFields(log.Fields{
-				"message":     msg,
+				"message": msg,
 				"room_id": roomID,
 			}).Print("Sending Travis-CI notification to room")
 			if _, e := cli.SendMessageEvent(roomID, "m.room.message", msg); e != nil {
