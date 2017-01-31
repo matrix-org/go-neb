@@ -11,7 +11,7 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/matrix-org/go-neb/errors"
+	"github.com/matrix-org/util"
 )
 
 // Heartbeat implements the heartbeat API
@@ -26,6 +26,6 @@ type Heartbeat struct{}
 // Response:
 //  HTTP/1.1 200 OK
 //  {}
-func (*Heartbeat) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError) {
+func (*Heartbeat) OnIncomingRequest(req *http.Request) (interface{}, *util.HTTPError) {
 	return &struct{}{}, nil
 }

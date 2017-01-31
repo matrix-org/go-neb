@@ -142,6 +142,12 @@
 			"branch": "master"
 		},
 		{
+			"importpath": "github.com/matrix-org/util",
+			"repository": "https://github.com/matrix-org/util",
+			"revision": "9b44af331cdd83d702e4f16433e47341d983c23b",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/mattn/go-shellwords",
 			"repository": "https://github.com/mattn/go-shellwords",
 			"revision": "525bedee691b5a8df547cb5cf9f86b7fb1883e24",
@@ -219,13 +225,6 @@
 			"branch": "master"
 		},
 		{
-			"importpath": "github.com/syndtr/goleveldb/leveldb",
-			"repository": "https://github.com/syndtr/goleveldb",
-			"revision": "6b4daa5362b502898ddf367c5c11deb9e7a5c727",
-			"branch": "master",
-			"path": "/leveldb"
-		},
-		{
 			"importpath": "github.com/russross/blackfriday",
 			"repository": "https://github.com/russross/blackfriday",
 			"revision": "35eb537633d9950afc8ae7bdf0edb6134584e9fc",
@@ -236,6 +235,13 @@
 			"repository": "https://github.com/shurcooL/sanitized_anchor_name",
 			"revision": "10ef21a441db47d8b13ebcc5fd2310f636973c77",
 			"branch": "master"
+		},
+		{
+			"importpath": "github.com/syndtr/goleveldb/leveldb",
+			"repository": "https://github.com/syndtr/goleveldb",
+			"revision": "6b4daa5362b502898ddf367c5c11deb9e7a5c727",
+			"branch": "master",
+			"path": "/leveldb"
 		},
 		{
 			"importpath": "golang.org/x/net/context",

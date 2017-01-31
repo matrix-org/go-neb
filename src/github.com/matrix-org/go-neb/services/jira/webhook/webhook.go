@@ -9,8 +9,8 @@ import (
 	log "github.com/Sirupsen/logrus"
 	gojira "github.com/andygrunwald/go-jira"
 	"github.com/matrix-org/go-neb/database"
-	"github.com/matrix-org/go-neb/errors"
 	"github.com/matrix-org/go-neb/realms/jira"
+	"github.com/matrix-org/util"
 )
 
 type jiraWebhook struct {
@@ -101,17 +101,17 @@ func RegisterHook(jrealm *jira.Realm, projects []string, userID, webhookEndpoint
 
 // OnReceiveRequest is called when JIRA hits NEB with an update.
 // Returns the project key and webhook event, or an error.
-func OnReceiveRequest(req *http.Request) (string, *Event, *errors.HTTPError) {
+func OnReceiveRequest(req *http.Request) (string, *Event, *util.HTTPError) {
 	// extract the JIRA webhook event JSON
 	defer req.Body.Close()
 	var whe Event
 	err := json.NewDecoder(req.Body).Decode(&whe)
 	if err != nil {
-		return "", nil, &errors.HTTPError{err, "Failed to parse request JSON", 400}
+		return "", nil, &util.HTTPError{err, "Failed to parse request JSON", 400}
 	}
 
 	if err != nil {
-		return "", nil, &errors.HTTPError{err, "Failed to parse JIRA URL", 400}
+		return "", nil, &util.HTTPError{err, "Failed to parse JIRA URL", 400}
 	}
 	projKey := strings.Split(whe.Issue.Key, "-")[0]
 	projKey = strings.ToUpper(projKey)
@@ -153,18 +153,18 @@ func createWebhook(jrealm *jira.Realm, webhookEndpointURL, userID string) error 
 	return err
 }
 
-func getWebhook(cli *gojira.Client, webhookEndpointURL string) (*jiraWebhook, *errors.HTTPError) {
+func getWebhook(cli *gojira.Client, webhookEndpointURL string) (*jiraWebhook, *util.HTTPError) {
 	req, err := cli.NewRequest("GET", "rest/webhooks/1.0/webhook", nil)
 	if err != nil {
-		return nil, &errors.HTTPError{err, "Failed to prepare webhook request", 500}
+		return nil, &util.HTTPError{err, "Failed to prepare webhook request", 500}
 	}
 	var webhookList []jiraWebhook
 	res, err := cli.Do(req, &webhookList)
 	if err != nil {
-		return nil, &errors.HTTPError{err, "Failed to query webhooks", 502}
+		return nil, &util.HTTPError{err, "Failed to query webhooks", 502}
 	}
 	if res.StatusCode < 200 || res.StatusCode >= 300 {
-		return nil, &errors.HTTPError{
+		return nil, &util.HTTPError{
 			err,
 			fmt.Sprintf("Querying webhook returned HTTP %d", res.StatusCode),
 			403,
@@ -181,23 +181,23 @@ func getWebhook(cli *gojira.Client, webhookEndpointURL string) (*jiraWebhook, *e
 	return nebWH, nil
 }
 
-func checkProjectsArePublic(jrealm *jira.Realm, projects []string, userID string) *errors.HTTPError {
+func checkProjectsArePublic(jrealm *jira.Realm, projects []string, userID string) *util.HTTPError {
 	publicCli, err := jrealm.JIRAClient("", true)
 	if err != nil {
-		return &errors.HTTPError{err, "Cannot create public JIRA client", 500}
+		return &util.HTTPError{err, "Cannot create public JIRA client", 500}
 	}
 	for _, projectKey := range projects {
 		// check you can query this project with a public client
 		req, err := publicCli.NewRequest("GET", "rest/api/2/project/"+projectKey, nil)
 		if err != nil {
-			return &errors.HTTPError{err, "Failed to create project URL", 500}
+			return &util.HTTPError{err, "Failed to create project URL", 500}
 		}
 		res, err := publicCli.Do(req, nil)
 		if err != nil {
-			return &errors.HTTPError{err, fmt.Sprintf("Failed to query project %s", projectKey), 500}
+			return &util.HTTPError{err, fmt.Sprintf("Failed to query project %s", projectKey), 500}
 		}
 		if res.StatusCode < 200 || res.StatusCode >= 300 {
-			return &errors.HTTPError{err, fmt.Sprintf("Project %s is not public. (HTTP %d)", projectKey, res.StatusCode), 403}
+			return &util.HTTPError{err, fmt.Sprintf("Project %s is not public. (HTTP %d)", projectKey, res.StatusCode), 403}
 		}
 	}
 	return nil

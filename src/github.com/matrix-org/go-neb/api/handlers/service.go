@@ -11,12 +11,12 @@ import (
 	"github.com/matrix-org/go-neb/api"
 	"github.com/matrix-org/go-neb/clients"
 	"github.com/matrix-org/go-neb/database"
-	"github.com/matrix-org/go-neb/errors"
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/metrics"
 	"github.com/matrix-org/go-neb/polling"
 	"github.com/matrix-org/go-neb/types"
 	"github.com/matrix-org/gomatrix"
+	"github.com/matrix-org/util"
 )
 
 // ConfigureService represents an HTTP handler which can process /admin/configureService requests.
@@ -76,9 +76,9 @@ func (s *ConfigureService) getMutexForServiceID(serviceID string) *sync.Mutex {
 //          // new service-specific config information
 //      },
 //  }
-func (s *ConfigureService) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError) {
+func (s *ConfigureService) OnIncomingRequest(req *http.Request) (interface{}, *util.HTTPError) {
 	if req.Method != "POST" {
-		return nil, &errors.HTTPError{nil, "Unsupported Method", 405}
+		return nil, &util.HTTPError{nil, "Unsupported Method", 405}
 	}
 
 	service, httpErr := s.createService(req)
@@ -98,25 +98,25 @@ func (s *ConfigureService) OnIncomingRequest(req *http.Request) (interface{}, *e
 
 	old, err := s.db.LoadService(service.ServiceID())
 	if err != nil && err != sql.ErrNoRows {
-		return nil, &errors.HTTPError{err, "Error loading old service", 500}
+		return nil, &util.HTTPError{err, "Error loading old service", 500}
 	}
 
 	client, err := s.clients.Client(service.ServiceUserID())
 	if err != nil {
-		return nil, &errors.HTTPError{err, "Unknown matrix client", 400}
+		return nil, &util.HTTPError{err, "Unknown matrix client", 400}
 	}
 
 	if err := checkClientForService(service, client); err != nil {
-		return nil, &errors.HTTPError{err, err.Error(), 400}
+		return nil, &util.HTTPError{err, err.Error(), 400}
 	}
 
 	if err = service.Register(old, client); err != nil {
-		return nil, &errors.HTTPError{err, "Failed to register service: " + err.Error(), 500}
+		return nil, &util.HTTPError{err, "Failed to register service: " + err.Error(), 500}
 	}
 
 	oldService, err := s.db.StoreService(service)
 	if err != nil {
-		return nil, &errors.HTTPError{err, "Error storing service", 500}
+		return nil, &util.HTTPError{err, "Error storing service", 500}
 	}
 
 	// Start any polling NOW because they may decide to stop it in PostRegister, and we want to make
@@ -141,19 +141,19 @@ func (s *ConfigureService) OnIncomingRequest(req *http.Request) (interface{}, *e
 	}{service.ServiceID(), service.ServiceType(), oldService, service}, nil
 }
 
-func (s *ConfigureService) createService(req *http.Request) (types.Service, *errors.HTTPError) {
+func (s *ConfigureService) createService(req *http.Request) (types.Service, *util.HTTPError) {
 	var body api.ConfigureServiceRequest
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
-		return nil, &errors.HTTPError{err, "Error parsing request JSON", 400}
+		return nil, &util.HTTPError{err, "Error parsing request JSON", 400}
 	}
 
 	if err := body.Check(); err != nil {
-		return nil, &errors.HTTPError{err, err.Error(), 400}
+		return nil, &util.HTTPError{err, err.Error(), 400}
 	}
 
 	service, err := types.CreateService(body.ID, body.Type, body.UserID, body.Config)
 	if err != nil {
-		return nil, &errors.HTTPError{err, "Error parsing config JSON", 400}
+		return nil, &util.HTTPError{err, "Error parsing config JSON", 400}
 	}
 	return service, nil
 }
@@ -182,27 +182,27 @@ type GetService struct {
 //          // service-specific config information
 //      }
 //  }
-func (h *GetService) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError) {
+func (h *GetService) OnIncomingRequest(req *http.Request) (interface{}, *util.HTTPError) {
 	if req.Method != "POST" {
-		return nil, &errors.HTTPError{nil, "Unsupported Method", 405}
+		return nil, &util.HTTPError{nil, "Unsupported Method", 405}
 	}
 	var body struct {
 		ID string
 	}
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
-		return nil, &errors.HTTPError{err, "Error parsing request JSON", 400}
+		return nil, &util.HTTPError{err, "Error parsing request JSON", 400}
 	}
 
 	if body.ID == "" {
-		return nil, &errors.HTTPError{nil, `Must supply a "ID"`, 400}
+		return nil, &util.HTTPError{nil, `Must supply a "ID"`, 400}
 	}
 
 	srv, err := h.Db.LoadService(body.ID)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, &errors.HTTPError{err, `Service not found`, 404}
+			return nil, &util.HTTPError{err, `Service not found`, 404}
 		}
-		return nil, &errors.HTTPError{err, `Failed to load service`, 500}
+		return nil, &util.HTTPError{err, `Failed to load service`, 500}
 	}
 
 	return &struct {

@@ -1,8 +1,6 @@
-package errors
+package util
 
-import (
-	"fmt"
-)
+import "fmt"
 
 // HTTPError An HTTP Error response, which may wrap an underlying native Go Error.
 type HTTPError struct {

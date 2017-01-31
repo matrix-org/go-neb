@@ -12,7 +12,6 @@ import (
 	"github.com/matrix-org/go-neb/services/github/client"
 	"github.com/matrix-org/go-neb/services/github/webhook"
 	"github.com/matrix-org/go-neb/types"
-	"github.com/matrix-org/go-neb/util"
 	"github.com/matrix-org/gomatrix"
 )
 
@@ -178,7 +177,7 @@ func (s *WebhookService) Register(oldService types.Service, client *gomatrix.Cli
 	reposForWebhooks := s.repoList()
 
 	// Add hooks for the newly added repos but don't remove hooks for the removed repos: we'll clean those out later
-	newRepos, removedRepos := util.Difference(reposForWebhooks, oldRepos)
+	newRepos, removedRepos := difference(reposForWebhooks, oldRepos)
 	if len(reposForWebhooks) == 0 && len(removedRepos) == 0 {
 		// The user didn't specify any webhooks. This may be a bug or it may be
 		// a conscious decision to remove all webhooks for this service. Figure out
@@ -224,7 +223,7 @@ func (s *WebhookService) PostRegister(oldService types.Service) {
 	newRepos := s.repoList()
 
 	// Register() handled adding the new repos, we just want to clean up after ourselves
-	_, removedRepos := util.Difference(newRepos, oldRepos)
+	_, removedRepos := difference(newRepos, oldRepos)
 	for _, r := range removedRepos {
 		segs := strings.Split(r, "/")
 		if err := s.deleteHook(segs[0], segs[1]); err != nil {
@@ -396,6 +395,36 @@ func sameRepos(a *WebhookService, b *WebhookService) bool {
 		}
 	}
 	return true
+}
+
+// difference returns the elements that are only in the first list and
+// the elements that are only in the second. As a side-effect this sorts
+// the input lists in-place.
+func difference(a, b []string) (onlyA, onlyB []string) {
+	sort.Strings(a)
+	sort.Strings(b)
+	for {
+		if len(b) == 0 {
+			onlyA = append(onlyA, a...)
+			return
+		}
+		if len(a) == 0 {
+			onlyB = append(onlyB, b...)
+			return
+		}
+		xA := a[0]
+		xB := b[0]
+		if xA < xB {
+			onlyA = append(onlyA, xA)
+			a = a[1:]
+		} else if xA > xB {
+			onlyB = append(onlyB, xB)
+			b = b[1:]
+		} else {
+			a = a[1:]
+			b = b[1:]
+		}
+	}
 }
 
 func (s *WebhookService) githubClientFor(userID string, allowUnauth bool) *gogithub.Client {
