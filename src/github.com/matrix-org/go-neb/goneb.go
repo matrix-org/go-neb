@@ -19,7 +19,6 @@ import (
 	"github.com/matrix-org/go-neb/polling"
 	_ "github.com/matrix-org/go-neb/realms/github"
 	_ "github.com/matrix-org/go-neb/realms/jira"
-	"github.com/matrix-org/go-neb/server"
 	_ "github.com/matrix-org/go-neb/services/echo"
 	_ "github.com/matrix-org/go-neb/services/giphy"
 	_ "github.com/matrix-org/go-neb/services/github"
@@ -29,6 +28,7 @@ import (
 	_ "github.com/matrix-org/go-neb/services/slackapi"
 	_ "github.com/matrix-org/go-neb/services/travisci"
 	"github.com/matrix-org/go-neb/types"
+	"github.com/matrix-org/util"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/prometheus/client_golang/prometheus"
 	yaml "gopkg.in/yaml.v2"
@@ -175,11 +175,11 @@ func setup(e envVars, mux *http.ServeMux, matrixClient *http.Client) {
 
 	// Handle non-admin paths for normal NEB functioning
 	mux.Handle("/metrics", prometheus.Handler())
-	mux.Handle("/test", prometheus.InstrumentHandler("test", server.MakeJSONAPI(&handlers.Heartbeat{})))
+	mux.Handle("/test", prometheus.InstrumentHandler("test", util.MakeJSONAPI(&handlers.Heartbeat{})))
 	wh := handlers.NewWebhook(db, clients)
-	mux.HandleFunc("/services/hooks/", prometheus.InstrumentHandlerFunc("webhookHandler", server.Protect(wh.Handle)))
+	mux.HandleFunc("/services/hooks/", prometheus.InstrumentHandlerFunc("webhookHandler", util.Protect(wh.Handle)))
 	rh := &handlers.RealmRedirect{db}
-	mux.HandleFunc("/realms/redirects/", prometheus.InstrumentHandlerFunc("realmRedirectHandler", server.Protect(rh.Handle)))
+	mux.HandleFunc("/realms/redirects/", prometheus.InstrumentHandlerFunc("realmRedirectHandler", util.Protect(rh.Handle)))
 
 	// Read exclusively from the config file if one was supplied.
 	// Otherwise, add HTTP listeners for new Services/Sessions/Clients/etc.
@@ -190,13 +190,13 @@ func setup(e envVars, mux *http.ServeMux, matrixClient *http.Client) {
 
 		log.Info("Inserted ", len(cfg.Services), " services")
 	} else {
-		mux.Handle("/admin/getService", prometheus.InstrumentHandler("getService", server.MakeJSONAPI(&handlers.GetService{db})))
-		mux.Handle("/admin/getSession", prometheus.InstrumentHandler("getSession", server.MakeJSONAPI(&handlers.GetSession{db})))
-		mux.Handle("/admin/configureClient", prometheus.InstrumentHandler("configureClient", server.MakeJSONAPI(&handlers.ConfigureClient{clients})))
-		mux.Handle("/admin/configureService", prometheus.InstrumentHandler("configureService", server.MakeJSONAPI(handlers.NewConfigureService(db, clients))))
-		mux.Handle("/admin/configureAuthRealm", prometheus.InstrumentHandler("configureAuthRealm", server.MakeJSONAPI(&handlers.ConfigureAuthRealm{db})))
-		mux.Handle("/admin/requestAuthSession", prometheus.InstrumentHandler("requestAuthSession", server.MakeJSONAPI(&handlers.RequestAuthSession{db})))
-		mux.Handle("/admin/removeAuthSession", prometheus.InstrumentHandler("removeAuthSession", server.MakeJSONAPI(&handlers.RemoveAuthSession{db})))
+		mux.Handle("/admin/getService", prometheus.InstrumentHandler("getService", util.MakeJSONAPI(&handlers.GetService{db})))
+		mux.Handle("/admin/getSession", prometheus.InstrumentHandler("getSession", util.MakeJSONAPI(&handlers.GetSession{db})))
+		mux.Handle("/admin/configureClient", prometheus.InstrumentHandler("configureClient", util.MakeJSONAPI(&handlers.ConfigureClient{clients})))
+		mux.Handle("/admin/configureService", prometheus.InstrumentHandler("configureService", util.MakeJSONAPI(handlers.NewConfigureService(db, clients))))
+		mux.Handle("/admin/configureAuthRealm", prometheus.InstrumentHandler("configureAuthRealm", util.MakeJSONAPI(&handlers.ConfigureAuthRealm{db})))
+		mux.Handle("/admin/requestAuthSession", prometheus.InstrumentHandler("requestAuthSession", util.MakeJSONAPI(&handlers.RequestAuthSession{db})))
+		mux.Handle("/admin/removeAuthSession", prometheus.InstrumentHandler("removeAuthSession", util.MakeJSONAPI(&handlers.RemoveAuthSession{db})))
 	}
 	polling.SetClients(clients)
 	if err := polling.Start(); err != nil {

@@ -6,7 +6,7 @@ import (
 
 	"github.com/matrix-org/go-neb/api"
 	"github.com/matrix-org/go-neb/clients"
-	"github.com/matrix-org/go-neb/errors"
+	"github.com/matrix-org/util"
 )
 
 // ConfigureClient represents an HTTP handler capable of processing /admin/configureClient requests.
@@ -39,23 +39,23 @@ type ConfigureClient struct {
 //         // The new api.ClientConfig
 //       }
 //  }
-func (s *ConfigureClient) OnIncomingRequest(req *http.Request) (interface{}, *errors.HTTPError) {
+func (s *ConfigureClient) OnIncomingRequest(req *http.Request) (interface{}, *util.HTTPError) {
 	if req.Method != "POST" {
-		return nil, &errors.HTTPError{nil, "Unsupported Method", 405}
+		return nil, &util.HTTPError{nil, "Unsupported Method", 405}
 	}
 
 	var body api.ClientConfig
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
-		return nil, &errors.HTTPError{err, "Error parsing request JSON", 400}
+		return nil, &util.HTTPError{err, "Error parsing request JSON", 400}
 	}
 
 	if err := body.Check(); err != nil {
-		return nil, &errors.HTTPError{err, "Error parsing client config", 400}
+		return nil, &util.HTTPError{err, "Error parsing client config", 400}
 	}
 
 	oldClient, err := s.Clients.Update(body)
 	if err != nil {
-		return nil, &errors.HTTPError{err, "Error storing token", 500}
+		return nil, &util.HTTPError{err, "Error storing token", 500}
 	}
 
 	return &struct {
