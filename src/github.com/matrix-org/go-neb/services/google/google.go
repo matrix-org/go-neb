@@ -21,26 +21,6 @@ const ServiceType = "google"
 
 var httpClient = &http.Client{}
 
-// Unsused -- leaving this in place for the time being to show structure of the request
-// type googleQuery struct {
-// 	// Query search text
-// 	Query string `json:"q"`
-// 	// Number of search results
-// 	Num int `json:"num"`
-// 	// Search result offset
-// 	Start int `json:"start"`
-// 	// Size of images to serch for (usually set to "medium")
-// 	ImgSize string `json:"imgSize"`
-// 	// Type of search - Currently always set to "image"
-// 	SearchType string `json:"searchType"`
-// 	// Type of image file to retur64 `json:"totalResults"`
-// 	FileType string `json:"fileType"`
-// 	// API key
-// 	Key string `json:"key"`
-// 	// Custom serch engine ID
-// 	Cx string `json:"cx"`
-// }
-
 type googleSearchResults struct {
 	SearchInformation struct {
 		TotalResults int64 `json:"totalResults,string"`
@@ -75,7 +55,7 @@ type googleImage struct {
 //
 // Example request:
 //   {
-//       "api_key": "AIzaSyA4FD39m9pN-hiYf2NRU9x9cOv5tekRDvM"
+//       "api_key": "AIzaSyA4FD39..."
 //   }
 type Service struct {
 	types.DefaultService
@@ -84,7 +64,7 @@ type Service struct {
 }
 
 // Commands supported:
-//    !google some search query without quotes
+//    !google image some_search_query_without_quotes
 // Responds with a suitable image into the same room as the command.
 func (s *Service) Commands(client *gomatrix.Client) []types.Command {
 	return []types.Command{
@@ -111,7 +91,7 @@ func (s *Service) cmdGoogle(client *gomatrix.Client, roomID, userID string, args
 	// Drop the search type (should currently always be "image")
 	args = args[1:]
 
-	// only 1 arg which is the text to search for.
+	// Get the query text to search for.
 	querySentence := strings.Join(args, " ")
 
 	searchResult, err := s.text2imgGoogle(querySentence)
@@ -128,7 +108,7 @@ func (s *Service) cmdGoogle(client *gomatrix.Client, roomID, userID string, args
 		}, nil
 	}
 
-	// FIXME -- Sometimes upload fails with a cryptic error - "msg=Upload request failed code=400 "
+	// FIXME -- Sometimes upload fails with a cryptic error - "msg=Upload request failed code=400"
 	resUpload, err := client.UploadLink(imgURL)
 	if err != nil {
 		return nil, fmt.Errorf("Failed to upload Google image to matrix: %s", err.Error())
@@ -162,7 +142,7 @@ func (s *Service) text2imgGoogle(query string) (*googleSearchResult, error) {
 	q.Set("start", "1")          // No search result offset
 	q.Set("imgSize", "medium")   // Just search for medium size images
 	q.Set("searchType", "image") // Search for images
-	// q.set("fileType, "")                             // Any file format
+	// q.set("fileType, "")      // Any file format
 
 	var key = s.APIKey
 	if key == "" {
@@ -194,7 +174,7 @@ func (s *Service) text2imgGoogle(query string) (*googleSearchResult, error) {
 		// TODO -- Find out how to just return an error string (with no formatting)
 		// return nil, errors.New("No images found")
 		// return nil, fmt.Errorf("No results - %s", err)
-		return nil, fmt.Errorf("No images found%s", "")
+		return nil, fmt.Errorf("No images found - %s", err.Error())
 	}
 
 	// Return only the first search result

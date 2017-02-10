@@ -78,7 +78,7 @@ services:
     Type: "google"
     UserID: "@goneb:localhost" # requires a Syncing client
     Config:
-      api_key: "AIzaSyA4FD39m9pN-hiYf2NRU9x9cOv5tekRDvM"
+      api_key: "AIzaSyA4FD39m9"
 
   - ID: "rss_service"
     Type: "rssbot"
