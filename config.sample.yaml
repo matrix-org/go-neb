@@ -79,6 +79,7 @@ services:
     UserID: "@goneb:localhost" # requires a Syncing client
     Config:
       api_key: "AIzaSyA4FD39m9"
+      cx: "AIASDFWSRRtrtr"
 
   - ID: "rss_service"
     Type: "rssbot"
