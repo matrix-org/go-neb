@@ -69,7 +69,7 @@ func (s *Service) cmdGuggy(client *gomatrix.Client, roomID, userID string, args 
 
 	if gifResult.GIF == "" {
 		return gomatrix.TextMessage{
-			MsgType: "m.text.notice",
+			MsgType: "m.notice",
 			Body:    "No GIF found!",
 		}, nil
 	}

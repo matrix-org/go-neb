@@ -109,7 +109,7 @@ func (s *Service) cmdGoogleImgSearch(client *gomatrix.Client, roomID, userID str
 	var imgURL = searchResult.Link
 	if imgURL == "" {
 		return gomatrix.TextMessage{
-			MsgType: "m.text.notice",
+			MsgType: "m.notice",
 			Body:    "No image found!",
 		}, nil
 	}
