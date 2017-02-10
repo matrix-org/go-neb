@@ -176,7 +176,7 @@ func (s *Service) text2imgGoogle(query string) (*googleSearchResult, error) {
 }
 
 // response2String returns a string representation of an HTTP response body
-func response2String(res *http.Response) (responseText string) {
+func response2String(res *http.Response) string {
 	bs, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return "Failed to decode response body"
