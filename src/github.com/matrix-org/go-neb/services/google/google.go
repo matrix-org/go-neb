@@ -51,16 +51,18 @@ type googleImage struct {
 }
 
 // Service contains the Config fields for the Google service.
-// TODO - move the google custom search engine ID in here!
 //
 // Example request:
 //   {
-//       "api_key": "AIzaSyA4FD39..."
+//			"api_key": "AIzaSyA4FD39..."
+//			"cx": "ASdsaijwdfASD..."
 //   }
 type Service struct {
 	types.DefaultService
 	// The Google API key to use when making HTTP requests to Google.
 	APIKey string `json:"api_key"`
+	// The Google custom search engine ID
+	Cx string `json:"cx"`
 }
 
 // Commands supported:
@@ -146,12 +148,9 @@ func (s *Service) text2imgGoogle(query string) (*googleSearchResult, error) {
 	q.Set("start", "1")          // No search result offset
 	q.Set("imgSize", "medium")   // Just search for medium size images
 	q.Set("searchType", "image") // Search for images
-	// q.set("fileType, "")      // Any file format
 
-	var key = s.APIKey
-
-	q.Set("key", key)                                // Set the API key for the request
-	q.Set("cx", "003141582324323361145:f5zyrk9_8_m") // Set the custom search engine ID
+	q.Set("key", s.APIKey) // Set the API key for the request
+	q.Set("cx", s.Cx)      // Set the custom search engine ID
 
 	u.RawQuery = q.Encode()
 	// log.Info("Request URL: ", u)
@@ -170,12 +169,6 @@ func (s *Service) text2imgGoogle(query string) (*googleSearchResult, error) {
 
 	// log.Info(response2String(res))
 	if err := json.NewDecoder(res.Body).Decode(&searchResults); err != nil || len(searchResults.Items) < 1 {
-		// Google return a JSON object which has { items: [] } if there are 0 results.
-		// This fails to be deserialised by Go.
-
-		// TODO -- Find out how to just return an error string (with no formatting)
-		// return nil, errors.New("No images found")
-		// return nil, fmt.Errorf("No results - %s", err)
 		return nil, fmt.Errorf("No images found - %s", err.Error())
 	}
 
