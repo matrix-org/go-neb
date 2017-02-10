@@ -69,9 +69,15 @@ type Service struct {
 func (s *Service) Commands(client *gomatrix.Client) []types.Command {
 	return []types.Command{
 		types.Command{
-			Path: []string{"google"},
+			Path: []string{"google", "image"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
-				return s.cmdGoogle(client, roomID, userID, args)
+				return s.cmdGoogleImgSearch(client, roomID, userID, args)
+			},
+		},
+		types.Command{
+			Path: []string{"google", "help"},
+			Command: func(roomID, userID string, args []string) (interface{}, error) {
+				return usageMessage(), nil
 			},
 		},
 	}
@@ -83,13 +89,11 @@ func usageMessage() *gomatrix.TextMessage {
 		`Usage: !google image image_search_text`}
 }
 
-func (s *Service) cmdGoogle(client *gomatrix.Client, roomID, userID string, args []string) (interface{}, error) {
+func (s *Service) cmdGoogleImgSearch(client *gomatrix.Client, roomID, userID string, args []string) (interface{}, error) {
 
-	if len(args) < 2 || args[0] != "image" {
+	if len(args) < 1 {
 		return usageMessage(), nil
 	}
-	// Drop the search type (should currently always be "image")
-	args = args[1:]
 
 	// Get the query text to search for.
 	querySentence := strings.Join(args, " ")
@@ -145,9 +149,7 @@ func (s *Service) text2imgGoogle(query string) (*googleSearchResult, error) {
 	// q.set("fileType, "")      // Any file format
 
 	var key = s.APIKey
-	if key == "" {
-		key = "AIzaSyA4FD39m9pN-hiYf2NRU9x9cOv5tekRDvM" // FIXME -- Should be instantiated from service config
-	}
+
 	q.Set("key", key)                                // Set the API key for the request
 	q.Set("cx", "003141582324323361145:f5zyrk9_8_m") // Set the custom search engine ID
 
