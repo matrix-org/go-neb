@@ -120,14 +120,13 @@ func (s *Service) cmdGoogleImgSearch(client *gomatrix.Client, roomID, userID str
 		return nil, fmt.Errorf("Failed to upload Google image to matrix: %s", err.Error())
 	}
 
-	img := searchResult.Image
 	return gomatrix.ImageMessage{
 		MsgType: "m.image",
 		Body:    querySentence,
 		URL:     resUpload.ContentURI,
 		Info: gomatrix.ImageInfo{
-			Height:   uint(math.Floor(img.Height)),
-			Width:    uint(math.Floor(img.Width)),
+			Height:   uint(math.Floor(searchResult.Image.Height)),
+			Width:    uint(math.Floor(searchResult.Image.Width)),
 			Mimetype: searchResult.Mime,
 		},
 	}, nil
