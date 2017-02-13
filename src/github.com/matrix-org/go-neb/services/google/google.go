@@ -145,7 +145,7 @@ func (s *Service) text2imgGoogle(query string) (*googleSearchResult, error) {
 	q.Set("q", query)            // String to search for
 	q.Set("num", "1")            // Just return 1 image result
 	q.Set("start", "1")          // No search result offset
-	q.Set("imgSize", "medium")   // Just search for medium size images
+	q.Set("imgSize", "large")    // Just search for medium size images
 	q.Set("searchType", "image") // Search for images
 
 	q.Set("key", s.APIKey) // Set the API key for the request
@@ -154,7 +154,7 @@ func (s *Service) text2imgGoogle(query string) (*googleSearchResult, error) {
 	u.RawQuery = q.Encode()
 	// log.Info("Request URL: ", u)
 
-	res, err := http.Get(u.String())
+	res, err := httpClient.Get(u.String())
 	if res != nil {
 		defer res.Body.Close()
 	}
@@ -167,8 +167,10 @@ func (s *Service) text2imgGoogle(query string) (*googleSearchResult, error) {
 	var searchResults googleSearchResults
 
 	// log.Info(response2String(res))
-	if err := json.NewDecoder(res.Body).Decode(&searchResults); err != nil || len(searchResults.Items) < 1 {
-		return nil, fmt.Errorf("No images found - %s", err.Error())
+	if err := json.NewDecoder(res.Body).Decode(&searchResults); err != nil {
+		return nil, fmt.Errorf("ERROR - %s", err.Error())
+	} else if len(searchResults.Items) < 1 {
+		return nil, fmt.Errorf("No images found")
 	}
 
 	// Return only the first search result
