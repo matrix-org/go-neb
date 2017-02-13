@@ -100,7 +100,7 @@ func TestCommand(t *testing.T) {
 
 	// Execute the matrix !command
 	cmds := google.Commands(matrixCli)
-	if len(cmds) != 2 {
+	if len(cmds) != 3 {
 		t.Fatalf("Unexpected number of commands: %d", len(cmds))
 	}
 	// cmd := cmds[0]
