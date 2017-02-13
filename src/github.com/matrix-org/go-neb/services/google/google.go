@@ -82,6 +82,12 @@ func (s *Service) Commands(client *gomatrix.Client) []types.Command {
 				return usageMessage(), nil
 			},
 		},
+		types.Command{
+			Path: []string{"google"},
+			Command: func(roomID, userID string, args []string) (interface{}, error) {
+				return usageMessage(), nil
+			},
+		},
 	}
 }
 
