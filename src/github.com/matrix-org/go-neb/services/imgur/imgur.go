@@ -215,13 +215,13 @@ func (s *Service) text2imgImgur(query string) (*imgurGalleryImage, *imgurGallery
 	}
 
 	var searchResults imgurSearchResponse
-	if err := json.NewDecoder(res.Body).Decode(&searchResults); err != nil || !searchResults.Data {
+	if err := json.NewDecoder(res.Body).Decode(&searchResults); err != nil || searchResults.Data == nil {
 		return nil, nil, fmt.Errorf("No images found - %s", err.Error())
 	}
 
 	// Check if we have an image or a gallery
 	var dataInt map[string]interface{}
-	if err := json.Unmarshal(searchResults.Data, &dataInt); err != nil || !searchResults.Data {
+	if err := json.Unmarshal(searchResults.Data, &dataInt); err != nil || searchResults.Data == nil {
 		return nil, nil, fmt.Errorf("Failed to parse response data - %s", err.Error())
 	}
 
