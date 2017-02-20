@@ -122,7 +122,7 @@ func (s *Service) Commands(client *gomatrix.Client) []types.Command {
 		types.Command{
 			Path: []string{"imgur"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
-				return s.cmdImgurImgSearch(client, roomID, userID, args)
+				return s.cmdImgSearch(client, roomID, userID, args)
 			},
 		},
 	}
@@ -134,7 +134,7 @@ func usageMessage() *gomatrix.TextMessage {
 		`Usage: !imgur image_search_text`}
 }
 
-func (s *Service) cmdImgurImgSearch(client *gomatrix.Client, roomID, userID string, args []string) (interface{}, error) {
+func (s *Service) cmdImgSearch(client *gomatrix.Client, roomID, userID string, args []string) (interface{}, error) {
 
 	if len(args) < 1 {
 		return usageMessage(), nil
@@ -143,7 +143,7 @@ func (s *Service) cmdImgurImgSearch(client *gomatrix.Client, roomID, userID stri
 	// Get the query text to search for.
 	querySentence := strings.Join(args, " ")
 
-	searchResultImage, searchResultAlbum, err := s.text2imgImgur(querySentence)
+	searchResultImage, searchResultAlbum, err := s.text2img(querySentence)
 
 	if err != nil {
 		return nil, err
@@ -187,8 +187,8 @@ func (s *Service) cmdImgurImgSearch(client *gomatrix.Client, roomID, userID stri
 	}
 }
 
-// text2imgImgur returns info about an image or an album
-func (s *Service) text2imgImgur(query string) (*imgurGalleryImage, *imgurGalleryAlbum, error) {
+// text2img returns info about an image or an album
+func (s *Service) text2img(query string) (*imgurGalleryImage, *imgurGalleryAlbum, error) {
 	log.Info("Searching Imgur for an image of a ", query)
 
 	query = url.QueryEscape(query)
