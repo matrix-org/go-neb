@@ -159,7 +159,7 @@ func (s *Service) cmdImgurImgSearch(client *gomatrix.Client, roomID, userID stri
 		}
 
 		// FIXME -- Sometimes upload fails with a cryptic error - "msg=Upload request failed code=400"
-		log.Printf("Uploading image at: %s", imgURL)
+		// log.Printf("Uploading image at: %s", imgURL)
 		resUpload, err := client.UploadLink(imgURL)
 		if err != nil {
 			return nil, fmt.Errorf("Failed to upload Imgur image (%s) to matrix: %s", imgURL, err.Error())
@@ -198,6 +198,7 @@ func (s *Service) text2imgImgur(query string) (*imgurGalleryImage, *imgurGallery
 	var window = "all" // day | week | month | year | all
 	var page = 1
 	var urlString = fmt.Sprintf("%s/%s/%s/%d?q=%s", base, sort, window, page, query)
+	// var urlString = fmt.Sprintf("%s?q=%s", base, query)
 
 	u, err := url.Parse(urlString)
 	if err != nil {
@@ -230,7 +231,7 @@ func (s *Service) text2imgImgur(query string) (*imgurGalleryImage, *imgurGallery
 	for i := 0; i < len(searchResults.Data); i++ {
 		// Return the first image result
 		var image imgurGalleryImage
-		if err := json.Unmarshal(searchResults.Data[i], &image); err == nil {
+		if err := json.Unmarshal(searchResults.Data[i], &image); err == nil && !image.IsAlbum {
 			return &image, nil, nil
 		}
 	}
