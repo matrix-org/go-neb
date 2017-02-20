@@ -40,7 +40,7 @@ type imgurGalleryImage struct {
 	Topic       string `json:"topic"`       // topic	string	Topic of the gallery image.
 	Section     string `json:"section"`     // section	string	If the image has been categorized by our backend then this will contain the section the image belongs in. (funny, cats, adviceanimals, wtf, etc)
 	IsAlbum     bool   `json:"is_album"`    // is_album	boolean	If it's an album or not
-	// ** Uninplemented fields **
+	// ** Unimplemented fields **
 	// bandwidth	integer	Bandwidth consumed by the image in bytes
 	// deletehash	string	OPTIONAL, the deletehash, if you're logged in as the image owner
 	// comment_count	int	Number of comments on the gallery image.
