@@ -87,9 +87,9 @@ type imgurGalleryAlbum struct {
 }
 
 type imgurSearchResponse struct {
-	Data    json.RawMessage `json:"data"`
-	Success bool            `json:"success"` // Request completed successfully
-	Status  int             `json:"status"`  // HTTP response code
+	Data    []json.RawMessage `json:"data"`
+	Success bool              `json:"success"` // Request completed successfully
+	Status  int               `json:"status"`  // HTTP response code
 }
 
 // Service contains the Config fields for the Imgur service.
@@ -159,9 +159,10 @@ func (s *Service) cmdImgurImgSearch(client *gomatrix.Client, roomID, userID stri
 		}
 
 		// FIXME -- Sometimes upload fails with a cryptic error - "msg=Upload request failed code=400"
+		log.Printf("Uploading image at: %s", imgURL)
 		resUpload, err := client.UploadLink(imgURL)
 		if err != nil {
-			return nil, fmt.Errorf("Failed to upload Imgur image to matrix: %s", err.Error())
+			return nil, fmt.Errorf("Failed to upload Imgur image (%s) to matrix: %s", imgURL, err.Error())
 		}
 
 		return gomatrix.ImageMessage{
@@ -191,11 +192,12 @@ func (s *Service) cmdImgurImgSearch(client *gomatrix.Client, roomID, userID stri
 func (s *Service) text2imgImgur(query string) (*imgurGalleryImage, *imgurGalleryAlbum, error) {
 	log.Info("Searching Imgur for an image of a ", query)
 
-	var base = "https://api.imgur.com/3/gallery/search/"
+	query = url.QueryEscape(query)
+	var base = "https://api.imgur.com/3/gallery/search"
 	var sort = "time"  // time | viral | top
 	var window = "all" // day | week | month | year | all
 	var page = 1
-	var urlString = fmt.Sprintf("%s/%s/%s/%d", base, sort, window, page)
+	var urlString = fmt.Sprintf("%s/%s/%s/%d?q=%s", base, sort, window, page, query)
 
 	u, err := url.Parse(urlString)
 	if err != nil {
@@ -207,7 +209,6 @@ func (s *Service) text2imgImgur(query string) (*imgurGalleryImage, *imgurGallery
 		return nil, nil, err
 	}
 
-	log.Printf("Client ID: %s", s.ClientID)
 	req.Header.Add("Authorization", "Client-ID "+s.ClientID)
 	res, err := httpClient.Do(req)
 	if res != nil {
@@ -225,28 +226,26 @@ func (s *Service) text2imgImgur(query string) (*imgurGalleryImage, *imgurGallery
 		return nil, nil, fmt.Errorf("No images found - %s", err.Error())
 	}
 
-	// Check if we have an image or a gallery
-	var dataInt map[string]interface{}
-	if err := json.Unmarshal(searchResults.Data, &dataInt); err != nil || searchResults.Data == nil {
-		return nil, nil, fmt.Errorf("Failed to parse response data - %s", err.Error())
+	log.Printf("%d results were returned from Imgur", len(searchResults.Data))
+	for i := 0; i < len(searchResults.Data); i++ {
+		// Return the first image result
+		var image imgurGalleryImage
+		if err := json.Unmarshal(searchResults.Data[i], &image); err == nil {
+			return &image, nil, nil
+		}
 	}
 
 	// Return an album
-	if dataInt["is_album"].(bool) {
-		var album imgurGalleryAlbum
-		if err := json.Unmarshal(searchResults.Data, &album); err != nil {
-			return nil, nil, fmt.Errorf("Failed to parse album data - %s", err.Error())
-		}
+	// if dataInt["is_album"].(bool) {
+	// 	var album imgurGalleryAlbum
+	// 	if err := json.Unmarshal(searchResults.Data, &album); err != nil {
+	// 		return nil, nil, fmt.Errorf("Failed to parse album data - %s", err.Error())
+	// 	}
+	//
+	// 	return nil, &album, nil
+	// }
 
-		return nil, &album, nil
-	}
-
-	// Return an image
-	var image imgurGalleryImage
-	if err := json.Unmarshal(searchResults.Data, &image); err != nil {
-		return nil, nil, fmt.Errorf("Failed to parse image data - %s", err.Error())
-	}
-	return &image, nil, nil
+	return nil, nil, fmt.Errorf("No images found")
 }
 
 // response2String returns a string representation of an HTTP response body
