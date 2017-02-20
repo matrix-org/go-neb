@@ -15,16 +15,14 @@ import (
 	"github.com/matrix-org/gomatrix"
 )
 
-// TODO: It would be nice to tabularise this test so we can try failing different combinations of responses to make
-//       sure all cases are handled, rather than just the general case as is here.
 func TestCommand(t *testing.T) {
 	database.SetServiceDB(&database.NopStorage{})
-	apiKey := "secret"
-	imgurImageURL := "https://www.imgurapis.com/customsearch/v1"
+	clientID := "My ID"
+	imgurImageURL := "https://api.imgur.com/3/gallery/search"
 
 	// Mock the response from imgur
 	imgurTrans := testutils.NewRoundTripper(func(req *http.Request) (*http.Response, error) {
-		imgurURL := "https://www.imgurapis.com/customsearch/v1"
+		imgurURL := "https://api.imgur.com/3/gallery/search"
 		query := req.URL.Query()
 
 		// Check the base API URL
@@ -35,26 +33,22 @@ func TestCommand(t *testing.T) {
 		if req.Method != "GET" {
 			t.Fatalf("Bad method: got %s want GET", req.Method)
 		}
-		// Check the API key
-		if query.Get("key") != apiKey {
-			t.Fatalf("Bad apiKey: got %s want %s", query.Get("key"), apiKey)
+		// Check the Client ID
+		authHeader := req.Header.Get("Authorization")
+		if authHeader != "Client-ID "+clientID {
+			t.Fatalf("Bad client ID - Expected: %s, got %s", "Client-ID "+clientID, authHeader)
 		}
+
 		// Check the search query
 		var searchString = query.Get("q")
-		var searchStringLength = len(searchString)
-		if searchStringLength > 0 && !strings.HasPrefix(searchString, "image") {
-			t.Fatalf("Bad search string: got \"%s\" (%d characters) ", searchString, searchStringLength)
+		if !strings.HasPrefix(searchString, "image") {
+			t.Fatalf("Bad search string: got \"%s\"", searchString)
 		}
 
-		resImage := imgurImage{
-			Width:  64,
-			Height: 64,
-		}
-
-		res := imgurSearchResult{
+		res := imgurGalleryImage{
 			Title: "A Cat",
-			Link:  "http://cat.com/cat.jpg",
-			Mime:  "image/jpeg",
+			Link:  "http://i.imgur.com/cat.jpg",
+			Type:  "image/jpeg",
 			Image: resImage,
 		}
 
@@ -72,7 +66,9 @@ func TestCommand(t *testing.T) {
 
 	// Create the imgur service
 	srv, err := types.CreateService("id", ServiceType, "@imgurbot:hyrule", []byte(
-		`{"api_key":"`+apiKey+`"}`,
+		`{
+			"client_id":"`+clientID+`"
+		}`,
 	))
 	if err != nil {
 		t.Fatal("Failed to create imgur service: ", err)
@@ -103,9 +99,9 @@ func TestCommand(t *testing.T) {
 	if len(cmds) != 2 {
 		t.Fatalf("Unexpected number of commands: %d", len(cmds))
 	}
-	// cmd := cmds[0]
-	// _, err = cmd.Command("!someroom:hyrule", "@navi:hyrule", []string{"image", "Czechoslovakian bananna"})
-	// if err != nil {
-	// 	t.Fatalf("Failed to process command: %s", err.Error())
-	// }
+	cmd := cmds[0]
+	_, err = cmd.Command("!someroom:hyrule", "@navi:hyrule", []string{"image", "Czechoslovakian bananna"})
+	if err != nil {
+		t.Fatalf("Failed to process command: %s", err.Error())
+	}
 }
