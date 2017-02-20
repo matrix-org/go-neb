@@ -101,10 +101,10 @@ type imgurSearchResponse struct {
 //   }
 type Service struct {
 	types.DefaultService
-	// The API key to use when making HTTP requests to Imgur.
-	ClientSecret string `json:"client_secret"`
 	// The Imgur client ID
 	ClientID string `json:"client_id"`
+	// The API key to use when making HTTP requests to Imgur.
+	ClientSecret string `json:"client_secret"`
 }
 
 // Commands supported:
@@ -198,12 +198,18 @@ func (s *Service) text2imgImgur(query string) (*imgurGalleryImage, *imgurGallery
 	var urlString = fmt.Sprintf("%s/%s/%s/%d", base, sort, window, page)
 
 	u, err := url.Parse(urlString)
-
 	if err != nil {
 		return nil, nil, err
 	}
 
-	res, err := http.Get(u.String())
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	log.Printf("Client ID: %s", s.ClientID)
+	req.Header.Add("Authorization", "Client-ID "+s.ClientID)
+	res, err := httpClient.Do(req)
 	if res != nil {
 		defer res.Body.Close()
 	}
