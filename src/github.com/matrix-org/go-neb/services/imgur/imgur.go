@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"math/rand"
 	"net/http"
 	"net/url"
 	"strings"
@@ -228,23 +229,18 @@ func (s *Service) text2imgImgur(query string) (*imgurGalleryImage, *imgurGallery
 	}
 
 	log.Printf("%d results were returned from Imgur", len(searchResults.Data))
+	// Return a random image result
+	var images []imgurGalleryImage
 	for i := 0; i < len(searchResults.Data); i++ {
-		// Return the first image result
 		var image imgurGalleryImage
 		if err := json.Unmarshal(searchResults.Data[i], &image); err == nil && !image.IsAlbum {
-			return &image, nil, nil
+			images = append(images, image)
 		}
 	}
-
-	// Return an album
-	// if dataInt["is_album"].(bool) {
-	// 	var album imgurGalleryAlbum
-	// 	if err := json.Unmarshal(searchResults.Data, &album); err != nil {
-	// 		return nil, nil, fmt.Errorf("Failed to parse album data - %s", err.Error())
-	// 	}
-	//
-	// 	return nil, &album, nil
-	// }
+	if len(images) > 0 {
+		r := rand.Intn(len(images) - 1)
+		return &images[r], nil, nil
+	}
 
 	return nil, nil, fmt.Errorf("No images found")
 }
