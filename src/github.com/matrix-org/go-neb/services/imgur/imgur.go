@@ -219,7 +219,7 @@ func (s *Service) text2imgImgur(query string) (*imgurGalleryImage, *imgurGallery
 	if err != nil {
 		return nil, nil, err
 	}
-	if res.StatusCode > 200 {
+	if res.StatusCode < 200 || res.StatusCode >= 300 {
 		return nil, nil, fmt.Errorf("Request error: %d, %s", res.StatusCode, response2String(res))
 	}
 
