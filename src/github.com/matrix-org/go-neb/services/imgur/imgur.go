@@ -194,11 +194,11 @@ func (s *Service) text2imgImgur(query string) (*imgurGalleryImage, *imgurGallery
 	log.Info("Searching Imgur for an image of a ", query)
 
 	query = url.QueryEscape(query)
-	var base = "https://api.imgur.com/3/gallery/search"
+
 	var sort = "time"  // time | viral | top
 	var window = "all" // day | week | month | year | all
 	var page = 1
-	var urlString = fmt.Sprintf("%s/%s/%s/%d?q=%s", base, sort, window, page, query)
+	var urlString = fmt.Sprintf("%s/%s/%s/%d?q=%s", "https://api.imgur.com/3/gallery/search", sort, window, page, query)
 	// var urlString = fmt.Sprintf("%s?q=%s", base, query)
 
 	u, err := url.Parse(urlString)
