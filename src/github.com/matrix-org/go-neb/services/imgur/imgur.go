@@ -159,8 +159,6 @@ func (s *Service) cmdImgurImgSearch(client *gomatrix.Client, roomID, userID stri
 			}, nil
 		}
 
-		// FIXME -- Sometimes upload fails with a cryptic error - "msg=Upload request failed code=400"
-		// log.Printf("Uploading image at: %s", imgURL)
 		resUpload, err := client.UploadLink(imgURL)
 		if err != nil {
 			return nil, fmt.Errorf("Failed to upload Imgur image (%s) to matrix: %s", imgURL, err.Error())
