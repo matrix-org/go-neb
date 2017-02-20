@@ -114,15 +114,15 @@ type Service struct {
 func (s *Service) Commands(client *gomatrix.Client) []types.Command {
 	return []types.Command{
 		types.Command{
-			Path: []string{"imgur"},
-			Command: func(roomID, userID string, args []string) (interface{}, error) {
-				return s.cmdImgurImgSearch(client, roomID, userID, args)
-			},
-		},
-		types.Command{
 			Path: []string{"imgur", "help"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				return usageMessage(), nil
+			},
+		},
+		types.Command{
+			Path: []string{"imgur"},
+			Command: func(roomID, userID string, args []string) (interface{}, error) {
+				return s.cmdImgurImgSearch(client, roomID, userID, args)
 			},
 		},
 	}
@@ -224,8 +224,10 @@ func (s *Service) text2imgImgur(query string) (*imgurGalleryImage, *imgurGallery
 	}
 
 	var searchResults imgurSearchResponse
-	if err := json.NewDecoder(res.Body).Decode(&searchResults); err != nil || searchResults.Data == nil {
+	if err := json.NewDecoder(res.Body).Decode(&searchResults); err != nil {
 		return nil, nil, fmt.Errorf("No images found - %s", err.Error())
+	} else if len(searchResults.Data) < 1 {
+		return nil, nil, fmt.Errorf("No images found")
 	}
 
 	log.Printf("%d results were returned from Imgur", len(searchResults.Data))
@@ -238,7 +240,10 @@ func (s *Service) text2imgImgur(query string) (*imgurGalleryImage, *imgurGallery
 		}
 	}
 	if len(images) > 0 {
-		r := rand.Intn(len(images) - 1)
+		var r = 0
+		if len(images) > 1 {
+			r = rand.Intn(len(images) - 1)
+		}
 		return &images[r], nil, nil
 	}
 

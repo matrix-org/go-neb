@@ -18,7 +18,8 @@ import (
 func TestCommand(t *testing.T) {
 	database.SetServiceDB(&database.NopStorage{})
 	clientID := "My ID"
-	imgurImageURL := "https://api.imgur.com/3/gallery/search"
+	imgurImageURL := "http://i.imgur.com/cat.jpg"
+	testSearchString := "Czechoslovakian bananna"
 
 	// Mock the response from imgur
 	imgurTrans := testutils.NewRoundTripper(func(req *http.Request) (*http.Response, error) {
@@ -41,14 +42,28 @@ func TestCommand(t *testing.T) {
 
 		// Check the search query
 		var searchString = query.Get("q")
-		if !strings.HasPrefix(searchString, "image") {
-			t.Fatalf("Bad search string: got \"%s\"", searchString)
+		if searchString != testSearchString {
+			t.Fatalf("Bad search string - got: \"%s\", expected: \"%s\"", testSearchString, searchString)
 		}
 
-		res := imgurGalleryImage{
+		img := imgurGalleryImage{
 			Title: "A Cat",
-			Link:  "http://i.imgur.com/cat.jpg",
+			Link:  imgurImageURL,
 			Type:  "image/jpeg",
+		}
+
+		imgJSON, err := json.Marshal(img)
+		if err != nil {
+			t.Fatalf("Failed to Marshal test image data - %s", err)
+		}
+		rawImageJSON := json.RawMessage(imgJSON)
+
+		res := imgurSearchResponse{
+			Data: []json.RawMessage{
+				rawImageJSON,
+			},
+			Success: true,
+			Status:  200,
 		}
 
 		b, err := json.Marshal(res)
@@ -98,8 +113,8 @@ func TestCommand(t *testing.T) {
 	if len(cmds) != 2 {
 		t.Fatalf("Unexpected number of commands: %d", len(cmds))
 	}
-	cmd := cmds[0]
-	_, err = cmd.Command("!someroom:hyrule", "@navi:hyrule", []string{"image", "Czechoslovakian bananna"})
+	cmd := cmds[1]
+	_, err = cmd.Command("!someroom:hyrule", "@navi:hyrule", []string{testSearchString})
 	if err != nil {
 		t.Fatalf("Failed to process command: %s", err.Error())
 	}
