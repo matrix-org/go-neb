@@ -20,16 +20,16 @@ import (
 func TestCommand(t *testing.T) {
 	database.SetServiceDB(&database.NopStorage{})
 	apiKey := "secret"
-	googleImageURL := "https://www.googleapis.com/customsearch/v1"
+	imgurImageURL := "https://www.imgurapis.com/customsearch/v1"
 
-	// Mock the response from Google
-	googleTrans := testutils.NewRoundTripper(func(req *http.Request) (*http.Response, error) {
-		googleURL := "https://www.googleapis.com/customsearch/v1"
+	// Mock the response from imgur
+	imgurTrans := testutils.NewRoundTripper(func(req *http.Request) (*http.Response, error) {
+		imgurURL := "https://www.imgurapis.com/customsearch/v1"
 		query := req.URL.Query()
 
 		// Check the base API URL
-		if !strings.HasPrefix(req.URL.String(), googleURL) {
-			t.Fatalf("Bad URL: got %s want prefix %s", req.URL.String(), googleURL)
+		if !strings.HasPrefix(req.URL.String(), imgurURL) {
+			t.Fatalf("Bad URL: got %s want prefix %s", req.URL.String(), imgurURL)
 		}
 		// Check the request method
 		if req.Method != "GET" {
@@ -46,12 +46,12 @@ func TestCommand(t *testing.T) {
 			t.Fatalf("Bad search string: got \"%s\" (%d characters) ", searchString, searchStringLength)
 		}
 
-		resImage := googleImage{
+		resImage := imgurImage{
 			Width:  64,
 			Height: 64,
 		}
 
-		res := googleSearchResult{
+		res := imgurSearchResult{
 			Title: "A Cat",
 			Link:  "http://cat.com/cat.jpg",
 			Mime:  "image/jpeg",
@@ -60,29 +60,29 @@ func TestCommand(t *testing.T) {
 
 		b, err := json.Marshal(res)
 		if err != nil {
-			t.Fatalf("Failed to marshal Google response - %s", err)
+			t.Fatalf("Failed to marshal imgur response - %s", err)
 		}
 		return &http.Response{
 			StatusCode: 200,
 			Body:       ioutil.NopCloser(bytes.NewBuffer(b)),
 		}, nil
 	})
-	// clobber the Google service http client instance
-	httpClient = &http.Client{Transport: googleTrans}
+	// clobber the imgur service http client instance
+	httpClient = &http.Client{Transport: imgurTrans}
 
-	// Create the Google service
-	srv, err := types.CreateService("id", ServiceType, "@googlebot:hyrule", []byte(
+	// Create the imgur service
+	srv, err := types.CreateService("id", ServiceType, "@imgurbot:hyrule", []byte(
 		`{"api_key":"`+apiKey+`"}`,
 	))
 	if err != nil {
-		t.Fatal("Failed to create Google service: ", err)
+		t.Fatal("Failed to create imgur service: ", err)
 	}
-	google := srv.(*Service)
+	imgur := srv.(*Service)
 
 	// Mock the response from Matrix
 	matrixTrans := struct{ testutils.MockTransport }{}
 	matrixTrans.RT = func(req *http.Request) (*http.Response, error) {
-		if req.URL.String() == googleImageURL { // getting the Google image
+		if req.URL.String() == imgurImageURL { // getting the imgur image
 			return &http.Response{
 				StatusCode: 200,
 				Body:       ioutil.NopCloser(bytes.NewBufferString("some image data")),
@@ -95,11 +95,11 @@ func TestCommand(t *testing.T) {
 		}
 		return nil, fmt.Errorf("Unknown URL: %s", req.URL.String())
 	}
-	matrixCli, _ := gomatrix.NewClient("https://hyrule", "@googlebot:hyrule", "its_a_secret")
+	matrixCli, _ := gomatrix.NewClient("https://hyrule", "@imgurbot:hyrule", "its_a_secret")
 	matrixCli.Client = &http.Client{Transport: matrixTrans}
 
 	// Execute the matrix !command
-	cmds := google.Commands(matrixCli)
+	cmds := imgur.Commands(matrixCli)
 	if len(cmds) != 2 {
 		t.Fatalf("Unexpected number of commands: %d", len(cmds))
 	}

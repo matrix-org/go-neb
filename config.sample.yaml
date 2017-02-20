@@ -81,6 +81,12 @@ services:
       api_key: "AIzaSyA4FD39m9"
       cx: "AIASDFWSRRtrtr"
 
+  - ID: "imgur_service"
+    Type: "imgur"
+    UserID: "@imgur:localhost" # requires a Syncing client
+    Config:
+      api_key: "AIzaSyA4FD39m9"
+
   - ID: "rss_service"
     Type: "rssbot"
     UserID: "@another_goneb:localhost"
