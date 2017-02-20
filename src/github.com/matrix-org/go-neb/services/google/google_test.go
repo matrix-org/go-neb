@@ -20,7 +20,7 @@ import (
 func TestCommand(t *testing.T) {
 	database.SetServiceDB(&database.NopStorage{})
 	apiKey := "secret"
-	googleImageURL := "https://www.googleapis.com/customsearch/v1"
+	googleImageURL := "http://cat.com/cat.jpg"
 
 	// Mock the response from Google
 	googleTrans := testutils.NewRoundTripper(func(req *http.Request) (*http.Response, error) {
@@ -51,11 +51,17 @@ func TestCommand(t *testing.T) {
 			Height: 64,
 		}
 
-		res := googleSearchResult{
+		image := googleSearchResult{
 			Title: "A Cat",
-			Link:  "http://cat.com/cat.jpg",
+			Link:  googleImageURL,
 			Mime:  "image/jpeg",
 			Image: resImage,
+		}
+
+		res := googleSearchResults{
+			Items: []googleSearchResult{
+				image,
+			},
 		}
 
 		b, err := json.Marshal(res)
@@ -103,9 +109,9 @@ func TestCommand(t *testing.T) {
 	if len(cmds) != 3 {
 		t.Fatalf("Unexpected number of commands: %d", len(cmds))
 	}
-	// cmd := cmds[0]
-	// _, err = cmd.Command("!someroom:hyrule", "@navi:hyrule", []string{"image", "Czechoslovakian bananna"})
-	// if err != nil {
-	// 	t.Fatalf("Failed to process command: %s", err.Error())
-	// }
+	cmd := cmds[0]
+	_, err = cmd.Command("!someroom:hyrule", "@navi:hyrule", []string{"image", "Czechoslovakian bananna"})
+	if err != nil {
+		t.Fatalf("Failed to process command: %s", err.Error())
+	}
 }
