@@ -126,7 +126,7 @@
 		{
 			"importpath": "github.com/gregjones/httpcache",
 			"repository": "https://github.com/gregjones/httpcache",
-			"revision": "413781778738c08fdbb98e1dd65f5abffe8832d0",
+			"revision": "d02018f006d98f58512bf3adfc171d88d17626df",
 			"branch": "master"
 		},
 		{
