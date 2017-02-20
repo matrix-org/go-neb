@@ -49,7 +49,6 @@ func TestCommand(t *testing.T) {
 			Title: "A Cat",
 			Link:  "http://i.imgur.com/cat.jpg",
 			Type:  "image/jpeg",
-			Image: resImage,
 		}
 
 		b, err := json.Marshal(res)
