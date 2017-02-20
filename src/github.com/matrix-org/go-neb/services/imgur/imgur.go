@@ -21,25 +21,25 @@ const ServiceType = "imgur"
 var httpClient = &http.Client{}
 
 type imgurGalleryImage struct {
-	ID          string `json:"id"`          // id	string	The ID for the image
-	Title       string `json:"title"`       // title	string	The title of the image.
-	Description string `json:"description"` // description	string	Description of the image.
-	DateTime    int64  `json:"datetime"`    // datetime	integer	Time inserted into the gallery, epoch time
-	Type        string `json:"type"`        // type	string	Image MIME type.
-	Animated    bool   `json:"animated"`    // animated	boolean	is the image animated
-	Width       int    `json:"width"`       // width	integer	The width of the image in pixels
-	Height      int    `json:"height"`      // height	integer	The height of the image in pixels
-	Size        int64  `json:"size"`        // size	integer	The size of the image in bytes
-	Views       int64  `json:"views"`       // views	integer	The number of image views
-	Link        string `json:"link"`        // link	string	The direct link to the the image. (Note: if fetching an animated GIF that was over 20MB in original size, a .gif thumbnail will be returned)
-	Gifv        string `json:"gifv"`        // gifv	string	OPTIONAL, The .gifv link. Only available if the image is animated and type is 'image/gif'.
-	MP4         string `json:"mp4"`         // mp4	string	OPTIONAL, The direct link to the .mp4. Only available if the image is animated and type is 'image/gif'.
-	MP4Size     int64  `json:"mp4_size"`    // mp4_size	integer	OPTIONAL, The Content-Length of the .mp4. Only available if the image is animated and type is 'image/gif'. Note that a zero value (0) is possible if the video has not yet been generated
-	Looping     bool   `json:"looping"`     // looping	boolean	OPTIONAL, Whether the image has a looping animation. Only available if the image is animated and type is 'image/gif'.
-	NSFW        bool   `json:"nsfw"`        // nsfw	boolean	Indicates if the image has been marked as nsfw or not. Defaults to null if information is not available.
-	Topic       string `json:"topic"`       // topic	string	Topic of the gallery image.
-	Section     string `json:"section"`     // section	string	If the image has been categorized by our backend then this will contain the section the image belongs in. (funny, cats, adviceanimals, wtf, etc)
-	IsAlbum     bool   `json:"is_album"`    // is_album	boolean	If it's an album or not
+	ID          string `json:"id"`          // The ID for the image
+	Title       string `json:"title"`       // The title of the image.
+	Description string `json:"description"` // Description of the image.
+	DateTime    int64  `json:"datetime"`    // Time inserted into the gallery, epoch time
+	Type        string `json:"type"`        // Image MIME type.
+	Animated    bool   `json:"animated"`    // Is the image animated
+	Width       int    `json:"width"`       // The width of the image in pixels
+	Height      int    `json:"height"`      // The height of the image in pixels
+	Size        int64  `json:"size"`        // The size of the image in bytes
+	Views       int64  `json:"views"`       // The number of image views
+	Link        string `json:"link"`        // The direct link to the the image. (Note: if fetching an animated GIF that was over 20MB in original size, a .gif thumbnail will be returned)
+	Gifv        string `json:"gifv"`        // OPTIONAL, The .gifv link. Only available if the image is animated and type is 'image/gif'.
+	MP4         string `json:"mp4"`         // OPTIONAL, The direct link to the .mp4. Only available if the image is animated and type is 'image/gif'.
+	MP4Size     int64  `json:"mp4_size"`    // OPTIONAL, The Content-Length of the .mp4. Only available if the image is animated and type is 'image/gif'. Note that a zero value (0) is possible if the video has not yet been generated
+	Looping     bool   `json:"looping"`     // OPTIONAL, Whether the image has a looping animation. Only available if the image is animated and type is 'image/gif'.
+	NSFW        bool   `json:"nsfw"`        // Indicates if the image has been marked as nsfw or not. Defaults to null if information is not available.
+	Topic       string `json:"topic"`       // Topic of the gallery image.
+	Section     string `json:"section"`     // If the image has been categorized by our backend then this will contain the section the image belongs in. (funny, cats, adviceanimals, wtf, etc)
+	IsAlbum     bool   `json:"is_album"`    // If it's an album or not
 	// ** Unimplemented fields **
 	// bandwidth	integer	Bandwidth consumed by the image in bytes
 	// deletehash	string	OPTIONAL, the deletehash, if you're logged in as the image owner
@@ -56,20 +56,20 @@ type imgurGalleryImage struct {
 }
 
 type imgurGalleryAlbum struct {
-	ID          string              `json:"id"`           // id	string	The ID for the album
-	Title       string              `json:"title"`        // title	string	The title of the album.
-	Description string              `json:"description"`  // description	string	Description of the album.
-	DateTime    int64               `json:"datetime"`     // datetime	integer	Time inserted into the gallery, epoch time
-	Views       int64               `json:"views"`        // views	integer	The number of album views
-	Link        string              `json:"link"`         // link	string	The URL link to the album
-	NSFW        bool                `json:"nsfw"`         // nsfw	boolean	Indicates if the album has been marked as nsfw or not. Defaults to null if information is not available.
-	Topic       string              `json:"topic"`        // topic	string	Topic of the gallery album.
-	IsAlbum     bool                `json:"is_album"`     // is_album	boolean	If it's an album or not
-	Cover       string              `json:"cover"`        // cover	string	The ID of the album cover image
-	CoverWidth  int                 `json:"cover_width"`  // cover_width	integer	The width, in pixels, of the album cover image
-	CoverHeight int                 `json:"cover_height"` // cover_height	integer	The height, in pixels, of the album cover image
-	ImagesCount int                 `json:"images_count"` // images_count	integer	The total number of images in the album
-	Images      []imgurGalleryImage `json:"images"`       // images	Array of Images	An array of all the images in the album (only available when requesting the direct album)
+	ID          string              `json:"id"`           // The ID for the album
+	Title       string              `json:"title"`        // The title of the album.
+	Description string              `json:"description"`  // Description of the album.
+	DateTime    int64               `json:"datetime"`     // Time inserted into the gallery, epoch time
+	Views       int64               `json:"views"`        // The number of album views
+	Link        string              `json:"link"`         // The URL link to the album
+	NSFW        bool                `json:"nsfw"`         // Indicates if the album has been marked as nsfw or not. Defaults to null if information is not available.
+	Topic       string              `json:"topic"`        // Topic of the gallery album.
+	IsAlbum     bool                `json:"is_album"`     // If it's an album or not
+	Cover       string              `json:"cover"`        // The ID of the album cover image
+	CoverWidth  int                 `json:"cover_width"`  // The width, in pixels, of the album cover image
+	CoverHeight int                 `json:"cover_height"` // The height, in pixels, of the album cover image
+	ImagesCount int                 `json:"images_count"` // The total number of images in the album
+	Images      []imgurGalleryImage `json:"images"`       // An array of all the images in the album (only available when requesting the direct album)
 
 	// ** Unimplemented fields **
 	// account_url	string	The account username or null if it's anonymous.
