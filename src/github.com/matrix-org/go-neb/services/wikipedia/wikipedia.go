@@ -7,15 +7,18 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 
 	log "github.com/Sirupsen/logrus"
+	"github.com/jaytaylor/html2text"
 	"github.com/matrix-org/go-neb/types"
 	"github.com/matrix-org/gomatrix"
 )
 
 // ServiceType of the Wikipedia service
 const ServiceType = "wikipedia"
+const maxExtractLength = 1024 // Max length of extract string in bytes
 
 var httpClient = &http.Client{}
 
@@ -81,9 +84,25 @@ func (s *Service) cmdWikipediaSearch(client *gomatrix.Client, roomID, userID str
 		}, nil
 	}
 
+	extractText, err := html2text.FromString(searchResultPage.Extract)
+	if err != nil {
+		return gomatrix.TextMessage{
+			MsgType: "m.notice",
+			Body:    "Failed to convert extract to plain text - " + err.Error(),
+		}, nil
+	}
+
+	// Truncate the extract text, if necessary
+	if len(extractText) > maxExtractLength {
+		extractText = extractText[:maxExtractLength] + "..."
+	}
+
+	// Add a link to the bottom of the extract
+	extractText += "\n" + "http://en.wikipedia.org/?curid=" + strconv.FormatInt(searchResultPage.PageID, 10)
+
 	return gomatrix.TextMessage{
 		MsgType: "m.notice",
-		Body:    searchResultPage.Extract,
+		Body:    extractText,
 	}, nil
 }
 
@@ -122,12 +141,18 @@ func (s *Service) text2Wikipedia(query string) (*wikipediaPage, error) {
 	// log.Info(response2String(res))
 	if err := json.NewDecoder(res.Body).Decode(&searchResults); err != nil {
 		return nil, fmt.Errorf("ERROR - %s", err.Error())
-	} else if len(searchResults.Pages) < 1 {
+	} else if len(searchResults.Query.Pages) < 1 {
 		return nil, fmt.Errorf("No articles found")
 	}
 
-	// Return only the first search result
-	return &searchResults.Pages[0], nil
+	// Return only the first search result with an extract
+	for _, page := range searchResults.Query.Pages {
+		if page.Extract != "" {
+			return &page, nil
+		}
+	}
+
+	return nil, fmt.Errorf("No articles with extracts found")
 }
 
 // response2String returns a string representation of an HTTP response body
