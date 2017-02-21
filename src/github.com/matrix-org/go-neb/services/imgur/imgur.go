@@ -190,7 +190,7 @@ func (s *Service) cmdImgSearch(client *gomatrix.Client, roomID, userID string, a
 // text2img returns info about an image or an album
 func (s *Service) text2img(query string) (*imgurGalleryImage, *imgurGalleryAlbum, error) {
 	log.Info("Searching Imgur for an image of a ", query)
-	bytes, err := queryImgur(query, s)
+	bytes, err := queryImgur(query, s.ClientID)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -224,7 +224,7 @@ func (s *Service) text2img(query string) (*imgurGalleryImage, *imgurGalleryAlbum
 }
 
 // Query imgur and return HTTP response or error
-func queryImgur(query string, s *Service) ([]byte, error) {
+func queryImgur(query, clientID string) ([]byte, error) {
 	query = url.QueryEscape(query)
 
 	var sort = "time"  // time | viral | top
@@ -243,7 +243,7 @@ func queryImgur(query string, s *Service) ([]byte, error) {
 		return nil, err
 	}
 
-	req.Header.Add("Authorization", "Client-ID "+s.ClientID)
+	req.Header.Add("Authorization", "Client-ID "+clientID)
 	res, err := httpClient.Do(req)
 	if res != nil {
 		defer res.Body.Close()
