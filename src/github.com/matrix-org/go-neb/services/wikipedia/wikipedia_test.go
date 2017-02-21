@@ -19,30 +19,26 @@ import (
 //       sure all cases are handled, rather than just the general case as is here.
 func TestCommand(t *testing.T) {
 	database.SetServiceDB(&database.NopStorage{})
-	apiKey := "secret"
-	wikipediaImageURL := "https://www.wikipediaapis.com/customsearch/v1"
+	searchText := "Czechoslovakian bananna"
+	wikipediaAPIURL := "https://en.wikipedia.org/w/api.php"
 
 	// Mock the response from Wikipedia
 	wikipediaTrans := testutils.NewRoundTripper(func(req *http.Request) (*http.Response, error) {
-		wikipediaURL := "https://www.wikipediaapis.com/customsearch/v1"
 		query := req.URL.Query()
 
 		// Check the base API URL
-		if !strings.HasPrefix(req.URL.String(), wikipediaURL) {
-			t.Fatalf("Bad URL: got %s want prefix %s", req.URL.String(), wikipediaURL)
+		if !strings.HasPrefix(req.URL.String(), wikipediaAPIURL) {
+			t.Fatalf("Bad URL: got %s want prefix %s", req.URL.String(), wikipediaAPIURL)
 		}
 		// Check the request method
 		if req.Method != "GET" {
 			t.Fatalf("Bad method: got %s want GET", req.Method)
 		}
-		// Check the API key
-		if query.Get("key") != apiKey {
-			t.Fatalf("Bad apiKey: got %s want %s", query.Get("key"), apiKey)
-		}
 		// Check the search query
-		var searchString = query.Get("q")
+		// Example query - https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exintro=&titles=RMS+Titanic
+		var searchString = query.Get("titles")
 		var searchStringLength = len(searchString)
-		if searchStringLength > 0 && !strings.HasPrefix(searchString, "image") {
+		if searchStringLength > 0 && searchString != searchText {
 			t.Fatalf("Bad search string: got \"%s\" (%d characters) ", searchString, searchStringLength)
 		}
 
@@ -76,7 +72,7 @@ func TestCommand(t *testing.T) {
 	httpClient = &http.Client{Transport: wikipediaTrans}
 
 	// Create the Wikipedia service
-	srv, err := types.CreateService("id", ServiceType, "@wikipediabot:hyrule", []byte(fmt.Sprintf(`{"api_key":"%s"}`, apiKey)))
+	srv, err := types.CreateService("id", ServiceType, "@wikipediabot:hyrule", []byte(`{}`))
 	if err != nil {
 		t.Fatal("Failed to create Wikipedia service: ", err)
 	}
@@ -85,17 +81,6 @@ func TestCommand(t *testing.T) {
 	// Mock the response from Matrix
 	matrixTrans := struct{ testutils.MockTransport }{}
 	matrixTrans.RT = func(req *http.Request) (*http.Response, error) {
-		if req.URL.String() == wikipediaImageURL { // getting the Wikipedia image
-			return &http.Response{
-				StatusCode: 200,
-				Body:       ioutil.NopCloser(bytes.NewBufferString("some image data")),
-			}, nil
-		} else if strings.Contains(req.URL.String(), "_matrix/media/r0/upload") { // uploading the image to matrix
-			return &http.Response{
-				StatusCode: 200,
-				Body:       ioutil.NopCloser(bytes.NewBufferString(`{"content_uri":"mxc://foo/bar"}`)),
-			}, nil
-		}
 		return nil, fmt.Errorf("Unknown URL: %s", req.URL.String())
 	}
 	matrixCli, _ := gomatrix.NewClient("https://hyrule", "@wikipediabot:hyrule", "its_a_secret")
@@ -106,9 +91,9 @@ func TestCommand(t *testing.T) {
 	if len(cmds) != 1 {
 		t.Fatalf("Unexpected number of commands: %d", len(cmds))
 	}
-	// cmd := cmds[0]
-	// _, err = cmd.Command("!someroom:hyrule", "@navi:hyrule", []string{"image", "Czechoslovakian bananna"})
-	// if err != nil {
-	// 	t.Fatalf("Failed to process command: %s", err.Error())
-	// }
+	cmd := cmds[0]
+	_, err = cmd.Command("!someroom:hyrule", "@navi:hyrule", []string{searchText})
+	if err != nil {
+		t.Fatalf("Failed to process command: %s", err.Error())
+	}
 }
