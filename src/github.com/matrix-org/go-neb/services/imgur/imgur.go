@@ -190,39 +190,14 @@ func (s *Service) cmdImgSearch(client *gomatrix.Client, roomID, userID string, a
 // text2img returns info about an image or an album
 func (s *Service) text2img(query string) (*imgurGalleryImage, *imgurGalleryAlbum, error) {
 	log.Info("Searching Imgur for an image of a ", query)
-
-	query = url.QueryEscape(query)
-
-	var sort = "time"  // time | viral | top
-	var window = "all" // day | week | month | year | all
-	var page = 1
-	var urlString = fmt.Sprintf("%s/%s/%s/%d?q=%s", "https://api.imgur.com/3/gallery/search", sort, window, page, query)
-	// var urlString = fmt.Sprintf("%s?q=%s", base, query)
-
-	u, err := url.Parse(urlString)
+	bytes, err := queryImgur(query, s)
 	if err != nil {
 		return nil, nil, err
-	}
-
-	req, err := http.NewRequest("GET", u.String(), nil)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	req.Header.Add("Authorization", "Client-ID "+s.ClientID)
-	res, err := httpClient.Do(req)
-	if res != nil {
-		defer res.Body.Close()
-	}
-	if err != nil {
-		return nil, nil, err
-	}
-	if res.StatusCode < 200 || res.StatusCode >= 300 {
-		return nil, nil, fmt.Errorf("Request error: %d, %s", res.StatusCode, response2String(res))
 	}
 
 	var searchResults imgurSearchResponse
-	if err := json.NewDecoder(res.Body).Decode(&searchResults); err != nil {
+	// if err := json.NewDecoder(res.Body).Decode(&searchResults); err != nil {
+	if err := json.Unmarshal(bytes, &searchResults); err != nil {
 		return nil, nil, fmt.Errorf("No images found - %s", err.Error())
 	} else if len(searchResults.Data) < 1 {
 		return nil, nil, fmt.Errorf("No images found")
@@ -246,6 +221,45 @@ func (s *Service) text2img(query string) (*imgurGalleryImage, *imgurGalleryAlbum
 	}
 
 	return nil, nil, fmt.Errorf("No images found")
+}
+
+// Query imgur and return HTTP response or error
+func queryImgur(query string, s *Service) ([]byte, error) {
+	query = url.QueryEscape(query)
+
+	var sort = "time"  // time | viral | top
+	var window = "all" // day | week | month | year | all
+	var page = 1
+	var urlString = fmt.Sprintf("%s/%s/%s/%d?q=%s", "https://api.imgur.com/3/gallery/search", sort, window, page, query)
+	// var urlString = fmt.Sprintf("%s?q=%s", base, query)
+
+	u, err := url.Parse(urlString)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Authorization", "Client-ID "+s.ClientID)
+	res, err := httpClient.Do(req)
+	if res != nil {
+		defer res.Body.Close()
+	}
+	if err != nil {
+		return nil, err
+	}
+	if res.StatusCode < 200 || res.StatusCode >= 300 {
+		return nil, fmt.Errorf("Request error: %d, %s", res.StatusCode, response2String(res))
+	}
+
+	bytes, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+	return bytes, nil
 }
 
 // response2String returns a string representation of an HTTP response body
