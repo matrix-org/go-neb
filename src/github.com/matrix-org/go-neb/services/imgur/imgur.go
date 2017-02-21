@@ -88,7 +88,7 @@ type imgurGalleryAlbum struct {
 }
 
 type imgurSearchResponse struct {
-	Data    []json.RawMessage `json:"data"`
+	Data    []json.RawMessage `json:"data"`    // Data temporarily stored as RawMessage objects, as it can contain a mix of imgurGalleryImage and imgurGalleryAlbum objects
 	Success *bool             `json:"success"` // Request completed successfully
 	Status  int               `json:"status"`  // HTTP response code
 }
