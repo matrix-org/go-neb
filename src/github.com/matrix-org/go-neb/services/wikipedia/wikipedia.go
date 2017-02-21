@@ -64,27 +64,27 @@ func usageMessage() *gomatrix.TextMessage {
 }
 
 func (s *Service) cmdWikipediaSearch(client *gomatrix.Client, roomID, userID string, args []string) (interface{}, error) {
-
+	// Check for query text
 	if len(args) < 1 {
 		return usageMessage(), nil
 	}
 
-	// Get the query text to search for.
+	// Get the query text and per,form search
 	querySentence := strings.Join(args, " ")
-
 	searchResultPage, err := s.text2Wikipedia(querySentence)
-
 	if err != nil {
 		return nil, err
 	}
 
-	if searchResultPage.Extract == "" {
+	// No article extracts
+	if searchResultPage == nil || searchResultPage.Extract == "" {
 		return gomatrix.TextMessage{
 			MsgType: "m.notice",
-			Body:    "No results found!",
+			Body:    "No results",
 		}, nil
 	}
 
+	// Convert article HTML to text
 	extractText, err := html2text.FromString(searchResultPage.Extract)
 	if err != nil {
 		return gomatrix.TextMessage{
@@ -101,6 +101,7 @@ func (s *Service) cmdWikipediaSearch(client *gomatrix.Client, roomID, userID str
 	// Add a link to the bottom of the extract
 	extractText += fmt.Sprintf("\nhttp://en.wikipedia.org/?curid=%d", searchResultPage.PageID)
 
+	// Return article extract
 	return gomatrix.TextMessage{
 		MsgType: "m.notice",
 		Body:    extractText,
@@ -127,6 +128,7 @@ func (s *Service) text2Wikipedia(query string) (*wikipediaPage, error) {
 	u.RawQuery = q.Encode()
 	// log.Info("Request URL: ", u)
 
+	// Perform wikipedia search request
 	res, err := httpClient.Get(u.String())
 	if res != nil {
 		defer res.Body.Close()
@@ -137,8 +139,9 @@ func (s *Service) text2Wikipedia(query string) (*wikipediaPage, error) {
 	if res.StatusCode < 200 || res.StatusCode >= 300 {
 		return nil, fmt.Errorf("Request error: %d, %s", res.StatusCode, response2String(res))
 	}
-	var searchResults wikipediaSearchResults
 
+	// Parse search results
+	var searchResults wikipediaSearchResults
 	// log.Info(response2String(res))
 	if err := json.NewDecoder(res.Body).Decode(&searchResults); err != nil {
 		return nil, fmt.Errorf("ERROR - %s", err.Error())
