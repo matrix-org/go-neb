@@ -47,9 +47,10 @@ func TestCommand(t *testing.T) {
 		}
 
 		img := imgurGalleryImage{
-			Title: "A Cat",
-			Link:  imgurImageURL,
-			Type:  "image/jpeg",
+			Title:   "A Cat",
+			Link:    imgurImageURL,
+			Type:    "image/jpeg",
+			IsAlbum: func() *bool { b := false; return &b }(),
 		}
 
 		imgJSON, err := json.Marshal(img)
@@ -62,7 +63,7 @@ func TestCommand(t *testing.T) {
 			Data: []json.RawMessage{
 				rawImageJSON,
 			},
-			Success: true,
+			Success: func() *bool { b := true; return &b }(),
 			Status:  200,
 		}
 
