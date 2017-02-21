@@ -76,9 +76,7 @@ func TestCommand(t *testing.T) {
 	httpClient = &http.Client{Transport: wikipediaTrans}
 
 	// Create the Wikipedia service
-	srv, err := types.CreateService("id", ServiceType, "@wikipediabot:hyrule", []byte(
-		`{"api_key":"`+apiKey+`"}`,
-	))
+	srv, err := types.CreateService("id", ServiceType, "@wikipediabot:hyrule", []byte(fmt.Sprintf(`{"api_key":"%s"}`, apiKey)))
 	if err != nil {
 		t.Fatal("Failed to create Wikipedia service: ", err)
 	}
