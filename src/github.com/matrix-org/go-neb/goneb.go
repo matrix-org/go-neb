@@ -24,6 +24,7 @@ import (
 	_ "github.com/matrix-org/go-neb/services/github"
 	_ "github.com/matrix-org/go-neb/services/google"
 	_ "github.com/matrix-org/go-neb/services/guggy"
+	_ "github.com/matrix-org/go-neb/services/imgur"
 	_ "github.com/matrix-org/go-neb/services/jira"
 	_ "github.com/matrix-org/go-neb/services/rssbot"
 	_ "github.com/matrix-org/go-neb/services/slackapi"
