@@ -230,7 +230,7 @@ func queryImgur(query string, s *Service) ([]byte, error) {
 	var sort = "time"  // time | viral | top
 	var window = "all" // day | week | month | year | all
 	var page = 1
-	var urlString = fmt.Sprintf("%s/%s/%s/%d?q=%s", "https://api.imgur.com/3/gallery/search", sort, window, page, query)
+	var urlString = fmt.Sprintf("https://api.imgur.com/3/gallery/search/%s/%s/%d?q=%s", sort, window, page, query)
 	// var urlString = fmt.Sprintf("%s?q=%s", base, query)
 
 	u, err := url.Parse(urlString)
