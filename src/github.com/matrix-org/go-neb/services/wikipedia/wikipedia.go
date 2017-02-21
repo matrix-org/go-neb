@@ -122,6 +122,7 @@ func (s *Service) text2Wikipedia(query string) (*wikipediaPage, error) {
 	q.Set("action", "query")  // Action - query for articles
 	q.Set("prop", "extracts") // Return article extracts
 	q.Set("format", "json")
+	q.Set("redirects", "")
 	// q.Set("exintro", "")
 	q.Set("titles", query) // Text to search for
 
