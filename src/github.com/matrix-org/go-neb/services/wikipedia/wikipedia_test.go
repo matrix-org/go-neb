@@ -46,16 +46,21 @@ func TestCommand(t *testing.T) {
 			t.Fatalf("Bad search string: got \"%s\" (%d characters) ", searchString, searchStringLength)
 		}
 
-		resImage := wikipediaImage{
-			Width:  64,
-			Height: 64,
+		page := wikipediaPage{
+			PageID:    1,
+			NS:        1,
+			Title:     "Test page",
+			Touched:   "2017-02-21 00:00:00",
+			LastRevID: 1,
+			Extract:   "Some extract text",
 		}
-
-		res := wikipediaSearchResult{
-			Title: "A Cat",
-			Link:  "http://cat.com/cat.jpg",
-			Mime:  "image/jpeg",
-			Image: resImage,
+		pages := map[string]wikipediaPage{
+			"1": page,
+		}
+		res := wikipediaSearchResults{
+			Query: wikipediaQuery{
+				Pages: pages,
+			},
 		}
 
 		b, err := json.Marshal(res)
@@ -100,7 +105,7 @@ func TestCommand(t *testing.T) {
 
 	// Execute the matrix !command
 	cmds := wikipedia.Commands(matrixCli)
-	if len(cmds) != 3 {
+	if len(cmds) != 1 {
 		t.Fatalf("Unexpected number of commands: %d", len(cmds))
 	}
 	// cmd := cmds[0]

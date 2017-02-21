@@ -7,7 +7,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"strconv"
 	"strings"
 
 	log "github.com/Sirupsen/logrus"
@@ -23,9 +22,11 @@ const maxExtractLength = 1024 // Max length of extract string in bytes
 var httpClient = &http.Client{}
 
 type wikipediaSearchResults struct {
-	Query struct {
-		Pages map[string]wikipediaPage `json:"pages"`
-	} `json:"query"`
+	Query wikipediaQuery `json:"query"`
+}
+
+type wikipediaQuery struct {
+	Pages map[string]wikipediaPage `json:"pages"`
 }
 
 type wikipediaPage struct {
@@ -98,7 +99,7 @@ func (s *Service) cmdWikipediaSearch(client *gomatrix.Client, roomID, userID str
 	}
 
 	// Add a link to the bottom of the extract
-	extractText += "\n" + "http://en.wikipedia.org/?curid=" + strconv.FormatInt(searchResultPage.PageID, 10)
+	extractText += fmt.Sprintf("\nhttp://en.wikipedia.org/?curid=%d", searchResultPage.PageID)
 
 	return gomatrix.TextMessage{
 		MsgType: "m.notice",
