@@ -80,9 +80,9 @@ func TestCommand(t *testing.T) {
 
 	// Create the imgur service
 	srv, err := types.CreateService("id", ServiceType, "@imgurbot:hyrule", []byte(
-		`{
-			"client_id":"`+clientID+`"
-		}`,
+		fmt.Sprintf(`{
+			"client_id":"%s"
+		}`, clientID),
 	))
 	if err != nil {
 		t.Fatal("Failed to create imgur service: ", err)
