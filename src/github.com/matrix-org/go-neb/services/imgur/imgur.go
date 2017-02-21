@@ -20,6 +20,7 @@ const ServiceType = "imgur"
 
 var httpClient = &http.Client{}
 
+// Represents an Imgur Gallery Image
 type imgurGalleryImage struct {
 	ID          string `json:"id"`          // The ID for the image
 	Title       string `json:"title"`       // The title of the image.
@@ -55,6 +56,7 @@ type imgurGalleryImage struct {
 	// score	integer	Imgur popularity score
 }
 
+// Represents an Imgur gallery album
 type imgurGalleryAlbum struct {
 	ID          string              `json:"id"`           // The ID for the album
 	Title       string              `json:"title"`        // The title of the album.
@@ -87,6 +89,7 @@ type imgurGalleryAlbum struct {
 	// topic_id	integer	Topic ID of the gallery album.
 }
 
+// Imgur gallery search response
 type imgurSearchResponse struct {
 	Data    []json.RawMessage `json:"data"`    // Data temporarily stored as RawMessage objects, as it can contain a mix of imgurGalleryImage and imgurGalleryAlbum objects
 	Success *bool             `json:"success"` // Request completed successfully
@@ -134,17 +137,16 @@ func usageMessage() *gomatrix.TextMessage {
 		`Usage: !imgur image_search_text`}
 }
 
+// Search Imgur for a relevant image and upload it to matrix
 func (s *Service) cmdImgSearch(client *gomatrix.Client, roomID, userID string, args []string) (interface{}, error) {
-
+	// Check for query text
 	if len(args) < 1 {
 		return usageMessage(), nil
 	}
 
-	// Get the query text to search for.
+	// Perform search
 	querySentence := strings.Join(args, " ")
-
 	searchResultImage, searchResultAlbum, err := s.text2img(querySentence)
-
 	if err != nil {
 		return nil, err
 	}
@@ -159,11 +161,13 @@ func (s *Service) cmdImgSearch(client *gomatrix.Client, roomID, userID string, a
 			}, nil
 		}
 
+		// Upload image
 		resUpload, err := client.UploadLink(imgURL)
 		if err != nil {
 			return nil, fmt.Errorf("Failed to upload Imgur image (%s) to matrix: %s", imgURL, err.Error())
 		}
 
+		// Return image message
 		return gomatrix.ImageMessage{
 			MsgType: "m.image",
 			Body:    querySentence,
@@ -227,11 +231,11 @@ func (s *Service) text2img(query string) (*imgurGalleryImage, *imgurGalleryAlbum
 func queryImgur(query, clientID string) ([]byte, error) {
 	query = url.QueryEscape(query)
 
+	// Build the query URL
 	var sort = "time"  // time | viral | top
 	var window = "all" // day | week | month | year | all
 	var page = 1
 	var urlString = fmt.Sprintf("https://api.imgur.com/3/gallery/search/%s/%s/%d?q=%s", sort, window, page, query)
-	// var urlString = fmt.Sprintf("%s?q=%s", base, query)
 
 	u, err := url.Parse(urlString)
 	if err != nil {
@@ -243,6 +247,7 @@ func queryImgur(query, clientID string) ([]byte, error) {
 		return nil, err
 	}
 
+	// Add authorisation header
 	req.Header.Add("Authorization", "Client-ID "+clientID)
 	res, err := httpClient.Do(req)
 	if res != nil {
@@ -255,6 +260,7 @@ func queryImgur(query, clientID string) ([]byte, error) {
 		return nil, fmt.Errorf("Request error: %d, %s", res.StatusCode, response2String(res))
 	}
 
+	// Read and return response body
 	bytes, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return nil, err
