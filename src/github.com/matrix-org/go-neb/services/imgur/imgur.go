@@ -26,7 +26,7 @@ type imgurGalleryImage struct {
 	Description string `json:"description"` // Description of the image.
 	DateTime    int64  `json:"datetime"`    // Time inserted into the gallery, epoch time
 	Type        string `json:"type"`        // Image MIME type.
-	Animated    bool   `json:"animated"`    // Is the image animated
+	Animated    *bool  `json:"animated"`    // Is the image animated
 	Width       int    `json:"width"`       // The width of the image in pixels
 	Height      int    `json:"height"`      // The height of the image in pixels
 	Size        int64  `json:"size"`        // The size of the image in bytes
@@ -35,11 +35,11 @@ type imgurGalleryImage struct {
 	Gifv        string `json:"gifv"`        // OPTIONAL, The .gifv link. Only available if the image is animated and type is 'image/gif'.
 	MP4         string `json:"mp4"`         // OPTIONAL, The direct link to the .mp4. Only available if the image is animated and type is 'image/gif'.
 	MP4Size     int64  `json:"mp4_size"`    // OPTIONAL, The Content-Length of the .mp4. Only available if the image is animated and type is 'image/gif'. Note that a zero value (0) is possible if the video has not yet been generated
-	Looping     bool   `json:"looping"`     // OPTIONAL, Whether the image has a looping animation. Only available if the image is animated and type is 'image/gif'.
-	NSFW        bool   `json:"nsfw"`        // Indicates if the image has been marked as nsfw or not. Defaults to null if information is not available.
+	Looping     *bool  `json:"looping"`     // OPTIONAL, Whether the image has a looping animation. Only available if the image is animated and type is 'image/gif'.
+	NSFW        *bool  `json:"nsfw"`        // Indicates if the image has been marked as nsfw or not. Defaults to null if information is not available.
 	Topic       string `json:"topic"`       // Topic of the gallery image.
 	Section     string `json:"section"`     // If the image has been categorized by our backend then this will contain the section the image belongs in. (funny, cats, adviceanimals, wtf, etc)
-	IsAlbum     bool   `json:"is_album"`    // If it's an album or not
+	IsAlbum     *bool  `json:"is_album"`    // If it's an album or not
 	// ** Unimplemented fields **
 	// bandwidth	integer	Bandwidth consumed by the image in bytes
 	// deletehash	string	OPTIONAL, the deletehash, if you're logged in as the image owner
@@ -62,9 +62,9 @@ type imgurGalleryAlbum struct {
 	DateTime    int64               `json:"datetime"`     // Time inserted into the gallery, epoch time
 	Views       int64               `json:"views"`        // The number of album views
 	Link        string              `json:"link"`         // The URL link to the album
-	NSFW        bool                `json:"nsfw"`         // Indicates if the album has been marked as nsfw or not. Defaults to null if information is not available.
+	NSFW        *bool               `json:"nsfw"`         // Indicates if the album has been marked as nsfw or not. Defaults to null if information is not available.
 	Topic       string              `json:"topic"`        // Topic of the gallery album.
-	IsAlbum     bool                `json:"is_album"`     // If it's an album or not
+	IsAlbum     *bool               `json:"is_album"`     // If it's an album or not
 	Cover       string              `json:"cover"`        // The ID of the album cover image
 	CoverWidth  int                 `json:"cover_width"`  // The width, in pixels, of the album cover image
 	CoverHeight int                 `json:"cover_height"` // The height, in pixels, of the album cover image
@@ -89,7 +89,7 @@ type imgurGalleryAlbum struct {
 
 type imgurSearchResponse struct {
 	Data    []json.RawMessage `json:"data"`
-	Success bool              `json:"success"` // Request completed successfully
+	Success *bool             `json:"success"` // Request completed successfully
 	Status  int               `json:"status"`  // HTTP response code
 }
 
@@ -208,7 +208,7 @@ func (s *Service) text2img(query string) (*imgurGalleryImage, *imgurGalleryAlbum
 	var images []imgurGalleryImage
 	for i := 0; i < len(searchResults.Data); i++ {
 		var image imgurGalleryImage
-		if err := json.Unmarshal(searchResults.Data[i], &image); err == nil && !image.IsAlbum {
+		if err := json.Unmarshal(searchResults.Data[i], &image); err == nil && !*(image.IsAlbum) {
 			images = append(images, image)
 		}
 	}
