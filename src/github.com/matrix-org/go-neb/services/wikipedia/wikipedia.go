@@ -23,22 +23,22 @@ var httpClient = &http.Client{}
 
 // Search results (returned by search query)
 type wikipediaSearchResults struct {
-	Query wikipediaQuery `json:"query"`
+	Query wikipediaQuery `json:"query"` // Containter for the query response
 }
 
 // Wikipeda pages returned in search results
 type wikipediaQuery struct {
-	Pages map[string]wikipediaPage `json:"pages"`
+	Pages map[string]wikipediaPage `json:"pages"` // Map of wikipedia page IDs to page objects
 }
 
 // Representation of an individual wikipedia page
 type wikipediaPage struct {
-	PageID    int64  `json:"pageid"`
-	NS        int    `json:"ns"`
-	Title     string `json:"title"`
-	Touched   string `json:"touched"`
-	LastRevID int64  `json:"lastrevid"`
-	Extract   string `json:"extract"`
+	PageID    int64  `json:"pageid"`    // Unique ID for the wikipedia page
+	NS        int    `json:"ns"`        // Namespace ID
+	Title     string `json:"title"`     // Page title text
+	Touched   string `json:"touched"`   // Date that the page was last touched / modified
+	LastRevID int64  `json:"lastrevid"` //
+	Extract   string `json:"extract"`   // Page extract text
 }
 
 // Service contains the Config fields for the Wikipedia service.
