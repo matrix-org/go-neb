@@ -130,6 +130,12 @@
 			"branch": "master"
 		},
 		{
+			"importpath": "github.com/jaytaylor/html2text",
+			"repository": "https://github.com/jaytaylor/html2text",
+			"revision": "24f9b0f63599c6bbecc3b773636b54f8d302db67",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/matrix-org/dugong",
 			"repository": "https://github.com/matrix-org/dugong",
 			"revision": "193b8f88e381d12f2d53023fba25e43fc81dc5ac",

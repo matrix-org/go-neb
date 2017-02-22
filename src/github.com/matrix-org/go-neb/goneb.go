@@ -29,6 +29,7 @@ import (
 	_ "github.com/matrix-org/go-neb/services/rssbot"
 	_ "github.com/matrix-org/go-neb/services/slackapi"
 	_ "github.com/matrix-org/go-neb/services/travisci"
+	_ "github.com/matrix-org/go-neb/services/wikipedia"
 	"github.com/matrix-org/go-neb/types"
 	"github.com/matrix-org/util"
 	_ "github.com/mattn/go-sqlite3"
