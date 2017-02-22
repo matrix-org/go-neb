@@ -21,14 +21,17 @@ const maxExtractLength = 1024 // Max length of extract string in bytes
 
 var httpClient = &http.Client{}
 
+// Search results (returned by search query)
 type wikipediaSearchResults struct {
 	Query wikipediaQuery `json:"query"`
 }
 
+// Wikipeda pages returned in search results
 type wikipediaQuery struct {
 	Pages map[string]wikipediaPage `json:"pages"`
 }
 
+// Representation of an individual wikipedia page
 type wikipediaPage struct {
 	PageID    int64  `json:"pageid"`
 	NS        int    `json:"ns"`

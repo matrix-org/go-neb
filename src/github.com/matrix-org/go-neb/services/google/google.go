@@ -123,7 +123,7 @@ func (s *Service) cmdGoogleImgSearch(client *gomatrix.Client, roomID, userID str
 	// FIXME -- Sometimes upload fails with a cryptic error - "msg=Upload request failed code=400"
 	resUpload, err := client.UploadLink(imgURL)
 	if err != nil {
-		return nil, fmt.Errorf("Failed to upload Google image to matrix: %s", err.Error())
+		return nil, fmt.Errorf("Failed to upload Google image at URL %s (content type %s) to matrix: %s", imgURL, searchResult.Mime, err.Error())
 	}
 
 	return gomatrix.ImageMessage{
