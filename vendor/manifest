@@ -150,7 +150,7 @@
 		{
 			"importpath": "github.com/matrix-org/util",
 			"repository": "https://github.com/matrix-org/util",
-			"revision": "9b44af331cdd83d702e4f16433e47341d983c23b",
+			"revision": "ccef6dc7c24a7c896d96b433a9107b7c47ecf828",
 			"branch": "master"
 		},
 		{
