@@ -271,8 +271,8 @@ func (s *Service) Expansions(cli *gomatrix.Client) []types.Expansion {
 func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *gomatrix.Client) {
 	eventProjectKey, event, httpErr := webhook.OnReceiveRequest(req)
 	if httpErr != nil {
-		log.WithError(httpErr).Print("Failed to handle JIRA webhook")
-		w.WriteHeader(500)
+		log.Print("Failed to handle JIRA webhook")
+		w.WriteHeader(httpErr.Code)
 		return
 	}
 	// grab base jira url

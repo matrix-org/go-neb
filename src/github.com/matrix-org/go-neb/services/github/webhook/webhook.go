@@ -21,14 +21,15 @@ import (
 // matrix message to send, along with parsed repo information.
 // The secretToken, if supplied, will be used to verify the request is from
 // Github. If it isn't, an error is returned.
-func OnReceiveRequest(r *http.Request, secretToken string) (string, *github.Repository, *gomatrix.HTMLMessage, *util.HTTPError) {
+func OnReceiveRequest(r *http.Request, secretToken string) (string, *github.Repository, *gomatrix.HTMLMessage, *util.JSONResponse) {
 	// Verify the HMAC signature if NEB was configured with a secret token
 	eventType := r.Header.Get("X-GitHub-Event")
 	signatureSHA1 := r.Header.Get("X-Hub-Signature")
 	content, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.WithError(err).Print("Failed to read Github webhook body")
-		return "", nil, nil, &util.HTTPError{nil, "Failed to parse body", 400}
+		resErr := util.MessageResponse(400, "Failed to parse body")
+		return "", nil, nil, &resErr
 	}
 	// Verify request if a secret token has been supplied.
 	if secretToken != "" {
@@ -38,14 +39,16 @@ func OnReceiveRequest(r *http.Request, secretToken string) (string, *github.Repo
 		if err != nil {
 			log.WithError(err).WithField("X-Hub-Signature", sigHex).Print(
 				"Failed to decode signature as hex.")
-			return "", nil, nil, &util.HTTPError{nil, "Failed to decode signature", 400}
+			resErr := util.MessageResponse(400, "Failed to decode signature")
+			return "", nil, nil, &resErr
 		}
 
 		if !checkMAC([]byte(content), sigBytes, []byte(secretToken)) {
 			log.WithFields(log.Fields{
 				"X-Hub-Signature": signatureSHA1,
 			}).Print("Received Github event which failed MAC check.")
-			return "", nil, nil, &util.HTTPError{nil, "Bad signature", 403}
+			resErr := util.MessageResponse(403, "Bad signature")
+			return "", nil, nil, &resErr
 		}
 	}
 
@@ -58,13 +61,15 @@ func OnReceiveRequest(r *http.Request, secretToken string) (string, *github.Repo
 		// Github will send a "ping" event when the webhook is first created. We need
 		// to return a 200 in order for the webhook to be marked as "up" (this doesn't
 		// affect delivery, just the tick/cross status flag).
-		return "", nil, nil, &util.HTTPError{nil, "pong", 200}
+		res := util.MessageResponse(200, "pong")
+		return "", nil, nil, &res
 	}
 
 	htmlStr, repo, refinedType, err := parseGithubEvent(eventType, content)
 	if err != nil {
 		log.WithError(err).Print("Failed to parse github event")
-		return "", nil, nil, &util.HTTPError{nil, "Failed to parse github event", 500}
+		resErr := util.MessageResponse(500, "Failed to parse github event")
+		return "", nil, nil, &resErr
 	}
 
 	msg := gomatrix.GetHTMLMessage("m.notice", htmlStr)

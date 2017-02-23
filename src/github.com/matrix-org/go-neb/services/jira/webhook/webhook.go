@@ -65,19 +65,19 @@ func RegisterHook(jrealm *jira.Realm, projects []string, userID, webhookEndpoint
 		logger.WithError(err).Print("No JIRA client exists")
 		return err // no OAuth token on this JIRA endpoint
 	}
-	wh, httpErr := getWebhook(cli, webhookEndpointURL)
-	if httpErr != nil {
-		if httpErr.Code != 403 {
-			logger.WithError(httpErr).Print("Failed to GET webhook")
-			return httpErr
+	wh, forbidden, err := getWebhook(cli, webhookEndpointURL)
+	if err != nil {
+		if !forbidden {
+			logger.WithError(err).Print("Failed to GET webhook")
+			return err
 		}
 		// User is not a JIRA admin (cannot GET webhooks)
 		// The only way this is going to end well for this request is if all the projects
 		// are PUBLIC. That is, they can be accessed directly without an access token.
-		httpErr = checkProjectsArePublic(jrealm, projects, userID)
-		if httpErr != nil {
-			logger.WithError(httpErr).Print("Failed to assert that all projects are public")
-			return httpErr
+		err = checkProjectsArePublic(jrealm, projects, userID)
+		if err != nil {
+			logger.WithError(err).Print("Failed to assert that all projects are public")
+			return err
 		}
 
 		// All projects that wish to be tracked are public, but the user cannot create
@@ -101,17 +101,19 @@ func RegisterHook(jrealm *jira.Realm, projects []string, userID, webhookEndpoint
 
 // OnReceiveRequest is called when JIRA hits NEB with an update.
 // Returns the project key and webhook event, or an error.
-func OnReceiveRequest(req *http.Request) (string, *Event, *util.HTTPError) {
+func OnReceiveRequest(req *http.Request) (string, *Event, *util.JSONResponse) {
 	// extract the JIRA webhook event JSON
 	defer req.Body.Close()
 	var whe Event
 	err := json.NewDecoder(req.Body).Decode(&whe)
 	if err != nil {
-		return "", nil, &util.HTTPError{err, "Failed to parse request JSON", 400}
+		resErr := util.MessageResponse(400, "Failed to parse request JSON")
+		return "", nil, &resErr
 	}
 
 	if err != nil {
-		return "", nil, &util.HTTPError{err, "Failed to parse JIRA URL", 400}
+		resErr := util.MessageResponse(400, "Failed to parse JIRA URL")
+		return "", nil, &resErr
 	}
 	projKey := strings.Split(whe.Issue.Key, "-")[0]
 	projKey = strings.ToUpper(projKey)
@@ -153,22 +155,18 @@ func createWebhook(jrealm *jira.Realm, webhookEndpointURL, userID string) error 
 	return err
 }
 
-func getWebhook(cli *gojira.Client, webhookEndpointURL string) (*jiraWebhook, *util.HTTPError) {
+func getWebhook(cli *gojira.Client, webhookEndpointURL string) (*jiraWebhook, bool, error) {
 	req, err := cli.NewRequest("GET", "rest/webhooks/1.0/webhook", nil)
 	if err != nil {
-		return nil, &util.HTTPError{err, "Failed to prepare webhook request", 500}
+		return nil, false, fmt.Errorf("Failed to prepare webhook request")
 	}
 	var webhookList []jiraWebhook
 	res, err := cli.Do(req, &webhookList)
 	if err != nil {
-		return nil, &util.HTTPError{err, "Failed to query webhooks", 502}
+		return nil, false, fmt.Errorf("Failed to query webhooks")
 	}
 	if res.StatusCode < 200 || res.StatusCode >= 300 {
-		return nil, &util.HTTPError{
-			err,
-			fmt.Sprintf("Querying webhook returned HTTP %d", res.StatusCode),
-			403,
-		}
+		return nil, true, fmt.Errorf("Querying webhook returned HTTP %d", res.StatusCode)
 	}
 	log.Print("Retrieved ", len(webhookList), " webhooks")
 	var nebWH *jiraWebhook
@@ -178,26 +176,26 @@ func getWebhook(cli *gojira.Client, webhookEndpointURL string) (*jiraWebhook, *u
 			break
 		}
 	}
-	return nebWH, nil
+	return nebWH, false, nil
 }
 
-func checkProjectsArePublic(jrealm *jira.Realm, projects []string, userID string) *util.HTTPError {
+func checkProjectsArePublic(jrealm *jira.Realm, projects []string, userID string) error {
 	publicCli, err := jrealm.JIRAClient("", true)
 	if err != nil {
-		return &util.HTTPError{err, "Cannot create public JIRA client", 500}
+		return fmt.Errorf("Cannot create public JIRA client")
 	}
 	for _, projectKey := range projects {
 		// check you can query this project with a public client
 		req, err := publicCli.NewRequest("GET", "rest/api/2/project/"+projectKey, nil)
 		if err != nil {
-			return &util.HTTPError{err, "Failed to create project URL", 500}
+			return fmt.Errorf("Failed to create project URL for project %s", projectKey)
 		}
 		res, err := publicCli.Do(req, nil)
 		if err != nil {
-			return &util.HTTPError{err, fmt.Sprintf("Failed to query project %s", projectKey), 500}
+			return fmt.Errorf("Failed to query project %s", projectKey)
 		}
 		if res.StatusCode < 200 || res.StatusCode >= 300 {
-			return &util.HTTPError{err, fmt.Sprintf("Project %s is not public. (HTTP %d)", projectKey, res.StatusCode), 403}
+			return fmt.Errorf("Project %s is not public. (HTTP %d)", projectKey, res.StatusCode)
 		}
 	}
 	return nil

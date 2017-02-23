@@ -39,27 +39,31 @@ type ConfigureClient struct {
 //         // The new api.ClientConfig
 //       }
 //  }
-func (s *ConfigureClient) OnIncomingRequest(req *http.Request) (interface{}, *util.HTTPError) {
+func (s *ConfigureClient) OnIncomingRequest(req *http.Request) util.JSONResponse {
 	if req.Method != "POST" {
-		return nil, &util.HTTPError{nil, "Unsupported Method", 405}
+		return util.MessageResponse(405, "Unsupported Method")
 	}
 
 	var body api.ClientConfig
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
-		return nil, &util.HTTPError{err, "Error parsing request JSON", 400}
+		return util.MessageResponse(400, "Error parsing request JSON")
 	}
 
 	if err := body.Check(); err != nil {
-		return nil, &util.HTTPError{err, "Error parsing client config", 400}
+		return util.MessageResponse(400, "Error parsing client config")
 	}
 
 	oldClient, err := s.Clients.Update(body)
 	if err != nil {
-		return nil, &util.HTTPError{err, "Error storing token", 500}
+		util.GetLogger(req.Context()).WithError(err).WithField("body", body).Error("Failed to Clients.Update")
+		return util.MessageResponse(500, "Error storing token")
 	}
 
-	return &struct {
-		OldClient api.ClientConfig
-		NewClient api.ClientConfig
-	}{oldClient, body}, nil
+	return util.JSONResponse{
+		Code: 200,
+		JSON: struct {
+			OldClient api.ClientConfig
+			NewClient api.ClientConfig
+		}{oldClient, body},
+	}
 }
