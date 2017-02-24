@@ -85,7 +85,7 @@ func (s *Service) Commands(client *gomatrix.Client) []types.Command {
 		types.Command{
 			Path: []string{"google"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
-				return usageMessage(), nil
+				return s.cmdGoogleWebSearch(client, roomID, userID, args), nil
 			},
 		},
 	}
@@ -97,6 +97,35 @@ func usageMessage() *gomatrix.TextMessage {
 		`Usage: !google image image_search_text`}
 }
 
+// Search google for web results
+func (s *Service) cmdGoogleWebSearch(client *gomatrix.Client, roomID, userID string, args []string) (interface{}, error) {
+
+	if len(args) < 1 {
+		return usageMessage(), nil
+	}
+
+	// Get the query text to search for.
+	querySentence := strings.Join(args, " ")
+
+	searchResult, err := s.textSearchGoogle(querySentence)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return gomatrix.HTMLMessage{
+		MsgType: "m.notice",
+		Body:    querySentence,
+		URL:     resUpload.ContentURI,
+		Info: gomatrix.ImageInfo{
+			Height:   uint(math.Floor(searchResult.Image.Height)),
+			Width:    uint(math.Floor(searchResult.Image.Width)),
+			Mimetype: searchResult.Mime,
+		},
+	}, nil
+}
+
+// Search google for a specified image
 func (s *Service) cmdGoogleImgSearch(client *gomatrix.Client, roomID, userID string, args []string) (interface{}, error) {
 
 	if len(args) < 1 {
