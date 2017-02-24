@@ -155,6 +155,9 @@ func createWebhook(jrealm *jira.Realm, webhookEndpointURL, userID string) error 
 	return err
 }
 
+// Get an existing JIRA webhook. Returns the hook if it exists, or an error along with a bool
+// which indicates if the request to retrieve the hook is not 2xx. If it is not 2xx, it is
+// forbidden (different JIRA deployments return different codes ranging from 401/403/404/500).
 func getWebhook(cli *gojira.Client, webhookEndpointURL string) (*jiraWebhook, bool, error) {
 	req, err := cli.NewRequest("GET", "rest/webhooks/1.0/webhook", nil)
 	if err != nil {
