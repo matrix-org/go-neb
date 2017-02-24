@@ -40,36 +40,43 @@ type RequestAuthSession struct {
 //  {
 //      // AuthRealm-specific information
 //  }
-func (h *RequestAuthSession) OnIncomingRequest(req *http.Request) (interface{}, *util.HTTPError) {
+func (h *RequestAuthSession) OnIncomingRequest(req *http.Request) util.JSONResponse {
+	logger := util.GetLogger(req.Context())
 	if req.Method != "POST" {
-		return nil, &util.HTTPError{nil, "Unsupported Method", 405}
+		return util.MessageResponse(405, "Unsupported Method")
 	}
 	var body api.RequestAuthSessionRequest
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
-		return nil, &util.HTTPError{err, "Error parsing request JSON", 400}
+		return util.MessageResponse(400, "Error parsing request JSON")
 	}
-	log.WithFields(log.Fields{
+	logger.WithFields(log.Fields{
 		"realm_id": body.RealmID,
 		"user_id":  body.UserID,
 	}).Print("Incoming auth session request")
 
 	if err := body.Check(); err != nil {
-		return nil, &util.HTTPError{err, err.Error(), 400}
+		logger.WithError(err).Info("Failed Check")
+		return util.MessageResponse(400, err.Error())
 	}
 
 	realm, err := h.Db.LoadAuthRealm(body.RealmID)
 	if err != nil {
-		return nil, &util.HTTPError{err, "Unknown RealmID", 400}
+		logger.WithError(err).Info("Failed to LoadAuthRealm")
+		return util.MessageResponse(400, "Unknown RealmID")
 	}
 
 	response := realm.RequestAuthSession(body.UserID, body.Config)
 	if response == nil {
-		return nil, &util.HTTPError{nil, "Failed to request auth session", 500}
+		logger.WithField("body", body).Error("Failed to RequestAuthSession")
+		return util.MessageResponse(500, "Failed to request auth session")
 	}
 
 	metrics.IncrementAuthSession(realm.Type())
 
-	return response, nil
+	return util.JSONResponse{
+		Code: 200,
+		JSON: response,
+	}
 }
 
 // RemoveAuthSession represents an HTTP handler capable of processing /admin/removeAuthSession requests.
@@ -90,36 +97,41 @@ type RemoveAuthSession struct {
 // Response:
 //  HTTP/1.1 200 OK
 //  {}
-func (h *RemoveAuthSession) OnIncomingRequest(req *http.Request) (interface{}, *util.HTTPError) {
+func (h *RemoveAuthSession) OnIncomingRequest(req *http.Request) util.JSONResponse {
+	logger := util.GetLogger(req.Context())
 	if req.Method != "POST" {
-		return nil, &util.HTTPError{nil, "Unsupported Method", 405}
+		return util.MessageResponse(405, "Unsupported Method")
 	}
 	var body struct {
 		RealmID string
 		UserID  string
 	}
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
-		return nil, &util.HTTPError{err, "Error parsing request JSON", 400}
+		return util.MessageResponse(400, "Error parsing request JSON")
 	}
-	log.WithFields(log.Fields{
+	logger.WithFields(log.Fields{
 		"realm_id": body.RealmID,
 		"user_id":  body.UserID,
 	}).Print("Incoming remove auth session request")
 
 	if body.UserID == "" || body.RealmID == "" {
-		return nil, &util.HTTPError{nil, `Must supply a "UserID", a "RealmID"`, 400}
+		return util.MessageResponse(400, `Must supply a "UserID", a "RealmID"`)
 	}
 
 	_, err := h.Db.LoadAuthRealm(body.RealmID)
 	if err != nil {
-		return nil, &util.HTTPError{err, "Unknown RealmID", 400}
+		return util.MessageResponse(400, "Unknown RealmID")
 	}
 
 	if err := h.Db.RemoveAuthSession(body.RealmID, body.UserID); err != nil {
-		return nil, &util.HTTPError{err, "Failed to remove auth session", 500}
+		logger.WithError(err).Error("Failed to RemoveAuthSession")
+		return util.MessageResponse(500, "Failed to remove auth session")
 	}
 
-	return []byte(`{}`), nil
+	return util.JSONResponse{
+		Code: 200,
+		JSON: struct{}{},
+	}
 }
 
 // RealmRedirect represents an HTTP handler which can process incoming redirects for auth realms.
@@ -186,39 +198,44 @@ type ConfigureAuthRealm struct {
 //          // New auth realm config information
 //      },
 //  }
-func (h *ConfigureAuthRealm) OnIncomingRequest(req *http.Request) (interface{}, *util.HTTPError) {
+func (h *ConfigureAuthRealm) OnIncomingRequest(req *http.Request) util.JSONResponse {
+	logger := util.GetLogger(req.Context())
 	if req.Method != "POST" {
-		return nil, &util.HTTPError{nil, "Unsupported Method", 405}
+		return util.MessageResponse(405, "Unsupported Method")
 	}
 	var body api.ConfigureAuthRealmRequest
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
-		return nil, &util.HTTPError{err, "Error parsing request JSON", 400}
+		return util.MessageResponse(400, "Error parsing request JSON")
 	}
 
 	if err := body.Check(); err != nil {
-		return nil, &util.HTTPError{err, err.Error(), 400}
+		return util.MessageResponse(400, err.Error())
 	}
 
 	realm, err := types.CreateAuthRealm(body.ID, body.Type, body.Config)
 	if err != nil {
-		return nil, &util.HTTPError{err, "Error parsing config JSON", 400}
+		return util.MessageResponse(400, "Error parsing config JSON")
 	}
 
 	if err = realm.Register(); err != nil {
-		return nil, &util.HTTPError{err, "Error registering auth realm", 400}
+		return util.MessageResponse(400, "Error registering auth realm")
 	}
 
 	oldRealm, err := h.Db.StoreAuthRealm(realm)
 	if err != nil {
-		return nil, &util.HTTPError{err, "Error storing realm", 500}
+		logger.WithError(err).Error("Failed to StoreAuthRealm")
+		return util.MessageResponse(500, "Error storing realm")
 	}
 
-	return &struct {
-		ID        string
-		Type      string
-		OldConfig types.AuthRealm
-		NewConfig types.AuthRealm
-	}{body.ID, body.Type, oldRealm, realm}, nil
+	return util.JSONResponse{
+		Code: 200,
+		JSON: struct {
+			ID        string
+			Type      string
+			OldConfig types.AuthRealm
+			NewConfig types.AuthRealm
+		}{body.ID, body.Type, oldRealm, realm},
+	}
 }
 
 // GetSession represents an HTTP handler capable of processing /admin/getSession requests.
@@ -252,35 +269,43 @@ type GetSession struct {
 //  {
 //      "Authenticated": false
 //  }
-func (h *GetSession) OnIncomingRequest(req *http.Request) (interface{}, *util.HTTPError) {
+func (h *GetSession) OnIncomingRequest(req *http.Request) util.JSONResponse {
+	logger := util.GetLogger(req.Context())
 	if req.Method != "POST" {
-		return nil, &util.HTTPError{nil, "Unsupported Method", 405}
+		return util.MessageResponse(405, "Unsupported Method")
 	}
 	var body struct {
 		RealmID string
 		UserID  string
 	}
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
-		return nil, &util.HTTPError{err, "Error parsing request JSON", 400}
+		return util.MessageResponse(400, "Error parsing request JSON")
 	}
 
 	if body.RealmID == "" || body.UserID == "" {
-		return nil, &util.HTTPError{nil, `Must supply a "RealmID" and "UserID"`, 400}
+		return util.MessageResponse(400, `Must supply a "RealmID" and "UserID"`)
 	}
 
 	session, err := h.Db.LoadAuthSessionByUser(body.RealmID, body.UserID)
 	if err != nil && err != sql.ErrNoRows {
-		return nil, &util.HTTPError{err, `Failed to load session`, 500}
+		logger.WithError(err).WithField("body", body).Error("Failed to LoadAuthSessionByUser")
+		return util.MessageResponse(500, `Failed to load session`)
 	}
 	if err == sql.ErrNoRows {
-		return &struct {
-			Authenticated bool
-		}{false}, nil
+		return util.JSONResponse{
+			Code: 200,
+			JSON: struct {
+				Authenticated bool
+			}{false},
+		}
 	}
 
-	return &struct {
-		ID            string
-		Authenticated bool
-		Info          interface{}
-	}{session.ID(), session.Authenticated(), session.Info()}, nil
+	return util.JSONResponse{
+		Code: 200,
+		JSON: struct {
+			ID            string
+			Authenticated bool
+			Info          interface{}
+		}{session.ID(), session.Authenticated(), session.Info()},
+	}
 }
