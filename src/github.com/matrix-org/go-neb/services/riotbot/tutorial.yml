@@ -1,0 +1,7 @@
+resources_base_url: "https://www.matrix.org/riotbot"
+tutorial:
+    steps:
+        -
+            text: "Hi there and welcome to Riot!"
+            image: "/images/bot.png"
+            delay: 3000
