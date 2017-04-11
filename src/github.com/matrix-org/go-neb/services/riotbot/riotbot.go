@@ -65,14 +65,17 @@ func (t Tutorial) nextStep(cli *gomatrix.Client) {
 	t.currentStep++
 	// Check that there is a valid mtutorial step to process
 	if t.currentStep < len(tutorialFlow.Tutorial.Steps) {
+		base := tutorialFlow.ResourcesBaseURL
 		step := tutorialFlow.Tutorial.Steps[t.currentStep]
 		// Check message type
 		if step.Image != "" {
 			msg := gomatrix.ImageMessage{
 				MsgType: "m.image",
-				Body:    "Hi I'm Riotbot",
-				URL:     step.Image,
+				Body:    "Hi I am Riotbot",
+				URL:     base + step.Image,
 			}
+
+			log.Printf("Sending message %v", msg)
 			if _, e := cli.SendMessageEvent(t.roomID, "m.room.message", msg); e != nil {
 				log.Print("Failed to send image message")
 			}
