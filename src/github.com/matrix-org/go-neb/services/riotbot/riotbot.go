@@ -14,42 +14,13 @@ import (
 	"github.com/matrix-org/gomatrix"
 )
 
-// ServiceType of the Riotbot service
-const ServiceType = "riotbot"
-
-// "Tutorial flow structure
-var tutorialConfig *TutorialConfig
-
-// Tutorial instances
-var tutorials []Tutorial
-
-// Tutorial represents the current totorial instances
-type Tutorial struct {
-	roomID      string
-	userID      string
-	currentStep int16
-	timer       *time.Timer
-}
-
-func (t Tutorial) nextStep(cli *gomatrix.Client) {
-	msg := gomatrix.TextMessage{
-		Body:    "Next tutorial step",
-		MsgType: "m.notice",
-	}
-	if _, e := cli.SendMessageEvent(t.roomID, "m.room.message", msg); e != nil {
-		log.Print("Failed to send message")
-	}
-	return
-	// return &gomatrix.TextMessage{MsgType: "m.notice", Body: response}, nil
-}
-
 // Service represents the Riotbot service. It has no Config fields.
 type Service struct {
 	types.DefaultService
 }
 
-// TutorialConfig represents the tutorial flow / steps
-type TutorialConfig struct {
+// TutorialFlow represents the tutorial flow / steps
+type TutorialFlow struct {
 	ResourcesBaseURL string `yaml:"resources_base_url"`
 	Tutorial         struct {
 		Steps []struct {
@@ -60,6 +31,65 @@ type TutorialConfig struct {
 			Delay time.Duration `yaml:"delay"`
 		} `yaml:"steps"`
 	} `yaml:"tutorial"`
+}
+
+// ServiceType of the Riotbot service
+const ServiceType = "riotbot"
+
+// "Tutorial flow structure
+var tutorialFlow *TutorialFlow
+
+// Tutorial instances
+var tutorials []Tutorial
+
+// Tutorial represents the current totorial instances
+type Tutorial struct {
+	roomID      string
+	userID      string
+	currentStep int
+	timer       *time.Timer
+}
+
+// NewTutorial creates a new Tutorial instance
+func NewTutorial(roomID string, userID string, timer *time.Timer) Tutorial {
+	t := Tutorial{
+		roomID:      roomID,
+		userID:      userID,
+		currentStep: -1,
+		timer:       timer,
+	}
+	return t
+}
+
+func (t Tutorial) nextStep(cli *gomatrix.Client) {
+	t.currentStep++
+	// Check that there is a valid mtutorial step to process
+	if t.currentStep < len(tutorialFlow.Tutorial.Steps) {
+		step := tutorialFlow.Tutorial.Steps[t.currentStep]
+		// Check message type
+		if step.Image != "" {
+			msg := gomatrix.ImageMessage{
+				MsgType: "m.image",
+				Body:    "Hi I'm Riotbot",
+				URL:     step.Image,
+			}
+			if _, e := cli.SendMessageEvent(t.roomID, "m.room.message", msg); e != nil {
+				log.Print("Failed to send image message")
+			}
+		} else {
+			msg := gomatrix.TextMessage{
+				MsgType: "m.notice",
+				Body:    "Next tutorial step",
+			}
+			if _, e := cli.SendMessageEvent(t.roomID, "m.room.message", msg); e != nil {
+				log.Print("Failed to send message")
+			}
+		}
+
+		// TODO -- If last step, clean up tutorial instance
+	} else {
+		// End of tutorial -- TODO remove tutorial instance
+	}
 }
 
 // Commands supported:
@@ -78,9 +108,9 @@ func (e *Service) Commands(cli *gomatrix.Client) []types.Command {
 }
 
 func initTutorialFlow(cli *gomatrix.Client, roomID string, userID string) string {
-	delay := tutorialConfig.Tutorial.Steps[0].Delay
+	delay := tutorialFlow.Tutorial.Steps[0].Delay
 	timer := time.NewTimer(time.Millisecond * delay)
-	tutorial := Tutorial{roomID: roomID, userID: userID, currentStep: 0, timer: timer}
+	tutorial := NewTutorial(roomID, userID, timer)
 	tutorials = append(tutorials, tutorial)
 	go func(tutorial Tutorial) {
 		<-timer.C
@@ -106,13 +136,12 @@ func init() {
 		}
 	})
 
-	var tutorialConfigFileName = getScriptPath() + "/tutorial.yml"
-	tutorialConfigYaml, err := ioutil.ReadFile(tutorialConfigFileName)
+	var tutorialFlowFileName = getScriptPath() + "/tutorial.yml"
+	tutorialFlowYaml, err := ioutil.ReadFile(tutorialFlowFileName)
 	if err != nil {
-		log.Fatalf("Failed to read tutorial yaml config file (%s): %v ", tutorialConfigFileName, err)
+		log.Fatalf("Failed to read tutorial yaml config file (%s): %v ", tutorialFlowFileName, err)
 	}
-	log.Printf("Config %s", tutorialConfigYaml)
-	if err = yaml.Unmarshal(tutorialConfigYaml, &tutorialConfig); err != nil {
+	if err = yaml.Unmarshal(tutorialFlowYaml, &tutorialFlow); err != nil {
 		log.Fatalf("Failed to unmarshal tutorial config yaml: %v", err)
 	}
 }
