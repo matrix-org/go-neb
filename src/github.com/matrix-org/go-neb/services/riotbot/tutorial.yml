@@ -1,5 +1,6 @@
 resources_base_url: "mxc://matrix.org"
-bot_name: Riotbot
+templates:
+    BotName: Riotbot
 initial_delay: 3000
 tutorial:
     steps:
@@ -11,8 +12,12 @@ tutorial:
         -
             type: text
             body: "Hi there and welcome to Riot!"
-            delay: 3000
+            delay: 1000
         -
             type: text
-            body: "My name is {bot_name} and I am here to help you to get started using Riot!"
-            delay: 3000
+            body: "My name is {{.BotName}} and I am here to help you to get started using Riot!"
+            delay: 1000
+        -
+            type: text
+            body: "Before we get started... What is your name?"
+            delay: 1000

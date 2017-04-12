@@ -2,10 +2,12 @@
 package riotbot
 
 import (
+	"bytes"
 	"io/ioutil"
 	"log"
 	"path/filepath"
 	"runtime"
+	"text/template"
 	"time"
 
 	yaml "gopkg.in/yaml.v2"
@@ -21,17 +23,19 @@ type Service struct {
 
 // TutorialFlow represents the tutorial flow / steps
 type TutorialFlow struct {
-	ResourcesBaseURL string        `yaml:"resources_base_url"`
-	BotName          string        `yaml:"bot_name"`
-	InitialDelay     time.Duration `yaml:"initial_delay"`
+	ResourcesBaseURL string            `yaml:"resources_base_url"`
+	Templates        map[string]string `yaml:"templates"`
+	InitialDelay     time.Duration     `yaml:"initial_delay"`
 	Tutorial         struct {
-		Steps []struct {
-			Type  string        `yaml:"type"`
-			Body  string        `yaml:"text"`
-			Src   string        `yaml:"src"`
-			Delay time.Duration `yaml:"delay"`
-		} `yaml:"steps"`
+		Steps []TutorialStep `yaml:"steps"`
 	} `yaml:"tutorial"`
+}
+
+type TutorialStep struct {
+	Type  string        `yaml:"type"`
+	Body  string        `yaml:"body"`
+	Src   string        `yaml:"src"`
+	Delay time.Duration `yaml:"delay"`
 }
 
 // ServiceType of the Riotbot service
@@ -50,16 +54,18 @@ type Tutorial struct {
 	currentStep int
 	timer       *time.Timer
 	cli         *gomatrix.Client
+	templates   map[string]string
 }
 
 // NewTutorial creates a new Tutorial instance
-func NewTutorial(roomID string, userID string, cli *gomatrix.Client) Tutorial {
+func NewTutorial(roomID string, userID string, cli *gomatrix.Client, templates map[string]string) Tutorial {
 	t := Tutorial{
 		roomID:      roomID,
 		userID:      userID,
 		currentStep: -1,
 		timer:       nil,
 		cli:         cli,
+		templates:   templates,
 	}
 	return t
 }
@@ -77,6 +83,7 @@ func (t *Tutorial) queueNextStep(delay time.Duration) {
 		t.timer.Stop()
 	}
 
+	log.Printf("Queueing next step of tutorial for user %s (current step %d) to run in %dms", t.userID, t.currentStep, delay)
 	if delay > 0 {
 		t.timer = time.NewTimer(time.Millisecond * delay)
 		<-t.timer.C
@@ -88,6 +95,7 @@ func (t *Tutorial) queueNextStep(delay time.Duration) {
 
 func (t Tutorial) nextStep() {
 	t.currentStep++
+	log.Printf("Performing next step (%d) of tutorial for %s", t.currentStep, t.userID)
 	// Check that there is a valid mtutorial step to process
 	if t.currentStep < len(tutorialFlow.Tutorial.Steps) {
 		base := tutorialFlow.ResourcesBaseURL
@@ -95,43 +103,67 @@ func (t Tutorial) nextStep() {
 		// Check message type
 		switch step.Type {
 		case "image":
+			body := t.renderBody(step)
 			msg := gomatrix.ImageMessage{
 				MsgType: "m.image",
-				Body:    step.Body,
+				Body:    body,
 				URL:     base + step.Src,
 			}
 
 			if _, e := t.cli.SendMessageEvent(t.roomID, "m.room.message", msg); e != nil {
 				log.Print("Failed to send Image message")
+			} else {
+				log.Printf("Seinding Image message - %s", body)
 			}
 		case "notice":
+			body := t.renderBody(step)
 			msg := gomatrix.TextMessage{
 				MsgType: "m.notice",
-				Body:    step.Body,
+				Body:    body,
 			}
 			if _, e := t.cli.SendMessageEvent(t.roomID, "m.room.message", msg); e != nil {
-				log.Printf("Failed to send Notice message - %s", step.Body)
+				log.Printf("Failed to send Notice message - %s", body)
+			} else {
+				log.Printf("Seinding Notice message - %s", body)
 			}
 		default: // text
+			body := t.renderBody(step)
 			msg := gomatrix.TextMessage{
 				MsgType: "m.text",
-				Body:    step.Body,
+				Body:    body,
 			}
 			if _, e := t.cli.SendMessageEvent(t.roomID, "m.room.message", msg); e != nil {
-				log.Printf("Failed to send Text message - %s", step.Body)
+				log.Printf("Failed to send Text message - %s", body)
+			} else {
+				log.Printf("Seinding Text message - %s", body)
 			}
 		}
 
 		// TODO -- If last step, clean up tutorial instance
 
 		// Set up timer for next step
-		if step.Delay > 0 {
-			t.timer = time.NewTimer(time.Millisecond * tutorialFlow.InitialDelay)
-		}
+		t.queueNextStep(step.Delay)
 	} else {
 		log.Println("Tutorial instance ended")
 		// End of tutorial -- TODO remove tutorial instance
 	}
+}
+
+func (t Tutorial) renderBody(ts TutorialStep) string {
+	if ts.Body != "" {
+		tmpl, err := template.New("message").Parse(ts.Body)
+		if err != nil {
+			log.Print("Failed to create message template")
+		}
+		var msg bytes.Buffer
+		if err = tmpl.Execute(&msg, t.templates); err != nil {
+			log.Print("Failed to execute template substitution")
+			return ""
+		}
+		return msg.String()
+	}
+
+	return ""
 }
 
 // Commands supported:
@@ -162,7 +194,7 @@ func initTutorialFlow(cli *gomatrix.Client, roomID string, userID string) string
 	log.Print("Existing tutorial instance not found for this user")
 
 	// Start a new instance of the riot tutorial
-	tutorial := NewTutorial(roomID, userID, cli)
+	tutorial := NewTutorial(roomID, userID, cli, tutorialFlow.Templates)
 	tutorials = append(tutorials, tutorial)
 	go tutorial.queueNextStep(tutorialFlow.InitialDelay)
 	log.Printf("Starting Riot tutorial: %v", tutorial)
