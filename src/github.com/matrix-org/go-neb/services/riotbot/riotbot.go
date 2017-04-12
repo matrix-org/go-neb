@@ -21,13 +21,14 @@ type Service struct {
 
 // TutorialFlow represents the tutorial flow / steps
 type TutorialFlow struct {
-	ResourcesBaseURL string `yaml:"resources_base_url"`
+	ResourcesBaseURL string        `yaml:"resources_base_url"`
+	BotName          string        `yaml:"bot_name"`
+	InitialDelay     time.Duration `yaml:"initial_delay"`
 	Tutorial         struct {
 		Steps []struct {
-			Text  string        `yaml:"text"`
-			Image string        `yaml:"image"`
-			Sound string        `yaml:"sound"`
-			Video string        `yaml:"video"`
+			Type  string        `yaml:"type"`
+			Body  string        `yaml:"text"`
+			Src   string        `yaml:"src"`
 			Delay time.Duration `yaml:"delay"`
 		} `yaml:"steps"`
 	} `yaml:"tutorial"`
@@ -48,60 +49,98 @@ type Tutorial struct {
 	userID      string
 	currentStep int
 	timer       *time.Timer
+	cli         *gomatrix.Client
 }
 
 // NewTutorial creates a new Tutorial instance
-func NewTutorial(roomID string, userID string, timer *time.Timer) Tutorial {
+func NewTutorial(roomID string, userID string, cli *gomatrix.Client) Tutorial {
 	t := Tutorial{
 		roomID:      roomID,
 		userID:      userID,
 		currentStep: -1,
-		timer:       timer,
+		timer:       nil,
+		cli:         cli,
 	}
 	return t
 }
 
-func (t Tutorial) nextStep(cli *gomatrix.Client) {
+func (t *Tutorial) restart() {
+	if t.timer != nil {
+		t.timer.Stop()
+	}
+	t.currentStep = -1
+	t.queueNextStep(tutorialFlow.InitialDelay)
+}
+
+func (t *Tutorial) queueNextStep(delay time.Duration) {
+	if t.timer != nil {
+		t.timer.Stop()
+	}
+
+	if delay > 0 {
+		t.timer = time.NewTimer(time.Millisecond * delay)
+		<-t.timer.C
+		t.nextStep()
+	} else {
+		t.nextStep()
+	}
+}
+
+func (t Tutorial) nextStep() {
 	t.currentStep++
 	// Check that there is a valid mtutorial step to process
 	if t.currentStep < len(tutorialFlow.Tutorial.Steps) {
 		base := tutorialFlow.ResourcesBaseURL
 		step := tutorialFlow.Tutorial.Steps[t.currentStep]
 		// Check message type
-		if step.Image != "" {
+		switch step.Type {
+		case "image":
 			msg := gomatrix.ImageMessage{
 				MsgType: "m.image",
-				Body:    "Hi I am Riotbot",
-				URL:     base + step.Image,
+				Body:    step.Body,
+				URL:     base + step.Src,
 			}
 
-			log.Printf("Sending message %v", msg)
-			if _, e := cli.SendMessageEvent(t.roomID, "m.room.message", msg); e != nil {
-				log.Print("Failed to send image message")
+			if _, e := t.cli.SendMessageEvent(t.roomID, "m.room.message", msg); e != nil {
+				log.Print("Failed to send Image message")
 			}
-		} else {
+		case "notice":
 			msg := gomatrix.TextMessage{
 				MsgType: "m.notice",
-				Body:    "Next tutorial step",
+				Body:    step.Body,
 			}
-			if _, e := cli.SendMessageEvent(t.roomID, "m.room.message", msg); e != nil {
-				log.Print("Failed to send message")
+			if _, e := t.cli.SendMessageEvent(t.roomID, "m.room.message", msg); e != nil {
+				log.Printf("Failed to send Notice message - %s", step.Body)
+			}
+		default: // text
+			msg := gomatrix.TextMessage{
+				MsgType: "m.text",
+				Body:    step.Body,
+			}
+			if _, e := t.cli.SendMessageEvent(t.roomID, "m.room.message", msg); e != nil {
+				log.Printf("Failed to send Text message - %s", step.Body)
 			}
 		}
 
 		// TODO -- If last step, clean up tutorial instance
+
+		// Set up timer for next step
+		if step.Delay > 0 {
+			t.timer = time.NewTimer(time.Millisecond * tutorialFlow.InitialDelay)
+		}
 	} else {
+		log.Println("Tutorial instance ended")
 		// End of tutorial -- TODO remove tutorial instance
 	}
 }
 
 // Commands supported:
-//    !help some request
-// Responds with some user help.
+//    !start
+// Starts the tutorial.
 func (e *Service) Commands(cli *gomatrix.Client) []types.Command {
 	return []types.Command{
 		types.Command{
-			Path: []string{"help"},
+			Path: []string{"start"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				response := initTutorialFlow(cli, roomID, userID)
 				return &gomatrix.TextMessage{MsgType: "m.notice", Body: response}, nil
@@ -111,16 +150,23 @@ func (e *Service) Commands(cli *gomatrix.Client) []types.Command {
 }
 
 func initTutorialFlow(cli *gomatrix.Client, roomID string, userID string) string {
-	delay := tutorialFlow.Tutorial.Steps[0].Delay
-	timer := time.NewTimer(time.Millisecond * delay)
-	tutorial := NewTutorial(roomID, userID, timer)
+	// Check if there is an existing tutorial for this user and restart it, if found
+	for t := range tutorials {
+		tutorial := tutorials[t]
+		if tutorial.userID == userID {
+			tutorial.restart()
+			log.Printf("Restarting Riot tutorial %d", t)
+			return "Restarting Riot tutorial"
+		}
+	}
+	log.Print("Existing tutorial instance not found for this user")
+
+	// Start a new instance of the riot tutorial
+	tutorial := NewTutorial(roomID, userID, cli)
 	tutorials = append(tutorials, tutorial)
-	go func(tutorial Tutorial) {
-		<-timer.C
-		tutorial.nextStep(cli)
-	}(tutorial)
-	log.Printf("Starting tutorial: %v", tutorial)
-	return "Starting tutorial"
+	go tutorial.queueNextStep(tutorialFlow.InitialDelay)
+	log.Printf("Starting Riot tutorial: %v", tutorial)
+	return "Starting Riot tutorial"
 }
 
 func getScriptPath() string {
