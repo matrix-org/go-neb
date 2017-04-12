@@ -1,7 +1,18 @@
-resources_base_url: "https://www.matrix.org/riotbot"
+resources_base_url: "mxc://matrix.org"
+bot_name: Riotbot
+initial_delay: 3000
 tutorial:
     steps:
         -
-            text: "Hi there and welcome to Riot!"
-            image: "/images/bot.png"
+            type: image
+            body: "Hi there and welcome to Riot!"
+            src: "/ryclgCVyFfPXdxuJYUOVPplP"
+            delay: 0
+        -
+            type: text
+            body: "Hi there and welcome to Riot!"
+            delay: 3000
+        -
+            type: text
+            body: "My name is {bot_name} and I am here to help you to get started using Riot!"
             delay: 3000
