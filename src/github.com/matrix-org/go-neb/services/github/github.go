@@ -67,7 +67,7 @@ func (s *Service) cmdGithubCreate(roomID, userID string, args []string) (interfa
 			return nil, fmt.Errorf("Failed to cast realm %s into a GithubRealm", s.RealmID)
 		}
 		return matrix.StarterLinkMessage{
-			Body: "You need to OAuth with Github before you can create issues.",
+			Body: "You need to log into Github before you can create issues.",
 			Link: ghRealm.StarterLink,
 		}, nil
 	}
