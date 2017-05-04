@@ -281,13 +281,13 @@ func (s *Service) queryFeed(feedURL string) (*gofeed.Feed, []gofeed.Item, error)
 	// Some RSS feeds can return a very small number of items then bounce
 	// back to their "normal" size, so we cannot just clobber the recent GUID list per request or else we'll
 	// forget what we sent and resend it. Instead, we'll keep 2x the max number of items that we've ever
-	// seen from this feed, up to a max of 1000.
+	// seen from this feed, up to a max of 10,000.
 	maxGuids := 2 * len(feed.Items)
 	if len(f.RecentGUIDs) > maxGuids {
 		maxGuids = len(f.RecentGUIDs) // already 2x'd.
 	}
-	if maxGuids > 1000 {
-		maxGuids = 1000
+	if maxGuids > 10000 {
+		maxGuids = 10000
 	}
 
 	lastSet := uniqueStrings(f.RecentGUIDs) // e.g. [4,5,6]
