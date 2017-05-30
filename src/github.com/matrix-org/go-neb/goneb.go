@@ -236,7 +236,7 @@ func main() {
 				DisableColors:    true,
 				DisableTimestamp: false,
 				DisableSorting:   false,
-			}, &dugong.DailyRotationSchedule{GZip: true},
+			}, &dugong.DailyRotationSchedule{GZip: false},
 		))
 	}
 
