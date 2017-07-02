@@ -222,3 +222,16 @@ GOPATH=$GOPATH:$(pwd) godoc -v -http=localhost:6060 &
 # Open up the documentation for go-neb in a browser.
 sensible-browser http://localhost:6060/pkg/github.com/matrix-org/go-neb
 ```
+
+## Docker image
+
+There is a `Dockerfile` in the root of the repository and a `build-docker-image.sh` script that uses an alpine-based golang container to build `go-neb` (note that this will overwrite host-built binaries in `pkg/` and `bin/`) and then builds the docker image using that binary.
+
+The image sets the following environment variables:
+```
+BIND_ADDRESS=:4050
+DATABASE_TYPE=sqlite3
+DATABASE_URL=/data/go-neb.db?_busy_timeout=5000
+```
+
+The image exposes port `4050` and a volume at `/data`. The `BASE_URL` environment variable needs to be set, a volume should be mounted at `/data` and port `4050` should be appropriately mapped as desired.
