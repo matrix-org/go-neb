@@ -17,16 +17,19 @@ import (
 // ServiceType of the Giphy service.
 const ServiceType = "giphy"
 
+type image struct {
+	URL string `json:"url"`
+	// Giphy returns ints as strings..
+	Width  string `json:"width"`
+	Height string `json:"height"`
+	Size   string `json:"size"`
+}
+
 type result struct {
 	Slug   string `json:"slug"`
 	Images struct {
-		Original struct {
-			URL string `json:"url"`
-			// Giphy returns ints as strings..
-			Width  string `json:"width"`
-			Height string `json:"height"`
-			Size   string `json:"size"`
-		} `json:"original"`
+		Downsized image `json:"downsized"`
+		Original  image `json:"original"`
 	} `json:"images"`
 }
 
@@ -38,13 +41,18 @@ type giphySearch struct {
 //
 // Example request:
 //   {
-//       "api_key": "dc6zaTOxFJmzC"
+//       "api_key": "dc6zaTOxFJmzC",
+//       "use_downsized": false
 //   }
 type Service struct {
 	types.DefaultService
 	// The Giphy API key to use when making HTTP requests to Giphy.
 	// The public beta API key is "dc6zaTOxFJmzC".
 	APIKey string `json:"api_key"`
+	// Whether to use the downsized image from Giphy.
+	// Uses the original image when set to false.
+	// Defaults to false.
+	UseDownsized bool `json:"use_downsized"`
 }
 
 // Commands supported:
@@ -68,10 +76,16 @@ func (s *Service) cmdGiphy(client *gomatrix.Client, roomID, userID string, args 
 	if err != nil {
 		return nil, err
 	}
-	if gifResult.Images.Original.URL == "" {
+
+	image := gifResult.Images.Original
+	if s.UseDownsized {
+		image = gifResult.Images.Downsized
+	}
+
+	if image.URL == "" {
 		return nil, fmt.Errorf("No results")
 	}
-	resUpload, err := client.UploadLink(gifResult.Images.Original.URL)
+	resUpload, err := client.UploadLink(image.URL)
 	if err != nil {
 		return nil, err
 	}
@@ -81,10 +95,10 @@ func (s *Service) cmdGiphy(client *gomatrix.Client, roomID, userID string, args 
 		Body:    gifResult.Slug,
 		URL:     resUpload.ContentURI,
 		Info: gomatrix.ImageInfo{
-			Height:   asInt(gifResult.Images.Original.Height),
-			Width:    asInt(gifResult.Images.Original.Width),
+			Height:   asInt(image.Height),
+			Width:    asInt(image.Width),
 			Mimetype: "image/gif",
-			Size:     asInt(gifResult.Images.Original.Size),
+			Size:     asInt(image.Size),
 		},
 	}, nil
 }
