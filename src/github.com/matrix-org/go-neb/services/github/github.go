@@ -27,6 +27,9 @@ const ServiceType = "github"
 // Matches alphanumeric then a /, then more alphanumeric then a #, then a number.
 // E.g. owner/repo#11 (issue/PR numbers) - Captured groups for owner/repo/number
 var ownerRepoIssueRegex = regexp.MustCompile(`(([A-z0-9-_.]+)/([A-z0-9-_.]+))?#([0-9]+)`)
+
+// Matches like above, but anchored to start and end of the string respectively.
+var ownerRepoIssueRegexAnchored = regexp.MustCompile(`^(([A-z0-9-_.]+)/([A-z0-9-_.]+))?#([0-9]+)$`)
 var ownerRepoRegex = regexp.MustCompile(`^([A-z0-9-_.]+)/([A-z0-9-_.]+)$`)
 
 // Service contains the Config fields for the Github service.
@@ -131,6 +134,92 @@ func (s *Service) cmdGithubCreate(roomID, userID string, args []string) (interfa
 	return gomatrix.TextMessage{"m.notice", fmt.Sprintf("Created issue: %s", *issue.HTMLURL)}, nil
 }
 
+func (s *Service) cmdGithubComment(roomID, userID string, args []string) (interface{}, error) {
+	cli := s.githubClientFor(userID, false)
+	if cli == nil {
+		r, err := database.GetServiceDB().LoadAuthRealm(s.RealmID)
+		if err != nil {
+			return nil, err
+		}
+		ghRealm, ok := r.(*github.Realm)
+		if !ok {
+			return nil, fmt.Errorf("Failed to cast realm %s into a GithubRealm", s.RealmID)
+		}
+		return matrix.StarterLinkMessage{
+			Body: "You need to log into Github before you can create issues.",
+			Link: ghRealm.StarterLink,
+		}, nil
+	}
+	if len(args) == 0 {
+		return &gomatrix.TextMessage{"m.notice",
+			`Usage: !github comment [owner/repo]#issue "comment text"`}, nil
+	}
+
+	// We expect the args to look like:
+	// [ "[owner/repo]#issue", "comment" ]
+	// They can omit the owner/repo if there is a default one set.
+	// Look for a default if the first arg is just an issue number
+	ownerRepoIssueGroups := ownerRepoIssueRegexAnchored.FindStringSubmatch(args[0])
+
+	if len(ownerRepoIssueGroups) != 5 {
+		return &gomatrix.TextMessage{"m.notice",
+			`Usage: !github comment [owner/repo]#issue "comment text"`}, nil
+	}
+
+	if ownerRepoIssueGroups[1] == "" {
+		// issue only match, this only works if there is a default repo
+		defaultRepo := s.defaultRepo(roomID)
+		if defaultRepo == "" {
+			return &gomatrix.TextMessage{"m.notice",
+				`Usage: !github comment [owner/repo]#issue "comment text"`}, nil
+		}
+
+		segs := strings.Split(defaultRepo, "/")
+		if len(segs) != 2 {
+			return &gomatrix.TextMessage{"m.notice",
+				`Malformed default repo. Usage: !github comment [owner/repo]#issue "comment text"`}, nil
+		}
+
+		// Fill in the missing fields in matching groups and fall through into ["foo/bar#11", "foo", "bar", "11"]
+		ownerRepoIssueGroups = []string{
+			defaultRepo + ownerRepoIssueGroups[0],
+			defaultRepo,
+			segs[0],
+			segs[1],
+			ownerRepoIssueGroups[4],
+		}
+	}
+
+	issueNum, err := strconv.Atoi(ownerRepoIssueGroups[4])
+	if err != nil {
+		return &gomatrix.TextMessage{"m.notice",
+			`Malformed issue number. Usage: !github comment [owner/repo]#issue "comment text"`}, nil
+	}
+
+	var comment *string
+
+	if len(args) == 2 {
+		comment = &args[1]
+	} else { // > 2 args is probably a comment without quote marks
+		joinedComment := strings.Join(args[1:], " ")
+		comment = &joinedComment
+	}
+
+	issueComment, res, err := cli.Issues.CreateComment(ownerRepoIssueGroups[2], ownerRepoIssueGroups[3], issueNum, &gogithub.IssueComment{
+		Body: comment,
+	})
+
+	if err != nil {
+		log.WithField("err", err).Print("Failed to create issue")
+		if res == nil {
+			return nil, fmt.Errorf("Failed to create issue. Failed to connect to Github")
+		}
+		return nil, fmt.Errorf("Failed to create issue. HTTP %d", res.StatusCode)
+	}
+
+	return gomatrix.TextMessage{"m.notice", fmt.Sprintf("Commented on issue: %s", *issueComment.HTMLURL)}, nil
+}
+
 func (s *Service) expandIssue(roomID, userID, owner, repo string, issueNum int) interface{} {
 	cli := s.githubClientFor(userID, true)
 
@@ -155,6 +244,10 @@ func (s *Service) expandIssue(roomID, userID, owner, repo string, issueNum int) 
 // Responds with the outcome of the issue creation request. This command requires
 // a Github account to be linked to the Matrix user ID issuing the command. If there
 // is no link, it will return a Starter Link instead.
+//    !github comment [owner/repo]#issue "comment"
+// Responds with the outcome of the issue comment creation request. This command requires
+// a Github account to be linked to the Matrix user ID issuing the command. If there
+// is no link, it will return a Starter Link instead.
 func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 	return []types.Command{
 		types.Command{
@@ -164,11 +257,18 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 			},
 		},
 		types.Command{
+			Path: []string{"github", "comment"},
+			Command: func(roomID, userID string, args []string) (interface{}, error) {
+				return s.cmdGithubComment(roomID, userID, args)
+			},
+		},
+		types.Command{
 			Path: []string{"github", "help"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				return &gomatrix.TextMessage{
 					"m.notice",
-					fmt.Sprintf(`!github create owner/repo "title text" "description text"`),
+					fmt.Sprintf(`!github create owner/repo "title text" "description text"` + "\n" +
+						`!github comment [owner/repo]#issue "comment text"`),
 				}, nil
 			},
 		},
