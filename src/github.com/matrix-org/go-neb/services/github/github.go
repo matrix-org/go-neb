@@ -61,8 +61,8 @@ type Service struct {
 func (s *Service) requireGithubClientFor(userID string) (cli *gogithub.Client, resp interface{}, err error) {
 	cli = s.githubClientFor(userID, false)
 	if cli == nil {
-		r, err := database.GetServiceDB().LoadAuthRealm(s.RealmID)
-		if err != nil {
+		var r types.AuthRealm
+		if r, err = database.GetServiceDB().LoadAuthRealm(s.RealmID); err != nil {
 			return
 		}
 		if ghRealm, ok := r.(*github.Realm); ok {
