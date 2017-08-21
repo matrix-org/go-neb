@@ -58,21 +58,29 @@ type Service struct {
 	RealmID string
 }
 
-func (s *Service) cmdGithubCreate(roomID, userID string, args []string) (interface{}, error) {
-	cli := s.githubClientFor(userID, false)
+func (s *Service) requireGithubClientFor(userID string) (cli *gogithub.Client, resp interface{}, err error) {
+	cli = s.githubClientFor(userID, false)
 	if cli == nil {
 		r, err := database.GetServiceDB().LoadAuthRealm(s.RealmID)
 		if err != nil {
-			return nil, err
+			return
 		}
-		ghRealm, ok := r.(*github.Realm)
-		if !ok {
-			return nil, fmt.Errorf("Failed to cast realm %s into a GithubRealm", s.RealmID)
+		if ghRealm, ok := r.(*github.Realm); ok {
+			resp = matrix.StarterLinkMessage{
+				Body: "You need to log into Github before you can create issues.",
+				Link: ghRealm.StarterLink,
+			}
+		} else {
+			err = fmt.Errorf("Failed to cast realm %s into a GithubRealm", s.RealmID)
 		}
-		return matrix.StarterLinkMessage{
-			Body: "You need to log into Github before you can create issues.",
-			Link: ghRealm.StarterLink,
-		}, nil
+	}
+	return
+}
+
+func (s *Service) cmdGithubCreate(roomID, userID string, args []string) (interface{}, error) {
+	cli, resp, err := s.requireGithubClientFor(userID)
+	if cli == nil {
+		return resp, err
 	}
 	if len(args) == 0 {
 		return &gomatrix.TextMessage{"m.notice",
@@ -135,20 +143,9 @@ func (s *Service) cmdGithubCreate(roomID, userID string, args []string) (interfa
 }
 
 func (s *Service) cmdGithubComment(roomID, userID string, args []string) (interface{}, error) {
-	cli := s.githubClientFor(userID, false)
+	cli, resp, err := s.requireGithubClientFor(userID)
 	if cli == nil {
-		r, err := database.GetServiceDB().LoadAuthRealm(s.RealmID)
-		if err != nil {
-			return nil, err
-		}
-		ghRealm, ok := r.(*github.Realm)
-		if !ok {
-			return nil, fmt.Errorf("Failed to cast realm %s into a GithubRealm", s.RealmID)
-		}
-		return matrix.StarterLinkMessage{
-			Body: "You need to log into Github before you can create issues.",
-			Link: ghRealm.StarterLink,
-		}, nil
+		return resp, err
 	}
 	if len(args) == 0 {
 		return &gomatrix.TextMessage{"m.notice",
