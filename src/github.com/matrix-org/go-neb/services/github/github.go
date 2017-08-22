@@ -152,45 +152,10 @@ func (s *Service) cmdGithubComment(roomID, userID string, args []string) (interf
 			`Usage: !github comment [owner/repo]#issue "comment text"`}, nil
 	}
 
-	// We expect the args to look like:
-	// [ "[owner/repo]#issue", "comment" ]
-	// They can omit the owner/repo if there is a default one set.
-	// Look for a default if the first arg is just an issue number
-	ownerRepoIssueGroups := ownerRepoIssueRegexAnchored.FindStringSubmatch(args[0])
-
-	if len(ownerRepoIssueGroups) != 5 {
-		return &gomatrix.TextMessage{"m.notice",
-			`Usage: !github comment [owner/repo]#issue "comment text"`}, nil
-	}
-
-	if ownerRepoIssueGroups[1] == "" {
-		// issue only match, this only works if there is a default repo
-		defaultRepo := s.defaultRepo(roomID)
-		if defaultRepo == "" {
-			return &gomatrix.TextMessage{"m.notice",
-				`Usage: !github comment [owner/repo]#issue "comment text"`}, nil
-		}
-
-		segs := strings.Split(defaultRepo, "/")
-		if len(segs) != 2 {
-			return &gomatrix.TextMessage{"m.notice",
-				`Malformed default repo. Usage: !github comment [owner/repo]#issue "comment text"`}, nil
-		}
-
-		// Fill in the missing fields in matching groups and fall through into ["foo/bar#11", "foo", "bar", "11"]
-		ownerRepoIssueGroups = []string{
-			defaultRepo + ownerRepoIssueGroups[0],
-			defaultRepo,
-			segs[0],
-			segs[1],
-			ownerRepoIssueGroups[4],
-		}
-	}
-
-	issueNum, err := strconv.Atoi(ownerRepoIssueGroups[4])
-	if err != nil {
-		return &gomatrix.TextMessage{"m.notice",
-			`Malformed issue number. Usage: !github comment [owner/repo]#issue "comment text"`}, nil
+	// get owner,repo,issue,resp out of args[0]
+	owner, repo, issueNum, resp := s.getIssueDetailsFor(args[0], roomID, `!github comment [owner/repo]#issue "comment text"`)
+	if resp != nil {
+		return resp, nil
 	}
 
 	var comment *string
@@ -202,7 +167,7 @@ func (s *Service) cmdGithubComment(roomID, userID string, args []string) (interf
 		comment = &joinedComment
 	}
 
-	issueComment, res, err := cli.Issues.CreateComment(ownerRepoIssueGroups[2], ownerRepoIssueGroups[3], issueNum, &gogithub.IssueComment{
+	issueComment, res, err := cli.Issues.CreateComment(owner, repo, issueNum, &gogithub.IssueComment{
 		Body: comment,
 	})
 
@@ -215,6 +180,79 @@ func (s *Service) cmdGithubComment(roomID, userID string, args []string) (interf
 	}
 
 	return gomatrix.TextMessage{"m.notice", fmt.Sprintf("Commented on issue: %s", *issueComment.HTMLURL)}, nil
+}
+
+func (s *Service) cmdGithubClose(roomID, userID string, args []string) (interface{}, error) {
+	cli, resp, err := s.requireGithubClientFor(userID)
+	if cli == nil {
+		return resp, err
+	}
+	if len(args) == 0 {
+		return &gomatrix.TextMessage{"m.notice",
+			`Usage: !github close [owner/repo]#issue`}, nil
+	}
+
+	// get owner,repo,issue,resp out of args[0]
+	owner, repo, issueNum, resp := s.getIssueDetailsFor(args[0], roomID, `!github close [owner/repo]#issue`)
+	if resp != nil {
+		return resp, nil
+	}
+
+	state := "closed"
+	issueComment, res, err := cli.Issues.Edit(owner, repo, issueNum, &gogithub.IssueRequest{
+		State: &state,
+	})
+
+	if err != nil {
+		log.WithField("err", err).Print("Failed to close issue")
+		if res == nil {
+			return nil, fmt.Errorf("Failed to close issue. Failed to connect to Github")
+		}
+		return nil, fmt.Errorf("Failed to close issue. HTTP %d", res.StatusCode)
+	}
+
+	return gomatrix.TextMessage{"m.notice", fmt.Sprintf("Closed issue: %s", *issueComment.HTMLURL)}, nil
+}
+
+func (s *Service) getIssueDetailsFor(input, roomID, usage string) (owner, repo string, issueNum int, resp interface{}) {
+	// We expect the input to look like:
+	// "[owner/repo]#issue"
+	// They can omit the owner/repo if there is a default one set.
+	// Look for a default if the first arg is just an issue number
+	ownerRepoIssueGroups := ownerRepoIssueRegexAnchored.FindStringSubmatch(input)
+
+	if len(ownerRepoIssueGroups) != 5 {
+		resp = &gomatrix.TextMessage{"m.notice", "Usage: " + usage}
+		return
+	}
+
+	owner = ownerRepoIssueGroups[2]
+	repo = ownerRepoIssueGroups[3]
+
+	var err error
+	if issueNum, err = strconv.Atoi(ownerRepoIssueGroups[4]); err != nil {
+		resp = &gomatrix.TextMessage{"m.notice", "Malformed issue number. Usage: " + usage}
+		return
+	}
+
+	if ownerRepoIssueGroups[1] == "" {
+		// issue only match, this only works if there is a default repo
+		defaultRepo := s.defaultRepo(roomID)
+		if defaultRepo == "" {
+			resp = &gomatrix.TextMessage{"m.notice", "Usage: " + usage}
+			return
+		}
+
+		segs := strings.Split(defaultRepo, "/")
+		if len(segs) != 2 {
+			resp = &gomatrix.TextMessage{"m.notice", "Malformed default repo. Usage: " + usage}
+			return
+		}
+
+		owner = segs[0]
+		repo = segs[1]
+	}
+	return
 }
 
 func (s *Service) expandIssue(roomID, userID, owner, repo string, issueNum int) interface{} {
@@ -260,12 +298,19 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 			},
 		},
 		types.Command{
+			Path: []string{"github", "close"},
+			Command: func(roomID, userID string, args []string) (interface{}, error) {
+				return s.cmdGithubClose(roomID, userID, args)
+			},
+		},
+		types.Command{
 			Path: []string{"github", "help"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				return &gomatrix.TextMessage{
 					"m.notice",
 					fmt.Sprintf(`!github create owner/repo "title text" "description text"` + "\n" +
-						`!github comment [owner/repo]#issue "comment text"`),
+						`!github comment [owner/repo]#issue "comment text"` + "\n" +
+						`!github close [owner/repo]#issue`),
 				}, nil
 			},
 		},
