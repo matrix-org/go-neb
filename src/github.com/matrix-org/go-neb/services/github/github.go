@@ -142,6 +142,35 @@ func (s *Service) cmdGithubCreate(roomID, userID string, args []string) (interfa
 	return gomatrix.TextMessage{"m.notice", fmt.Sprintf("Created issue: %s", *issue.HTMLURL)}, nil
 }
 
+func (s *Service) cmdGithubReact(roomID, userID string, args []string) (interface{}, error) {
+	cli, resp, err := s.requireGithubClientFor(userID)
+	if cli == nil {
+		return resp, err
+	}
+	if len(args) < 2 {
+		return &gomatrix.TextMessage{"m.notice",
+			`Usage: !github react [owner/repo]#issue [+1|-1|laugh|confused|heart|hooray]`}, nil
+	}
+
+	// get owner,repo,issue,resp out of args[0]
+	owner, repo, issueNum, resp := s.getIssueDetailsFor(args[0], roomID, `!github react [owner/repo]#issue [+1|-1|laugh|confused|heart|hooray]`)
+	if resp != nil {
+		return resp, nil
+	}
+
+	_, res, err := cli.Reactions.CreateIssueReaction(owner, repo, issueNum, args[1])
+
+	if err != nil {
+		log.WithField("err", err).Print("Failed to react to issue")
+		if res == nil {
+			return nil, fmt.Errorf("Failed to react to issue. Failed to connect to Github")
+		}
+		return nil, fmt.Errorf("Failed to react to issue. HTTP %d", res.StatusCode)
+	}
+
+	return gomatrix.TextMessage{"m.notice", fmt.Sprintf("Reacted to issue with: %s", args[1])}, nil
+}
+
 func (s *Service) cmdGithubComment(roomID, userID string, args []string) (interface{}, error) {
 	cli, resp, err := s.requireGithubClientFor(userID)
 	if cli == nil {
@@ -292,6 +321,12 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 			},
 		},
 		types.Command{
+			Path: []string{"github", "react"},
+			Command: func(roomID, userID string, args []string) (interface{}, error) {
+				return s.cmdGithubReact(roomID, userID, args)
+			},
+		},
+		types.Command{
 			Path: []string{"github", "comment"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				return s.cmdGithubComment(roomID, userID, args)
@@ -309,6 +344,7 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 				return &gomatrix.TextMessage{
 					"m.notice",
 					fmt.Sprintf(`!github create owner/repo "title text" "description text"` + "\n" +
+						`!github react [owner/repo]#issue [+1|-1|laugh|confused|heart|hooray]` + "\n" +
 						`!github comment [owner/repo]#issue "comment text"` + "\n" +
 						`!github close [owner/repo]#issue`),
 				}, nil
