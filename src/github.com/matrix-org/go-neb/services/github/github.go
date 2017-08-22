@@ -141,7 +141,7 @@ func (s *Service) cmdGithubCreate(roomID, userID string, args []string) (interfa
 	return gomatrix.TextMessage{"m.notice", fmt.Sprintf("Created issue: %s", *issue.HTMLURL)}, nil
 }
 
-const cmdGithubReactUsage = `!github react [owner/repo]#issue [+1|-1|laugh|confused|heart|hooray]`
+const cmdGithubReactUsage = `!github react [owner/repo]#issue (+1|-1|laugh|confused|heart|hooray)`
 
 func (s *Service) cmdGithubReact(roomID, userID string, args []string) (interface{}, error) {
 	cli, resp, err := s.requireGithubClientFor(userID)
@@ -212,7 +212,7 @@ func (s *Service) cmdGithubComment(roomID, userID string, args []string) (interf
 	return gomatrix.TextMessage{"m.notice", fmt.Sprintf("Commented on issue: %s", *issueComment.HTMLURL)}, nil
 }
 
-const cmdGithubAssignUsage = `!github assign [username]...`
+const cmdGithubAssignUsage = `!github assign [owner/repo]#issue username [username] [...]`
 
 func (s *Service) cmdGithubAssign(roomID, userID string, args []string) (interface{}, error) {
 	cli, resp, err := s.requireGithubClientFor(userID)
