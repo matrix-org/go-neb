@@ -77,14 +77,15 @@ func (s *Service) requireGithubClientFor(userID string) (cli *gogithub.Client, r
 	return
 }
 
+const cmdGithubCreateUsage = `!github create owner/repo "issue title" "description"`
+
 func (s *Service) cmdGithubCreate(roomID, userID string, args []string) (interface{}, error) {
 	cli, resp, err := s.requireGithubClientFor(userID)
 	if cli == nil {
 		return resp, err
 	}
 	if len(args) == 0 {
-		return &gomatrix.TextMessage{"m.notice",
-			`Usage: !github create owner/repo "issue title" "description"`}, nil
+		return &gomatrix.TextMessage{"m.notice", "Usage: " + cmdGithubCreateUsage}, nil
 	}
 
 	// We expect the args to look like:
@@ -97,14 +98,12 @@ func (s *Service) cmdGithubCreate(roomID, userID string, args []string) (interfa
 		// look for a default repo
 		defaultRepo := s.defaultRepo(roomID)
 		if defaultRepo == "" {
-			return &gomatrix.TextMessage{"m.notice",
-				`Usage: !github create owner/repo "issue title" "description"`}, nil
+			return &gomatrix.TextMessage{"m.notice", "Usage: " + cmdGithubCreateUsage}, nil
 		}
 		// default repo should pass the regexp
 		ownerRepoGroups = ownerRepoRegex.FindStringSubmatch(defaultRepo)
 		if len(ownerRepoGroups) == 0 {
-			return &gomatrix.TextMessage{"m.notice",
-				`Malformed default repo. Usage: !github create owner/repo "issue title" "description"`}, nil
+			return &gomatrix.TextMessage{"m.notice", "Malformed default repo. Usage: " + cmdGithubCreateUsage}, nil
 		}
 
 		// insert the default as the first arg to reuse the same indices
@@ -142,18 +141,19 @@ func (s *Service) cmdGithubCreate(roomID, userID string, args []string) (interfa
 	return gomatrix.TextMessage{"m.notice", fmt.Sprintf("Created issue: %s", *issue.HTMLURL)}, nil
 }
 
+const cmdGithubReactUsage = `!github react [owner/repo]#issue [+1|-1|laugh|confused|heart|hooray]`
+
 func (s *Service) cmdGithubReact(roomID, userID string, args []string) (interface{}, error) {
 	cli, resp, err := s.requireGithubClientFor(userID)
 	if cli == nil {
 		return resp, err
 	}
 	if len(args) < 2 {
-		return &gomatrix.TextMessage{"m.notice",
-			`Usage: !github react [owner/repo]#issue [+1|-1|laugh|confused|heart|hooray]`}, nil
+		return &gomatrix.TextMessage{"m.notice", "Usage: " + cmdGithubReactUsage}, nil
 	}
 
 	// get owner,repo,issue,resp out of args[0]
-	owner, repo, issueNum, resp := s.getIssueDetailsFor(args[0], roomID, `!github react [owner/repo]#issue [+1|-1|laugh|confused|heart|hooray]`)
+	owner, repo, issueNum, resp := s.getIssueDetailsFor(args[0], roomID, cmdGithubReactUsage)
 	if resp != nil {
 		return resp, nil
 	}
@@ -171,18 +171,19 @@ func (s *Service) cmdGithubReact(roomID, userID string, args []string) (interfac
 	return gomatrix.TextMessage{"m.notice", fmt.Sprintf("Reacted to issue with: %s", args[1])}, nil
 }
 
+const cmdGithubCommentUsage = `!github comment [owner/repo]#issue "comment text"`
+
 func (s *Service) cmdGithubComment(roomID, userID string, args []string) (interface{}, error) {
 	cli, resp, err := s.requireGithubClientFor(userID)
 	if cli == nil {
 		return resp, err
 	}
 	if len(args) == 0 {
-		return &gomatrix.TextMessage{"m.notice",
-			`Usage: !github comment [owner/repo]#issue "comment text"`}, nil
+		return &gomatrix.TextMessage{"m.notice", "Usage: " + cmdGithubCommentUsage}, nil
 	}
 
 	// get owner,repo,issue,resp out of args[0]
-	owner, repo, issueNum, resp := s.getIssueDetailsFor(args[0], roomID, `!github comment [owner/repo]#issue "comment text"`)
+	owner, repo, issueNum, resp := s.getIssueDetailsFor(args[0], roomID, cmdGithubCommentUsage)
 	if resp != nil {
 		return resp, nil
 	}
@@ -211,18 +212,19 @@ func (s *Service) cmdGithubComment(roomID, userID string, args []string) (interf
 	return gomatrix.TextMessage{"m.notice", fmt.Sprintf("Commented on issue: %s", *issueComment.HTMLURL)}, nil
 }
 
+const cmdGithubCloseUsage = `!github close [owner/repo]#issue`
+
 func (s *Service) cmdGithubClose(roomID, userID string, args []string) (interface{}, error) {
 	cli, resp, err := s.requireGithubClientFor(userID)
 	if cli == nil {
 		return resp, err
 	}
 	if len(args) == 0 {
-		return &gomatrix.TextMessage{"m.notice",
-			`Usage: !github close [owner/repo]#issue`}, nil
+		return &gomatrix.TextMessage{"m.notice", "Usage: " + cmdGithubCloseUsage}, nil
 	}
 
 	// get owner,repo,issue,resp out of args[0]
-	owner, repo, issueNum, resp := s.getIssueDetailsFor(args[0], roomID, `!github close [owner/repo]#issue`)
+	owner, repo, issueNum, resp := s.getIssueDetailsFor(args[0], roomID, cmdGithubCloseUsage)
 	if resp != nil {
 		return resp, nil
 	}
@@ -343,10 +345,10 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				return &gomatrix.TextMessage{
 					"m.notice",
-					fmt.Sprintf(`!github create owner/repo "title text" "description text"` + "\n" +
-						`!github react [owner/repo]#issue [+1|-1|laugh|confused|heart|hooray]` + "\n" +
-						`!github comment [owner/repo]#issue "comment text"` + "\n" +
-						`!github close [owner/repo]#issue`),
+					fmt.Sprintf(cmdGithubCreateUsage + "\n" +
+						cmdGithubReactUsage + "\n" +
+						cmdGithubCommentUsage + "\n" +
+						cmdGithubCloseUsage),
 				}, nil
 			},
 		},
