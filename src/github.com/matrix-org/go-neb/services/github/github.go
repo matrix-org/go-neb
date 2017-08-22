@@ -151,6 +151,9 @@ func (s *Service) cmdGithubReact(roomID, userID string, args []string) (interfac
 	if len(args) < 2 {
 		return &gomatrix.TextMessage{"m.notice", "Usage: " + cmdGithubReactUsage}, nil
 	}
+	if args[1] != "+1" && args[1] != "-1" && args[1] != "laugh" && args[1] != "confused" && args[1] != "heart" && args[1] != "hooray" {
+		return &gomatrix.TextMessage{"m.notice", "Invalid reaction. Usage: " + cmdGithubReactUsage}, nil
+	}
 
 	// get owner,repo,issue,resp out of args[0]
 	owner, repo, issueNum, resp := s.getIssueDetailsFor(args[0], roomID, cmdGithubReactUsage)
