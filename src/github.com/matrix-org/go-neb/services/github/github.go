@@ -305,7 +305,7 @@ func (s *Service) getIssueDetailsFor(input, roomID, usage string) (owner, repo s
 		// issue only match, this only works if there is a default repo
 		defaultRepo := s.defaultRepo(roomID)
 		if defaultRepo == "" {
-			resp = &gomatrix.TextMessage{"m.notice", "Usage: " + usage}
+			resp = &gomatrix.TextMessage{"m.notice", "No default repo specified. Usage: " + usage}
 			return
 		}
 
