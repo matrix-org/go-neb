@@ -212,6 +212,38 @@ func (s *Service) cmdGithubComment(roomID, userID string, args []string) (interf
 	return gomatrix.TextMessage{"m.notice", fmt.Sprintf("Commented on issue: %s", *issueComment.HTMLURL)}, nil
 }
 
+const cmdGithubAssignUsage = `!github assign [username]...`
+
+func (s *Service) cmdGithubAssign(roomID, userID string, args []string) (interface{}, error) {
+	cli, resp, err := s.requireGithubClientFor(userID)
+	if cli == nil {
+		return resp, err
+	}
+	if len(args) < 1 {
+		return &gomatrix.TextMessage{"m.notice", "Usage: " + cmdGithubAssignUsage}, nil
+	} else if len(args) < 2 {
+		return &gomatrix.TextMessage{"m.notice", "Needs at least one username. Usage: " + cmdGithubAssignUsage}, nil
+	}
+
+	// get owner,repo,issue,resp out of args[0]
+	owner, repo, issueNum, resp := s.getIssueDetailsFor(args[0], roomID, cmdGithubAssignUsage)
+	if resp != nil {
+		return resp, nil
+	}
+
+	issue, res, err := cli.Issues.AddAssignees(owner, repo, issueNum, args[1:])
+
+	if err != nil {
+		log.WithField("err", err).Print("Failed to add issue assignees")
+		if res == nil {
+			return nil, fmt.Errorf("Failed to add issue assignees. Failed to connect to Github")
+		}
+		return nil, fmt.Errorf("Failed to add issue assignees. HTTP %d", res.StatusCode)
+	}
+
+	return gomatrix.TextMessage{"m.notice", fmt.Sprintf("Added assignees to issue: %s", *issue.HTMLURL)}, nil
+}
+
 const cmdGithubCloseUsage = `!github close [owner/repo]#issue`
 
 func (s *Service) cmdGithubClose(roomID, userID string, args []string) (interface{}, error) {
@@ -335,6 +367,12 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 			},
 		},
 		types.Command{
+			Path: []string{"github", "assign"},
+			Command: func(roomID, userID string, args []string) (interface{}, error) {
+				return s.cmdGithubAssign(roomID, userID, args)
+			},
+		},
+		types.Command{
 			Path: []string{"github", "close"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				return s.cmdGithubClose(roomID, userID, args)
@@ -345,10 +383,13 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				return &gomatrix.TextMessage{
 					"m.notice",
-					fmt.Sprintf(cmdGithubCreateUsage + "\n" +
-						cmdGithubReactUsage + "\n" +
-						cmdGithubCommentUsage + "\n" +
-						cmdGithubCloseUsage),
+					strings.Join([]string{
+						cmdGithubCreateUsage,
+						cmdGithubReactUsage,
+						cmdGithubCommentUsage,
+						cmdGithubAssignUsage,
+						cmdGithubCloseUsage,
+					}, "\n"),
 				}, nil
 			},
 		},
