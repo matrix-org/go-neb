@@ -207,11 +207,11 @@ func (s *Service) cmdGithubComment(roomID, userID string, args []string) (interf
 	})
 
 	if err != nil {
-		log.WithField("err", err).Print("Failed to create issue")
+		log.WithField("err", err).Print("Failed to create issue comment")
 		if res == nil {
-			return nil, fmt.Errorf("Failed to create issue. Failed to connect to Github")
+			return nil, fmt.Errorf("Failed to create issue comment. Failed to connect to Github")
 		}
-		return nil, fmt.Errorf("Failed to create issue. HTTP %d", res.StatusCode)
+		return nil, fmt.Errorf("Failed to create issue comment. HTTP %d", res.StatusCode)
 	}
 
 	return gomatrix.TextMessage{"m.notice", fmt.Sprintf("Commented on issue: %s", *issueComment.HTMLURL)}, nil
