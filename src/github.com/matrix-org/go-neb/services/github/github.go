@@ -200,12 +200,31 @@ func (s *Service) cmdGithubCreate(roomID, userID string, args []string) (interfa
 }
 
 var cmdGithubReactAliases = map[string]string{
-	"+1":       "+1",
-	"-1":       "-1",
-	"laugh":    "laugh",
-	"confused": "confused",
-	"heart":    "heart",
-	"hooray":   "hooray",
+	"+1":   "+1",
+	":+1:": "+1",
+	"👍":    "+1",
+
+	"-1":   "-1",
+	":-1:": "-1",
+	"👎":    "-1",
+
+	"laugh":   "laugh",
+	"smile":   "laugh",
+	":smile:": "laugh",
+	"😄":       "laugh",
+
+	"confused":   "confused",
+	":confused:": "confused",
+	"😕":          "confused",
+
+	"heart":   "heart",
+	":heart:": "heart",
+	"❤":       "heart",
+
+	"hooray": "hooray",
+	"tada":   "hooray",
+	":tada:": "hooray",
+	"🎉":      "hooray",
 }
 
 const cmdGithubReactUsage = `!github react [owner/repo]#issue (+1|-1|laugh|confused|heart|hooray)`
