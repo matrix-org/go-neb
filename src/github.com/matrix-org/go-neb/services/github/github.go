@@ -220,6 +220,7 @@ var cmdGithubReactAliases = map[string]string{
 	"heart":   "heart",
 	":heart:": "heart",
 	"❤":       "heart",
+	"❤️":      "heart",
 
 	"hooray": "hooray",
 	"tada":   "hooray",
