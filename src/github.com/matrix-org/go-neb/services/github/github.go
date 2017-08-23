@@ -212,10 +212,12 @@ var cmdGithubReactAliases = map[string]string{
 	"smile":   "laugh",
 	":smile:": "laugh",
 	"😄":       "laugh",
+	"grin":    "laugh",
 
 	"confused":   "confused",
 	":confused:": "confused",
 	"😕":          "confused",
+	"uncertain":  "confused",
 
 	"heart":   "heart",
 	":heart:": "heart",
@@ -228,7 +230,7 @@ var cmdGithubReactAliases = map[string]string{
 	"🎉":      "hooray",
 }
 
-const cmdGithubReactUsage = `!github react [owner/repo]#issue (+1|-1|laugh|confused|heart|hooray)`
+const cmdGithubReactUsage = `!github react [owner/repo]#issue (+1|👍|-1|:-1:|laugh|:smile:|confused|uncertain|heart|❤|hooray|:tada:)`
 
 func (s *Service) cmdGithubReact(roomID, userID string, args []string) (interface{}, error) {
 	cli, resp, err := s.requireGithubClientFor(userID)
