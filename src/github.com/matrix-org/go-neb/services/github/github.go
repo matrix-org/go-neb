@@ -199,6 +199,15 @@ func (s *Service) cmdGithubCreate(roomID, userID string, args []string) (interfa
 	return gomatrix.TextMessage{"m.notice", fmt.Sprintf("Created issue: %s", *issue.HTMLURL)}, nil
 }
 
+var cmdGithubReactAliases = map[string]string{
+	"+1":       "+1",
+	"-1":       "-1",
+	"laugh":    "laugh",
+	"confused": "confused",
+	"heart":    "heart",
+	"hooray":   "hooray",
+}
+
 const cmdGithubReactUsage = `!github react [owner/repo]#issue (+1|-1|laugh|confused|heart|hooray)`
 
 func (s *Service) cmdGithubReact(roomID, userID string, args []string) (interface{}, error) {
@@ -209,7 +218,9 @@ func (s *Service) cmdGithubReact(roomID, userID string, args []string) (interfac
 	if len(args) < 2 {
 		return &gomatrix.TextMessage{"m.notice", "Usage: " + cmdGithubReactUsage}, nil
 	}
-	if args[1] != "+1" && args[1] != "-1" && args[1] != "laugh" && args[1] != "confused" && args[1] != "heart" && args[1] != "hooray" {
+
+	reaction, ok := cmdGithubReactAliases[args[1]]
+	if !ok {
 		return &gomatrix.TextMessage{"m.notice", "Invalid reaction. Usage: " + cmdGithubReactUsage}, nil
 	}
 
@@ -219,7 +230,7 @@ func (s *Service) cmdGithubReact(roomID, userID string, args []string) (interfac
 		return resp, nil
 	}
 
-	_, res, err := cli.Reactions.CreateIssueReaction(owner, repo, issueNum, args[1])
+	_, res, err := cli.Reactions.CreateIssueReaction(owner, repo, issueNum, reaction)
 
 	if err != nil {
 		log.WithField("err", err).Print("Failed to react to issue")
