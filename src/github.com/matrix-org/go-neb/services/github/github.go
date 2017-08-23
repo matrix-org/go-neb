@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"strings"
 
+	"bytes"
 	log "github.com/Sirupsen/logrus"
 	gogithub "github.com/google/go-github/github"
 	"github.com/matrix-org/go-neb/database"
@@ -77,7 +78,64 @@ func (s *Service) requireGithubClientFor(userID string) (cli *gogithub.Client, r
 	return
 }
 
-const cmdGithubCreateUsage = `!github create owner/repo "issue title" "description"`
+const numberGithubSearchSummaries = 3
+const cmdGithubSearchUsage = `!github create owner/repo "search query"`
+
+func (s *Service) cmdGithubSearch(roomID, userID string, args []string) (interface{}, error) {
+	cli, resp, err := s.requireGithubClientFor(userID)
+	if cli == nil {
+		return resp, err
+	}
+	if len(args) < 2 {
+		return &gomatrix.TextMessage{"m.notice", "Usage: " + cmdGithubSearchUsage}, nil
+	}
+
+	query := fmt.Sprintf("repo:%s %s", args[0], strings.Join(args[1:], " "))
+	searchResult, res, err := cli.Search.Issues(query, nil)
+
+	if err != nil {
+		log.WithField("err", err).Print("Failed to react to issue")
+		if res == nil {
+			return nil, fmt.Errorf("Failed to react to issue. Failed to connect to Github")
+		}
+		return nil, fmt.Errorf("Failed to react to issue. HTTP %d", res.StatusCode)
+	}
+
+	if searchResult.Total == nil || *searchResult.Total == 0 {
+		return &gomatrix.TextMessage{"m.notice", "No results found for your search query!"}, nil
+	}
+
+	numResults := *searchResult.Total
+	var htmlBuffer bytes.Buffer
+	var plainBuffer bytes.Buffer
+
+	numberOfSummaries := numberGithubSearchSummaries
+	if numResults < numberGithubSearchSummaries {
+		numberOfSummaries = numResults
+	}
+
+	summarizedIssues := searchResult.Issues[0:numberOfSummaries]
+
+	htmlBuffer.WriteString(fmt.Sprintf("Found %d results, here are the most relevant:<br><ol>", numResults))
+	plainBuffer.WriteString(fmt.Sprintf("Found %d results, here are the most relevant:\n", numResults))
+	for i, issue := range summarizedIssues {
+		if issue.HTMLURL == nil || issue.User.Login == nil || issue.Title == nil {
+			continue
+		}
+		htmlBuffer.WriteString(fmt.Sprintf(`<li><a href="%s">%s: %s</a></li>`, *issue.HTMLURL, *issue.User.Login, *issue.Title))
+		plainBuffer.WriteString(fmt.Sprintf("%d. %s\n", i+1, *issue.HTMLURL))
+	}
+	htmlBuffer.WriteString("</ol>")
+
+	return &gomatrix.HTMLMessage{
+		Body:          plainBuffer.String(),
+		MsgType:       "m.notice",
+		Format:        "org.matrix.custom.html",
+		FormattedBody: htmlBuffer.String(),
+	}, nil
+}
+
+const cmdGithubCreateUsage = `!github create [owner/repo] "issue title" "description"`
 
 func (s *Service) cmdGithubCreate(roomID, userID string, args []string) (interface{}, error) {
 	cli, resp, err := s.requireGithubClientFor(userID)
@@ -98,7 +156,7 @@ func (s *Service) cmdGithubCreate(roomID, userID string, args []string) (interfa
 		// look for a default repo
 		defaultRepo := s.defaultRepo(roomID)
 		if defaultRepo == "" {
-			return &gomatrix.TextMessage{"m.notice", "Usage: " + cmdGithubCreateUsage}, nil
+			return &gomatrix.TextMessage{"m.notice", "Need to specify repo. Usage: " + cmdGithubCreateUsage}, nil
 		}
 		// default repo should pass the regexp
 		ownerRepoGroups = ownerRepoRegex.FindStringSubmatch(defaultRepo)
@@ -305,7 +363,7 @@ func (s *Service) getIssueDetailsFor(input, roomID, usage string) (owner, repo s
 		// issue only match, this only works if there is a default repo
 		defaultRepo := s.defaultRepo(roomID)
 		if defaultRepo == "" {
-			resp = &gomatrix.TextMessage{"m.notice", "No default repo specified. Usage: " + usage}
+			resp = &gomatrix.TextMessage{"m.notice", "Need to specify repo. Usage: " + usage}
 			return
 		}
 
@@ -351,6 +409,12 @@ func (s *Service) expandIssue(roomID, userID, owner, repo string, issueNum int) 
 // is no link, it will return a Starter Link instead.
 func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 	return []types.Command{
+		types.Command{
+			Path: []string{"github", "search"},
+			Command: func(roomID, userID string, args []string) (interface{}, error) {
+				return s.cmdGithubSearch(roomID, userID, args)
+			},
+		},
 		types.Command{
 			Path: []string{"github", "create"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
