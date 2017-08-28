@@ -82,10 +82,7 @@ const numberGithubSearchSummaries = 3
 const cmdGithubSearchUsage = `!github create owner/repo "search query"`
 
 func (s *Service) cmdGithubSearch(roomID, userID string, args []string) (interface{}, error) {
-	cli, resp, err := s.requireGithubClientFor(userID)
-	if cli == nil {
-		return resp, err
-	}
+	cli := s.githubClientFor(userID, true)
 	if len(args) < 2 {
 		return &gomatrix.TextMessage{"m.notice", "Usage: " + cmdGithubSearchUsage}, nil
 	}
@@ -94,11 +91,11 @@ func (s *Service) cmdGithubSearch(roomID, userID string, args []string) (interfa
 	searchResult, res, err := cli.Search.Issues(query, nil)
 
 	if err != nil {
-		log.WithField("err", err).Print("Failed to react to issue")
+		log.WithField("err", err).Print("Failed to search")
 		if res == nil {
-			return nil, fmt.Errorf("Failed to react to issue. Failed to connect to Github")
+			return nil, fmt.Errorf("Failed to search. Failed to connect to Github")
 		}
-		return nil, fmt.Errorf("Failed to react to issue. HTTP %d", res.StatusCode)
+		return nil, fmt.Errorf("Failed to search. HTTP %d", res.StatusCode)
 	}
 
 	if searchResult.Total == nil || *searchResult.Total == 0 {
@@ -122,7 +119,7 @@ func (s *Service) cmdGithubSearch(roomID, userID string, args []string) (interfa
 		if issue.HTMLURL == nil || issue.User.Login == nil || issue.Title == nil {
 			continue
 		}
-		htmlBuffer.WriteString(fmt.Sprintf(`<li><a href="%s">%s: %s</a></li>`, *issue.HTMLURL, *issue.User.Login, *issue.Title))
+		htmlBuffer.WriteString(fmt.Sprintf(`<li><a href="%s" rel="noopener">%s: %s</a></li>`, *issue.HTMLURL, *issue.User.Login, *issue.Title))
 		plainBuffer.WriteString(fmt.Sprintf("%d. %s\n", i+1, *issue.HTMLURL))
 	}
 	htmlBuffer.WriteString("</ol>")
