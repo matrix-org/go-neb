@@ -103,9 +103,6 @@ func (s *Service) cmdGithubSearch(roomID, userID string, args []string) (interfa
 	}
 
 	numResults := *searchResult.Total
-	var htmlBuffer bytes.Buffer
-	var plainBuffer bytes.Buffer
-
 	numberOfSummaries := numberGithubSearchSummaries
 	if numResults < numberGithubSearchSummaries {
 		numberOfSummaries = numResults
@@ -113,6 +110,8 @@ func (s *Service) cmdGithubSearch(roomID, userID string, args []string) (interfa
 
 	summarizedIssues := searchResult.Issues[0:numberOfSummaries]
 
+	var htmlBuffer bytes.Buffer
+	var plainBuffer bytes.Buffer
 	htmlBuffer.WriteString(fmt.Sprintf("Found %d results, here are the most relevant:<br><ol>", numResults))
 	plainBuffer.WriteString(fmt.Sprintf("Found %d results, here are the most relevant:\n", numResults))
 	for i, issue := range summarizedIssues {
