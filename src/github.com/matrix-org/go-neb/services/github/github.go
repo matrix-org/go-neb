@@ -20,6 +20,7 @@ import (
 	"github.com/matrix-org/go-neb/services/github/client"
 	"github.com/matrix-org/go-neb/types"
 	"github.com/matrix-org/gomatrix"
+	"html"
 )
 
 // ServiceType of the Github service
@@ -118,7 +119,8 @@ func (s *Service) cmdGithubSearch(roomID, userID string, args []string) (interfa
 		if issue.HTMLURL == nil || issue.User.Login == nil || issue.Title == nil {
 			continue
 		}
-		htmlBuffer.WriteString(fmt.Sprintf(`<li><a href="%s" rel="noopener">%s: %s</a></li>`, *issue.HTMLURL, *issue.User.Login, *issue.Title))
+		escapedTitle, escapedUserLogin := html.EscapeString(*issue.Title), html.EscapeString(*issue.User.Login)
+		htmlBuffer.WriteString(fmt.Sprintf(`<li><a href="%s" rel="noopener">%s: %s</a></li>`, *issue.HTMLURL, escapedUserLogin, escapedTitle))
 		plainBuffer.WriteString(fmt.Sprintf("%d. %s\n", i+1, *issue.HTMLURL))
 	}
 	htmlBuffer.WriteString("</ol>")
