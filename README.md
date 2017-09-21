@@ -82,7 +82,7 @@ Invite the bot user into a Matrix room and type `!echo hello world`. It will rep
 
 
 # Installing
-Go-NEB is built using Go 1.5+ and [GB](https://getgb.io/). Once you have installed Go, run the following commands:
+Go-NEB is built using Go 1.7+ and [GB](https://getgb.io/). Once you have installed Go, run the following commands:
 ```bash
 # Install gb
 go get github.com/constabulary/gb/...
