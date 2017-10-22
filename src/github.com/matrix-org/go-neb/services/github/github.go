@@ -365,6 +365,39 @@ func (s *Service) cmdGithubClose(roomID, userID string, args []string) (interfac
 	return gomatrix.TextMessage{"m.notice", fmt.Sprintf("Closed issue: %s", *issueComment.HTMLURL)}, nil
 }
 
+const cmdGithubReopenUsage = `!github close [owner/repo]#issue`
+
+func (s *Service) cmdGithubReopen(roomID, userID string, args []string) (interface{}, error) {
+	cli, resp, err := s.requireGithubClientFor(userID)
+	if cli == nil {
+		return resp, err
+	}
+	if len(args) == 0 {
+		return &gomatrix.TextMessage{"m.notice", "Usage: " + cmdGithubReopenUsage}, nil
+	}
+
+	// get owner,repo,issue,resp out of args[0]
+	owner, repo, issueNum, resp := s.getIssueDetailsFor(args[0], roomID, cmdGithubReopenUsage)
+	if resp != nil {
+		return resp, nil
+	}
+
+	state := "open"
+	issueComment, res, err := cli.Issues.Edit(owner, repo, issueNum, &gogithub.IssueRequest{
+		State: &state,
+	})
+
+	if err != nil {
+		log.WithField("err", err).Print("Failed to reopen issue")
+		if res == nil {
+			return nil, fmt.Errorf("Failed to reopen issue. Failed to connect to Github")
+		}
+		return nil, fmt.Errorf("Failed to reopen issue. HTTP %d", res.StatusCode)
+	}
+
+	return gomatrix.TextMessage{"m.notice", fmt.Sprintf("Reopened issue: %s", *issueComment.HTMLURL)}, nil
+}
+
 func (s *Service) getIssueDetailsFor(input, roomID, usage string) (owner, repo string, issueNum int, resp interface{}) {
 	// We expect the input to look like:
 	// "[owner/repo]#issue"
@@ -473,6 +506,12 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 			},
 		},
 		types.Command{
+			Path: []string{"github", "reopen"},
+			Command: func(roomID, userID string, args []string) (interface{}, error) {
+				return s.cmdGithubReopen(roomID, userID, args)
+			},
+		},
+		types.Command{
 			Path: []string{"github", "help"},
 			Command: func(roomID, userID string, args []string) (interface{}, error) {
 				return &gomatrix.TextMessage{
@@ -483,6 +522,7 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 						cmdGithubCommentUsage,
 						cmdGithubAssignUsage,
 						cmdGithubCloseUsage,
+						cmdGithubReopenUsage,
 					}, "\n"),
 				}, nil
 			},
