@@ -365,7 +365,7 @@ func (s *Service) cmdGithubClose(roomID, userID string, args []string) (interfac
 	return gomatrix.TextMessage{"m.notice", fmt.Sprintf("Closed issue: %s", *issueComment.HTMLURL)}, nil
 }
 
-const cmdGithubReopenUsage = `!github close [owner/repo]#issue`
+const cmdGithubReopenUsage = `!github reopen [owner/repo]#issue`
 
 func (s *Service) cmdGithubReopen(roomID, userID string, args []string) (interface{}, error) {
 	cli, resp, err := s.requireGithubClientFor(userID)
