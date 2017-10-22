@@ -371,7 +371,7 @@ func (s *Service) cmdGithubClose(roomID, userID string, args []string) (interfac
 const cmdGithubReopenUsage = `!github reopen [owner/repo]#issue`
 
 func (s *Service) cmdGithubReopen(roomID, userID string, args []string) (interface{}, error) {
-	return s.githubIssueCloseReopen(roomID, userID, args, "closed", "close", cmdGithubCloseUsage)
+	return s.githubIssueCloseReopen(roomID, userID, args, "open", "open", cmdGithubCloseUsage)
 }
 
 func (s *Service) getIssueDetailsFor(input, roomID, usage string) (owner, repo string, issueNum int, resp interface{}) {
