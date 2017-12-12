@@ -30,6 +30,7 @@ import (
 	_ "github.com/matrix-org/go-neb/services/slackapi"
 	_ "github.com/matrix-org/go-neb/services/travisci"
 	_ "github.com/matrix-org/go-neb/services/wikipedia"
+	_ "github.com/matrix-org/go-neb/services/circleci"
 	"github.com/matrix-org/go-neb/types"
 	"github.com/matrix-org/util"
 	_ "github.com/mattn/go-sqlite3"
