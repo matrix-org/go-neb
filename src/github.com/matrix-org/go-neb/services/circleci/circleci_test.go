@@ -120,7 +120,7 @@ func assertResponse(t *testing.T, w *httptest.ResponseRecorder, msgs []gomatrix.
 }
 
 func makeService(t *testing.T, template string) *Service {
-	srv, err := types.CreateService("id", ServiceType, "@travisci:hyrule", []byte(
+	srv, err := types.CreateService("id", ServiceType, "@circleci:hyrule", []byte(
 		`{
 			"rooms":{
 				"!ewfug483gsfe:localhost": {

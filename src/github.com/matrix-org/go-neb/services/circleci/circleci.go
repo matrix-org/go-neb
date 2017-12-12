@@ -13,9 +13,10 @@ import (
 	"github.com/matrix-org/go-neb/types"
 	"github.com/matrix-org/gomatrix"
 	"io/ioutil"
+	"strconv"
 )
 
-// ServiceType of the Travis-CI service.
+// ServiceType of the CircleCI service.
 const ServiceType = "circleci"
 
 // DefaultTemplate contains the template that will be used if none is supplied.
@@ -89,7 +90,7 @@ func notifToTemplate(n WebhookNotification) map[string]string {
 	t["repository_slug"] = p.Username + "/" + p.Reponame
 	t["repository"] = t["repository_slug"] // Deprecated form but still used everywhere in people's templates
 	t["repository_name"] = p.Reponame
-	t["build_number"] = string(p.BuildNum)
+	t["build_number"] = strconv.Itoa(p.BuildNum)
 	t["build_id"] = t["build_number"] // CircleCI doesn't have a difference between number and ID but to be consistent with TravisCI
 	t["branch"] = p.Branch
 	shaLength := len(p.VcsRevision)
