@@ -29,7 +29,7 @@ var ownerRepoRegex = regexp.MustCompile(`^([A-z0-9-_.]+)/([A-z0-9-_.]+)$`)
 
 var httpClient = &http.Client{}
 
-// Service contains the Config fields for the Travis-CI service.
+// Service contains the Config fields for the CircleCI service.
 //
 // This service will send notifications into a Matrix room when CircleCI sends
 // webhook events to it. It requires a public domain which CircleCI can reach.
@@ -107,7 +107,7 @@ func notifToTemplate(n WebhookNotification) map[string]string {
 	if p.Status != "" {
 		t["result"] = p.Status
 	}
-	t["message"] = p.Outcome // message: Travis CI message to the build
+	t["message"] = p.Outcome // message: CircleCI message to the build
 
 	if !p.StartTime.IsZero()  && !p.StopTime.IsZero() {
 			t["duration"] = p.StopTime.Sub(p.StartTime).String()
@@ -138,7 +138,7 @@ func outputForTemplate(circleciTmpl string, tmpl map[string]string) (out string)
 // webhook endpoint URL to their .circleci/config.yml file:
 //    notify:
 //		webhooks:
-//			- url: https://example.com/hooks/circle
+//			- url: https://example.com/services/hooks/circle
 //
 // See https://circleci.com/docs/1.0/configuration/#notify for more information.
 func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *gomatrix.Client) {
