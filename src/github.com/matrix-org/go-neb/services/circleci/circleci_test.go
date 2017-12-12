@@ -65,7 +65,7 @@ func TestCircleCI(t *testing.T) {
 			Body:       ioutil.NopCloser(bytes.NewBufferString(`{"event_id":"$yup:event"}`)),
 		}, nil
 	}
-	matrixCli, _ := gomatrix.NewClient("https://hyrule", "@travisci:hyrule", "its_a_secret")
+	matrixCli, _ := gomatrix.NewClient("https://hyrule", "@circleci:hyrule", "its_a_secret")
 	matrixCli.Client = &http.Client{Transport: matrixTrans}
 
 	// BEGIN running the CircleCI table tests
