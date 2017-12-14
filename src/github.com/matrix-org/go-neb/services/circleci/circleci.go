@@ -22,7 +22,7 @@ const ServiceType = "circleci"
 
 // DefaultTemplate contains the template that will be used if none is supplied.
 // This matches the default mentioned at: https://docs.travis-ci.com/user/notifications#Customizing-slack-notifications
-const DefaultTemplate = (`%{repository_slug}#%{buildnum} (%{branch} - %{commit} : %{committername}): %{body}
+const DefaultTemplate = (`%{repository_slug}#%{buildnum} (%{branch} - %{commit} : %{committername}): %{outcome}
 	Build details : %{buildurl}`)
 
 // Matches 'owner/repo'
@@ -42,7 +42,7 @@ var httpClient = &http.Client{}
 //           "!ewfug483gsfe:localhost": {
 //               repos: {
 //                   "matrix-org/go-neb": {
-//                       template: "%{repository_slug}#%{buildnum} (%{branch} - %{commit} : %{committername}): %{body}\nBuild details : %{buildurl}"
+//                       template: "%{repository_slug}#%{buildnum} (%{branch} - %{commit} : %{committername}): %{outcome}\nBuild details : %{buildurl}"
 //                   }
 //               }
 //           }
