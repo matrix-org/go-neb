@@ -25,22 +25,22 @@ var circleciTests = []struct {
 }{
 	{
 		exampleBody,
-		"%{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{message}",
+		"%{repository_slug}#%{buildnum} (%{branch} - %{commit} : %{committername}): %{message}",
 		"circleci/mongofinil#22 (master - 1d231626ba : Allen Rohner): success",
 	},
 	{
 		exampleBody,
-		"%{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{message}",
+		"%{repository_slug}#%{buildnum} (%{branch} - %{commit} : %{committername}): %{message}",
 		"circleci/mongofinil#22 (master - 1d231626ba : Allen Rohner): success",
 	},
 	{
 		strings.TrimSuffix(exampleBody, "%7D") + "%2C%22EXTRA_KEY%22%3Anull%7D",
-		"%{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{message}",
+		"%{repository_slug}#%{buildnum} (%{branch} - %{commit} : %{committername}): %{message}",
 		"circleci/mongofinil#22 (master - 1d231626ba : Allen Rohner): success",
 	},
 	{
 		exampleBody,
-		"%{repository}#%{build_number} %{duration}",
+		"%{repository_slug}#%{buildnum} %{duration}",
 		"circleci/mongofinil#22 23s",
 	},
 }

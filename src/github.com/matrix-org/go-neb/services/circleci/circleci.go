@@ -14,6 +14,7 @@ import (
 	"github.com/matrix-org/gomatrix"
 	"io/ioutil"
 	"strconv"
+	"github.com/fatih/structs"
 )
 
 // ServiceType of the CircleCI service.
@@ -21,8 +22,8 @@ const ServiceType = "circleci"
 
 // DefaultTemplate contains the template that will be used if none is supplied.
 // This matches the default mentioned at: https://docs.travis-ci.com/user/notifications#Customizing-slack-notifications
-const DefaultTemplate = (`%{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{message}
-	Build details : %{build_url}`)
+const DefaultTemplate = (`%{repository_slug}#%{buildnum} (%{branch} - %{commit} : %{committername}): %{body}
+	Build details : %{buildurl}`)
 
 // Matches 'owner/repo'
 var ownerRepoRegex = regexp.MustCompile(`^([A-z0-9-_.]+)/([A-z0-9-_.]+)$`)
@@ -41,7 +42,7 @@ var httpClient = &http.Client{}
 //           "!ewfug483gsfe:localhost": {
 //               repos: {
 //                   "matrix-org/go-neb": {
-//                       template: "%{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{message}\nBuild details : %{build_url}"
+//                       template: "%{repository_slug}#%{buildnum} (%{branch} - %{commit} : %{committername}): %{body}\nBuild details : %{buildurl}"
 //                   }
 //               }
 //           }
@@ -61,22 +62,30 @@ type Service struct {
 			// This is identical to the format of Slack Notifications for Travis-CI:
 			// https://docs.travis-ci.com/user/notifications#Customizing-slack-notifications
 			//
+			// As this is CircleCI it also supports all CircleCI fields (full loiwer case no "_" )
+			// Compare with https://circleci.com/docs/api/v1-reference/#build
+			//
 			// The following variables are available:
 			//   repository_slug: your Git* repo identifier (like svenfuchs/minimal)
-			//   repository_name: the slug without the username
-			//   build_number: build number
-			//   build_id: build id
+			//   reponame: the slug without the username
+			//   repository_name: the slug without the username //Deprecated for CircleCI use "reponame" instead
+			//   buildnum: build number
+			//   build_number: build number //Deprecated for CircleCI use "buildnum" instead
+			//   build_id: build id //Deprecated for CircleCI use "build_num" instead as this value doesn't really exist in CircleCI
 			//   branch: branch build name
 			//   commit: shortened commit SHA
-			//   author: commit author name
-			//   commit_message: commit message of build
+			//   committername: commit author name
+			//   author: commit author name //Deprecated for CircleCI use "committername" instead
+			//   body: commit message of build
+			//   commit_message: commit message of build //Deprecated for CircleCI use "body" instead
 			//   commit_subject: first line of the commit message
 			//   result: result of build
 			//   message: CircleCI message to the build
 			//   duration: total duration of all builds in the matrix
 			//   elapsed_time: time between build start and finish
-			//   compare_url: commit change view URL
-			//   build_url: URL of the build detail
+			//   buildurl: URL of the build detail
+			//   build_url: URL of the build detail //Deprecated for CircleCI use "buildurl" instead
+
 			Template string `json:"template"`
 		} `json:"repos"`
 	} `json:"rooms"`
@@ -92,7 +101,6 @@ func notifToTemplate(n WebhookNotification) map[string]string {
 	t["repository_name"] = p.Reponame
 	t["build_number"] = strconv.Itoa(p.BuildNum)
 	t["build_id"] = t["build_number"] // CircleCI doesn't have a difference between number and ID but to be consistent with TravisCI
-	t["branch"] = p.Branch
 	shaLength := len(p.VcsRevision)
 	if shaLength > 10 {
 		shaLength = 10
@@ -115,6 +123,17 @@ func notifToTemplate(n WebhookNotification) map[string]string {
 	}
 
 	t["build_url"] = p.BuildURL
+
+	// Make the full struct data into the Map without manual mapping
+	rawT := structs.Map(p)
+	for key, value := range rawT {
+		switch value := value.(type) {
+		case string:
+			t[strings.ToLower(key)] = value
+		case int:
+			t[strings.ToLower(key)] = strconv.Itoa(value)
+		}
+	}
 	return t
 }
 
