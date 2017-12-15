@@ -22,8 +22,8 @@ const ServiceType = "circleci"
 
 // DefaultTemplate contains the template that will be used if none is supplied.
 // This matches the default mentioned at: https://docs.travis-ci.com/user/notifications#Customizing-slack-notifications
-const DefaultTemplate = (`%{repository_slug}#%{buildnum} (%{branch} - %{commit} : %{committername}): %{outcome}
-	Build details : %{buildurl}`)
+const DefaultTemplate = (`%{repository_slug}#%{build_num} (%{branch} - %{commit} : %{committer_name}): %{outcome}
+	Build details : %{build_url}`)
 
 // Matches 'owner/repo'
 var ownerRepoRegex = regexp.MustCompile(`^([A-z0-9-_.]+)/([A-z0-9-_.]+)$`)
@@ -42,7 +42,7 @@ var httpClient = &http.Client{}
 //           "!ewfug483gsfe:localhost": {
 //               repos: {
 //                   "matrix-org/go-neb": {
-//                       template: "%{repository_slug}#%{buildnum} (%{branch} - %{commit} : %{committername}): %{outcome}\nBuild details : %{buildurl}"
+//                       template: "%{repository_slug}#%{build_num} (%{branch} - %{commit} : %{committer_name}): %{outcome}\nBuild details : %{build_url}"
 //                   }
 //               }
 //           }
@@ -62,20 +62,20 @@ type Service struct {
 			// This is identical to the format of Slack Notifications for Travis-CI:
 			// https://docs.travis-ci.com/user/notifications#Customizing-slack-notifications
 			//
-			// As this is CircleCI it also supports all CircleCI fields (full loiwer case no "_" )
+			// As this is CircleCI it also supports all CircleCI fields
 			// Compare with https://circleci.com/docs/api/v1-reference/#build
 			//
 			// The following variables are available:
 			//   repository_slug: your Git* repo identifier (like svenfuchs/minimal)
 			//   reponame: the slug without the username
 			//   repository_name: the slug without the username //Deprecated for CircleCI use "reponame" instead
-			//   buildnum: build number
-			//   build_number: build number //Deprecated for CircleCI use "buildnum" instead
+			//   build_num: build number
+			//   build_number: build number //Deprecated for CircleCI use "build_num" instead
 			//   build_id: build id //Deprecated for CircleCI use "build_num" instead as this value doesn't really exist in CircleCI
 			//   branch: branch build name
 			//   commit: shortened commit SHA
-			//   committername: commit author name
-			//   author: commit author name //Deprecated for CircleCI use "committername" instead
+			//   committer_name: commit author name
+			//   author: commit author name //Deprecated for CircleCI use "committer_name" instead
 			//   body: commit message of build
 			//   commit_message: commit message of build //Deprecated for CircleCI use "body" instead
 			//   commit_subject: first line of the commit message
@@ -83,8 +83,7 @@ type Service struct {
 			//   message: CircleCI message to the build
 			//   duration: total duration of all builds in the matrix
 			//   elapsed_time: time between build start and finish
-			//   buildurl: URL of the build detail
-			//   build_url: URL of the build detail //Deprecated for CircleCI use "buildurl" instead
+			//   build_url: URL of the build detail
 
 			Template string `json:"template"`
 		} `json:"repos"`
@@ -129,9 +128,9 @@ func notifToTemplate(n WebhookNotification) map[string]string {
 	for key, value := range rawT {
 		switch value := value.(type) {
 		case string:
-			t[strings.ToLower(key)] = value
+			t[CamelCaseToUnderscore(key)] = value
 		case int:
-			t[strings.ToLower(key)] = strconv.Itoa(value)
+			t[CamelCaseToUnderscore(key)] = strconv.Itoa(value)
 		}
 	}
 	return t
