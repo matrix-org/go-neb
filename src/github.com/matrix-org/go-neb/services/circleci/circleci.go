@@ -15,6 +15,7 @@ import (
 	"io/ioutil"
 	"strconv"
 	"github.com/fatih/structs"
+	"time"
 )
 
 // ServiceType of the CircleCI service.
@@ -131,6 +132,8 @@ func notifToTemplate(n WebhookNotification) map[string]string {
 			t[CamelCaseToUnderscore(key)] = value
 		case int:
 			t[CamelCaseToUnderscore(key)] = strconv.Itoa(value)
+		case time.Time:
+			t[CamelCaseToUnderscore(key)] = value.String()
 		}
 	}
 	return t
