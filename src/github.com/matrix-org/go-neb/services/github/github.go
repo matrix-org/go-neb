@@ -28,7 +28,8 @@ const ServiceType = "github"
 
 // Matches alphanumeric then a /, then more alphanumeric then a #, then a number.
 // E.g. owner/repo#11 (issue/PR numbers) - Captured groups for owner/repo/number
-var ownerRepoIssueRegex = regexp.MustCompile(`(([A-z0-9-_.]+)/([A-z0-9-_.]+))?#([0-9]+)`)
+// Does not match things like #3dprinting and testing#1234 (incomplete owner/repo format)
+var ownerRepoIssueRegex = regexp.MustCompile(`(?:(?:([A-z0-9-_.]+)/([A-z0-9-_.]+))|\B)#([0-9]+)\b`)
 
 // Matches like above, but anchored to start and end of the string respectively.
 var ownerRepoIssueRegexAnchored = regexp.MustCompile(`^(([A-z0-9-_.]+)/([A-z0-9-_.]+))?#([0-9]+)$`)
@@ -502,15 +503,15 @@ func (s *Service) Expansions(cli *gomatrix.Client) []types.Expansion {
 			Regexp: ownerRepoIssueRegex,
 			Expand: func(roomID, userID string, matchingGroups []string) interface{} {
 				// There's an optional group in the regex so matchingGroups can look like:
-				// [foo/bar#55 foo/bar foo bar 55]
-				// [#55                        55]
-				if len(matchingGroups) != 5 {
+				// [foo/bar#55 foo bar 55]
+				// [#55                55]
+				if len(matchingGroups) != 4 {
 					log.WithField("groups", matchingGroups).WithField("len", len(matchingGroups)).Print(
 						"Unexpected number of groups",
 					)
 					return nil
 				}
-				if matchingGroups[1] == "" && matchingGroups[2] == "" && matchingGroups[3] == "" {
+				if matchingGroups[1] == "" && matchingGroups[2] == "" {
 					// issue only match, this only works if there is a default repo
 					defaultRepo := s.defaultRepo(roomID)
 					if defaultRepo == "" {
@@ -527,18 +528,17 @@ func (s *Service) Expansions(cli *gomatrix.Client) []types.Expansion {
 					// Fill in the missing fields in matching groups and fall through into ["foo/bar#11", "foo", "bar", "11"]
 					matchingGroups = []string{
 						defaultRepo + matchingGroups[0],
-						defaultRepo,
 						segs[0],
 						segs[1],
-						matchingGroups[4],
+						matchingGroups[3],
 					}
 				}
-				num, err := strconv.Atoi(matchingGroups[4])
+				num, err := strconv.Atoi(matchingGroups[3])
 				if err != nil {
-					log.WithField("issue_number", matchingGroups[4]).Print("Bad issue number")
+					log.WithField("issue_number", matchingGroups[3]).Print("Bad issue number")
 					return nil
 				}
-				return s.expandIssue(roomID, userID, matchingGroups[2], matchingGroups[3], num)
+				return s.expandIssue(roomID, userID, matchingGroups[1], matchingGroups[2], num)
 			},
 		},
 	}
