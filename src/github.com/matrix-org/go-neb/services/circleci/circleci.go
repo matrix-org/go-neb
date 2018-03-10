@@ -12,10 +12,7 @@ import (
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/types"
 	"github.com/matrix-org/gomatrix"
-	"io/ioutil"
 	"strconv"
-	"github.com/fatih/structs"
-	"time"
 )
 
 // ServiceType of the CircleCI service.
@@ -28,8 +25,6 @@ const DefaultTemplate = (`%{repository_slug}#%{build_num} (%{branch} - %{commit}
 
 // Matches 'owner/repo'
 var ownerRepoRegex = regexp.MustCompile(`^([A-z0-9-_.]+)/([A-z0-9-_.]+)$`)
-
-var httpClient = &http.Client{}
 
 // Service contains the Config fields for the CircleCI service.
 //
@@ -92,7 +87,7 @@ type Service struct {
 }
 
 // Converts a webhook notification into a map of template var name to value
-func notifToTemplate(n WebhookNotification) map[string]string {
+func notifToTemplate(n webhookNotification) map[string]string {
 	t := make(map[string]string)
 	//Get Payload to variable
 	p := n.Payload
@@ -106,7 +101,7 @@ func notifToTemplate(n WebhookNotification) map[string]string {
 		shaLength = 10
 	}
 	t["commit"] = p.VcsRevision[:shaLength] // shortened commit SHA
-	t["author"] = p.CommitterName      // author: commit author name
+	t["author"] = p.CommitterName           // author: commit author name
 	// commit_message: commit message of build
 	// commit_subject: first line of the commit message
 	t["commit_message"] = p.Body
@@ -117,25 +112,47 @@ func notifToTemplate(n WebhookNotification) map[string]string {
 	}
 	t["message"] = p.Outcome // message: CircleCI message to the build
 
-	if !p.StartTime.IsZero()  && !p.StopTime.IsZero() {
-			t["duration"] = p.StopTime.Sub(p.StartTime).String()
-			t["elapsed_time"] = t["duration"]
+	if !p.StartTime.IsZero() && !p.StopTime.IsZero() {
+		t["duration"] = p.StopTime.Sub(p.StartTime).String()
+		t["elapsed_time"] = t["duration"]
 	}
 
 	t["build_url"] = p.BuildURL
 
-	// Make the full struct data into the Map without manual mapping
-	rawT := structs.Map(p)
-	for key, value := range rawT {
-		switch value := value.(type) {
-		case string:
-			t[CamelCaseToUnderscore(key)] = value
-		case int:
-			t[CamelCaseToUnderscore(key)] = strconv.Itoa(value)
-		case time.Time:
-			t[CamelCaseToUnderscore(key)] = value.String()
-		}
+	//Map json fields
+	t["vcs_url"] = p.VcsURL
+	t["build_num"] = strconv.Itoa(p.BuildNum)
+	t["branch"] = p.Branch
+	t["vcs_revision"] = p.VcsRevision
+	t["committer_name"] = p.CommitterName
+	t["committer_email"] = p.CommitterEmail
+	t["subject"] = p.Subject
+	t["body"] = p.Body
+	t["why"] = p.Why
+	switch value := p.DontBuild.(type) {
+	case string:
+		t["dont_build"] = value
+	case int:
+		t["dont_build"] = strconv.Itoa(value)
+	case bool:
+		t["dont_build"] = strconv.FormatBool(value)
 	}
+	t["queued_at"] = p.QueuedAt.String()
+	t["start_time"] = p.StartTime.String()
+	t["stop_time"] = p.StopTime.String()
+	t["build_time_millis"] = strconv.Itoa(p.BuildTimeMillis)
+	t["username"] = p.Username
+	t["reponame"] = p.Reponame
+	t["lifecycle"] = p.Lifecycle
+	t["outcome"] = p.Outcome
+	t["status"] = p.Status
+	switch value := p.RetryOf.(type) {
+	case string:
+		t["retry_of"] = value
+	case int:
+		t["retry_of"] = strconv.Itoa(value)
+	}
+	//TODO: Figure out how to map the Steps Slice/Array
 	return t
 }
 
@@ -163,19 +180,8 @@ func outputForTemplate(circleciTmpl string, tmpl map[string]string) (out string)
 //
 // See https://circleci.com/docs/1.0/configuration/#notify for more information.
 func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *gomatrix.Client) {
-	body, err := ioutil.ReadAll(req.Body)
-	if err != nil {
-		log.WithFields(log.Fields{
-			"Body":  req.Body,
-			log.ErrorKey: err,
-		}).Warn("Failed to Read Body")
-		w.WriteHeader(403)
-		return
-	}
-	//fmt.Printf("%s\n", body)
-
-	var notif WebhookNotification
-	if err := json.Unmarshal(body, &notif); err != nil {
+	var notif webhookNotification
+	if err := json.NewDecoder(req.Body).Decode(&notif); err != nil {
 		log.WithError(err).Error("CircleCI webhook received an invalid JSON body")
 		w.WriteHeader(400)
 		return

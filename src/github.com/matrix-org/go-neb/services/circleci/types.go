@@ -3,7 +3,7 @@ package circleci
 import "time"
 
 // WebhookNotification is the response of a webhook notification by circleCI
-type WebhookNotification struct {
+type webhookNotification struct {
 	Payload struct {
 		VcsURL          string      `json:"vcs_url,omitempty"`
 		BuildURL        string      `json:"build_url,omitempty"`
