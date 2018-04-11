@@ -77,12 +77,6 @@
 			"branch": "master"
 		},
 		{
-			"importpath": "github.com/fatih/structs",
-			"repository": "https://github.com/fatih/structs",
-			"revision": "f5faa72e73092639913f5833b75e1ac1d6bc7a63",
-			"branch": "master"
-		},
-		{
 			"importpath": "github.com/garyburd/redigo/internal",
 			"repository": "https://github.com/garyburd/redigo",
 			"revision": "ffa8d46ada782d81cfda81a0fbd9f45ceae448e8",
