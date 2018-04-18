@@ -105,7 +105,7 @@ BIND_ADDRESS=:4050 DATABASE_TYPE=sqlite3 DATABASE_URL=go-neb.db?_busy_timeout=50
  - `DATABASE_URL` is where to find the database file. One will be created if it does not exist. It is a URL so parameters can be passed to it. We recommend setting `_busy_timeout=5000` to prevent sqlite3 "database is locked" errors.
  - `BASE_URL` should be the public-facing endpoint that sites like Github can send webhooks to.
  - `CONFIG_FILE` is the path to the configuration file to read from. This isn't included in the example above, so Go-NEB will operate in HTTP mode.
-
+ - `LOG_DIR` is a directory that log files will be written to, with log rotation enabled. If set, logging to stderr will be disabled.
 Go-NEB needs to be "configured" with clients and services before it will do anything useful. It can be configured via a configuration file OR by an HTTP API.
 
 ## Configuration file
