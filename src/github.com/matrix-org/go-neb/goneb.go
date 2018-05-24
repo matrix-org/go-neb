@@ -238,6 +238,7 @@ func main() {
 				DisableSorting:   false,
 			}, &dugong.DailyRotationSchedule{GZip: false},
 		))
+		log.SetOutput(ioutil.Discard)
 	}
 
 	log.Infof("Go-NEB (%+v)", e)
