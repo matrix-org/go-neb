@@ -26,9 +26,18 @@ import (
 // ServiceType of the Github service
 const ServiceType = "github"
 
+// Optionally matches alphanumeric then a /, then more alphanumeric
+// Used as a base for the expansion regexes below.
+var ownerRepoBaseRegex = `(?:(?:([A-z0-9-_.]+)/([A-z0-9-_.]+))|\B)`
+
 // Matches alphanumeric then a /, then more alphanumeric then a #, then a number.
 // E.g. owner/repo#11 (issue/PR numbers) - Captured groups for owner/repo/number
-var ownerRepoIssueRegex = regexp.MustCompile(`(([A-z0-9-_.]+)/([A-z0-9-_.]+))?#([0-9]+)`)
+// Does not match things like #3dprinting and testing#1234 (incomplete owner/repo format)
+var ownerRepoIssueRegex = regexp.MustCompile(ownerRepoBaseRegex + `#([0-9]+)\b`)
+
+// Matches alphanumeric then a /, then more alphanumeric then a @, then a hex string.
+// E.g. owner/repo@deadbeef1234 (commit hash) - Captured groups for owner/repo/hash
+var ownerRepoCommitRegex = regexp.MustCompile(ownerRepoBaseRegex + `@([0-9a-fA-F]+)\b`)
 
 // Matches like above, but anchored to start and end of the string respectively.
 var ownerRepoIssueRegexAnchored = regexp.MustCompile(`^(([A-z0-9-_.]+)/([A-z0-9-_.]+))?#([0-9]+)$`)
@@ -80,7 +89,7 @@ func (s *Service) requireGithubClientFor(userID string) (cli *gogithub.Client, r
 }
 
 const numberGithubSearchSummaries = 3
-const cmdGithubSearchUsage = `!github create owner/repo "search query"`
+const cmdGithubSearchUsage = `!github search "search query"`
 
 func (s *Service) cmdGithubSearch(roomID, userID string, args []string) (interface{}, error) {
 	cli := s.githubClientFor(userID, true)
@@ -88,7 +97,7 @@ func (s *Service) cmdGithubSearch(roomID, userID string, args []string) (interfa
 		return &gomatrix.TextMessage{"m.notice", "Usage: " + cmdGithubSearchUsage}, nil
 	}
 
-	query := fmt.Sprintf("repo:%s %s", args[0], strings.Join(args[1:], " "))
+	query := strings.Join(args, " ")
 	searchResult, res, err := cli.Search.Issues(query, nil)
 
 	if err != nil {
@@ -425,6 +434,58 @@ func (s *Service) expandIssue(roomID, userID, owner, repo string, issueNum int) 
 	}
 }
 
+func (s *Service) expandCommit(roomID, userID, owner, repo, sha string) interface{} {
+	cli := s.githubClientFor(userID, true)
+
+	c, _, err := cli.Repositories.GetCommit(owner, repo, sha)
+	if err != nil {
+		log.WithError(err).WithFields(log.Fields{
+			"owner": owner,
+			"repo": repo,
+			"sha": sha,
+		}).Print("Failed to fetch commit")
+		return nil
+	}
+
+	commit := c.Commit
+	var htmlBuffer bytes.Buffer
+	var plainBuffer bytes.Buffer
+
+	shortUrl := strings.TrimSuffix(*c.HTMLURL, *c.SHA) + sha
+	htmlBuffer.WriteString(fmt.Sprintf("<a href=\"%s\">%s</a><br />", *c.HTMLURL, shortUrl))
+	plainBuffer.WriteString(fmt.Sprintf("%s\n", shortUrl))
+
+	if c.Stats != nil {
+		htmlBuffer.WriteString(fmt.Sprintf("[<strong><font color='#1cc3ed'>~%d</font>, <font color='#30bf2b'>+%d</font>, <font color='#fc3a25'>-%d</font></strong>] ", len(c.Files), *c.Stats.Additions, *c.Stats.Deletions))
+		plainBuffer.WriteString(fmt.Sprintf("[~%d, +%d, -%d] ", len(c.Files), *c.Stats.Additions, *c.Stats.Deletions))
+	}
+
+	if commit.Author != nil {
+		authorName := ""
+		if commit.Author.Name != nil {
+			authorName = *commit.Author.Name
+		} else if commit.Author.Login != nil {
+			authorName = *commit.Author.Login
+		}
+
+		htmlBuffer.WriteString(fmt.Sprintf("%s: ", authorName))
+		plainBuffer.WriteString(fmt.Sprintf("%s: ", authorName))
+	}
+
+	if commit.Message != nil {
+		segs := strings.SplitN(*commit.Message, "\n", 2)
+		htmlBuffer.WriteString(segs[0])
+		plainBuffer.WriteString(segs[0])
+	}
+
+	return &gomatrix.HTMLMessage{
+		Body:          plainBuffer.String(),
+		MsgType:       "m.notice",
+		Format:        "org.matrix.custom.html",
+		FormattedBody: htmlBuffer.String(),
+	}
+}
+
 // Commands supported:
 //    !github create owner/repo "issue title" "optional issue description"
 // Responds with the outcome of the issue creation request. This command requires
@@ -502,15 +563,15 @@ func (s *Service) Expansions(cli *gomatrix.Client) []types.Expansion {
 			Regexp: ownerRepoIssueRegex,
 			Expand: func(roomID, userID string, matchingGroups []string) interface{} {
 				// There's an optional group in the regex so matchingGroups can look like:
-				// [foo/bar#55 foo/bar foo bar 55]
-				// [#55                        55]
-				if len(matchingGroups) != 5 {
+				// [foo/bar#55 foo bar 55]
+				// [#55                55]
+				if len(matchingGroups) != 4 {
 					log.WithField("groups", matchingGroups).WithField("len", len(matchingGroups)).Print(
 						"Unexpected number of groups",
 					)
 					return nil
 				}
-				if matchingGroups[1] == "" && matchingGroups[2] == "" && matchingGroups[3] == "" {
+				if matchingGroups[1] == "" && matchingGroups[2] == "" {
 					// issue only match, this only works if there is a default repo
 					defaultRepo := s.defaultRepo(roomID)
 					if defaultRepo == "" {
@@ -527,18 +588,55 @@ func (s *Service) Expansions(cli *gomatrix.Client) []types.Expansion {
 					// Fill in the missing fields in matching groups and fall through into ["foo/bar#11", "foo", "bar", "11"]
 					matchingGroups = []string{
 						defaultRepo + matchingGroups[0],
-						defaultRepo,
 						segs[0],
 						segs[1],
-						matchingGroups[4],
+						matchingGroups[3],
 					}
 				}
-				num, err := strconv.Atoi(matchingGroups[4])
+				num, err := strconv.Atoi(matchingGroups[3])
 				if err != nil {
-					log.WithField("issue_number", matchingGroups[4]).Print("Bad issue number")
+					log.WithField("issue_number", matchingGroups[3]).Print("Bad issue number")
 					return nil
 				}
-				return s.expandIssue(roomID, userID, matchingGroups[2], matchingGroups[3], num)
+				return s.expandIssue(roomID, userID, matchingGroups[1], matchingGroups[2], num)
+			},
+		},
+		types.Expansion{
+			Regexp: ownerRepoCommitRegex,
+			Expand: func(roomID, userID string, matchingGroups []string) interface{} {
+				// There's an optional group in the regex so matchingGroups can look like:
+				// [foo/bar@a123 foo bar a123]
+				// [@a123                a123]
+				if len(matchingGroups) != 4 {
+					log.WithField("groups", matchingGroups).WithField("len", len(matchingGroups)).Print(
+						"Unexpected number of groups",
+					)
+					return nil
+				}
+				if matchingGroups[1] == "" && matchingGroups[2] == "" {
+					// issue only match, this only works if there is a default repo
+					defaultRepo := s.defaultRepo(roomID)
+					if defaultRepo == "" {
+						return nil
+					}
+					segs := strings.Split(defaultRepo, "/")
+					if len(segs) != 2 {
+						log.WithFields(log.Fields{
+							"room_id":      roomID,
+							"default_repo": defaultRepo,
+						}).Error("Default repo is malformed")
+						return nil
+					}
+					// Fill in the missing fields in matching groups and fall through into ["foo/bar@a123", "foo", "bar", "a123"]
+					matchingGroups = []string{
+						defaultRepo + matchingGroups[0],
+						segs[0],
+						segs[1],
+						matchingGroups[3],
+					}
+				}
+
+				return s.expandCommit(roomID, userID, matchingGroups[1], matchingGroups[2], matchingGroups[3])
 			},
 		},
 	}
