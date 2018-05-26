@@ -9,13 +9,10 @@ GOPATH=$(pwd):$(pwd)/vendor godoc -http=localhost:6060 &
 DOC_PID=$!
 
 # Wait for the server to init
-while :
+until curl -s "http://localhost:6060" > /dev/null
 do
-    curl -s "http://localhost:6060" > /dev/null
-    if [ $? -eq 0 ] # exit code is 0 if we connected
-    then
-        break
-    fi
+    # no-op
+    :
 done
 
 # Scrape the pkg directory for the API docs. Scrap lib for the CSS/JS. Ignore everything else.
