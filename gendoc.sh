@@ -9,7 +9,7 @@ GOPATH=$(pwd):$(pwd)/vendor godoc -http=localhost:6060 &
 DOC_PID=$!
 
 # Wait for the server to init
-until curl -s "http://localhost:6060" > /dev/null
+until curl -fs "http://localhost:6060/pkg/github.com/matrix-org/go-neb/" > /dev/null
 do
     # no-op
     :
