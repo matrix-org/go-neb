@@ -1,5 +1,5 @@
 # Build go-neb
-FROM golang:1.8-alpine as builder
+FROM golang:1.10-alpine as builder
 
 COPY . /tmp/go-neb
 WORKDIR /tmp/go-neb
