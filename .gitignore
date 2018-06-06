@@ -12,6 +12,9 @@ bin
 pkg
 _obj
 _test
+.idea
+vendor/pkg
+vendor/src
 
 # Architecture specific extensions/prefixes
 *.[568vq]
