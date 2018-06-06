@@ -225,7 +225,12 @@ sensible-browser http://localhost:6060/pkg/github.com/matrix-org/go-neb
 
 ## Docker image
 
-There is a `Dockerfile` in the root of the repository which copies the local source files and builds go-neb.
+To get started quickly, use the image from docker.io:
+```
+docker run -v /path/to/data:/data -e "BASE_URL=http://your.public.url:4050" matrixdotorg/go-neb
+```
+
+If you'd prefer to build the file yourself, clone this repository and build the `Dockerfile`.
 
 The image sets the following environment variables:
 ```
