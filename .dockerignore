@@ -1,0 +1,10 @@
+vendor/pkg
+vendor/src
+pkg
+hooks
+bin
+
+# Other stuff we just don't need
+.gitignore
+.git
+.travis.yml
