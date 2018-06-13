@@ -10,7 +10,7 @@ RUN apk add --no-cache -t build-deps git gcc musl-dev go \
 
 
 # Run go-neb
-FROM alpine:3.6
+FROM alpine:3.7
 
 ENV BIND_ADDRESS=:4050 DATABASE_TYPE=sqlite3 DATABASE_URL=/data/go-neb.db?_busy_timeout=5000
 
