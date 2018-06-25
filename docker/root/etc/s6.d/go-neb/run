@@ -1,0 +1,3 @@
+#!/bin/sh
+chown -R ${UID}:${GID} /data
+exec su-exec ${UID}:${GID} /usr/local/bin/go-neb

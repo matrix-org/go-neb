@@ -225,7 +225,12 @@ sensible-browser http://localhost:6060/pkg/github.com/matrix-org/go-neb
 
 ## Docker image
 
-There is a `Dockerfile` in the root of the repository and a `build-docker-image.sh` script that uses an alpine-based golang container to build `go-neb` (note that this will overwrite host-built binaries in `pkg/` and `bin/`) and then builds the docker image using that binary.
+To get started quickly, use the image from docker.io:
+```
+docker run -v /path/to/data:/data -e "BASE_URL=http://your.public.url:4050" matrixdotorg/go-neb
+```
+
+If you'd prefer to build the file yourself, clone this repository and build the `Dockerfile`.
 
 The image sets the following environment variables:
 ```
