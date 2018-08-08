@@ -30,7 +30,7 @@ var (
 	pollCounter = prometheus.NewCounterVec(prometheus.CounterOpts{
 		Name: "goneb_rss_polls_total",
 		Help: "The number of feed polls from RSS services",
-	}, []string{"url", "http_status"})
+	}, []string{"http_status"})
 )
 
 const minPollingIntervalSeconds = 60 * 5 // 5 min (News feeds can be genuinely spammy)
@@ -200,21 +200,15 @@ func (s *Service) OnPoll(cli *gomatrix.Client) time.Time {
 }
 
 func incrementMetrics(urlStr string, err error) {
-	// extract domain part of RSS feed URL to get coarser (more useful) statistics
-	domain := urlStr
-	u, urlErr := url.Parse(urlStr)
-	if urlErr == nil {
-		domain = u.Host
-	}
 	if err != nil {
 		herr, ok := err.(gofeed.HTTPError)
 		statusCode := 0 // e.g. network timeout
 		if ok {
 			statusCode = herr.StatusCode
 		}
-		pollCounter.With(prometheus.Labels{"url": domain, "http_status": strconv.Itoa(statusCode)}).Inc()
+		pollCounter.With(prometheus.Labels{"http_status": strconv.Itoa(statusCode)}).Inc()
 	} else {
-		pollCounter.With(prometheus.Labels{"url": domain, "http_status": "200"}).Inc() // technically 2xx but gofeed doesn't tell us which
+		pollCounter.With(prometheus.Labels{"http_status": "200"}).Inc() // technically 2xx but gofeed doesn't tell us which
 	}
 }
 
