@@ -233,7 +233,7 @@ func pushHTMLMessage(p github.PushEvent) string {
 	// this branch was deleted, no HeadCommit object and deleted=true
 	if p.HeadCommit == nil && p.Deleted != nil && *p.Deleted {
 		return fmt.Sprintf(
-			`[<u>%s</u>] %s <font color="red"><b>deleted</font> %s</b>`,
+			`[<u>%s</u>] %s <b><font color="red">deleted</font> %s</b>`,
 			html.EscapeString(*p.Repo.FullName),
 			html.EscapeString(*p.Pusher.Name),
 			html.EscapeString(branch),
