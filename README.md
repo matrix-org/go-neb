@@ -79,6 +79,9 @@ Invite the bot user into a Matrix room and type `!echo hello world`. It will rep
 ### Travis CI
  - Ability to receive incoming build notifications.
  - Ability to adjust the message which is sent into the room.
+ 
+### Alertmanager
+ - Ability to receive alerts and render them with go templates
 
 
 # Installing
