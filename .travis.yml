@@ -1,6 +1,6 @@
 language: go
 go:
- - 1.10
+ - 1.11
 install:
  - go get github.com/constabulary/gb/...
  - go get github.com/golang/lint/golint
