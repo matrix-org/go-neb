@@ -132,7 +132,7 @@ func (s *Service) Register(oldService types.Service, client *gomatrix.Client) er
 				log.WithFields(log.Fields{
 					"line":        err.line,
 					"description": err.description,
-				}).Info("plain text Template Error")
+				}).Warn("plain text Template Error")
 				return fmt.Errorf("plain text template is invalid")
 			}
 		}
@@ -143,7 +143,7 @@ func (s *Service) Register(oldService types.Service, client *gomatrix.Client) er
 				log.WithFields(log.Fields{
 					"line":        err.line,
 					"description": err.description,
-				}).Info("HTML Template Error")
+				}).Warn("HTML Template Error")
 				return fmt.Errorf("html template is invalid")
 			}
 		}
