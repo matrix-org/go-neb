@@ -81,7 +81,7 @@ func (s *Service) Register(oldService types.Service, client *gomatrix.Client) er
 			numOldFeeds = len(oldFeedService.Feeds)
 		}
 		if numOldFeeds == 0 {
-			return errors.New("An RSS feed must be specified.")
+			return errors.New("An RSS feed must be specified")
 		}
 		return nil
 	}

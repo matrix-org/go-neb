@@ -52,7 +52,7 @@ type Service struct {
 	} `json:"rooms"`
 }
 
-// The payload from Alertmanager
+// WebhookNotification is the payload from Alertmanager
 type WebhookNotification struct {
 	Version           string            `json:"version"`
 	GroupKey          string            `json:"groupKey"`
@@ -61,14 +61,14 @@ type WebhookNotification struct {
 	GroupLabels       map[string]string `json:"groupLabels"`
 	CommonLabels      map[string]string `json:"commonLabels"`
 	CommonAnnotations map[string]string `json:"commonAnnotations"`
-	ExternalUrl       string            `json:"externalURL"`
+	ExternalURL       string            `json:"externalURL"`
 	Alerts            []struct {
 		Status       string            `json:"status"`
 		Labels       map[string]string `json:"labels"`
 		Annotations  map[string]string `json:"annotations"`
 		StartsAt     string            `json:"startsAt"`
 		EndsAt       string            `json:"endsAt"`
-		GeneratorUrl string            `json:"generatorURL"`
+		GeneratorURL string            `json:"generatorURL"`
 	} `json:"alerts"`
 }
 
@@ -125,13 +125,12 @@ func (s *Service) Register(oldService types.Service, client *gomatrix.Client) er
 		// validate that we have at least a plain text template
 		if templates.TextTemplate == "" {
 			return fmt.Errorf("plain text template missing")
-		} else {
-			// validate the plain text template is valid
-			_, err := text.New("textTemplate").Parse(templates.TextTemplate)
-			if err != nil {
-				log.WithError(err).Print("plain text Template Error")
-				return fmt.Errorf("plain text template is invalid")
-			}
+		}
+		// validate the plain text template is valid
+		_, err := text.New("textTemplate").Parse(templates.TextTemplate)
+		if err != nil {
+			log.WithError(err).Print("plain text Template Error")
+			return fmt.Errorf("plain text template is invalid")
 		}
 		if templates.HTMLTemplate != "" {
 			// validate that the html template is valid

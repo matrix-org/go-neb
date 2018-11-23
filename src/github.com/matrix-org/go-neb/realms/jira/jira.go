@@ -165,7 +165,7 @@ func (r *Realm) Init() error {
 // Register is called when this realm is being created from an external entity
 func (r *Realm) Register() error {
 	if r.ConsumerName == "" || r.ConsumerKey == "" || r.ConsumerSecret == "" || r.PrivateKeyPEM == "" {
-		return errors.New("ConsumerName, ConsumerKey, ConsumerSecret, PrivateKeyPEM must be specified.")
+		return errors.New("ConsumerName, ConsumerKey, ConsumerSecret, PrivateKeyPEM must be specified")
 	}
 	if r.JIRAEndpoint == "" {
 		return errors.New("JIRAEndpoint must be specified")

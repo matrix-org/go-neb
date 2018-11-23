@@ -460,9 +460,9 @@ func (s *Service) expandCommit(roomID, userID, owner, repo, sha string) interfac
 	var htmlBuffer bytes.Buffer
 	var plainBuffer bytes.Buffer
 
-	shortUrl := strings.TrimSuffix(*c.HTMLURL, *c.SHA) + sha
-	htmlBuffer.WriteString(fmt.Sprintf("<a href=\"%s\">%s</a><br />", *c.HTMLURL, shortUrl))
-	plainBuffer.WriteString(fmt.Sprintf("%s\n", shortUrl))
+	shortURL := strings.TrimSuffix(*c.HTMLURL, *c.SHA) + sha
+	htmlBuffer.WriteString(fmt.Sprintf("<a href=\"%s\">%s</a><br />", *c.HTMLURL, shortURL))
+	plainBuffer.WriteString(fmt.Sprintf("%s\n", shortURL))
 
 	if c.Stats != nil {
 		htmlBuffer.WriteString(fmt.Sprintf("[<strong><font color='#1cc3ed'>~%d</font>, <font color='#30bf2b'>+%d</font>, <font color='#fc3a25'>-%d</font></strong>] ", len(c.Files), *c.Stats.Additions, *c.Stats.Deletions))
@@ -744,7 +744,7 @@ func getTokenForUser(realmID, userID string) (string, error) {
 		return "", fmt.Errorf("Session is not a github session: %s", session.ID())
 	}
 	if ghSession.AccessToken == "" {
-		return "", fmt.Errorf("Github auth session for %s has not been completed.", userID)
+		return "", fmt.Errorf("Github auth session for %s has not been completed", userID)
 	}
 	return ghSession.AccessToken, nil
 }
