@@ -125,15 +125,14 @@ func (s *Service) Register(oldService types.Service, client *gomatrix.Client) er
 		// validate that we have at least a plain text template
 		if templates.TextTemplate == "" {
 			return fmt.Errorf("plain text template missing")
+		} else {
+			// validate the plain text template is valid
+			_, err := text.New("textTemplate").Parse(templates.TextTemplate)
+			if err != nil {
+				log.WithError(err).Print("plain text template error")
+				return fmt.Errorf("plain text template is invalid")
+			}
 		}
-
-		// validate the plain text template is valid
-		_, err := text.New("textTemplate").Parse(templates.TextTemplate)
-		if err != nil {
-			log.WithError(err).Print("plain text template error")
-			return fmt.Errorf("plain text template is invalid")
-		}
-
 		if templates.HTMLTemplate != "" {
 			// validate that the html template is valid
 			_, err := html.New("htmlTemplate").Parse(templates.HTMLTemplate)
