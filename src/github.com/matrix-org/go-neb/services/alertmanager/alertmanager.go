@@ -130,6 +130,7 @@ func (s *Service) Register(oldService types.Service, client *gomatrix.Client) er
 		// validate the plain text template is valid
 		_, err := text.New("textTemplate").Parse(templates.TextTemplate)
 		if err != nil {
+			log.WithError(err).Print("plain text template error")
 			return fmt.Errorf("plain text template is invalid")
 		}
 
@@ -137,6 +138,7 @@ func (s *Service) Register(oldService types.Service, client *gomatrix.Client) er
 			// validate that the html template is valid
 			_, err := html.New("htmlTemplate").Parse(templates.HTMLTemplate)
 			if err != nil {
+				log.WithError(err).Print("html template error")
 				return fmt.Errorf("html template is invalid")
 			}
 		}
