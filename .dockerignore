@@ -1,6 +1,5 @@
 vendor/pkg
 vendor/src
 pkg
-hooks
 bin
 .git
