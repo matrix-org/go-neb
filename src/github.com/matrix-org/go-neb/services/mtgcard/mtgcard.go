@@ -20,7 +20,7 @@ import (
 const ServiceType = "mtgcard"
 
 // Matches [[ then word separated with spaces then ]]. E.g "[[card Name]]
-var cardRegex = regexp.MustCompile(`\[\[\w+(\s*\w+)*\]\]`)
+var cardRegex = regexp.MustCompile(`\[\[[\p{L}|\p{Po}+|\s*]+\]\]`)
 
 type scryfallSearch struct {
 	Name         string `json:"name"`
