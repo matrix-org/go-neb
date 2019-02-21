@@ -129,7 +129,7 @@ func (c *Clients) updateClientInDB(newConfig api.ClientConfig) (new clientEntry,
 
 	// set the new display name if they differ
 	if old.config.DisplayName != new.config.DisplayName {
-		if err := new.client.SetDisplayName(new.config.DisplayName); err != nil {
+		if err = new.client.SetDisplayName(new.config.DisplayName); err != nil {
 			// whine about it but don't stop: this isn't fatal.
 			log.WithFields(log.Fields{
 				log.ErrorKey:  err,
