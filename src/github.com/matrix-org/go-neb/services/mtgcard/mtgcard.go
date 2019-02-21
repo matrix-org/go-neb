@@ -28,7 +28,7 @@ type scryfallSearch struct {
 	Euro         string `json:"eur"`
 	PurchaseURIs struct {
 		Cardmarket string `json:cardmarket`
-	} `json:purchase_uris`
+	} `json:"purchase_uris"`
 	ImageURIs struct {
 		Normal string `json:"normal"`
 		Small  string `json:"small"`
