@@ -156,7 +156,7 @@ func (s *WebhookService) Register(oldService types.Service, client *gomatrix.Cli
 	cli := s.githubClientFor(s.ClientUserID, false)
 	if cli == nil {
 		return fmt.Errorf(
-			"User %s does not have a Github auth session with realm %s.", s.ClientUserID, realm.ID())
+			"User %s does not have a Github auth session with realm %s", s.ClientUserID, realm.ID())
 	}
 
 	// Fetch the old service list and work out the difference between the two services.
@@ -182,7 +182,7 @@ func (s *WebhookService) Register(oldService types.Service, client *gomatrix.Cli
 		// The user didn't specify any webhooks. This may be a bug or it may be
 		// a conscious decision to remove all webhooks for this service. Figure out
 		// which it is by checking if we'd be removing any webhooks.
-		return fmt.Errorf("No webhooks specified.")
+		return fmt.Errorf("No webhooks specified")
 	}
 	for _, r := range newRepos {
 		logger := log.WithField("repo", r)

@@ -5,13 +5,14 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	html "html/template"
+	"net/http"
+	text "text/template"
+
 	log "github.com/Sirupsen/logrus"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/types"
 	"github.com/matrix-org/gomatrix"
-	html "html/template"
-	"net/http"
-	text "text/template"
 )
 
 // ServiceType of the Alertmanager service.
@@ -52,7 +53,7 @@ type Service struct {
 	} `json:"rooms"`
 }
 
-// The payload from Alertmanager
+// WebhookNotification is the payload from Alertmanager
 type WebhookNotification struct {
 	Version           string            `json:"version"`
 	GroupKey          string            `json:"groupKey"`
@@ -61,14 +62,14 @@ type WebhookNotification struct {
 	GroupLabels       map[string]string `json:"groupLabels"`
 	CommonLabels      map[string]string `json:"commonLabels"`
 	CommonAnnotations map[string]string `json:"commonAnnotations"`
-	ExternalUrl       string            `json:"externalURL"`
+	ExternalURL       string            `json:"externalURL"`
 	Alerts            []struct {
 		Status       string            `json:"status"`
 		Labels       map[string]string `json:"labels"`
 		Annotations  map[string]string `json:"annotations"`
 		StartsAt     string            `json:"startsAt"`
 		EndsAt       string            `json:"endsAt"`
-		GeneratorUrl string            `json:"generatorURL"`
+		GeneratorURL string            `json:"generatorURL"`
 	} `json:"alerts"`
 }
 

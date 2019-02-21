@@ -247,7 +247,7 @@ func (s *Service) Register(oldService types.Service, client *gomatrix.Client) er
 		for repo := range roomData.Repos {
 			match := ownerRepoRegex.FindStringSubmatch(repo)
 			if len(match) == 0 {
-				return fmt.Errorf("Repository '%s' is not a valid repository name.", repo)
+				return fmt.Errorf("Repository '%s' is not a valid repository name", repo)
 			}
 		}
 	}

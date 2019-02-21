@@ -85,7 +85,7 @@ func RegisterHook(jrealm *jira.Realm, projects []string, userID, webhookEndpoint
 		// JIRA endpoint.
 		if !jrealm.HasWebhook {
 			logger.Print("No webhook exists for this realm.")
-			return fmt.Errorf("Not authorised to create webhook: not an admin.")
+			return fmt.Errorf("Not authorised to create webhook: not an admin")
 		}
 		return nil
 	}
