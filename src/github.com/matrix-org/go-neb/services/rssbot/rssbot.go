@@ -356,9 +356,8 @@ func itemToHTML(feed *gofeed.Feed, item gofeed.Item) gomatrix.HTMLMessage {
 		Format: "org.matrix.custom.html",
 		FormattedBody: fmt.Sprintf("<strong>%s</strong>:<br><a href=\"%s\"><strong>%s</strong></a>",
 			html.EscapeString(feed.Title), html.EscapeString(item.Link), html.EscapeString(item.Title)),
-			// SomeOne posted a new article: Title Of The Entry ( https://someurl.com/blag )
 			// FeedTitle:
-			// Title of the Entry which is a Link to It
+			// Title of the Entry, as a Link to It
 	  }
 }
 
