@@ -89,7 +89,7 @@ func (s *Service) requireGithubClientFor(userID string) (cli *gogithub.Client, r
 }
 
 const numberGithubSearchSummaries = 3
-const cmdGithubSearchUsage = `!github search "search query"`
+const cmdGithubSearchUsage = `!github search owner/repo "search query"`
 
 func (s *Service) cmdGithubSearch(roomID, userID string, args []string) (interface{}, error) {
 	cli := s.githubClientFor(userID, true)
@@ -560,6 +560,7 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 						cmdGithubAssignUsage,
 						cmdGithubCloseUsage,
 						cmdGithubReopenUsage,
+						cmdGithubSearchUsage,
 					}, "\n"),
 				}, nil
 			},
