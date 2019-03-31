@@ -89,14 +89,36 @@ func (s *Service) requireGithubClientFor(userID string) (cli *gogithub.Client, r
 }
 
 const numberGithubSearchSummaries = 3
-const cmdGithubSearchUsage = `!github search owner/repo "search query"`
+const cmdGithubSearchUsage = `!github search [owner/repo] "search query"`
 
 func (s *Service) cmdGithubSearch(roomID, userID string, args []string) (interface{}, error) {
 	cli := s.githubClientFor(userID, true)
-	if len(args) < 2 {
+	if len(args) < 1 {
 		return &gomatrix.TextMessage{"m.notice", "Usage: " + cmdGithubSearchUsage}, nil
 	}
 
+	// Look for a default if the first arg doesn't look like an owner/repo
+	ownerRepoGroups := ownerRepoRegex.FindStringSubmatch(args[0])
+
+	if len(ownerRepoGroups) == 0 {
+		// look for a default repo
+		defaultRepo := s.defaultRepo(roomID)
+		if defaultRepo == "" {
+			return &gomatrix.TextMessage{"m.notice", "Need to specify repo. Usage: " + cmdGithubSearchUsage}, nil
+		}
+		// default repo should pass the regexp
+		ownerRepoGroups = ownerRepoRegex.FindStringSubmatch(defaultRepo)
+		if len(ownerRepoGroups) == 0 {
+			return &gomatrix.TextMessage{"m.notice", "Malformed default repo. Usage: " + cmdGithubSearchUsage}, nil
+		}
+
+		// insert the default as the first arg to reuse the same indices
+		args = append([]string{defaultRepo}, args...)
+		// continue through now that ownerRepoGroups has matching groups
+	}
+
+	// The first arg is always a repo, and should have the repo: prefix.
+	args[0] = fmt.Sprintf("repo:%s", args[0])
 	query := strings.Join(args, " ")
 	searchResult, res, err := cli.Search.Issues(query, nil)
 
