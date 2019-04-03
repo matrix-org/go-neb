@@ -348,12 +348,18 @@ func (s *Service) sendToRooms(cli *gomatrix.Client, feedURL string, feed *gofeed
 	return nil
 }
 
-// SomeOne posted a new article: Title Of The Entry ( https://someurl.com/blag )
 func itemToHTML(feed *gofeed.Feed, item gofeed.Item) gomatrix.HTMLMessage {
-	return gomatrix.GetHTMLMessage("m.notice", fmt.Sprintf(
-		"<i>%s</i> posted a new article: %s ( %s )",
-		html.EscapeString(feed.Title), html.EscapeString(item.Title), html.EscapeString(item.Link),
-	))
+	return &gomatrix.HTMLMessage{
+		Body: fmt.Sprintf("%s: %s (%s)",
+			html.EscapeString(feed.Title), html.EscapeString(item.Title), html.EscapeString(item.Link)),
+		MsgType: "m.notice",
+		Format: "org.matrix.custom.html",
+		FormattedBody: fmt.Sprintf("<strong>%s</strong>:<br><a href=\"%s\"><strong>%s</strong></a>",
+			html.EscapeString(feed.Title), html.EscapeString(item.Link), html.EscapeString(item.Title)),
+			// <strong>FeedTitle</strong>:
+			// <br>
+			// <a href="url-of-the-entry"><strong>Title of the Entry</strong></a>
+	  }
 }
 
 func ensureItemsHaveGUIDs(feed *gofeed.Feed) {
