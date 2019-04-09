@@ -349,7 +349,7 @@ func (s *Service) sendToRooms(cli *gomatrix.Client, feedURL string, feed *gofeed
 }
 
 func itemToHTML(feed *gofeed.Feed, item gofeed.Item) gomatrix.HTMLMessage {
-	return &gomatrix.HTMLMessage{
+	return gomatrix.HTMLMessage{
 		Body: fmt.Sprintf("%s: %s (%s)",
 			html.EscapeString(feed.Title), html.EscapeString(item.Title), html.EscapeString(item.Link)),
 		MsgType: "m.notice",
