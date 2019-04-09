@@ -28,8 +28,10 @@ type image struct {
 type result struct {
 	Slug   string `json:"slug"`
 	Images struct {
-		Downsized image `json:"downsized"`
-		Original  image `json:"original"`
+		Original  		image `json:"original"`
+		DownsampledFixedHeight	image `json:"fixed_height_downsampled"`
+		DownsampledFixedWidth	image `json:"fixed_width_downsampled"`
+		Downsized 		image `json:"downsized"`
 	} `json:"images"`
 }
 
@@ -49,6 +51,14 @@ type Service struct {
 	// The Giphy API key to use when making HTTP requests to Giphy.
 	// The public beta API key is "dc6zaTOxFJmzC".
 	APIKey string `json:"api_key"`
+	
+	// Specifies whether to use downsampled/downsized image from Giphy.
+	// 0 indicates original image (defaults to this)
+	// 1 for downsized images
+	// 2 for fixed height downsampled, 3 for fixed width downsampled images
+	ImageType int `json:"image_type"`
+	
+	
 	// Whether to use the downsized image from Giphy.
 	// Uses the original image when set to false.
 	// Defaults to false.
@@ -78,9 +88,14 @@ func (s *Service) cmdGiphy(client *gomatrix.Client, roomID, userID string, args 
 	}
 
 	image := gifResult.Images.Original
-	if s.UseDownsized {
+	
+	switch s.ImageType {
+	case 1:
+		image = gifResult.Images.DownsampledFixedHeight
+	case 2:
+		image = gifResult.Images.DownsampledFixedWidth
+	case 3:
 		image = gifResult.Images.Downsized
-	}
 
 	if image.URL == "" {
 		return nil, fmt.Errorf("No results")
