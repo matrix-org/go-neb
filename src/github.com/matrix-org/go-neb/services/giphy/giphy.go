@@ -44,7 +44,7 @@ type giphySearch struct {
 // Example request:
 //   {
 //       "api_key": "dc6zaTOxFJmzC",
-//       "use_downsized": false
+//       "image_type": 0
 //   }
 type Service struct {
 	types.DefaultService
@@ -57,12 +57,6 @@ type Service struct {
 	// 1 for downsized images
 	// 2 for fixed height downsampled, 3 for fixed width downsampled images
 	ImageType int `json:"image_type"`
-	
-	
-	// Whether to use the downsized image from Giphy.
-	// Uses the original image when set to false.
-	// Defaults to false.
-	UseDownsized bool `json:"use_downsized"`
 }
 
 // Commands supported:
@@ -88,7 +82,6 @@ func (s *Service) cmdGiphy(client *gomatrix.Client, roomID, userID string, args 
 	}
 
 	image := gifResult.Images.Original
-	
 	switch s.ImageType {
 	case 1:
 		image = gifResult.Images.DownsampledFixedHeight
