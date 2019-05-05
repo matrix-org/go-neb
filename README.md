@@ -70,6 +70,9 @@ Invite the bot user into a Matrix room and type `!echo hello world`. It will rep
 ### Giphy
  - Ability to query Giphy's "text-to-gif" engine.
  
+### Google Image search
+ - Ability to query Google Custom search for images.
+ 
 ### Guggy
  - Ability to query Guggy's gif engine.
  
@@ -142,6 +145,8 @@ List of Services:
  - [Giphy](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/services/giphy/) - A GIF bot
  - [Github](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/services/github/) - A Github bot
  - [Github Webhook](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/services/github/index.html#WebhookService) - A Github notification bot
+ - Google Image search - Search and display images.
+      - Requires: [Custom Search API key](https://developers.google.com/custom-search/v1/overview?pli=1&authuser=1) and an [Search engine ID](https://cse.google.com/cse/create/new) configured with 'Search the entire web' and 'Image search' enabled.
  - [Guggy](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/services/guggy/) - A GIF bot
  - [JIRA](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/services/jira/) - Integration with JIRA
  - [RSS Bot](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/services/rssbot/) - An Atom/RSS feed reader
