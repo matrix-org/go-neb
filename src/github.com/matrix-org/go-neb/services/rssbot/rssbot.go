@@ -350,8 +350,10 @@ func (s *Service) sendToRooms(cli *gomatrix.Client, feedURL string, feed *gofeed
 
 func itemToHTML(feed *gofeed.Feed, item gofeed.Item) gomatrix.HTMLMessage {
 	// If an item does not have a title, try using the feed's title instead
-	if item.Title == "" {
-		item.Title = feed.Title
+	// Create a new variable instead of mutating that which is passed in
+	itemTitle = item.Title
+	if itemTitle == "" {
+		itemTitle = feed.Title
 	}
 	
 	return gomatrix.HTMLMessage{
@@ -360,7 +362,7 @@ func itemToHTML(feed *gofeed.Feed, item gofeed.Item) gomatrix.HTMLMessage {
 		MsgType: "m.notice",
 		Format: "org.matrix.custom.html",
 		FormattedBody: fmt.Sprintf("<strong>%s</strong>:<br><a href=\"%s\"><strong>%s</strong></a>",
-			html.EscapeString(feed.Title), html.EscapeString(item.Link), html.EscapeString(item.Title)),
+			html.EscapeString(feed.Title), html.EscapeString(item.Link), html.EscapeString(itemTitle)),
 			// <strong>FeedTitle</strong>:
 			// <br>
 			// <a href="url-of-the-entry"><strong>Title of the Entry</strong></a>
