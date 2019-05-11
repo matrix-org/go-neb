@@ -52,7 +52,7 @@ type Service struct {
 	} `json:"rooms"`
 }
 
-// The payload from Alertmanager
+// WebhookNotification is the payload from Alertmanager
 type WebhookNotification struct {
 	Version           string            `json:"version"`
 	GroupKey          string            `json:"groupKey"`
@@ -125,13 +125,13 @@ func (s *Service) Register(oldService types.Service, client *gomatrix.Client) er
 		// validate that we have at least a plain text template
 		if templates.TextTemplate == "" {
 			return fmt.Errorf("plain text template missing")
-		} else {
-			// validate the plain text template is valid
-			_, err := text.New("textTemplate").Parse(templates.TextTemplate)
-			if err != nil {
-				return fmt.Errorf("plain text template is invalid")
-			}
+
+		// validate the plain text template is valid
+		_, err := text.New("textTemplate").Parse(templates.TextTemplate)
+		if err != nil {
+			return fmt.Errorf("plain text template is invalid")
 		}
+
 		if templates.HTMLTemplate != "" {
 			// validate that the html template is valid
 			_, err := html.New("htmlTemplate").Parse(templates.HTMLTemplate)

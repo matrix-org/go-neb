@@ -172,15 +172,15 @@ func setup(e envVars, mux *http.ServeMux, matrixClient *http.Client) {
 		log.Info("Inserted ", len(cfg.Sessions), " sessions")
 	}
 
-	clients := clients.New(db, matrixClient)
-	if err := clients.Start(); err != nil {
+	newClients := clients.New(db, matrixClient)
+	if err := newClients.Start(); err != nil {
 		log.WithError(err).Panic("Failed to start up clients")
 	}
 
 	// Handle non-admin paths for normal NEB functioning
 	mux.Handle("/metrics", prometheus.Handler())
 	mux.Handle("/test", prometheus.InstrumentHandler("test", util.MakeJSONAPI(&handlers.Heartbeat{})))
-	wh := handlers.NewWebhook(db, clients)
+	wh := handlers.NewWebhook(db, newClients)
 	mux.HandleFunc("/services/hooks/", prometheus.InstrumentHandlerFunc("webhookHandler", util.Protect(wh.Handle)))
 	rh := &handlers.RealmRedirect{db}
 	mux.HandleFunc("/realms/redirects/", prometheus.InstrumentHandlerFunc("realmRedirectHandler", util.Protect(rh.Handle)))
@@ -188,7 +188,7 @@ func setup(e envVars, mux *http.ServeMux, matrixClient *http.Client) {
 	// Read exclusively from the config file if one was supplied.
 	// Otherwise, add HTTP listeners for new Services/Sessions/Clients/etc.
 	if e.ConfigFile != "" {
-		if err := insertServicesFromConfig(clients, cfg.Services); err != nil {
+		if err := insertServicesFromConfig(newClients, cfg.Services); err != nil {
 			log.WithError(err).Panic("Failed to insert services")
 		}
 
@@ -196,13 +196,13 @@ func setup(e envVars, mux *http.ServeMux, matrixClient *http.Client) {
 	} else {
 		mux.Handle("/admin/getService", prometheus.InstrumentHandler("getService", util.MakeJSONAPI(&handlers.GetService{db})))
 		mux.Handle("/admin/getSession", prometheus.InstrumentHandler("getSession", util.MakeJSONAPI(&handlers.GetSession{db})))
-		mux.Handle("/admin/configureClient", prometheus.InstrumentHandler("configureClient", util.MakeJSONAPI(&handlers.ConfigureClient{clients})))
-		mux.Handle("/admin/configureService", prometheus.InstrumentHandler("configureService", util.MakeJSONAPI(handlers.NewConfigureService(db, clients))))
+		mux.Handle("/admin/configureClient", prometheus.InstrumentHandler("configureClient", util.MakeJSONAPI(&handlers.ConfigureClient{newClients})))
+		mux.Handle("/admin/configureService", prometheus.InstrumentHandler("configureService", util.MakeJSONAPI(handlers.NewConfigureService(db, newClients))))
 		mux.Handle("/admin/configureAuthRealm", prometheus.InstrumentHandler("configureAuthRealm", util.MakeJSONAPI(&handlers.ConfigureAuthRealm{db})))
 		mux.Handle("/admin/requestAuthSession", prometheus.InstrumentHandler("requestAuthSession", util.MakeJSONAPI(&handlers.RequestAuthSession{db})))
 		mux.Handle("/admin/removeAuthSession", prometheus.InstrumentHandler("removeAuthSession", util.MakeJSONAPI(&handlers.RemoveAuthSession{db})))
 	}
-	polling.SetClients(clients)
+	polling.SetClients(newClients)
 	if err := polling.Start(); err != nil {
 		log.WithError(err).Panic("Failed to start polling")
 	}

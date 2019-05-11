@@ -101,7 +101,7 @@ func (s *Service) cmdJiraCreate(roomID, userID string, args []string) (interface
 	}
 
 	if !projectKeyRegex.MatchString(args[0]) {
-		return nil, errors.New("Project key must only contain A-Z.")
+		return nil, errors.New("Project key must only contain A-Z")
 	}
 
 	pkey := strings.ToUpper(args[0]) // REST API complains if they are not ALL CAPS
@@ -118,10 +118,10 @@ func (s *Service) cmdJiraCreate(roomID, userID string, args []string) (interface
 	r, err := s.projectToRealm(userID, pkey)
 	if err != nil {
 		log.WithError(err).Print("Failed to map project key to realm")
-		return nil, errors.New("Failed to map project key to a JIRA endpoint.")
+		return nil, errors.New("Failed to map project key to a JIRA endpoint")
 	}
 	if r == nil {
-		return nil, errors.New("No known project exists with that project key.")
+		return nil, errors.New("No known project exists with that project key")
 	}
 
 	iss := gojira.Issue{
