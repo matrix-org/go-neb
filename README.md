@@ -19,7 +19,7 @@ Go-NEB is a [Matrix](https://matrix.org) bot written in Go. It is the successor 
 
 # Quick Start
 
-Clone and run (Requires Go 1.7+ and GB):
+Clone and run (Requires Go 1.11+ and GB):
 
 ```bash
 gb build github.com/matrix-org/go-neb
