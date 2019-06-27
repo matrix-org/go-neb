@@ -63,6 +63,8 @@ type Service struct {
 	APIKey string `json:"api_key"`
 	// The Google custom search engine ID
 	Cx string `json:"cx"`
+	// Whether or not to enable Google safe-search
+	Safesearch bool `json:"safe_search"`
 }
 
 // Commands supported:
@@ -156,6 +158,12 @@ func (s *Service) text2imgGoogle(query string) (*googleSearchResult, error) {
 
 	q.Set("key", s.APIKey) // Set the API key for the request
 	q.Set("cx", s.Cx)      // Set the custom search engine ID
+
+	if s.Safesearch {
+		q.Set("safe", "active")
+	} else {
+		q.Set("safe", "off")
+	}
 
 	u.RawQuery = q.Encode()
 	// log.Info("Request URL: ", u)

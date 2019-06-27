@@ -15,15 +15,8 @@ import (
 	"github.com/matrix-org/gomatrix"
 )
 
-// TODO: It would be nice to tabularise this test so we can try failing different combinations of responses to make
-//       sure all cases are handled, rather than just the general case as is here.
-func TestCommand(t *testing.T) {
-	database.SetServiceDB(&database.NopStorage{})
-	apiKey := "secret"
-	googleImageURL := "http://cat.com/cat.jpg"
-
-	// Mock the response from Google
-	googleTrans := testutils.NewRoundTripper(func(req *http.Request) (*http.Response, error) {
+func mockGoogle(t *testing.T, apiKey, googleImageURL string, safeSearch bool) http.RoundTripper {
+	return testutils.NewRoundTripper(func(req *http.Request) (*http.Response, error) {
 		googleURL := "https://www.googleapis.com/customsearch/v1"
 		query := req.URL.Query()
 
@@ -39,6 +32,15 @@ func TestCommand(t *testing.T) {
 		if query.Get("key") != apiKey {
 			t.Fatalf("Bad apiKey: got %s want %s", query.Get("key"), apiKey)
 		}
+		// Check safe-search
+		safe := "off"
+		if safeSearch {
+			safe = "active"
+		}
+		if query.Get("safe") != safe {
+			t.Fatalf("Bad safe: got %s want %s", query.Get("safe"), safe)
+		}
+
 		// Check the search query
 		var searchString = query.Get("q")
 		var searchStringLength = len(searchString)
@@ -73,12 +75,73 @@ func TestCommand(t *testing.T) {
 			Body:       ioutil.NopCloser(bytes.NewBuffer(b)),
 		}, nil
 	})
+}
+
+// TODO: It would be nice to tabularise this test so we can try failing different combinations of responses to make
+//       sure all cases are handled, rather than just the general case as is here.
+func TestCommand(t *testing.T) {
+	database.SetServiceDB(&database.NopStorage{})
+	apiKey := "secret"
+	googleImageURL := "http://cat.com/cat.jpg"
+
+	// Mock the response from Google
+	googleTrans := mockGoogle(t, apiKey, googleImageURL, false)
 	// clobber the Google service http client instance
 	httpClient = &http.Client{Transport: googleTrans}
 
 	// Create the Google service
 	srv, err := types.CreateService("id", ServiceType, "@googlebot:hyrule", []byte(
 		`{"api_key":"`+apiKey+`"}`,
+	))
+	if err != nil {
+		t.Fatal("Failed to create Google service: ", err)
+	}
+	google := srv.(*Service)
+
+	// Mock the response from Matrix
+	matrixTrans := struct{ testutils.MockTransport }{}
+	matrixTrans.RT = func(req *http.Request) (*http.Response, error) {
+		if req.URL.String() == googleImageURL { // getting the Google image
+			return &http.Response{
+				StatusCode: 200,
+				Body:       ioutil.NopCloser(bytes.NewBufferString("some image data")),
+			}, nil
+		} else if strings.Contains(req.URL.String(), "_matrix/media/r0/upload") { // uploading the image to matrix
+			return &http.Response{
+				StatusCode: 200,
+				Body:       ioutil.NopCloser(bytes.NewBufferString(`{"content_uri":"mxc://foo/bar"}`)),
+			}, nil
+		}
+		return nil, fmt.Errorf("Unknown URL: %s", req.URL.String())
+	}
+	matrixCli, _ := gomatrix.NewClient("https://hyrule", "@googlebot:hyrule", "its_a_secret")
+	matrixCli.Client = &http.Client{Transport: matrixTrans}
+
+	// Execute the matrix !command
+	cmds := google.Commands(matrixCli)
+	if len(cmds) != 3 {
+		t.Fatalf("Unexpected number of commands: %d", len(cmds))
+	}
+	cmd := cmds[0]
+	_, err = cmd.Command("!someroom:hyrule", "@navi:hyrule", []string{"image", "Czechoslovakian bananna"})
+	if err != nil {
+		t.Fatalf("Failed to process command: %s", err.Error())
+	}
+}
+
+func TestSafesearch(t *testing.T) {
+	database.SetServiceDB(&database.NopStorage{})
+	apiKey := "secret"
+	googleImageURL := "http://cat.com/cat.jpg"
+
+	// Mock the response from Google
+	googleTrans := mockGoogle(t, apiKey, googleImageURL, true)
+	// clobber the Google service http client instance
+	httpClient = &http.Client{Transport: googleTrans}
+
+	// Create the Google service
+	srv, err := types.CreateService("id", ServiceType, "@googlebot:hyrule", []byte(
+		`{"api_key":"`+apiKey+`", "safe_search": true}`,
 	))
 	if err != nil {
 		t.Fatal("Failed to create Google service: ", err)

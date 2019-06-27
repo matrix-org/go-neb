@@ -81,6 +81,7 @@ services:
     Config:
       api_key: "AIzaSyA4FD39m9"
       cx: "AIASDFWSRRtrtr"
+      safe_search: false
 
   - ID: "imgur_service"
     Type: "imgur"
