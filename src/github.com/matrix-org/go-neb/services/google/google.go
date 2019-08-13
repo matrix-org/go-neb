@@ -3,8 +3,10 @@
 package google
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
+	"github.com/matrix-org/go-neb/database"
 	"io/ioutil"
 	"math"
 	"net/http"
@@ -57,6 +59,17 @@ type googleImage struct {
 //			"api_key": "AIzaSyA4FD39..."
 //			"cx": "ASdsaijwdfASD..."
 //   }
+//
+// You can set a room-specific safe-search enabled flag for a Matrix room by sending a `m.room.bot.options` state event
+// which has the following `content`:
+//
+//  {
+//    "google": {
+//      "safe_search": false
+//    }
+//  }
+//
+// This will override the global Safesearch setting on a per-room basis.
 type Service struct {
 	types.DefaultService
 	// The Google API key to use when making HTTP requests to Google.
@@ -108,7 +121,7 @@ func (s *Service) cmdGoogleImgSearch(client *gomatrix.Client, roomID, userID str
 	// Get the query text to search for.
 	querySentence := strings.Join(args, " ")
 
-	searchResult, err := s.text2imgGoogle(querySentence)
+	searchResult, err := s.text2imgGoogle(roomID, querySentence)
 
 	if err != nil {
 		return nil, err
@@ -140,8 +153,38 @@ func (s *Service) cmdGoogleImgSearch(client *gomatrix.Client, roomID, userID str
 	}, nil
 }
 
+// safeSearchEnabled returns whether safe search is enabled for the given room, or the service global value s.Safesearch
+func (s *Service) safeSearchEnabled(roomID string) bool {
+	logger := log.WithFields(log.Fields{
+		"room_id":     roomID,
+		"bot_user_id": s.ServiceUserID(),
+	})
+	opts, err := database.GetServiceDB().LoadBotOptions(s.ServiceUserID(), roomID)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			logger.WithError(err).Error("Failed to load bot options")
+		}
+		return s.Safesearch
+	}
+	// Expect opts to look like:
+	// { google: { safe_search: BOOLEAN } }
+	googleOpts, ok := opts.Options["google"].(map[string]interface{})
+	if !ok {
+		logger.WithField("options", opts.Options).Error("Failed to cast bot options as google options")
+		return s.Safesearch
+	}
+	safeSearch, ok := googleOpts["safe_search"].(bool)
+	if !ok {
+		logger.WithField("default_repo", googleOpts["safe_search"]).Error(
+			"Failed to cast room-specific safe-search as a bool",
+		)
+		return s.Safesearch
+	}
+	return safeSearch
+}
+
 // text2imgGoogle returns info about an image
-func (s *Service) text2imgGoogle(query string) (*googleSearchResult, error) {
+func (s *Service) text2imgGoogle(roomID, query string) (*googleSearchResult, error) {
 	log.Info("Searching Google for an image of a ", query)
 
 	u, err := url.Parse("https://www.googleapis.com/customsearch/v1")
@@ -159,7 +202,7 @@ func (s *Service) text2imgGoogle(query string) (*googleSearchResult, error) {
 	q.Set("key", s.APIKey) // Set the API key for the request
 	q.Set("cx", s.Cx)      // Set the custom search engine ID
 
-	if s.Safesearch {
+	if s.safeSearchEnabled(roomID) {
 		q.Set("safe", "active")
 	} else {
 		q.Set("safe", "off")
