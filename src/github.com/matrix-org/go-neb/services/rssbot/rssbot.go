@@ -351,11 +351,11 @@ func (s *Service) sendToRooms(cli *gomatrix.Client, feedURL string, feed *gofeed
 func itemToHTML(feed *gofeed.Feed, item gofeed.Item) gomatrix.HTMLMessage {
 	return gomatrix.HTMLMessage{
 		Body: fmt.Sprintf("%s: %s ( %s )",
-			html.EscapeString(feed.Title), html.EscapeString(item.Title), html.EscapeString(item.Link)),
+			html.UnescapeString(feed.Title), html.UnescapeString(item.Title), html.UnescapeString(item.Link)),
 		MsgType: "m.notice",
 		Format: "org.matrix.custom.html",
 		FormattedBody: fmt.Sprintf("<strong>%s</strong>:<br><a href=\"%s\"><strong>%s</strong></a>",
-			html.EscapeString(feed.Title), html.EscapeString(item.Link), html.EscapeString(item.Title)),
+			html.UnescapeString(feed.Title), html.UnescapeString(item.Link), html.UnescapeString(item.Title)),
 			// <strong>FeedTitle</strong>:
 			// <br>
 			// <a href="url-of-the-entry"><strong>Title of the Entry</strong></a>
