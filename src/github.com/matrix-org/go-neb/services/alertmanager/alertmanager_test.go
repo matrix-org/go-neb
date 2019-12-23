@@ -11,6 +11,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"regexp"
 	"strings"
 	"testing"
@@ -70,8 +71,7 @@ func TestNotify(t *testing.T) {
 
 	lines := strings.Split(msg.FormattedBody, "\n")
 
-	// 	<a href="http://alertmanager#silences/new?filter=%7balertname%3D%22alert%202%22,severity%3D%22tiny%22%7d">silence</a>
-	silenceRegexp := regexp.MustCompile(`<a href="([^"]*)">silence</a>`)
+	// <a href="http://alertmanager#silences/new?filter=%7balertname%3D%22alert%202%22,severity%3D%22tiny%22%7d">silence</a>
 	matchedSilence := 0
 	for _, line := range lines {
 		if !strings.Contains(line, "silence") {
@@ -79,16 +79,10 @@ func TestNotify(t *testing.T) {
 		}
 
 		matchedSilence++
-		m := silenceRegexp.FindStringSubmatch(line)
-		if m == nil {
-			t.Errorf("silence line %s had bad format", line)
-		} else {
-			url := m[1]
-			expected := "http://alertmanager#silences/new?filter=%7balertname%3D%22alert%201%22,severity%3D%22huge%22%7d"
-			if url != expected {
-				t.Errorf("silence url: got %s, want %s", url, expected)
-			}
-		}
+		checkSilenceLine(t, line, map[string]string{
+			"alertname": "\"alert 1\"",
+			"severity":  "\"huge\"",
+		})
 		break
 	}
 
@@ -153,4 +147,37 @@ func buildTestService(t *testing.T) types.Service {
 	}
 
 	return srv
+}
+
+func checkSilenceLine(t *testing.T, line string, expectedKeys map[string]string) {
+	silenceRegexp := regexp.MustCompile(`<a href="http://alertmanager#silences/new\?filter=%7b([^"]*)%7d">silence</a>`)
+	m := silenceRegexp.FindStringSubmatch(line)
+	if m == nil {
+		t.Errorf("silence line %s had bad format", line)
+		return
+	}
+
+	unesc, err := url.QueryUnescape(m[1])
+	if err != nil {
+		t.Errorf("Unable to decode filter, %v", err)
+		return
+	}
+
+	matched := 0
+	for _, f := range strings.Split(unesc, ",") {
+		splits := strings.SplitN(f, "=", 2)
+		key := splits[0]
+		exp, ok := expectedKeys[key]
+		if !ok {
+			t.Errorf("unexpected key in filter: %v", key)
+		} else if exp != splits[1] {
+			t.Errorf("bad value for filter key %v: got %q, want %q", key, splits[1], exp)
+		} else {
+			matched++
+		}
+	}
+
+	if matched != len(expectedKeys) {
+		t.Errorf("number of filter fields got %i, want %i", matched, len(expectedKeys))
+	}
 }
