@@ -1,19 +1,19 @@
 package alertmanager
 
 import (
+	"bytes"
+	"encoding/json"
+	"fmt"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/testutils"
-	"github.com/matrix-org/gomatrix"
-	"net/http"
-	"strings"
-	"fmt"
-	"encoding/json"
-	"io/ioutil"
-	"bytes"
-	"testing"
 	"github.com/matrix-org/go-neb/types"
+	"github.com/matrix-org/gomatrix"
+	"io/ioutil"
+	"net/http"
 	"net/http/httptest"
 	"regexp"
+	"strings"
+	"testing"
 )
 
 func TestNotify(t *testing.T) {
@@ -40,31 +40,31 @@ func TestNotify(t *testing.T) {
 	matrixCli.Client = &http.Client{Transport: matrixTrans}
 
 	// create the service
-	html_template, err := json.Marshal(
+	htmlTemplate, err := json.Marshal(
 		`{{range .Alerts}}
 		{{index .Labels "severity" }} : {{- index .Labels "alertname" -}}
 		<a href="{{ .GeneratorURL }}">source</a>
 		<a href="{{ .SilenceURL }}">silence</a>
 		{{- end }}
 		`,
-    )
+	)
 
 	if err != nil {
 		t.Fatal(err)
 	}
 
-    text_template, err := json.Marshal(`{{range .Alerts}}{{index .Labels "alertname"}} {{end}}`)
+	textTemplate, err := json.Marshal(`{{range .Alerts}}{{index .Labels "alertname"}} {{end}}`)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-    config := fmt.Sprintf(`{
+	config := fmt.Sprintf(`{
 		"rooms":{ "!testroom:id" : {
 			"text_template":%s,
 			"html_template":%s,
 			"msg_type":"m.text"
 		}}
-	}`, text_template, html_template,
+	}`, textTemplate, htmlTemplate,
 	)
 
 	srv, err := types.CreateService("id", "alertmanager", "@neb:hs", []byte(config))
@@ -114,17 +114,17 @@ func TestNotify(t *testing.T) {
 		t.Errorf("Wrong msgtype: got %s want m.text", msg.MsgType)
 	}
 
-	lines := strings.Split(msg.FormattedBody, "\n" )
+	lines := strings.Split(msg.FormattedBody, "\n")
 
 	// 	<a href="http://alertmanager#silences/new?filter=%7balertname%3D%22alert%202%22,severity%3D%22tiny%22%7d">silence</a>
 	silenceRegexp := regexp.MustCompile(`<a href="([^"]*)">silence</a>`)
 	matchedSilence := 0
 	for _, line := range lines {
-		if ! strings.Contains(line, "silence") {
+		if !strings.Contains(line, "silence") {
 			continue
 		}
 
-		matchedSilence += 1
+		matchedSilence++
 		m := silenceRegexp.FindStringSubmatch(line)
 		if m == nil {
 			t.Errorf("silence line %s had bad format", line)

@@ -11,8 +11,8 @@ import (
 	"github.com/matrix-org/gomatrix"
 	html "html/template"
 	"net/http"
-	text "text/template"
 	"strings"
+	text "text/template"
 )
 
 // ServiceType of the Alertmanager service.
@@ -93,7 +93,7 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 		for label, val := range alert.Labels {
 			filters = append(filters, fmt.Sprintf("%s%%3D\"%s\"", label, val))
 		}
-		alert.SilenceURL = fmt.Sprintf("%s#silences/new?filter={%s}", notif.ExternalURL, strings.Join(filters, ",") )
+		alert.SilenceURL = fmt.Sprintf("%s#silences/new?filter={%s}", notif.ExternalURL, strings.Join(filters, ","))
 	}
 
 	for roomID, templates := range s.Rooms {
