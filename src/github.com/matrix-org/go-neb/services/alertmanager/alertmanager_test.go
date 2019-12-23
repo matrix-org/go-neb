@@ -21,56 +21,10 @@ func TestNotify(t *testing.T) {
 
 	// Intercept message sending to Matrix and mock responses
 	msgs := []gomatrix.HTMLMessage{}
-	matrixTrans := struct{ testutils.MockTransport }{}
-	matrixTrans.RT = func(req *http.Request) (*http.Response, error) {
-		if !strings.Contains(req.URL.String(), "/send/m.room.message") {
-			return nil, fmt.Errorf("Unhandled URL: %s", req.URL.String())
-		}
-		var msg gomatrix.HTMLMessage
-		if err := json.NewDecoder(req.Body).Decode(&msg); err != nil {
-			return nil, fmt.Errorf("Failed to decode request JSON: %s", err)
-		}
-		msgs = append(msgs, msg)
-		return &http.Response{
-			StatusCode: 200,
-			Body:       ioutil.NopCloser(bytes.NewBufferString(`{"event_id":"$yup:event"}`)),
-		}, nil
-	}
-	matrixCli, _ := gomatrix.NewClient("https://hs", "@neb:hs", "its_a_secret")
-	matrixCli.Client = &http.Client{Transport: matrixTrans}
+	matrixCli := buildTestClient(&msgs)
 
 	// create the service
-	htmlTemplate, err := json.Marshal(
-		`{{range .Alerts}}
-		{{index .Labels "severity" }} : {{- index .Labels "alertname" -}}
-		<a href="{{ .GeneratorURL }}">source</a>
-		<a href="{{ .SilenceURL }}">silence</a>
-		{{- end }}
-		`,
-	)
-
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	textTemplate, err := json.Marshal(`{{range .Alerts}}{{index .Labels "alertname"}} {{end}}`)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	config := fmt.Sprintf(`{
-		"rooms":{ "!testroom:id" : {
-			"text_template":%s,
-			"html_template":%s,
-			"msg_type":"m.text"
-		}}
-	}`, textTemplate, htmlTemplate,
-	)
-
-	srv, err := types.CreateService("id", "alertmanager", "@neb:hs", []byte(config))
-	if err != nil {
-		t.Fatal(err)
-	}
+	srv := buildTestService(t)
 
 	// send a notification
 	req, err := http.NewRequest(
@@ -78,22 +32,22 @@ func TestNotify(t *testing.T) {
 			{
 				"externalURL": "http://alertmanager",
 				 "alerts": [
-                    {
-                        "labels": {
+					{
+						"labels": {
 							"alertname": "alert 1",
 							"severity": "huge"
-                        },
+						},
 						"generatorURL": "http://x"
-                    },
-                    {
-                        "labels": {
+					},
+					{
+						"labels": {
 							"alertname": "alert 2",
 							"severity": "tiny"
-                        },
+						},
 						"generatorURL": "http://y"
-                    }
+					}
 				]
-            }
+			}
 		`),
 	)
 	if err != nil {
@@ -141,4 +95,62 @@ func TestNotify(t *testing.T) {
 	if matchedSilence == 0 {
 		t.Errorf("Did not find any silence lines")
 	}
+}
+
+func buildTestClient(msgs *[]gomatrix.HTMLMessage) *gomatrix.Client {
+	matrixTrans := struct{ testutils.MockTransport }{}
+	matrixTrans.RT = func(req *http.Request) (*http.Response, error) {
+		if !strings.Contains(req.URL.String(), "/send/m.room.message") {
+			return nil, fmt.Errorf("Unhandled URL: %s", req.URL.String())
+		}
+		var msg gomatrix.HTMLMessage
+		if err := json.NewDecoder(req.Body).Decode(&msg); err != nil {
+			return nil, fmt.Errorf("Failed to decode request JSON: %s", err)
+		}
+		*msgs = append(*msgs, msg)
+		return &http.Response{
+			StatusCode: 200,
+			Body:       ioutil.NopCloser(bytes.NewBufferString(`{"event_id":"$yup:event"}`)),
+		}, nil
+	}
+	matrixCli, _ := gomatrix.NewClient("https://hs", "@neb:hs", "its_a_secret")
+	matrixCli.Client = &http.Client{Transport: matrixTrans}
+	return matrixCli
+}
+
+func buildTestService(t *testing.T) types.Service {
+	htmlTemplate, err := json.Marshal(
+		`{{range .Alerts}}
+		{{index .Labels "severity" }} : {{- index .Labels "alertname" -}}
+		<a href="{{ .GeneratorURL }}">source</a>
+		<a href="{{ .SilenceURL }}">silence</a>
+		{{- end }}
+		`,
+	)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	textTemplate, err := json.Marshal(`{{range .Alerts}}{{index .Labels "alertname"}} {{end}}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	config := fmt.Sprintf(`{
+		"rooms":{ "!testroom:id" : {
+			"text_template":%s,
+			"html_template":%s,
+			"msg_type":"m.text"
+		}}
+	}`, textTemplate, htmlTemplate,
+	)
+
+	srv, err := types.CreateService("id", "alertmanager", "@neb:hs", []byte(config))
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return srv
 }
