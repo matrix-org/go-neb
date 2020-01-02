@@ -11,6 +11,7 @@ import (
 	"github.com/matrix-org/gomatrix"
 	html "html/template"
 	"net/http"
+	"strings"
 	text "text/template"
 )
 
@@ -69,6 +70,7 @@ type WebhookNotification struct {
 		StartsAt     string            `json:"startsAt"`
 		EndsAt       string            `json:"endsAt"`
 		GeneratorURL string            `json:"generatorURL"`
+		SilenceURL   string
 	} `json:"alerts"`
 }
 
@@ -80,6 +82,18 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 		log.WithError(err).Error("Alertmanager webhook received an invalid JSON payload")
 		w.WriteHeader(400)
 		return
+	}
+
+	// add the silence link for each alert
+	// see 'newSilenceFromAlertLabels' in
+	// https://github.com/prometheus/alertmanager/blob/master/ui/app/src/Views/SilenceForm/Parsing.elm
+	for i := range notif.Alerts {
+		alert := &notif.Alerts[i]
+		filters := []string{}
+		for label, val := range alert.Labels {
+			filters = append(filters, fmt.Sprintf("%s%%3D\"%s\"", label, val))
+		}
+		alert.SilenceURL = fmt.Sprintf("%s#silences/new?filter={%s}", notif.ExternalURL, strings.Join(filters, ","))
 	}
 
 	for roomID, templates := range s.Rooms {
