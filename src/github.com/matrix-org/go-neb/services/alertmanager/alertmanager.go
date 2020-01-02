@@ -87,12 +87,20 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 		// we don't check whether the templates parse because we already did when storing them in the db
 		textTemplate, _ := text.New("textTemplate").Parse(templates.TextTemplate)
 		var bodyBuffer bytes.Buffer
-		textTemplate.Execute(&bodyBuffer, notif)
+		if err := textTemplate.Execute(&bodyBuffer, notif); err != nil {
+			log.WithError(err).Error("Alertmanager webhook failed to execute text template")
+			w.WriteHeader(500)
+			return
+		}
 		if templates.HTMLTemplate != "" {
 			// we don't check whether the templates parse because we already did when storing them in the db
 			htmlTemplate, _ := html.New("htmlTemplate").Parse(templates.HTMLTemplate)
 			var formattedBodyBuffer bytes.Buffer
-			htmlTemplate.Execute(&formattedBodyBuffer, notif)
+			if err := htmlTemplate.Execute(&formattedBodyBuffer, notif); err != nil {
+				log.WithError(err).Error("Alertmanager webhook failed to execute HTML template")
+				w.WriteHeader(500)
+				return
+			}
 			msg = gomatrix.HTMLMessage{
 				Body:          bodyBuffer.String(),
 				MsgType:       templates.MsgType,
@@ -130,14 +138,14 @@ func (s *Service) Register(oldService types.Service, client *gomatrix.Client) er
 		// validate the plain text template is valid
 		_, err := text.New("textTemplate").Parse(templates.TextTemplate)
 		if err != nil {
-			return fmt.Errorf("plain text template is invalid")
+			return fmt.Errorf("plain text template is invalid: %v", err)
 		}
 
 		if templates.HTMLTemplate != "" {
 			// validate that the html template is valid
 			_, err := html.New("htmlTemplate").Parse(templates.HTMLTemplate)
 			if err != nil {
-				return fmt.Errorf("html template is invalid")
+				return fmt.Errorf("html template is invalid: %v", err)
 			}
 		}
 		// validate that the msgtype is either m.notice or m.text
