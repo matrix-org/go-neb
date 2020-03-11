@@ -19,11 +19,11 @@ Go-NEB is a [Matrix](https://matrix.org) bot written in Go. It is the successor 
 
 # Quick Start
 
-Clone and run (Requires Go 1.7+ and GB):
+Clone and run (Requires Go 1.14+):
 
 ```bash
-gb build github.com/matrix-org/go-neb
-BIND_ADDRESS=:4050 DATABASE_TYPE=sqlite3 DATABASE_URL=go-neb.db?_busy_timeout=5000 BASE_URL=http://localhost:4050 bin/go-neb
+go build github.com/matrix-org/go-neb
+BIND_ADDRESS=:4050 DATABASE_TYPE=sqlite3 DATABASE_URL=go-neb.db?_busy_timeout=5000 BASE_URL=http://localhost:4050 ./go-neb
 ```
 
 Get a Matrix user ID and access token and give it to Go-NEB:
@@ -85,23 +85,20 @@ Invite the bot user into a Matrix room and type `!echo hello world`. It will rep
 
 
 # Installing
-Go-NEB is built using Go 1.7+ and [GB](https://getgb.io/). Once you have installed Go, run the following commands:
+Go-NEB is built using Go 1.14+. Once you have installed Go, run the following commands:
 ```bash
-# Install gb
-go get github.com/constabulary/gb/...
-
 # Clone the go-neb repository
 git clone https://github.com/matrix-org/go-neb
 cd go-neb
 
 # Build go-neb
-gb build github.com/matrix-org/go-neb
+go build github.com/matrix-org/go-neb
 ```
 
 # Running
 Go-NEB uses environment variables to configure its SQLite database and bind address. To run Go-NEB, run the following command:
 ```bash
-BIND_ADDRESS=:4050 DATABASE_TYPE=sqlite3 DATABASE_URL=go-neb.db?_busy_timeout=5000 BASE_URL=https://public.facing.endpoint bin/go-neb
+BIND_ADDRESS=:4050 DATABASE_TYPE=sqlite3 DATABASE_URL=go-neb.db?_busy_timeout=5000 BASE_URL=https://public.facing.endpoint ./go-neb
 ```
  - `BIND_ADDRESS` is the port to listen on.
  - `DATABASE_TYPE` MUST be "sqlite3". No other type is supported.
@@ -172,7 +169,7 @@ things like linting. Some of them are bundled with go (fmt and vet) but some
 are not. You should install the ones which are not:
 
 ```bash
-go get github.com/golang/lint/golint
+go get golang.org/x/lint/golint
 go get github.com/fzipp/gocyclo
 ```
 
