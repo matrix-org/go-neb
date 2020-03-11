@@ -1,8 +1,0 @@
-<!--
-Description: entry multiple links
--->
-<feed xmlns="http://www.w3.org/2005/Atom">
-  <entry>
-    <link rel="alternate" type="application/xhtml+xml" href="http://www.example.org"/>
-  </entry>
-</feed>

@@ -1,8 +1,0 @@
-<!--
-Description: channel managingEditor
--->
-<rss version="2.0">
-  <channel>
-    <managingEditor>email@example.org</managingEditor>
-  </channel>
-</rss>

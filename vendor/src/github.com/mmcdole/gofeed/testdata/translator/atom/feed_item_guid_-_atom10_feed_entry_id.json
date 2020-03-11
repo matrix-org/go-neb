@@ -1,9 +1,0 @@
-{
-    "items": [
-        {
-            "guid": "http://example.org"
-        }
-    ],
-    "feedType": "atom",
-    "feedVersion": "1.0"
-}
