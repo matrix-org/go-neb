@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 
+	_ "github.com/lib/pq"
 	"github.com/matrix-org/dugong"
 	"github.com/matrix-org/go-neb/api"
 	"github.com/matrix-org/go-neb/api/handlers"

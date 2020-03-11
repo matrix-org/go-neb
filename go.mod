@@ -23,6 +23,7 @@ require (
 	github.com/json-iterator/go v1.1.9 // indirect
 	github.com/julienschmidt/httprouter v1.2.0 // indirect
 	github.com/kr/pretty v0.1.0 // indirect
+	github.com/lib/pq v1.3.0
 	github.com/matrix-org/dugong v0.0.0-20180820122854-51a565b5666b
 	github.com/matrix-org/gomatrix v0.0.0-20200128155335-9e7906b6766d
 	github.com/matrix-org/util v0.0.0-20190711121626-527ce5ddefc7
