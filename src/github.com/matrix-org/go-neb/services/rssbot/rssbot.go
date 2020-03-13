@@ -327,6 +327,10 @@ func (s *Service) newItems(feedURL string, allItems []*gofeed.Item) (items []gof
 		//   This will inevitably break for some people, but that group of people are probably smaller, so *shrug*.
 		i.Title = html.UnescapeString(i.Title)
 		i.Description = html.UnescapeString(i.Description)
+		if i.Author != nil {
+			i.Author.Name = html.UnescapeString(i.Author.Name)
+			i.Author.Email = html.UnescapeString(i.Author.Email)
+		}
 
 		items = append(items, *i)
 	}
@@ -355,18 +359,30 @@ func itemToHTML(feed *gofeed.Feed, item gofeed.Item) gomatrix.HTMLMessage {
 	if itemTitle == "" {
 		itemTitle = feed.Title
 	}
-	
+
+	fmtBody := fmt.Sprintf("<strong>%s</strong>:<br><a href=\"%s\"><strong>%s</strong></a>",
+		html.EscapeString(feed.Title), html.EscapeString(item.Link), html.EscapeString(itemTitle))
+	if item.Author != nil {
+		if len(item.Author.Name) > 0 && len(item.Author.Email) > 0 {
+			fmtBody += fmt.Sprintf(" by <a href=\"mailto:%s\">%s</a>", html.EscapeString(item.Author.Email),
+				html.EscapeString(item.Author.Name))
+		} else if len(item.Author.Name) > 0 {
+			fmtBody += fmt.Sprintf(" by %s", html.EscapeString(item.Author.Name))
+		} else if len(item.Author.Email) > 0 {
+			fmtBody += fmt.Sprintf(" by <a href=\"mailto:%s\">%s</a>", html.EscapeString(item.Author.Email),
+				html.EscapeString(item.Author.Email))
+		}
+	}
 	return gomatrix.HTMLMessage{
 		Body: fmt.Sprintf("%s: %s ( %s )",
-			html.EscapeString(feed.Title), html.EscapeString(item.Title), html.EscapeString(item.Link)),
-		MsgType: "m.notice",
-		Format: "org.matrix.custom.html",
-		FormattedBody: fmt.Sprintf("<strong>%s</strong>:<br><a href=\"%s\"><strong>%s</strong></a>",
-			html.EscapeString(feed.Title), html.EscapeString(item.Link), html.EscapeString(itemTitle)),
-			// <strong>FeedTitle</strong>:
-			// <br>
-			// <a href="url-of-the-entry"><strong>Title of the Entry</strong></a>
-	  }
+			html.EscapeString(feed.Title), html.EscapeString(itemTitle), html.EscapeString(item.Link)),
+		MsgType:       "m.notice",
+		Format:        "org.matrix.custom.html",
+		FormattedBody: fmtBody,
+		// <strong>FeedTitle</strong>:
+		// <br>
+		// <a href="url-of-the-entry"><strong>Title of the Entry</strong></a>
+	}
 }
 
 func ensureItemsHaveGUIDs(feed *gofeed.Feed) {
