@@ -450,8 +450,8 @@ func (s *Service) expandCommit(roomID, userID, owner, repo, sha string) interfac
 	if err != nil {
 		log.WithError(err).WithFields(log.Fields{
 			"owner": owner,
-			"repo": repo,
-			"sha": sha,
+			"repo":  repo,
+			"sha":   sha,
 		}).Print("Failed to fetch commit")
 		return nil
 	}

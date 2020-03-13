@@ -32,13 +32,13 @@ const rssFeedXML = `
 	<item>
 		<title>New Item: Majora&#8217;s Mask</title>
 		<link>http://go.neb/rss/majoras-mask</link>
+		<author>The Skullkid!</author>
 	</item>
 </channel>
 </rss>`
 
-func TestHTMLEntities(t *testing.T) {
+func createRSSClient(t *testing.T, feedURL string) *Service {
 	database.SetServiceDB(&database.NopStorage{})
-	feedURL := "https://thehappymaskshop.hyrule"
 	// Replace the cachingClient with a mock so we can intercept RSS requests
 	rssTrans := testutils.NewRoundTripper(func(req *http.Request) (*http.Response, error) {
 		if req.URL.String() != feedURL {
@@ -55,9 +55,11 @@ func TestHTMLEntities(t *testing.T) {
 	srv, err := types.CreateService("id", "rssbot", "@happy_mask_salesman:hyrule", []byte(
 		`{"feeds": {"`+feedURL+`":{}}}`, // no config yet
 	))
+
 	if err != nil {
-		t.Fatal("Failed to create RSS bot: ", err)
+		t.Fatal(err)
 	}
+
 	rssbot := srv.(*Service)
 
 	// Configure the service to force OnPoll to query the RSS feed and attempt to send results
@@ -66,6 +68,14 @@ func TestHTMLEntities(t *testing.T) {
 	f.Rooms = []string{"!linksroom:hyrule"}
 	f.NextPollTimestampSecs = time.Now().Unix()
 	rssbot.Feeds[feedURL] = f
+
+	return rssbot
+}
+
+func TestHTMLEntities(t *testing.T) {
+	feedURL := "https://thehappymaskshop.hyrule"
+
+	rssbot := createRSSClient(t, feedURL)
 
 	// Create the Matrix client which will send the notification
 	wg := sync.WaitGroup{}
@@ -102,4 +112,60 @@ func TestHTMLEntities(t *testing.T) {
 
 	// Check that the Matrix client sent a message
 	wg.Wait()
+}
+
+func TestFeedItemFiltering(t *testing.T) {
+	feedURL := "https://thehappymaskshop.hyrule"
+
+	// Create rssbot client
+	rssbot := createRSSClient(t, feedURL)
+
+	feed := rssbot.Feeds[feedURL]
+	feed.MustInclude.Title = []string{"Zelda"}
+	rssbot.Feeds[feedURL] = feed
+
+	_, items, _ := rssbot.queryFeed(feedURL)
+	// Expect that we get no items if we filter for 'Zelda' in title
+	if len(items) != 0 {
+		t.Errorf("Expected 0 items, got %v", items)
+	}
+
+	// Recreate rssbot client
+	rssbot = createRSSClient(t, feedURL)
+
+	feed = rssbot.Feeds[feedURL]
+	feed.MustInclude.Title = []string{"Majora"}
+	rssbot.Feeds[feedURL] = feed
+
+	_, items, _ = rssbot.queryFeed(feedURL)
+	// Expect one item if we filter for 'Majora' in title
+	if len(items) != 1 {
+		t.Errorf("Expected 1 item, got %d", len(items))
+	}
+
+	// Recreate rssbot client
+	rssbot = createRSSClient(t, feedURL)
+
+	feed = rssbot.Feeds[feedURL]
+	feed.MustNotInclude.Author = []string{"kid"}
+	rssbot.Feeds[feedURL] = feed
+
+	_, items, _ = rssbot.queryFeed(feedURL)
+	// 'kid' does not match an entire word in the author name, so it's not filtered
+	if len(items) != 1 {
+		t.Errorf("Expected 1 item, got %d", len(items))
+	}
+
+	// Recreate rssbot client
+	rssbot = createRSSClient(t, feedURL)
+
+	feed = rssbot.Feeds[feedURL]
+	feed.MustNotInclude.Author = []string{"Skullkid"}
+	rssbot.Feeds[feedURL] = feed
+
+	_, items, _ = rssbot.queryFeed(feedURL)
+	// Expect no items if we filter for 'Skullkid' not in author name
+	if len(items) != 0 {
+		t.Errorf("Expected 0 items, got %v", items)
+	}
 }

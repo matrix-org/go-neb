@@ -7,7 +7,9 @@ import (
 	"html"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
+	"unicode"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/die-net/lrucache"
@@ -33,6 +35,30 @@ var (
 )
 
 const minPollingIntervalSeconds = 60 * 5 // 5 min (News feeds can be genuinely spammy)
+
+// includeRules contains the rules for including or excluding a feed item. For the fields Author, Title
+// and Description in a feed item, there can be some words specified in the config that determine whether
+// the item will be displayed or not, depending on whether these words are included in that field.
+//
+//   - If specified in the `must_include` field, the feed item must include at least one word for each field
+//     that has been specified. This means that if some words have been specified for both Author and Title,
+//     both the Author and Title must contain at least one of their respective words or the item will be skipped.
+//   - If specified in the `must_not_include` field, the feed item fields must not contain any of the words
+//     that were specified for each field. This means that if some words have been specified for both Author
+//     and Title, if either of them includes at least one of their respective words, the item will be skipped,
+//     even in the case that the item matched the `must_include` rules.
+//
+//   In both cases, specifying an empty list for a field or not specifying anything causes the field to be ignored.
+//   The field being checked each time will be split into words (any non-alphanumeric character starts a new word)
+//   and they will be checked against the provided list.
+type includeRules struct {
+	// Author is a case-sensitive list of words that the author name must contain or not contain.
+	Author []string `json:"author"`
+	// Title is a case-sensitive list of words that the author name must contain or not contain.
+	Title []string `json:"title"`
+	// Description is a case-sensitive list of words that the author name must contain or not contain.
+	Description []string `json:"description"`
+}
 
 // Service contains the Config fields for this service.
 //
@@ -62,6 +88,10 @@ type Service struct {
 		// The time of the last successful poll. This is populated by Go-NEB. Use /getService to retrieve
 		// this value.
 		FeedUpdatedTimestampSecs int64 `json:"last_updated_ts_secs"`
+		// Specified fields must each include at least one of these words.
+		MustInclude includeRules `json:"must_include"`
+		// None of the specified fields must include any of these words.
+		MustNotInclude includeRules `json:"must_not_include"`
 		// Internal field. When we should poll again.
 		NextPollTimestampSecs int64
 		// Internal field. The most recently seen GUIDs. Sized to the number of items in the feed.
@@ -302,7 +332,44 @@ func (s *Service) queryFeed(feedURL string) (*gofeed.Feed, []gofeed.Item, error)
 	return feed, items, nil
 }
 
+// containsAny takes a string and an array of words and returns whether any of the words
+// in the list are contained in the string. The words in the string are considered to be
+// separated by any non-alphanumeric character.
+func containsAny(item string, filterWords []string) bool {
+	itemWords := strings.FieldsFunc(item, func(c rune) bool {
+		return !unicode.IsLetter(c) && !unicode.IsNumber(c)
+	})
+	for _, itemWord := range itemWords {
+		for _, filterWord := range filterWords {
+			if filterWord == itemWord {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func itemFiltered(i *gofeed.Item, mustInclude, mustNotInclude *includeRules) bool {
+	// At least one word for each field that has been specified must be included for an item to pass the filter.
+	if (i.Author != nil && len(mustInclude.Author) > 0 && !containsAny(i.Author.Name, mustInclude.Author)) ||
+		(len(mustInclude.Title) > 0 && !containsAny(i.Title, mustInclude.Title)) ||
+		(len(mustInclude.Description) > 0 && !containsAny(i.Description, mustInclude.Description)) {
+		return true
+	}
+
+	// If at least one word of any field that has been specified is included in the item, it doesn't pass the filter.
+	if (i.Author != nil && containsAny(i.Author.Name, mustNotInclude.Author)) ||
+		containsAny(i.Title, mustNotInclude.Title) ||
+		containsAny(i.Description, mustNotInclude.Description) {
+		return true
+	}
+	return false
+}
+
 func (s *Service) newItems(feedURL string, allItems []*gofeed.Item) (items []gofeed.Item) {
+	mustInclude := s.Feeds[feedURL].MustInclude
+	mustNotInclude := s.Feeds[feedURL].MustNotInclude
+
 	for _, i := range allItems {
 		if i == nil {
 			continue
@@ -332,7 +399,9 @@ func (s *Service) newItems(feedURL string, allItems []*gofeed.Item) (items []gof
 			i.Author.Email = html.UnescapeString(i.Author.Email)
 		}
 
-		items = append(items, *i)
+		if !itemFiltered(i, &mustInclude, &mustNotInclude) {
+			items = append(items, *i)
+		}
 	}
 	return
 }
