@@ -351,7 +351,7 @@ func (s *Service) sendToRooms(cli *gomatrix.Client, feedURL string, feed *gofeed
 func itemToHTML(feed *gofeed.Feed, item gofeed.Item) gomatrix.HTMLMessage {
 	// If an item does not have a title, try using the feed's title instead
 	// Create a new variable instead of mutating that which is passed in
-	itemTitle = item.Title
+	itemTitle := item.Title
 	if itemTitle == "" {
 		itemTitle = feed.Title
 	}
