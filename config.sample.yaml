@@ -100,6 +100,16 @@ services:
       feeds:
         "http://lorem-rss.herokuapp.com/feed?unit=second&interval=60":
           rooms: ["!qmElAGdFYCHoCJuaNt:localhost"]
+          must_include:
+            author:
+              - author1
+            description:
+              - lorem
+              - ipsum
+          must_not_include:
+            title:
+              - Lorem
+              - Ipsum
 
   - ID: "github_cmd_service"
     Type: "github"
