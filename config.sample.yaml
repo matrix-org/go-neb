@@ -67,7 +67,7 @@ services:
     UserID: "@goneb:localhost" # requires a Syncing client
     Config:
       api_key: "qwg4672vsuyfsfe"
-      use_downsized: false
+      image_type: 0
 
   - ID: "guggy_service"
     Type: "guggy"
