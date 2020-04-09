@@ -7,9 +7,10 @@ go-neb.db
 *.a
 *.so
 
+# Binary file
+go-neb
+
 # Folders
-bin
-pkg
 _obj
 _test
 .idea

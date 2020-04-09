@@ -1,9 +1,0 @@
-<!--
-Description: feed contributor - mixed content 
--->
-<feed xmlns="http://www.w3.org/2005/Atom">
-  <contributor>
-    <name>Contributor Name</name>
-    Mixed content
-  </contributor>
-</feed>

@@ -1,12 +1,11 @@
 language: go
 go:
- - 1.11
+ - 1.14
 install:
- - go get github.com/constabulary/gb/...
- - go get github.com/golang/lint/golint
+ - go get golang.org/x/lint/golint
  - go get github.com/fzipp/gocyclo
 
-script: gb build github.com/matrix-org/go-neb && ./hooks/pre-commit
+script: go build github.com/matrix-org/go-neb && ./hooks/pre-commit
 
 notifications:
     webhooks:

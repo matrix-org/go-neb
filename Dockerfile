@@ -1,15 +1,13 @@
 # Build go-neb
-FROM golang:1.11-alpine as builder
+FROM golang:1.14-alpine as builder
 
 RUN apk add --no-cache -t build-deps git gcc musl-dev go
 
 COPY . /tmp/go-neb
 WORKDIR /tmp/go-neb
-RUN go get -u github.com/constabulary/gb/... \
-    && go get github.com/golang/lint/golint \
+RUN go get golang.org/x/lint/golint \
     && go get github.com/fzipp/gocyclo \
-    && gb vendor restore \
-    && gb build -f github.com/matrix-org/go-neb
+    && go build github.com/matrix-org/go-neb
 
 # Ensures we're lint-free
 RUN /tmp/go-neb/hooks/pre-commit
@@ -23,7 +21,7 @@ ENV BIND_ADDRESS=:4050 \
     UID=1337 \
     GID=1337
 
-COPY --from=builder /tmp/go-neb/bin/go-neb /usr/local/bin/go-neb
+COPY --from=builder /tmp/go-neb/go-neb /usr/local/bin/go-neb
 RUN apk add --no-cache \
       ca-certificates \
       su-exec \
