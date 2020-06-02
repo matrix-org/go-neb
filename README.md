@@ -163,7 +163,12 @@ Authentication via the config file:
  - [Github](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/realms/github/index.html#Session)
  - [JIRA](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/realms/jira/index.html#Session)
 
+# Contributing
+
+Before submitting pull requests, please read the [Matrix.org contribution guidelines](https://github.com/matrix-org/synapse/blob/develop/CONTRIBUTING.md#sign-off) regarding sign-off of your work.
+
 # Developing
+
 There's a bunch more tools this project uses when developing in order to do
 things like linting. Some of them are bundled with go (fmt and vet) but some
 are not. You should install the ones which are not:
