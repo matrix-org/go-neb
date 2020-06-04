@@ -3,6 +3,8 @@ package types
 import (
 	"regexp"
 	"strings"
+
+	"maunium.net/go/mautrix/id"
 )
 
 // A Command is something that a user invokes by sending a message starting with '!'
@@ -13,7 +15,7 @@ type Command struct {
 	Path      []string
 	Arguments []string
 	Help      string
-	Command   func(roomID, userID string, arguments []string) (content interface{}, err error)
+	Command   func(roomID id.RoomID, userID id.UserID, arguments []string) (content interface{}, err error)
 }
 
 // An Expansion is something that actives when the user sends any message
@@ -22,7 +24,7 @@ type Command struct {
 // the appropriate RFC.
 type Expansion struct {
 	Regexp *regexp.Regexp
-	Expand func(roomID, userID string, matchingGroups []string) interface{}
+	Expand func(roomID id.RoomID, userID id.UserID, matchingGroups []string) interface{}
 }
 
 // Matches if the arguments start with the path of the command.

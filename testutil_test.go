@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+
+	"maunium.net/go/mautrix/id"
 )
 
 // newResponse creates a new HTTP response with the given data.
@@ -46,8 +48,8 @@ func (rt *matrixTripper) Handle(method, path string, handler func(req *http.Requ
 	rt.handlers[key] = handler
 }
 
-func (rt *matrixTripper) HandlePOSTFilter(userID string) {
-	rt.Handle("POST", "/_matrix/client/r0/user/"+userID+"/filter",
+func (rt *matrixTripper) HandlePOSTFilter(userID id.UserID) {
+	rt.Handle("POST", "/_matrix/client/r0/user/"+userID.String()+"/filter",
 		func(req *http.Request) (*http.Response, error) {
 			return newResponse(200, `{
 				"filter_id":"abcdef"

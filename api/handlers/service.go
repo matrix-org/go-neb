@@ -14,9 +14,9 @@ import (
 	"github.com/matrix-org/go-neb/metrics"
 	"github.com/matrix-org/go-neb/polling"
 	"github.com/matrix-org/go-neb/types"
-	"github.com/matrix-org/gomatrix"
 	"github.com/matrix-org/util"
 	log "github.com/sirupsen/logrus"
+	"maunium.net/go/mautrix"
 )
 
 // ConfigureService represents an HTTP handler which can process /admin/configureService requests.
@@ -225,7 +225,7 @@ func (h *GetService) OnIncomingRequest(req *http.Request) util.JSONResponse {
 	}
 }
 
-func checkClientForService(service types.Service, client *gomatrix.Client) error {
+func checkClientForService(service types.Service, client *mautrix.Client) error {
 	// If there are any commands or expansions for this Service then the service user ID
 	// MUST be a syncing client or else the Service will never get the incoming command/expansion!
 	cmds := service.Commands(client)

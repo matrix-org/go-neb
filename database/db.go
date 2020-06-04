@@ -4,9 +4,11 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"time"
+
 	"github.com/matrix-org/go-neb/api"
 	"github.com/matrix-org/go-neb/types"
-	"time"
+	"maunium.net/go/mautrix/id"
 )
 
 // A ServiceDB stores the configuration for the services
@@ -75,7 +77,7 @@ func (d *ServiceDB) LoadMatrixClientConfigs() (configs []api.ClientConfig, err e
 
 // LoadMatrixClientConfig loads a Matrix client config from the database.
 // Returns sql.ErrNoRows if the client isn't in the database.
-func (d *ServiceDB) LoadMatrixClientConfig(userID string) (config api.ClientConfig, err error) {
+func (d *ServiceDB) LoadMatrixClientConfig(userID id.UserID) (config api.ClientConfig, err error) {
 	err = runTransaction(d.db, func(txn *sql.Tx) error {
 		config, err = selectMatrixClientConfigTxn(txn, userID)
 		return err
@@ -84,7 +86,7 @@ func (d *ServiceDB) LoadMatrixClientConfig(userID string) (config api.ClientConf
 }
 
 // UpdateNextBatch updates the next_batch token for the given user.
-func (d *ServiceDB) UpdateNextBatch(userID, nextBatch string) (err error) {
+func (d *ServiceDB) UpdateNextBatch(userID id.UserID, nextBatch string) (err error) {
 	err = runTransaction(d.db, func(txn *sql.Tx) error {
 		return updateNextBatchTxn(txn, userID, nextBatch)
 	})
@@ -92,7 +94,7 @@ func (d *ServiceDB) UpdateNextBatch(userID, nextBatch string) (err error) {
 }
 
 // LoadNextBatch loads the next_batch token for the given user.
-func (d *ServiceDB) LoadNextBatch(userID string) (nextBatch string, err error) {
+func (d *ServiceDB) LoadNextBatch(userID id.UserID) (nextBatch string, err error) {
 	err = runTransaction(d.db, func(txn *sql.Tx) error {
 		nextBatch, err = selectNextBatchTxn(txn, userID)
 		return err
@@ -120,7 +122,7 @@ func (d *ServiceDB) DeleteService(serviceID string) (err error) {
 
 // LoadServicesForUser loads all the bot services configured for a given user.
 // Returns an empty list if there aren't any services configured.
-func (d *ServiceDB) LoadServicesForUser(serviceUserID string) (services []types.Service, err error) {
+func (d *ServiceDB) LoadServicesForUser(serviceUserID id.UserID) (services []types.Service, err error) {
 	err = runTransaction(d.db, func(txn *sql.Tx) error {
 		services, err = selectServicesForUserTxn(txn, serviceUserID)
 		if err != nil {
@@ -218,7 +220,7 @@ func (d *ServiceDB) StoreAuthSession(session types.AuthSession) (old types.AuthS
 
 // RemoveAuthSession removes the auth session for the given user on the given realm.
 // No error is returned if the session did not exist in the first place.
-func (d *ServiceDB) RemoveAuthSession(realmID, userID string) error {
+func (d *ServiceDB) RemoveAuthSession(realmID string, userID id.UserID) error {
 	return runTransaction(d.db, func(txn *sql.Tx) error {
 		return deleteAuthSessionTxn(txn, realmID, userID)
 	})
@@ -227,7 +229,7 @@ func (d *ServiceDB) RemoveAuthSession(realmID, userID string) error {
 // LoadAuthSessionByUser loads an AuthSession from the database based on the given
 // realm and user ID.
 // Returns sql.ErrNoRows if the session isn't in the database.
-func (d *ServiceDB) LoadAuthSessionByUser(realmID, userID string) (session types.AuthSession, err error) {
+func (d *ServiceDB) LoadAuthSessionByUser(realmID string, userID id.UserID) (session types.AuthSession, err error) {
 	err = runTransaction(d.db, func(txn *sql.Tx) error {
 		session, err = selectAuthSessionByUserTxn(txn, realmID, userID)
 		return err
@@ -248,7 +250,7 @@ func (d *ServiceDB) LoadAuthSessionByID(realmID, sessionID string) (session type
 
 // LoadBotOptions loads bot options from the database.
 // Returns sql.ErrNoRows if the bot options isn't in the database.
-func (d *ServiceDB) LoadBotOptions(userID, roomID string) (opts types.BotOptions, err error) {
+func (d *ServiceDB) LoadBotOptions(userID id.UserID, roomID id.RoomID) (opts types.BotOptions, err error) {
 	err = runTransaction(d.db, func(txn *sql.Tx) error {
 		opts, err = selectBotOptionsTxn(txn, userID, roomID)
 		return err

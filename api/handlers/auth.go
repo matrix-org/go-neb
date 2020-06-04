@@ -13,6 +13,7 @@ import (
 	"github.com/matrix-org/go-neb/types"
 	"github.com/matrix-org/util"
 	log "github.com/sirupsen/logrus"
+	"maunium.net/go/mautrix/id"
 )
 
 // RequestAuthSession represents an HTTP handler capable of processing /admin/requestAuthSession requests.
@@ -104,7 +105,7 @@ func (h *RemoveAuthSession) OnIncomingRequest(req *http.Request) util.JSONRespon
 	}
 	var body struct {
 		RealmID string
-		UserID  string
+		UserID  id.UserID
 	}
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
 		return util.MessageResponse(400, "Error parsing request JSON")
@@ -276,7 +277,7 @@ func (h *GetSession) OnIncomingRequest(req *http.Request) util.JSONResponse {
 	}
 	var body struct {
 		RealmID string
-		UserID  string
+		UserID  id.UserID
 	}
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
 		return util.MessageResponse(400, "Error parsing request JSON")

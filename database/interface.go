@@ -3,20 +3,21 @@ package database
 import (
 	"github.com/matrix-org/go-neb/api"
 	"github.com/matrix-org/go-neb/types"
+	"maunium.net/go/mautrix/id"
 )
 
 // Storer is the interface which needs to be conformed to in order to persist Go-NEB data
 type Storer interface {
 	StoreMatrixClientConfig(config api.ClientConfig) (oldConfig api.ClientConfig, err error)
 	LoadMatrixClientConfigs() (configs []api.ClientConfig, err error)
-	LoadMatrixClientConfig(userID string) (config api.ClientConfig, err error)
+	LoadMatrixClientConfig(userID id.UserID) (config api.ClientConfig, err error)
 
-	UpdateNextBatch(userID, nextBatch string) (err error)
-	LoadNextBatch(userID string) (nextBatch string, err error)
+	UpdateNextBatch(userID id.UserID, nextBatch string) (err error)
+	LoadNextBatch(userID id.UserID) (nextBatch string, err error)
 
 	LoadService(serviceID string) (service types.Service, err error)
 	DeleteService(serviceID string) (err error)
-	LoadServicesForUser(serviceUserID string) (services []types.Service, err error)
+	LoadServicesForUser(serviceUserID id.UserID) (services []types.Service, err error)
 	LoadServicesByType(serviceType string) (services []types.Service, err error)
 	StoreService(service types.Service) (oldService types.Service, err error)
 
@@ -25,11 +26,11 @@ type Storer interface {
 	StoreAuthRealm(realm types.AuthRealm) (old types.AuthRealm, err error)
 
 	StoreAuthSession(session types.AuthSession) (old types.AuthSession, err error)
-	LoadAuthSessionByUser(realmID, userID string) (session types.AuthSession, err error)
+	LoadAuthSessionByUser(realmID string, userID id.UserID) (session types.AuthSession, err error)
 	LoadAuthSessionByID(realmID, sessionID string) (session types.AuthSession, err error)
-	RemoveAuthSession(realmID, userID string) error
+	RemoveAuthSession(realmID string, userID id.UserID) error
 
-	LoadBotOptions(userID, roomID string) (opts types.BotOptions, err error)
+	LoadBotOptions(userID id.UserID, roomID id.RoomID) (opts types.BotOptions, err error)
 	StoreBotOptions(opts types.BotOptions) (oldOpts types.BotOptions, err error)
 
 	InsertFromConfig(cfg *api.ConfigFile) error
@@ -50,17 +51,17 @@ func (s *NopStorage) LoadMatrixClientConfigs() (configs []api.ClientConfig, err 
 }
 
 // LoadMatrixClientConfig NOP
-func (s *NopStorage) LoadMatrixClientConfig(userID string) (config api.ClientConfig, err error) {
+func (s *NopStorage) LoadMatrixClientConfig(userID id.UserID) (config api.ClientConfig, err error) {
 	return
 }
 
 // UpdateNextBatch NOP
-func (s *NopStorage) UpdateNextBatch(userID, nextBatch string) (err error) {
+func (s *NopStorage) UpdateNextBatch(userID id.UserID, nextBatch string) (err error) {
 	return
 }
 
 // LoadNextBatch NOP
-func (s *NopStorage) LoadNextBatch(userID string) (nextBatch string, err error) {
+func (s *NopStorage) LoadNextBatch(userID id.UserID) (nextBatch string, err error) {
 	return
 }
 
@@ -75,7 +76,7 @@ func (s *NopStorage) DeleteService(serviceID string) (err error) {
 }
 
 // LoadServicesForUser NOP
-func (s *NopStorage) LoadServicesForUser(serviceUserID string) (services []types.Service, err error) {
+func (s *NopStorage) LoadServicesForUser(serviceUserID id.UserID) (services []types.Service, err error) {
 	return
 }
 
@@ -110,7 +111,7 @@ func (s *NopStorage) StoreAuthSession(session types.AuthSession) (old types.Auth
 }
 
 // LoadAuthSessionByUser NOP
-func (s *NopStorage) LoadAuthSessionByUser(realmID, userID string) (session types.AuthSession, err error) {
+func (s *NopStorage) LoadAuthSessionByUser(realmID string, userID id.UserID) (session types.AuthSession, err error) {
 	return
 }
 
@@ -120,12 +121,12 @@ func (s *NopStorage) LoadAuthSessionByID(realmID, sessionID string) (session typ
 }
 
 // RemoveAuthSession NOP
-func (s *NopStorage) RemoveAuthSession(realmID, userID string) error {
+func (s *NopStorage) RemoveAuthSession(realmID string, userID id.UserID) error {
 	return nil
 }
 
 // LoadBotOptions NOP
-func (s *NopStorage) LoadBotOptions(userID, roomID string) (opts types.BotOptions, err error) {
+func (s *NopStorage) LoadBotOptions(userID id.UserID, roomID id.RoomID) (opts types.BotOptions, err error) {
 	return
 }
 

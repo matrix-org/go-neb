@@ -13,9 +13,11 @@ import (
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/metrics"
 	"github.com/matrix-org/go-neb/types"
-	"github.com/matrix-org/gomatrix"
 	shellwords "github.com/mattn/go-shellwords"
 	log "github.com/sirupsen/logrus"
+	"maunium.net/go/mautrix"
+	mevt "maunium.net/go/mautrix/event"
+	"maunium.net/go/mautrix/id"
 )
 
 // A Clients is a collection of clients used for bot services.
@@ -24,7 +26,7 @@ type Clients struct {
 	httpClient *http.Client
 	dbMutex    sync.Mutex
 	mapMutex   sync.Mutex
-	clients    map[string]clientEntry
+	clients    map[id.UserID]clientEntry
 }
 
 // New makes a new collection of matrix clients
@@ -32,13 +34,13 @@ func New(db database.Storer, cli *http.Client) *Clients {
 	clients := &Clients{
 		db:         db,
 		httpClient: cli,
-		clients:    make(map[string]clientEntry), // user_id => clientEntry
+		clients:    make(map[id.UserID]clientEntry), // user_id => clientEntry
 	}
 	return clients
 }
 
 // Client gets a client for the userID
-func (c *Clients) Client(userID string) (*gomatrix.Client, error) {
+func (c *Clients) Client(userID id.UserID) (*mautrix.Client, error) {
 	entry := c.getClient(userID)
 	if entry.client != nil {
 		return entry.client, nil
@@ -71,10 +73,10 @@ func (c *Clients) Start() error {
 
 type clientEntry struct {
 	config api.ClientConfig
-	client *gomatrix.Client
+	client *mautrix.Client
 }
 
-func (c *Clients) getClient(userID string) clientEntry {
+func (c *Clients) getClient(userID id.UserID) clientEntry {
 	c.mapMutex.Lock()
 	defer c.mapMutex.Unlock()
 	return c.clients[userID]
@@ -86,7 +88,7 @@ func (c *Clients) setClient(client clientEntry) {
 	c.clients[client.config.UserID] = client
 }
 
-func (c *Clients) loadClientFromDB(userID string) (entry clientEntry, err error) {
+func (c *Clients) loadClientFromDB(userID id.UserID) (entry clientEntry, err error) {
 	c.dbMutex.Lock()
 	defer c.dbMutex.Unlock()
 
@@ -153,7 +155,7 @@ func (c *Clients) updateClientInDB(newConfig api.ClientConfig) (new clientEntry,
 	return
 }
 
-func (c *Clients) onMessageEvent(client *gomatrix.Client, event *gomatrix.Event) {
+func (c *Clients) onMessageEvent(client *mautrix.Client, event *mevt.Event) {
 	services, err := c.db.LoadServicesForUser(client.UserID)
 	if err != nil {
 		log.WithFields(log.Fields{
@@ -163,13 +165,19 @@ func (c *Clients) onMessageEvent(client *gomatrix.Client, event *gomatrix.Event)
 		}).Warn("Error loading services")
 	}
 
-	body, ok := event.Body()
-	if !ok || body == "" {
+	if err := event.Content.ParseRaw(mevt.EventMessage); err != nil {
+		return
+	}
+
+	message := event.Content.AsMessage()
+	body := message.Body
+
+	if body == "" {
 		return
 	}
 
 	// filter m.notice to prevent loops
-	if msgtype, ok := event.MessageType(); !ok || msgtype == "m.notice" {
+	if message.MsgType == mevt.MsgNotice {
 		return
 	}
 
@@ -198,7 +206,7 @@ func (c *Clients) onMessageEvent(client *gomatrix.Client, event *gomatrix.Event)
 	}
 
 	for _, content := range responses {
-		if _, err := client.SendMessageEvent(event.RoomID, "m.room.message", content); err != nil {
+		if _, err := client.SendMessageEvent(event.RoomID, mevt.EventMessage, content); err != nil {
 			log.WithFields(log.Fields{
 				log.ErrorKey: err,
 				"room_id":    event.RoomID,
@@ -213,7 +221,7 @@ func (c *Clients) onMessageEvent(client *gomatrix.Client, event *gomatrix.Event)
 // the matching command with the longest path. Returns the JSON encodable
 // content of a single matrix message event to use as a response or nil if no
 // response is appropriate.
-func runCommandForService(cmds []types.Command, event *gomatrix.Event, arguments []string) interface{} {
+func runCommandForService(cmds []types.Command, event *mevt.Event, arguments []string) interface{} {
 	var bestMatch *types.Command
 	for i, command := range cmds {
 		matches := command.Matches(arguments)
@@ -245,7 +253,10 @@ func runCommandForService(cmds []types.Command, event *gomatrix.Event, arguments
 			}).Warn("Command returned both error and content.")
 		}
 		metrics.IncrementCommand(bestMatch.Path[0], metrics.StatusFailure)
-		content = gomatrix.TextMessage{"m.notice", err.Error()}
+		content = mevt.MessageEventContent{
+			MsgType: mevt.MsgNotice,
+			Body:    err.Error(),
+		}
 	} else {
 		metrics.IncrementCommand(bestMatch.Path[0], metrics.StatusSuccess)
 	}
@@ -254,7 +265,7 @@ func runCommandForService(cmds []types.Command, event *gomatrix.Event, arguments
 }
 
 // run the expansions for a matrix event.
-func runExpansionsForService(expans []types.Expansion, event *gomatrix.Event, body string) []interface{} {
+func runExpansionsForService(expans []types.Expansion, event *mevt.Event, body string) []interface{} {
 	var responses []interface{}
 
 	for _, expansion := range expans {
@@ -275,10 +286,13 @@ func runExpansionsForService(expans []types.Expansion, event *gomatrix.Event, bo
 	return responses
 }
 
-func (c *Clients) onBotOptionsEvent(client *gomatrix.Client, event *gomatrix.Event) {
+func (c *Clients) onBotOptionsEvent(client *mautrix.Client, event *mevt.Event) {
 	// see if these options are for us. The state key is the user ID with a leading _
 	// to get around restrictions in the HS about having user IDs as state keys.
-	targetUserID := strings.TrimPrefix(*event.StateKey, "_")
+	if event.StateKey == nil {
+		return
+	}
+	targetUserID := id.UserID(strings.TrimPrefix(*event.StateKey, "_"))
 	if targetUserID != client.UserID {
 		return
 	}
@@ -287,7 +301,7 @@ func (c *Clients) onBotOptionsEvent(client *gomatrix.Client, event *gomatrix.Eve
 		UserID:      client.UserID,
 		RoomID:      event.RoomID,
 		SetByUserID: event.Sender,
-		Options:     event.Content,
+		Options:     event.Content.Raw,
 	}
 	if _, err := c.db.StoreBotOptions(opts); err != nil {
 		log.WithFields(log.Fields{
@@ -299,15 +313,14 @@ func (c *Clients) onBotOptionsEvent(client *gomatrix.Client, event *gomatrix.Eve
 	}
 }
 
-func (c *Clients) onRoomMemberEvent(client *gomatrix.Client, event *gomatrix.Event) {
-	if *event.StateKey != client.UserID {
-		return // not our member event
-	}
-	m := event.Content["membership"]
-	membership, ok := m.(string)
-	if !ok {
+func (c *Clients) onRoomMemberEvent(client *mautrix.Client, event *mevt.Event) {
+	if err := event.Content.ParseRaw(mevt.StateMember); err != nil {
 		return
 	}
+	if event.StateKey == nil || *event.StateKey != client.UserID.String() {
+		return // not our member event
+	}
+	membership := event.Content.AsMember().Membership
 	if membership == "invite" {
 		logger := log.WithFields(log.Fields{
 			"room_id":         event.RoomID,
@@ -317,10 +330,10 @@ func (c *Clients) onRoomMemberEvent(client *gomatrix.Client, event *gomatrix.Eve
 		logger.Print("Accepting invite from user")
 
 		content := struct {
-			Inviter string `json:"inviter"`
+			Inviter id.UserID `json:"inviter"`
 		}{event.Sender}
 
-		if _, err := client.JoinRoom(event.RoomID, "", content); err != nil {
+		if _, err := client.JoinRoom(event.RoomID.String(), "", content); err != nil {
 			logger.WithError(err).Print("Failed to join room")
 		} else {
 			logger.Print("Joined room")
@@ -328,15 +341,15 @@ func (c *Clients) onRoomMemberEvent(client *gomatrix.Client, event *gomatrix.Eve
 	}
 }
 
-func (c *Clients) newClient(config api.ClientConfig) (*gomatrix.Client, error) {
-	client, err := gomatrix.NewClient(config.HomeserverURL, config.UserID, config.AccessToken)
+func (c *Clients) newClient(config api.ClientConfig) (*mautrix.Client, error) {
+	client, err := mautrix.NewClient(config.HomeserverURL, config.UserID, config.AccessToken)
 	if err != nil {
 		return nil, err
 	}
 	client.Client = c.httpClient
-	syncer := client.Syncer.(*gomatrix.DefaultSyncer)
+	syncer := client.Syncer.(*mautrix.DefaultSyncer)
 	nebStore := &matrix.NEBStore{
-		InMemoryStore: *gomatrix.NewInMemoryStore(),
+		InMemoryStore: *mautrix.NewInMemoryStore(),
 		Database:      c.db,
 		ClientConfig:  config,
 	}
@@ -346,16 +359,16 @@ func (c *Clients) newClient(config api.ClientConfig) (*gomatrix.Client, error) {
 	// TODO: Check that the access token is valid for the userID by peforming
 	// a request against the server.
 
-	syncer.OnEventType("m.room.message", func(event *gomatrix.Event) {
+	syncer.OnEventType(mevt.EventMessage, func(event *mevt.Event) {
 		c.onMessageEvent(client, event)
 	})
 
-	syncer.OnEventType("m.room.bot.options", func(event *gomatrix.Event) {
+	syncer.OnEventType(mevt.Type{Type: "m.room.bot.options", Class: mevt.UnknownEventType}, func(event *mevt.Event) {
 		c.onBotOptionsEvent(client, event)
 	})
 
 	if config.AutoJoinRooms {
-		syncer.OnEventType("m.room.member", func(event *gomatrix.Event) {
+		syncer.OnEventType(mevt.StateMember, func(event *mevt.Event) {
 			c.onRoomMemberEvent(client, event)
 		})
 	}

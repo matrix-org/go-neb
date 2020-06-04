@@ -1,7 +1,11 @@
+os: linux
+dist: bionic
 language: go
 go:
  - 1.14
 install:
+ - sudo apt-get update
+ - sudo apt-get -y install libolm2 libolm-dev
  - go get golang.org/x/lint/golint
  - go get github.com/fzipp/gocyclo
 

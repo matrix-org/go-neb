@@ -19,6 +19,7 @@ import (
 	"github.com/matrix-org/go-neb/types"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/net/context"
+	"maunium.net/go/mautrix/id"
 )
 
 // RealmType of the JIRA realm
@@ -83,7 +84,7 @@ type Realm struct {
 // The endpoint is dictated by the realm ID.
 type Session struct {
 	id      string // request token
-	userID  string
+	userID  id.UserID
 	realmID string
 
 	// Configuration fields
@@ -121,7 +122,7 @@ func (s *Session) Info() interface{} {
 }
 
 // UserID returns the ID of the user performing the authentication.
-func (s *Session) UserID() string {
+func (s *Session) UserID() id.UserID {
 	return s.userID
 }
 
@@ -203,7 +204,7 @@ func (r *Realm) Register() error {
 //   {
 //       "URL": "https://jira.somewhere.com/plugins/servlet/oauth/authorize?oauth_token=7yeuierbgweguiegrTbOT"
 //   }
-func (r *Realm) RequestAuthSession(userID string, req json.RawMessage) interface{} {
+func (r *Realm) RequestAuthSession(userID id.UserID, req json.RawMessage) interface{} {
 	logger := log.WithField("jira_url", r.JIRAEndpoint)
 
 	// check if they supplied a redirect URL
@@ -298,7 +299,7 @@ func (r *Realm) OnReceiveRedirect(w http.ResponseWriter, req *http.Request) {
 }
 
 // AuthSession returns a JIRASession with the given parameters
-func (r *Realm) AuthSession(id, userID, realmID string) types.AuthSession {
+func (r *Realm) AuthSession(id string, userID id.UserID, realmID string) types.AuthSession {
 	return &Session{
 		id:      id,
 		userID:  userID,
@@ -310,7 +311,7 @@ func (r *Realm) AuthSession(id, userID, realmID string) types.AuthSession {
 // An authenticated client for userID will be used if one exists, else an
 // unauthenticated client will be used, which may not be able to see the complete list
 // of projects.
-func (r *Realm) ProjectKeyExists(userID, projectKey string) (bool, error) {
+func (r *Realm) ProjectKeyExists(userID id.UserID, projectKey string) (bool, error) {
 	cli, err := r.JIRAClient(userID, true)
 	if err != nil {
 		return false, err
@@ -344,7 +345,7 @@ func (r *Realm) ProjectKeyExists(userID, projectKey string) (bool, error) {
 
 // JIRAClient returns an authenticated jira.Client for the given userID. Returns an unauthenticated
 // client if allowUnauth is true and no authenticated session is found, else returns an error.
-func (r *Realm) JIRAClient(userID string, allowUnauth bool) (*jira.Client, error) {
+func (r *Realm) JIRAClient(userID id.UserID, allowUnauth bool) (*jira.Client, error) {
 	// Check if user has an auth session.
 	session, err := database.GetServiceDB().LoadAuthSessionByUser(r.id, userID)
 	if err != nil {
@@ -367,7 +368,7 @@ func (r *Realm) JIRAClient(userID string, allowUnauth bool) (*jira.Client, error
 			// make an unauthenticated client
 			return jira.NewClient(nil, r.JIRAEndpoint)
 		}
-		return nil, errors.New("No authenticated session found for " + userID)
+		return nil, errors.New("No authenticated session found for " + userID.String())
 	}
 	// make an authenticated client
 	auth := r.oauth1Config(r.JIRAEndpoint)
