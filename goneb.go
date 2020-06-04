@@ -17,6 +17,7 @@ import (
 	"github.com/matrix-org/go-neb/database"
 	_ "github.com/matrix-org/go-neb/metrics"
 	"github.com/matrix-org/go-neb/polling"
+
 	//_ "github.com/matrix-org/go-neb/realms/github"
 	_ "github.com/matrix-org/go-neb/realms/jira"
 	//_ "github.com/matrix-org/go-neb/services/alertmanager"
@@ -27,7 +28,7 @@ import (
 	//_ "github.com/matrix-org/go-neb/services/guggy"
 	//_ "github.com/matrix-org/go-neb/services/imgur"
 	//_ "github.com/matrix-org/go-neb/services/jira"
-	//_ "github.com/matrix-org/go-neb/services/rssbot"
+	_ "github.com/matrix-org/go-neb/services/rssbot"
 	//_ "github.com/matrix-org/go-neb/services/slackapi"
 	//_ "github.com/matrix-org/go-neb/services/travisci"
 	//_ "github.com/matrix-org/go-neb/services/wikipedia"

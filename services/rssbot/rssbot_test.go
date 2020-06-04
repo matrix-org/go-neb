@@ -14,7 +14,9 @@ import (
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/testutils"
 	"github.com/matrix-org/go-neb/types"
-	"github.com/matrix-org/gomatrix"
+	"maunium.net/go/mautrix"
+	mevt "maunium.net/go/mautrix/event"
+	"maunium.net/go/mautrix/id"
 )
 
 const rssFeedXML = `
@@ -65,7 +67,7 @@ func createRSSClient(t *testing.T, feedURL string) *Service {
 	// Configure the service to force OnPoll to query the RSS feed and attempt to send results
 	// to the right room.
 	f := rssbot.Feeds[feedURL]
-	f.Rooms = []string{"!linksroom:hyrule"}
+	f.Rooms = []id.RoomID{"!linksroom:hyrule"}
 	f.NextPollTimestampSecs = time.Now().Unix()
 	rssbot.Feeds[feedURL] = f
 
@@ -84,7 +86,7 @@ func TestHTMLEntities(t *testing.T) {
 	matrixTrans.RT = func(req *http.Request) (*http.Response, error) {
 		if strings.HasPrefix(req.URL.Path, "/_matrix/client/r0/rooms/!linksroom:hyrule/send/m.room.message") {
 			// Check content body to make sure it is decoded
-			var msg gomatrix.HTMLMessage
+			var msg mevt.MessageEventContent
 			if err := json.NewDecoder(req.Body).Decode(&msg); err != nil {
 				t.Fatal("Failed to decode request JSON: ", err)
 				return nil, errors.New("Error handling matrix client test request")
@@ -104,7 +106,7 @@ func TestHTMLEntities(t *testing.T) {
 		}
 		return nil, errors.New("Unhandled matrix client test request")
 	}
-	matrixClient, _ := gomatrix.NewClient("https://hyrule", "@happy_mask_salesman:hyrule", "its_a_secret")
+	matrixClient, _ := mautrix.NewClient("https://hyrule", "@happy_mask_salesman:hyrule", "its_a_secret")
 	matrixClient.Client = &http.Client{Transport: matrixTrans}
 
 	// Invoke OnPoll to trigger the RSS feed update
