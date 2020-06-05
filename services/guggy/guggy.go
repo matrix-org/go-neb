@@ -11,8 +11,10 @@ import (
 	"strings"
 
 	"github.com/matrix-org/go-neb/types"
-	"github.com/matrix-org/gomatrix"
 	log "github.com/sirupsen/logrus"
+	"maunium.net/go/mautrix"
+	mevt "maunium.net/go/mautrix/event"
+	"maunium.net/go/mautrix/id"
 )
 
 // ServiceType of the Guggy service
@@ -49,17 +51,17 @@ type Service struct {
 // Commands supported:
 //    !guggy some search query without quotes
 // Responds with a suitable GIF into the same room as the command.
-func (s *Service) Commands(client *gomatrix.Client) []types.Command {
+func (s *Service) Commands(client *mautrix.Client) []types.Command {
 	return []types.Command{
-		types.Command{
+		{
 			Path: []string{"guggy"},
-			Command: func(roomID, userID string, args []string) (interface{}, error) {
+			Command: func(roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
 				return s.cmdGuggy(client, roomID, userID, args)
 			},
 		},
 	}
 }
-func (s *Service) cmdGuggy(client *gomatrix.Client, roomID, userID string, args []string) (interface{}, error) {
+func (s *Service) cmdGuggy(client *mautrix.Client, roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
 	// only 1 arg which is the text to search for.
 	querySentence := strings.Join(args, " ")
 	gifResult, err := s.text2gifGuggy(querySentence)
@@ -68,8 +70,8 @@ func (s *Service) cmdGuggy(client *gomatrix.Client, roomID, userID string, args 
 	}
 
 	if gifResult.GIF == "" {
-		return gomatrix.TextMessage{
-			MsgType: "m.notice",
+		return mevt.MessageEventContent{
+			MsgType: mevt.MsgNotice,
 			Body:    "No GIF found!",
 		}, nil
 	}
@@ -79,14 +81,14 @@ func (s *Service) cmdGuggy(client *gomatrix.Client, roomID, userID string, args 
 		return nil, fmt.Errorf("Failed to upload Guggy image to matrix: %s", err.Error())
 	}
 
-	return gomatrix.ImageMessage{
+	return mevt.MessageEventContent{
 		MsgType: "m.image",
 		Body:    querySentence,
-		URL:     resUpload.ContentURI,
-		Info: gomatrix.ImageInfo{
-			Height:   uint(math.Floor(gifResult.Height)),
-			Width:    uint(math.Floor(gifResult.Width)),
-			Mimetype: "image/gif",
+		URL:     resUpload.ContentURI.CUString(),
+		Info: &mevt.FileInfo{
+			Height:   int(math.Floor(gifResult.Height)),
+			Width:    int(math.Floor(gifResult.Width)),
+			MimeType: "image/gif",
 		},
 	}, nil
 }
@@ -142,7 +144,7 @@ func (s *Service) text2gifGuggy(querySentence string) (*guggyGifResult, error) {
 }
 
 func init() {
-	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
+	types.RegisterService(func(serviceID string, serviceUserID id.UserID, webhookEndpointURL string) types.Service {
 		return &Service{
 			DefaultService: types.NewDefaultService(serviceID, serviceUserID, ServiceType),
 		}
