@@ -17,14 +17,14 @@ import (
 	"github.com/matrix-org/go-neb/database"
 	_ "github.com/matrix-org/go-neb/metrics"
 	"github.com/matrix-org/go-neb/polling"
-
-	//_ "github.com/matrix-org/go-neb/realms/github"
+	_ "github.com/matrix-org/go-neb/realms/github"
 	_ "github.com/matrix-org/go-neb/realms/jira"
+
 	//_ "github.com/matrix-org/go-neb/services/alertmanager"
 	_ "github.com/matrix-org/go-neb/services/echo"
 	_ "github.com/matrix-org/go-neb/services/giphy"
+	_ "github.com/matrix-org/go-neb/services/github"
 
-	//_ "github.com/matrix-org/go-neb/services/github"
 	//_ "github.com/matrix-org/go-neb/services/google"
 	_ "github.com/matrix-org/go-neb/services/guggy"
 	_ "github.com/matrix-org/go-neb/services/imgur"
