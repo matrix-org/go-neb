@@ -12,9 +12,9 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/matrix-org/gomatrix"
 	"github.com/russross/blackfriday"
 	log "github.com/sirupsen/logrus"
+	mevt "maunium.net/go/mautrix/event"
 )
 
 type slackAttachment struct {
@@ -195,7 +195,7 @@ func renderSlackAttachment(attachment *slackAttachment) {
 	}
 }
 
-func slackMessageToHTMLMessage(message slackMessage) (html gomatrix.HTMLMessage, err error) {
+func slackMessageToHTMLMessage(message slackMessage) (html mevt.MessageEventContent, err error) {
 	text := linkifyString(message.Text)
 	if message.Mrkdwn == nil || *message.Mrkdwn == true {
 		message.TextRendered = template.HTML(blackfriday.MarkdownBasic([]byte(text)))

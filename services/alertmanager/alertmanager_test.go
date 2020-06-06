@@ -4,10 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/matrix-org/go-neb/database"
-	"github.com/matrix-org/go-neb/testutils"
-	"github.com/matrix-org/go-neb/types"
-	"github.com/matrix-org/gomatrix"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -15,13 +11,19 @@ import (
 	"regexp"
 	"strings"
 	"testing"
+
+	"github.com/matrix-org/go-neb/database"
+	"github.com/matrix-org/go-neb/testutils"
+	"github.com/matrix-org/go-neb/types"
+	"maunium.net/go/mautrix"
+	mevt "maunium.net/go/mautrix/event"
 )
 
 func TestNotify(t *testing.T) {
 	database.SetServiceDB(&database.NopStorage{})
 
 	// Intercept message sending to Matrix and mock responses
-	msgs := []gomatrix.HTMLMessage{}
+	msgs := []mevt.MessageEventContent{}
 	matrixCli := buildTestClient(&msgs)
 
 	// create the service
@@ -91,13 +93,13 @@ func TestNotify(t *testing.T) {
 	}
 }
 
-func buildTestClient(msgs *[]gomatrix.HTMLMessage) *gomatrix.Client {
+func buildTestClient(msgs *[]mevt.MessageEventContent) *mautrix.Client {
 	matrixTrans := struct{ testutils.MockTransport }{}
 	matrixTrans.RT = func(req *http.Request) (*http.Response, error) {
 		if !strings.Contains(req.URL.String(), "/send/m.room.message") {
 			return nil, fmt.Errorf("Unhandled URL: %s", req.URL.String())
 		}
-		var msg gomatrix.HTMLMessage
+		var msg mevt.MessageEventContent
 		if err := json.NewDecoder(req.Body).Decode(&msg); err != nil {
 			return nil, fmt.Errorf("Failed to decode request JSON: %s", err)
 		}
@@ -107,7 +109,7 @@ func buildTestClient(msgs *[]gomatrix.HTMLMessage) *gomatrix.Client {
 			Body:       ioutil.NopCloser(bytes.NewBufferString(`{"event_id":"$yup:event"}`)),
 		}, nil
 	}
-	matrixCli, _ := gomatrix.NewClient("https://hs", "@neb:hs", "its_a_secret")
+	matrixCli, _ := mautrix.NewClient("https://hs", "@neb:hs", "its_a_secret")
 	matrixCli.Client = &http.Client{Transport: matrixTrans}
 	return matrixCli
 }

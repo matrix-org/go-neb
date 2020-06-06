@@ -5,14 +5,17 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/matrix-org/go-neb/database"
-	"github.com/matrix-org/go-neb/types"
-	"github.com/matrix-org/gomatrix"
-	log "github.com/sirupsen/logrus"
 	html "html/template"
 	"net/http"
 	"strings"
 	text "text/template"
+
+	"github.com/matrix-org/go-neb/database"
+	"github.com/matrix-org/go-neb/types"
+	log "github.com/sirupsen/logrus"
+	"maunium.net/go/mautrix"
+	mevt "maunium.net/go/mautrix/event"
+	"maunium.net/go/mautrix/id"
 )
 
 // ServiceType of the Alertmanager service.
@@ -46,10 +49,10 @@ type Service struct {
 	// The URL which should be added to alertmanagers config - Populated by Go-NEB after Service registration.
 	WebhookURL string `json:"webhook_url"`
 	// A map of matrix rooms to templates
-	Rooms map[string]struct {
-		TextTemplate string `json:"text_template"`
-		HTMLTemplate string `json:"html_template"`
-		MsgType      string `json:"msg_type"`
+	Rooms map[id.RoomID]struct {
+		TextTemplate string           `json:"text_template"`
+		HTMLTemplate string           `json:"html_template"`
+		MsgType      mevt.MessageType `json:"msg_type"`
 	} `json:"rooms"`
 }
 
@@ -75,7 +78,7 @@ type WebhookNotification struct {
 }
 
 // OnReceiveWebhook receives requests from Alertmanager and sends requests to Matrix as a result.
-func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *gomatrix.Client) {
+func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *mautrix.Client) {
 	decoder := json.NewDecoder(req.Body)
 	var notif WebhookNotification
 	if err := decoder.Decode(&notif); err != nil {
@@ -115,14 +118,14 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 				w.WriteHeader(500)
 				return
 			}
-			msg = gomatrix.HTMLMessage{
+			msg = mevt.MessageEventContent{
 				Body:          bodyBuffer.String(),
 				MsgType:       templates.MsgType,
-				Format:        "org.matrix.custom.html",
+				Format:        mevt.FormatHTML,
 				FormattedBody: formattedBodyBuffer.String(),
 			}
 		} else {
-			msg = gomatrix.TextMessage{
+			msg = mevt.MessageEventContent{
 				Body:    bodyBuffer.String(),
 				MsgType: templates.MsgType,
 			}
@@ -132,7 +135,7 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 			"message": msg,
 			"room_id": roomID,
 		}).Print("Sending Alertmanager notification to room")
-		if _, e := cli.SendMessageEvent(roomID, "m.room.message", msg); e != nil {
+		if _, e := cli.SendMessageEvent(roomID, mevt.EventMessage, msg); e != nil {
 			log.WithError(e).WithField("room_id", roomID).Print(
 				"Failed to send Alertmanager notification to room.")
 		}
@@ -141,7 +144,7 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 }
 
 // Register makes sure the Config information supplied is valid.
-func (s *Service) Register(oldService types.Service, client *gomatrix.Client) error {
+func (s *Service) Register(oldService types.Service, client *mautrix.Client) error {
 	s.WebhookURL = s.webhookEndpointURL
 	for _, templates := range s.Rooms {
 		// validate that we have at least a plain text template
@@ -188,9 +191,9 @@ func (s *Service) PostRegister(oldService types.Service) {
 	}
 }
 
-func (s *Service) joinRooms(client *gomatrix.Client) {
+func (s *Service) joinRooms(client *mautrix.Client) {
 	for roomID := range s.Rooms {
-		if _, err := client.JoinRoom(roomID, "", nil); err != nil {
+		if _, err := client.JoinRoom(roomID.String(), "", nil); err != nil {
 			log.WithFields(log.Fields{
 				log.ErrorKey: err,
 				"room_id":    roomID,
@@ -201,7 +204,7 @@ func (s *Service) joinRooms(client *gomatrix.Client) {
 }
 
 func init() {
-	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
+	types.RegisterService(func(serviceID string, serviceUserID id.UserID, webhookEndpointURL string) types.Service {
 		return &Service{
 			DefaultService:     types.NewDefaultService(serviceID, serviceUserID, ServiceType),
 			webhookEndpointURL: webhookEndpointURL,
