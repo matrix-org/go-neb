@@ -18,9 +18,12 @@ import (
 	"github.com/matrix-org/go-neb/realms/jira"
 	"github.com/matrix-org/go-neb/realms/jira/urls"
 	"github.com/matrix-org/go-neb/services/jira/webhook"
+	"github.com/matrix-org/go-neb/services/utils"
 	"github.com/matrix-org/go-neb/types"
-	"github.com/matrix-org/gomatrix"
 	log "github.com/sirupsen/logrus"
+	"maunium.net/go/mautrix"
+	mevt "maunium.net/go/mautrix/event"
+	"maunium.net/go/mautrix/id"
 )
 
 // ServiceType of the JIRA Service
@@ -54,9 +57,9 @@ type Service struct {
 	webhookEndpointURL string
 	// The user ID to create issues as, or to create/delete webhooks as. This user
 	// is also used to look up issues for expansions.
-	ClientUserID string
+	ClientUserID id.UserID
 	// A map from Matrix room ID to JIRA realms and project keys.
-	Rooms map[string]struct {
+	Rooms map[id.RoomID]struct {
 		// A map of realm IDs to project keys. The realm IDs determine the JIRA
 		// endpoint used.
 		Realms map[string]struct {
@@ -73,7 +76,7 @@ type Service struct {
 
 // Register ensures that the given realm IDs are valid JIRA realms and registers webhooks
 // with those JIRA endpoints.
-func (s *Service) Register(oldService types.Service, client *gomatrix.Client) error {
+func (s *Service) Register(oldService types.Service, client *mautrix.Client) error {
 	// We only ever make 1 JIRA webhook which listens for all projects and then filter
 	// on receive. So we simply need to know if we need to make a webhook or not. We
 	// need to do this for each unique realm.
@@ -94,7 +97,7 @@ func (s *Service) Register(oldService types.Service, client *gomatrix.Client) er
 	return nil
 }
 
-func (s *Service) cmdJiraCreate(roomID, userID string, args []string) (interface{}, error) {
+func (s *Service) cmdJiraCreate(roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
 	// E.g jira create PROJ "Issue title" "Issue desc"
 	if len(args) <= 1 {
 		return nil, errors.New("Missing project key (e.g 'ABC') and/or title")
@@ -164,13 +167,13 @@ func (s *Service) cmdJiraCreate(roomID, userID string, args []string) (interface
 		return nil, fmt.Errorf("Failed to create issue: JIRA returned %d", res.StatusCode)
 	}
 
-	return &gomatrix.TextMessage{
-		"m.notice",
-		fmt.Sprintf("Created issue: %sbrowse/%s", r.JIRAEndpoint, i.Key),
+	return &mevt.MessageEventContent{
+		MsgType: mevt.MsgNotice,
+		Body:    fmt.Sprintf("Created issue: %sbrowse/%s", r.JIRAEndpoint, i.Key),
 	}, nil
 }
 
-func (s *Service) expandIssue(roomID, userID string, issueKeyGroups []string) interface{} {
+func (s *Service) expandIssue(roomID id.RoomID, userID id.UserID, issueKeyGroups []string) interface{} {
 	// issueKeyGroups => ["SYN-123", "SYN", "123"]
 	if len(issueKeyGroups) != 3 {
 		log.WithField("groups", issueKeyGroups).Error("Bad number of groups")
@@ -221,8 +224,8 @@ func (s *Service) expandIssue(roomID, userID string, issueKeyGroups []string) in
 		logger.WithError(err).Print("Failed to GET issue")
 		return err
 	}
-	return gomatrix.GetHTMLMessage(
-		"m.notice",
+	return utils.StrippedHTMLMessage(
+		mevt.MsgNotice,
 		fmt.Sprintf(
 			"%sbrowse/%s : %s",
 			jrealm.JIRAEndpoint, issueKey, htmlSummaryForIssue(issue),
@@ -239,11 +242,11 @@ func (s *Service) expandIssue(roomID, userID string, issueKeyGroups []string) in
 // same project key, which project is chosen is undefined. If there
 // is no JIRA account linked to the Matrix user ID, it will return a Starter Link
 // if there is a known public project with that project key.
-func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
+func (s *Service) Commands(cli *mautrix.Client) []types.Command {
 	return []types.Command{
 		types.Command{
 			Path: []string{"jira", "create"},
-			Command: func(roomID, userID string, args []string) (interface{}, error) {
+			Command: func(roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
 				return s.cmdJiraCreate(roomID, userID, args)
 			},
 		},
@@ -256,11 +259,11 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 // to map the project key to a realm, and subsequently the JIRA endpoint to hit.
 // If there are multiple projects with the same project key in the Service Config, one will
 // be chosen arbitrarily.
-func (s *Service) Expansions(cli *gomatrix.Client) []types.Expansion {
+func (s *Service) Expansions(cli *mautrix.Client) []types.Expansion {
 	return []types.Expansion{
 		types.Expansion{
 			Regexp: issueKeyRegex,
-			Expand: func(roomID, userID string, issueKeyGroups []string) interface{} {
+			Expand: func(roomID id.RoomID, userID id.UserID, issueKeyGroups []string) interface{} {
 				return s.expandIssue(roomID, userID, issueKeyGroups)
 			},
 		},
@@ -268,7 +271,7 @@ func (s *Service) Expansions(cli *gomatrix.Client) []types.Expansion {
 }
 
 // OnReceiveWebhook receives requests from JIRA and possibly sends requests to Matrix as a result.
-func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *gomatrix.Client) {
+func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *mautrix.Client) {
 	eventProjectKey, event, httpErr := webhook.OnReceiveRequest(req)
 	if httpErr != nil {
 		log.Print("Failed to handle JIRA webhook")
@@ -297,7 +300,7 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 					continue
 				}
 				_, msgErr := cli.SendMessageEvent(
-					roomID, "m.room.message", gomatrix.GetHTMLMessage("m.notice", htmlText),
+					roomID, mevt.EventMessage, utils.StrippedHTMLMessage(mevt.MsgNotice, htmlText),
 				)
 				if msgErr != nil {
 					log.WithFields(log.Fields{
@@ -312,7 +315,7 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 	w.WriteHeader(200)
 }
 
-func (s *Service) realmIDForProject(roomID, projectKey string) string {
+func (s *Service) realmIDForProject(roomID id.RoomID, projectKey string) string {
 	// TODO: Multiple realms with the same pkey will be randomly chosen.
 	for r, realmConfig := range s.Rooms[roomID].Realms {
 		for pkey, projectConfig := range realmConfig.Projects {
@@ -324,7 +327,7 @@ func (s *Service) realmIDForProject(roomID, projectKey string) string {
 	return ""
 }
 
-func (s *Service) projectToRealm(userID, pkey string) (*jira.Realm, error) {
+func (s *Service) projectToRealm(userID id.UserID, pkey string) (*jira.Realm, error) {
 	// We don't know which JIRA installation this project maps to, so:
 	//  - Get all known JIRA realms and f.e query their endpoints with the
 	//    given user ID's credentials (so if it is a private project they
@@ -447,7 +450,7 @@ func htmlForEvent(whe *webhook.Event, jiraBaseURL string) string {
 }
 
 func init() {
-	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
+	types.RegisterService(func(serviceID string, serviceUserID id.UserID, webhookEndpointURL string) types.Service {
 		return &Service{
 			DefaultService:     types.NewDefaultService(serviceID, serviceUserID, ServiceType),
 			webhookEndpointURL: webhookEndpointURL,

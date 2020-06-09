@@ -12,8 +12,10 @@ import (
 	"strings"
 
 	"github.com/matrix-org/go-neb/types"
-	"github.com/matrix-org/gomatrix"
 	log "github.com/sirupsen/logrus"
+	"maunium.net/go/mautrix"
+	mevt "maunium.net/go/mautrix/event"
+	"maunium.net/go/mautrix/id"
 )
 
 // ServiceType of the Google service
@@ -68,23 +70,23 @@ type Service struct {
 // Commands supported:
 //    !google image some_search_query_without_quotes
 // Responds with a suitable image into the same room as the command.
-func (s *Service) Commands(client *gomatrix.Client) []types.Command {
+func (s *Service) Commands(client *mautrix.Client) []types.Command {
 	return []types.Command{
-		types.Command{
+		{
 			Path: []string{"google", "image"},
-			Command: func(roomID, userID string, args []string) (interface{}, error) {
+			Command: func(roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
 				return s.cmdGoogleImgSearch(client, roomID, userID, args)
 			},
 		},
-		types.Command{
+		{
 			Path: []string{"google", "help"},
-			Command: func(roomID, userID string, args []string) (interface{}, error) {
+			Command: func(roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
 				return usageMessage(), nil
 			},
 		},
-		types.Command{
+		{
 			Path: []string{"google"},
-			Command: func(roomID, userID string, args []string) (interface{}, error) {
+			Command: func(roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
 				return usageMessage(), nil
 			},
 		},
@@ -92,12 +94,14 @@ func (s *Service) Commands(client *gomatrix.Client) []types.Command {
 }
 
 // usageMessage returns a matrix TextMessage representation of the service usage
-func usageMessage() *gomatrix.TextMessage {
-	return &gomatrix.TextMessage{"m.notice",
-		`Usage: !google image image_search_text`}
+func usageMessage() *mevt.MessageEventContent {
+	return &mevt.MessageEventContent{
+		MsgType: mevt.MsgNotice,
+		Body:    `Usage: !google image image_search_text`,
+	}
 }
 
-func (s *Service) cmdGoogleImgSearch(client *gomatrix.Client, roomID, userID string, args []string) (interface{}, error) {
+func (s *Service) cmdGoogleImgSearch(client *mautrix.Client, roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
 
 	if len(args) < 1 {
 		return usageMessage(), nil
@@ -114,8 +118,8 @@ func (s *Service) cmdGoogleImgSearch(client *gomatrix.Client, roomID, userID str
 
 	var imgURL = searchResult.Link
 	if imgURL == "" {
-		return gomatrix.TextMessage{
-			MsgType: "m.notice",
+		return mevt.MessageEventContent{
+			MsgType: mevt.MsgNotice,
 			Body:    "No image found!",
 		}, nil
 	}
@@ -126,14 +130,14 @@ func (s *Service) cmdGoogleImgSearch(client *gomatrix.Client, roomID, userID str
 		return nil, fmt.Errorf("Failed to upload Google image at URL %s (content type %s) to matrix: %s", imgURL, searchResult.Mime, err.Error())
 	}
 
-	return gomatrix.ImageMessage{
-		MsgType: "m.image",
+	return mevt.MessageEventContent{
+		MsgType: mevt.MsgImage,
 		Body:    querySentence,
-		URL:     resUpload.ContentURI,
-		Info: gomatrix.ImageInfo{
-			Height:   uint(math.Floor(searchResult.Image.Height)),
-			Width:    uint(math.Floor(searchResult.Image.Width)),
-			Mimetype: searchResult.Mime,
+		URL:     resUpload.ContentURI.CUString(),
+		Info: &mevt.FileInfo{
+			Height:   int(math.Floor(searchResult.Image.Height)),
+			Width:    int(math.Floor(searchResult.Image.Width)),
+			MimeType: searchResult.Mime,
 		},
 	}, nil
 }
@@ -195,7 +199,7 @@ func response2String(res *http.Response) string {
 
 // Initialise the service
 func init() {
-	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
+	types.RegisterService(func(serviceID string, serviceUserID id.UserID, webhookEndpointURL string) types.Service {
 		return &Service{
 			DefaultService: types.NewDefaultService(serviceID, serviceUserID, ServiceType),
 		}

@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+
+	"maunium.net/go/mautrix/id"
 )
 
 // AuthRealm represents a place where a user can authenticate themselves.
@@ -15,8 +17,8 @@ type AuthRealm interface {
 	Init() error
 	Register() error
 	OnReceiveRedirect(w http.ResponseWriter, req *http.Request)
-	AuthSession(id, userID, realmID string) AuthSession
-	RequestAuthSession(userID string, config json.RawMessage) interface{}
+	AuthSession(id string, userID id.UserID, realmID string) AuthSession
+	RequestAuthSession(userID id.UserID, config json.RawMessage) interface{}
 }
 
 var realmsByType = map[string]func(string, string) AuthRealm{}
@@ -49,7 +51,7 @@ func CreateAuthRealm(realmID, realmType string, realmJSON []byte) (AuthRealm, er
 // an auth realm.
 type AuthSession interface {
 	ID() string
-	UserID() string
+	UserID() id.UserID
 	RealmID() string
 	Authenticated() bool
 	Info() interface{}

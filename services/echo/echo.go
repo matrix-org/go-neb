@@ -5,7 +5,9 @@ import (
 	"strings"
 
 	"github.com/matrix-org/go-neb/types"
-	"github.com/matrix-org/gomatrix"
+	"maunium.net/go/mautrix"
+	mevt "maunium.net/go/mautrix/event"
+	"maunium.net/go/mautrix/id"
 )
 
 // ServiceType of the Echo service
@@ -19,19 +21,22 @@ type Service struct {
 // Commands supported:
 //    !echo some message
 // Responds with a notice of "some message".
-func (e *Service) Commands(cli *gomatrix.Client) []types.Command {
+func (e *Service) Commands(cli *mautrix.Client) []types.Command {
 	return []types.Command{
 		types.Command{
 			Path: []string{"echo"},
-			Command: func(roomID, userID string, args []string) (interface{}, error) {
-				return &gomatrix.TextMessage{"m.notice", strings.Join(args, " ")}, nil
+			Command: func(roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
+				return &mevt.MessageEventContent{
+					MsgType: mevt.MsgNotice,
+					Body:    strings.Join(args, " "),
+				}, nil
 			},
 		},
 	}
 }
 
 func init() {
-	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
+	types.RegisterService(func(serviceID string, serviceUserID id.UserID, webhookEndpointURL string) types.Service {
 		return &Service{
 			DefaultService: types.NewDefaultService(serviceID, serviceUserID, ServiceType),
 		}

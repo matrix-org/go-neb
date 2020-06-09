@@ -11,6 +11,7 @@ import (
 	"github.com/matrix-org/go-neb/realms/jira"
 	"github.com/matrix-org/util"
 	log "github.com/sirupsen/logrus"
+	"maunium.net/go/mautrix/id"
 )
 
 type jiraWebhook struct {
@@ -32,7 +33,7 @@ type Event struct {
 }
 
 // RegisterHook checks to see if this user is allowed to track the given projects and then tracks them.
-func RegisterHook(jrealm *jira.Realm, projects []string, userID, webhookEndpointURL string) error {
+func RegisterHook(jrealm *jira.Realm, projects []string, userID id.UserID, webhookEndpointURL string) error {
 	// Tracking means that a webhook may need to be created on the remote JIRA installation.
 	// We need to make sure that the user has permission to do this. If they don't, it may still be okay if
 	// there is an existing webhook set up for this installation by someone else, *PROVIDED* that the projects
@@ -120,7 +121,7 @@ func OnReceiveRequest(req *http.Request) (string, *Event, *util.JSONResponse) {
 	return projKey, &whe, nil
 }
 
-func createWebhook(jrealm *jira.Realm, webhookEndpointURL, userID string) error {
+func createWebhook(jrealm *jira.Realm, webhookEndpointURL string, userID id.UserID) error {
 	cli, err := jrealm.JIRAClient(userID, false)
 	if err != nil {
 		return err
@@ -182,7 +183,7 @@ func getWebhook(cli *gojira.Client, webhookEndpointURL string) (*jiraWebhook, bo
 	return nebWH, false, nil
 }
 
-func checkProjectsArePublic(jrealm *jira.Realm, projects []string, userID string) error {
+func checkProjectsArePublic(jrealm *jira.Realm, projects []string, userID id.UserID) error {
 	publicCli, err := jrealm.JIRAClient("", true)
 	if err != nil {
 		return fmt.Errorf("Cannot create public JIRA client")

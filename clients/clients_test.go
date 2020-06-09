@@ -8,7 +8,9 @@ import (
 
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/types"
-	"github.com/matrix-org/gomatrix"
+	"maunium.net/go/mautrix"
+	mevt "maunium.net/go/mautrix/event"
+	"maunium.net/go/mautrix/id"
 )
 
 var commandParseTests = []struct {
@@ -28,7 +30,7 @@ type MockService struct {
 	commands []types.Command
 }
 
-func (s *MockService) Commands(cli *gomatrix.Client) []types.Command {
+func (s *MockService) Commands(cli *mautrix.Client) []types.Command {
 	return s.commands
 }
 
@@ -37,7 +39,7 @@ type MockStore struct {
 	service types.Service
 }
 
-func (d *MockStore) LoadServicesForUser(userID string) ([]types.Service, error) {
+func (d *MockStore) LoadServicesForUser(userID id.UserID) ([]types.Service, error) {
 	return []types.Service{d.service}, nil
 }
 
@@ -54,7 +56,7 @@ func TestCommandParsing(t *testing.T) {
 	cmds := []types.Command{
 		types.Command{
 			Path: []string{"test"},
-			Command: func(roomID, userID string, args []string) (interface{}, error) {
+			Command: func(roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
 				executedCmdArgs = args
 				return nil, nil
 			},
@@ -72,19 +74,25 @@ func TestCommandParsing(t *testing.T) {
 		Transport: trans,
 	}
 	clients := New(&store, cli)
-	mxCli, _ := gomatrix.NewClient("https://someplace.somewhere", "@service:user", "token")
+	mxCli, _ := mautrix.NewClient("https://someplace.somewhere", "@service:user", "token")
 	mxCli.Client = cli
 
 	for _, input := range commandParseTests {
 		executedCmdArgs = []string{}
-		event := gomatrix.Event{
-			Type:   "m.room.message",
-			Sender: "@someone:somewhere",
-			RoomID: "!foo:bar",
-			Content: map[string]interface{}{
-				"body":    input.body,
-				"msgtype": "m.text",
-			},
+		content := mevt.Content{Raw: map[string]interface{}{
+			"body":    input.body,
+			"msgtype": "m.text",
+		}}
+		if veryRaw, err := content.MarshalJSON(); err != nil {
+			t.Errorf("Error marshalling JSON: %s", err)
+		} else {
+			content.VeryRaw = veryRaw
+		}
+		event := mevt.Event{
+			Type:    mevt.EventMessage,
+			Sender:  "@someone:somewhere",
+			RoomID:  "!foo:bar",
+			Content: content,
 		}
 		clients.onMessageEvent(mxCli, &event)
 		if !reflect.DeepEqual(executedCmdArgs, input.expectArgs) {

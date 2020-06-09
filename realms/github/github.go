@@ -2,6 +2,7 @@
 package github
 
 import (
+	"context"
 	"crypto/rand"
 	"encoding/hex"
 	"encoding/json"
@@ -14,6 +15,7 @@ import (
 	"github.com/matrix-org/go-neb/services/github/client"
 	"github.com/matrix-org/go-neb/types"
 	log "github.com/sirupsen/logrus"
+	"maunium.net/go/mautrix/id"
 )
 
 // RealmType of the Github Realm
@@ -41,7 +43,7 @@ type Realm struct {
 // Session represents an authenticated github session
 type Session struct {
 	id      string
-	userID  string
+	userID  id.UserID
 	realmID string
 
 	// AccessToken is the github access token for the user
@@ -86,7 +88,7 @@ func (s *Session) Info() interface{} {
 	}
 	for {
 		// query for a list of possible projects
-		rs, resp, err := cli.Repositories.List("", opts)
+		rs, resp, err := cli.Repositories.List(context.Background(), "", opts)
 		if err != nil {
 			logger.WithError(err).Print("Failed to query github projects on github.com")
 			return nil
@@ -110,7 +112,7 @@ func (s *Session) Info() interface{} {
 }
 
 // UserID returns the user_id who authorised with Github
-func (s *Session) UserID() string {
+func (s *Session) UserID() id.UserID {
 	return s.userID
 }
 
@@ -156,7 +158,7 @@ func (r *Realm) Register() error {
 //   {
 //       "URL": "https://github.com/login/oauth/authorize?client_id=abcdef&client_secret=acascacac...."
 //   }
-func (r *Realm) RequestAuthSession(userID string, req json.RawMessage) interface{} {
+func (r *Realm) RequestAuthSession(userID id.UserID, req json.RawMessage) interface{} {
 	state, err := randomString(10)
 	if err != nil {
 		log.WithError(err).Print("Failed to generate state param")
@@ -259,7 +261,7 @@ func (r *Realm) OnReceiveRedirect(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	r.redirectOr(
-		w, 200, "You have successfully linked your Github account to "+ghSession.UserID(), logger, ghSession,
+		w, 200, "You have successfully linked your Github account to "+ghSession.UserID().String(), logger, ghSession,
 	)
 }
 
@@ -275,7 +277,7 @@ func (r *Realm) redirectOr(w http.ResponseWriter, code int, msg string, logger *
 }
 
 // AuthSession returns a Github Session for this user
-func (r *Realm) AuthSession(id, userID, realmID string) types.AuthSession {
+func (r *Realm) AuthSession(id string, userID id.UserID, realmID string) types.AuthSession {
 	return &Session{
 		id:      id,
 		userID:  userID,

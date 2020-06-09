@@ -5,6 +5,7 @@
 package github
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"regexp"
@@ -12,15 +13,18 @@ import (
 	"strings"
 
 	"bytes"
+	"html"
+
 	gogithub "github.com/google/go-github/github"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/matrix"
 	"github.com/matrix-org/go-neb/realms/github"
 	"github.com/matrix-org/go-neb/services/github/client"
 	"github.com/matrix-org/go-neb/types"
-	"github.com/matrix-org/gomatrix"
 	log "github.com/sirupsen/logrus"
-	"html"
+	"maunium.net/go/mautrix"
+	mevt "maunium.net/go/mautrix/event"
+	"maunium.net/go/mautrix/id"
 )
 
 // ServiceType of the Github service
@@ -69,7 +73,7 @@ type Service struct {
 	RealmID string
 }
 
-func (s *Service) requireGithubClientFor(userID string) (cli *gogithub.Client, resp interface{}, err error) {
+func (s *Service) requireGithubClientFor(userID id.UserID) (cli *gogithub.Client, resp interface{}, err error) {
 	cli = s.githubClientFor(userID, false)
 	if cli == nil {
 		var r types.AuthRealm
@@ -91,14 +95,17 @@ func (s *Service) requireGithubClientFor(userID string) (cli *gogithub.Client, r
 const numberGithubSearchSummaries = 3
 const cmdGithubSearchUsage = `!github search "search query"`
 
-func (s *Service) cmdGithubSearch(roomID, userID string, args []string) (interface{}, error) {
+func (s *Service) cmdGithubSearch(roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
 	cli := s.githubClientFor(userID, true)
 	if len(args) < 2 {
-		return &gomatrix.TextMessage{"m.notice", "Usage: " + cmdGithubSearchUsage}, nil
+		return &mevt.MessageEventContent{
+			MsgType: mevt.MsgNotice,
+			Body:    "Usage: " + cmdGithubSearchUsage,
+		}, nil
 	}
 
 	query := strings.Join(args, " ")
-	searchResult, res, err := cli.Search.Issues(query, nil)
+	searchResult, res, err := cli.Search.Issues(context.Background(), query, nil)
 
 	if err != nil {
 		log.WithField("err", err).Print("Failed to search")
@@ -109,7 +116,10 @@ func (s *Service) cmdGithubSearch(roomID, userID string, args []string) (interfa
 	}
 
 	if searchResult.Total == nil || *searchResult.Total == 0 {
-		return &gomatrix.TextMessage{"m.notice", "No results found for your search query!"}, nil
+		return &mevt.MessageEventContent{
+			MsgType: mevt.MsgNotice,
+			Body:    "No results found for your search query!",
+		}, nil
 	}
 
 	numResults := *searchResult.Total
@@ -130,9 +140,9 @@ func (s *Service) cmdGithubSearch(roomID, userID string, args []string) (interfa
 	}
 	htmlBuffer.WriteString("</ol>")
 
-	return &gomatrix.HTMLMessage{
+	return &mevt.MessageEventContent{
 		Body:          plainBuffer.String(),
-		MsgType:       "m.notice",
+		MsgType:       mevt.MsgNotice,
 		Format:        "org.matrix.custom.html",
 		FormattedBody: htmlBuffer.String(),
 	}, nil
@@ -140,13 +150,16 @@ func (s *Service) cmdGithubSearch(roomID, userID string, args []string) (interfa
 
 const cmdGithubCreateUsage = `!github create [owner/repo] "issue title" "description"`
 
-func (s *Service) cmdGithubCreate(roomID, userID string, args []string) (interface{}, error) {
+func (s *Service) cmdGithubCreate(roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
 	cli, resp, err := s.requireGithubClientFor(userID)
 	if cli == nil {
 		return resp, err
 	}
 	if len(args) == 0 {
-		return &gomatrix.TextMessage{"m.notice", "Usage: " + cmdGithubCreateUsage}, nil
+		return &mevt.MessageEventContent{
+			MsgType: mevt.MsgNotice,
+			Body:    "Usage: " + cmdGithubCreateUsage,
+		}, nil
 	}
 
 	// We expect the args to look like:
@@ -159,12 +172,16 @@ func (s *Service) cmdGithubCreate(roomID, userID string, args []string) (interfa
 		// look for a default repo
 		defaultRepo := s.defaultRepo(roomID)
 		if defaultRepo == "" {
-			return &gomatrix.TextMessage{"m.notice", "Need to specify repo. Usage: " + cmdGithubCreateUsage}, nil
+			return &mevt.MessageEventContent{
+				MsgType: mevt.MsgNotice,
+				Body:    "Need to specify repo. Usage: " + cmdGithubCreateUsage,
+			}, nil
 		}
 		// default repo should pass the regexp
 		ownerRepoGroups = ownerRepoRegex.FindStringSubmatch(defaultRepo)
 		if len(ownerRepoGroups) == 0 {
-			return &gomatrix.TextMessage{"m.notice", "Malformed default repo. Usage: " + cmdGithubCreateUsage}, nil
+			return &mevt.MessageEventContent{
+				MsgType: mevt.MsgNotice, Body: "Malformed default repo. Usage: " + cmdGithubCreateUsage}, nil
 		}
 
 		// insert the default as the first arg to reuse the same indices
@@ -187,7 +204,7 @@ func (s *Service) cmdGithubCreate(roomID, userID string, args []string) (interfa
 		title = &joinedTitle
 	}
 
-	issue, res, err := cli.Issues.Create(ownerRepoGroups[1], ownerRepoGroups[2], &gogithub.IssueRequest{
+	issue, res, err := cli.Issues.Create(context.Background(), ownerRepoGroups[1], ownerRepoGroups[2], &gogithub.IssueRequest{
 		Title: title,
 		Body:  desc,
 	})
@@ -199,7 +216,8 @@ func (s *Service) cmdGithubCreate(roomID, userID string, args []string) (interfa
 		return nil, fmt.Errorf("Failed to create issue. HTTP %d", res.StatusCode)
 	}
 
-	return gomatrix.TextMessage{"m.notice", fmt.Sprintf("Created issue: %s", *issue.HTMLURL)}, nil
+	return mevt.MessageEventContent{
+		MsgType: mevt.MsgNotice, Body: fmt.Sprintf("Created issue: %s", *issue.HTMLURL)}, nil
 }
 
 var cmdGithubReactAliases = map[string]string{
@@ -235,18 +253,23 @@ var cmdGithubReactAliases = map[string]string{
 
 const cmdGithubReactUsage = `!github react [owner/repo]#issue (+1|👍|-1|:-1:|laugh|:smile:|confused|uncertain|heart|❤|hooray|:tada:)`
 
-func (s *Service) cmdGithubReact(roomID, userID string, args []string) (interface{}, error) {
+func (s *Service) cmdGithubReact(roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
 	cli, resp, err := s.requireGithubClientFor(userID)
 	if cli == nil {
 		return resp, err
 	}
 	if len(args) < 2 {
-		return &gomatrix.TextMessage{"m.notice", "Usage: " + cmdGithubReactUsage}, nil
+		return &mevt.MessageEventContent{
+			MsgType: mevt.MsgNotice, Body: "Usage: " + cmdGithubReactUsage,
+		}, nil
 	}
 
 	reaction, ok := cmdGithubReactAliases[args[1]]
 	if !ok {
-		return &gomatrix.TextMessage{"m.notice", "Invalid reaction. Usage: " + cmdGithubReactUsage}, nil
+		return &mevt.MessageEventContent{
+			MsgType: mevt.MsgNotice,
+			Body:    "Invalid reaction. Usage: " + cmdGithubReactUsage,
+		}, nil
 	}
 
 	// get owner,repo,issue,resp out of args[0]
@@ -255,7 +278,7 @@ func (s *Service) cmdGithubReact(roomID, userID string, args []string) (interfac
 		return resp, nil
 	}
 
-	_, res, err := cli.Reactions.CreateIssueReaction(owner, repo, issueNum, reaction)
+	_, res, err := cli.Reactions.CreateIssueReaction(context.Background(), owner, repo, issueNum, reaction)
 
 	if err != nil {
 		log.WithField("err", err).Print("Failed to react to issue")
@@ -265,18 +288,24 @@ func (s *Service) cmdGithubReact(roomID, userID string, args []string) (interfac
 		return nil, fmt.Errorf("Failed to react to issue. HTTP %d", res.StatusCode)
 	}
 
-	return gomatrix.TextMessage{"m.notice", fmt.Sprintf("Reacted to issue with: %s", args[1])}, nil
+	return mevt.MessageEventContent{
+		MsgType: mevt.MsgNotice,
+		Body:    fmt.Sprintf("Reacted to issue with: %s", args[1]),
+	}, nil
 }
 
 const cmdGithubCommentUsage = `!github comment [owner/repo]#issue "comment text"`
 
-func (s *Service) cmdGithubComment(roomID, userID string, args []string) (interface{}, error) {
+func (s *Service) cmdGithubComment(roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
 	cli, resp, err := s.requireGithubClientFor(userID)
 	if cli == nil {
 		return resp, err
 	}
 	if len(args) == 0 {
-		return &gomatrix.TextMessage{"m.notice", "Usage: " + cmdGithubCommentUsage}, nil
+		return &mevt.MessageEventContent{
+			MsgType: mevt.MsgNotice,
+			Body:    "Usage: " + cmdGithubCommentUsage,
+		}, nil
 	}
 
 	// get owner,repo,issue,resp out of args[0]
@@ -294,7 +323,7 @@ func (s *Service) cmdGithubComment(roomID, userID string, args []string) (interf
 		comment = &joinedComment
 	}
 
-	issueComment, res, err := cli.Issues.CreateComment(owner, repo, issueNum, &gogithub.IssueComment{
+	issueComment, res, err := cli.Issues.CreateComment(context.Background(), owner, repo, issueNum, &gogithub.IssueComment{
 		Body: comment,
 	})
 
@@ -306,20 +335,29 @@ func (s *Service) cmdGithubComment(roomID, userID string, args []string) (interf
 		return nil, fmt.Errorf("Failed to create issue comment. HTTP %d", res.StatusCode)
 	}
 
-	return gomatrix.TextMessage{"m.notice", fmt.Sprintf("Commented on issue: %s", *issueComment.HTMLURL)}, nil
+	return mevt.MessageEventContent{
+		MsgType: mevt.MsgNotice,
+		Body:    fmt.Sprintf("Commented on issue: %s", *issueComment.HTMLURL),
+	}, nil
 }
 
 const cmdGithubAssignUsage = `!github assign [owner/repo]#issue username [username] [...]`
 
-func (s *Service) cmdGithubAssign(roomID, userID string, args []string) (interface{}, error) {
+func (s *Service) cmdGithubAssign(roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
 	cli, resp, err := s.requireGithubClientFor(userID)
 	if cli == nil {
 		return resp, err
 	}
 	if len(args) < 1 {
-		return &gomatrix.TextMessage{"m.notice", "Usage: " + cmdGithubAssignUsage}, nil
+		return &mevt.MessageEventContent{
+			MsgType: mevt.MsgNotice,
+			Body:    "Usage: " + cmdGithubAssignUsage,
+		}, nil
 	} else if len(args) < 2 {
-		return &gomatrix.TextMessage{"m.notice", "Needs at least one username. Usage: " + cmdGithubAssignUsage}, nil
+		return &mevt.MessageEventContent{
+			MsgType: mevt.MsgNotice,
+			Body:    "Needs at least one username. Usage: " + cmdGithubAssignUsage,
+		}, nil
 	}
 
 	// get owner,repo,issue,resp out of args[0]
@@ -328,7 +366,7 @@ func (s *Service) cmdGithubAssign(roomID, userID string, args []string) (interfa
 		return resp, nil
 	}
 
-	issue, res, err := cli.Issues.AddAssignees(owner, repo, issueNum, args[1:])
+	issue, res, err := cli.Issues.AddAssignees(context.Background(), owner, repo, issueNum, args[1:])
 
 	if err != nil {
 		log.WithField("err", err).Print("Failed to add issue assignees")
@@ -338,16 +376,22 @@ func (s *Service) cmdGithubAssign(roomID, userID string, args []string) (interfa
 		return nil, fmt.Errorf("Failed to add issue assignees. HTTP %d", res.StatusCode)
 	}
 
-	return gomatrix.TextMessage{"m.notice", fmt.Sprintf("Added assignees to issue: %s", *issue.HTMLURL)}, nil
+	return mevt.MessageEventContent{
+		MsgType: mevt.MsgNotice,
+		Body:    fmt.Sprintf("Added assignees to issue: %s", *issue.HTMLURL),
+	}, nil
 }
 
-func (s *Service) githubIssueCloseReopen(roomID, userID string, args []string, state, verb, help string) (interface{}, error) {
+func (s *Service) githubIssueCloseReopen(roomID id.RoomID, userID id.UserID, args []string, state, verb, help string) (interface{}, error) {
 	cli, resp, err := s.requireGithubClientFor(userID)
 	if cli == nil {
 		return resp, err
 	}
 	if len(args) == 0 {
-		return &gomatrix.TextMessage{"m.notice", "Usage: " + help}, nil
+		return &mevt.MessageEventContent{
+			MsgType: mevt.MsgNotice,
+			Body:    "Usage: " + help,
+		}, nil
 	}
 
 	// get owner,repo,issue,resp out of args[0]
@@ -356,7 +400,7 @@ func (s *Service) githubIssueCloseReopen(roomID, userID string, args []string, s
 		return resp, nil
 	}
 
-	issueComment, res, err := cli.Issues.Edit(owner, repo, issueNum, &gogithub.IssueRequest{
+	issueComment, res, err := cli.Issues.Edit(context.Background(), owner, repo, issueNum, &gogithub.IssueRequest{
 		State: &state,
 	})
 
@@ -368,22 +412,25 @@ func (s *Service) githubIssueCloseReopen(roomID, userID string, args []string, s
 		return nil, fmt.Errorf("Failed to %s issue. HTTP %d", verb, res.StatusCode)
 	}
 
-	return gomatrix.TextMessage{"m.notice", fmt.Sprintf("Closed issue: %s", *issueComment.HTMLURL)}, nil
+	return mevt.MessageEventContent{
+		MsgType: mevt.MsgNotice,
+		Body:    fmt.Sprintf("Closed issue: %s", *issueComment.HTMLURL),
+	}, nil
 }
 
 const cmdGithubCloseUsage = `!github close [owner/repo]#issue`
 
-func (s *Service) cmdGithubClose(roomID, userID string, args []string) (interface{}, error) {
+func (s *Service) cmdGithubClose(roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
 	return s.githubIssueCloseReopen(roomID, userID, args, "closed", "close", cmdGithubCloseUsage)
 }
 
 const cmdGithubReopenUsage = `!github reopen [owner/repo]#issue`
 
-func (s *Service) cmdGithubReopen(roomID, userID string, args []string) (interface{}, error) {
+func (s *Service) cmdGithubReopen(roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
 	return s.githubIssueCloseReopen(roomID, userID, args, "open", "open", cmdGithubCloseUsage)
 }
 
-func (s *Service) getIssueDetailsFor(input, roomID, usage string) (owner, repo string, issueNum int, resp interface{}) {
+func (s *Service) getIssueDetailsFor(input string, roomID id.RoomID, usage string) (owner, repo string, issueNum int, resp interface{}) {
 	// We expect the input to look like:
 	// "[owner/repo]#issue"
 	// They can omit the owner/repo if there is a default one set.
@@ -391,7 +438,10 @@ func (s *Service) getIssueDetailsFor(input, roomID, usage string) (owner, repo s
 	ownerRepoIssueGroups := ownerRepoIssueRegexAnchored.FindStringSubmatch(input)
 
 	if len(ownerRepoIssueGroups) != 5 {
-		resp = &gomatrix.TextMessage{"m.notice", "Usage: " + usage}
+		resp = &mevt.MessageEventContent{
+			MsgType: mevt.MsgNotice,
+			Body:    "Usage: " + usage,
+		}
 		return
 	}
 
@@ -400,7 +450,10 @@ func (s *Service) getIssueDetailsFor(input, roomID, usage string) (owner, repo s
 
 	var err error
 	if issueNum, err = strconv.Atoi(ownerRepoIssueGroups[4]); err != nil {
-		resp = &gomatrix.TextMessage{"m.notice", "Malformed issue number. Usage: " + usage}
+		resp = &mevt.MessageEventContent{
+			MsgType: mevt.MsgNotice,
+			Body:    "Malformed issue number. Usage: " + usage,
+		}
 		return
 	}
 
@@ -408,13 +461,19 @@ func (s *Service) getIssueDetailsFor(input, roomID, usage string) (owner, repo s
 		// issue only match, this only works if there is a default repo
 		defaultRepo := s.defaultRepo(roomID)
 		if defaultRepo == "" {
-			resp = &gomatrix.TextMessage{"m.notice", "Need to specify repo. Usage: " + usage}
+			resp = &mevt.MessageEventContent{
+				MsgType: mevt.MsgNotice,
+				Body:    "Need to specify repo. Usage: " + usage,
+			}
 			return
 		}
 
 		segs := strings.Split(defaultRepo, "/")
 		if len(segs) != 2 {
-			resp = &gomatrix.TextMessage{"m.notice", "Malformed default repo. Usage: " + usage}
+			resp = &mevt.MessageEventContent{
+				MsgType: mevt.MsgNotice,
+				Body:    "Malformed default repo. Usage: " + usage,
+			}
 			return
 		}
 
@@ -424,10 +483,10 @@ func (s *Service) getIssueDetailsFor(input, roomID, usage string) (owner, repo s
 	return
 }
 
-func (s *Service) expandIssue(roomID, userID, owner, repo string, issueNum int) interface{} {
+func (s *Service) expandIssue(roomID id.RoomID, userID id.UserID, owner, repo string, issueNum int) interface{} {
 	cli := s.githubClientFor(userID, true)
 
-	i, _, err := cli.Issues.Get(owner, repo, issueNum)
+	i, _, err := cli.Issues.Get(context.Background(), owner, repo, issueNum)
 	if err != nil {
 		log.WithError(err).WithFields(log.Fields{
 			"owner":  owner,
@@ -437,16 +496,16 @@ func (s *Service) expandIssue(roomID, userID, owner, repo string, issueNum int) 
 		return nil
 	}
 
-	return &gomatrix.TextMessage{
-		"m.notice",
-		fmt.Sprintf("%s : %s", *i.HTMLURL, *i.Title),
+	return &mevt.MessageEventContent{
+		MsgType: mevt.MsgNotice,
+		Body:    fmt.Sprintf("%s : %s", *i.HTMLURL, *i.Title),
 	}
 }
 
-func (s *Service) expandCommit(roomID, userID, owner, repo, sha string) interface{} {
+func (s *Service) expandCommit(roomID id.RoomID, userID id.UserID, owner, repo, sha string) interface{} {
 	cli := s.githubClientFor(userID, true)
 
-	c, _, err := cli.Repositories.GetCommit(owner, repo, sha)
+	c, _, err := cli.Repositories.GetCommit(context.Background(), owner, repo, sha)
 	if err != nil {
 		log.WithError(err).WithFields(log.Fields{
 			"owner": owner,
@@ -487,10 +546,10 @@ func (s *Service) expandCommit(roomID, userID, owner, repo, sha string) interfac
 		plainBuffer.WriteString(segs[0])
 	}
 
-	return &gomatrix.HTMLMessage{
+	return &mevt.MessageEventContent{
 		Body:          plainBuffer.String(),
-		MsgType:       "m.notice",
-		Format:        "org.matrix.custom.html",
+		MsgType:       mevt.MsgNotice,
+		Format:        mevt.FormatHTML,
 		FormattedBody: htmlBuffer.String(),
 	}
 }
@@ -504,56 +563,56 @@ func (s *Service) expandCommit(roomID, userID, owner, repo, sha string) interfac
 // Responds with the outcome of the issue comment creation request. This command requires
 // a Github account to be linked to the Matrix user ID issuing the command. If there
 // is no link, it will return a Starter Link instead.
-func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
+func (s *Service) Commands(cli *mautrix.Client) []types.Command {
 	return []types.Command{
-		types.Command{
+		{
 			Path: []string{"github", "search"},
-			Command: func(roomID, userID string, args []string) (interface{}, error) {
+			Command: func(roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
 				return s.cmdGithubSearch(roomID, userID, args)
 			},
 		},
-		types.Command{
+		{
 			Path: []string{"github", "create"},
-			Command: func(roomID, userID string, args []string) (interface{}, error) {
+			Command: func(roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
 				return s.cmdGithubCreate(roomID, userID, args)
 			},
 		},
-		types.Command{
+		{
 			Path: []string{"github", "react"},
-			Command: func(roomID, userID string, args []string) (interface{}, error) {
+			Command: func(roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
 				return s.cmdGithubReact(roomID, userID, args)
 			},
 		},
-		types.Command{
+		{
 			Path: []string{"github", "comment"},
-			Command: func(roomID, userID string, args []string) (interface{}, error) {
+			Command: func(roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
 				return s.cmdGithubComment(roomID, userID, args)
 			},
 		},
-		types.Command{
+		{
 			Path: []string{"github", "assign"},
-			Command: func(roomID, userID string, args []string) (interface{}, error) {
+			Command: func(roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
 				return s.cmdGithubAssign(roomID, userID, args)
 			},
 		},
-		types.Command{
+		{
 			Path: []string{"github", "close"},
-			Command: func(roomID, userID string, args []string) (interface{}, error) {
+			Command: func(roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
 				return s.cmdGithubClose(roomID, userID, args)
 			},
 		},
-		types.Command{
+		{
 			Path: []string{"github", "reopen"},
-			Command: func(roomID, userID string, args []string) (interface{}, error) {
+			Command: func(roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
 				return s.cmdGithubReopen(roomID, userID, args)
 			},
 		},
-		types.Command{
+		{
 			Path: []string{"github", "help"},
-			Command: func(roomID, userID string, args []string) (interface{}, error) {
-				return &gomatrix.TextMessage{
-					"m.notice",
-					strings.Join([]string{
+			Command: func(roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
+				return &mevt.MessageEventContent{
+					MsgType: mevt.MsgNotice,
+					Body: strings.Join([]string{
 						cmdGithubCreateUsage,
 						cmdGithubReactUsage,
 						cmdGithubCommentUsage,
@@ -573,11 +632,11 @@ func (s *Service) Commands(cli *gomatrix.Client) []types.Command {
 // it will also expand strings of the form:
 //   #12
 // using the default repository.
-func (s *Service) Expansions(cli *gomatrix.Client) []types.Expansion {
+func (s *Service) Expansions(cli *mautrix.Client) []types.Expansion {
 	return []types.Expansion{
 		types.Expansion{
 			Regexp: ownerRepoIssueRegex,
-			Expand: func(roomID, userID string, matchingGroups []string) interface{} {
+			Expand: func(roomID id.RoomID, userID id.UserID, matchingGroups []string) interface{} {
 				// There's an optional group in the regex so matchingGroups can look like:
 				// [foo/bar#55 foo bar 55]
 				// [#55                55]
@@ -619,7 +678,7 @@ func (s *Service) Expansions(cli *gomatrix.Client) []types.Expansion {
 		},
 		types.Expansion{
 			Regexp: ownerRepoCommitRegex,
-			Expand: func(roomID, userID string, matchingGroups []string) interface{} {
+			Expand: func(roomID id.RoomID, userID id.UserID, matchingGroups []string) interface{} {
 				// There's an optional group in the regex so matchingGroups can look like:
 				// [foo/bar@a123 foo bar a123]
 				// [@a123                a123]
@@ -659,7 +718,7 @@ func (s *Service) Expansions(cli *gomatrix.Client) []types.Expansion {
 }
 
 // Register makes sure that the given realm ID maps to a github realm.
-func (s *Service) Register(oldService types.Service, client *gomatrix.Client) error {
+func (s *Service) Register(oldService types.Service, client *mautrix.Client) error {
 	if s.RealmID == "" {
 		return fmt.Errorf("RealmID is required")
 	}
@@ -678,7 +737,7 @@ func (s *Service) Register(oldService types.Service, client *gomatrix.Client) er
 }
 
 // defaultRepo returns the default repo for the given room, or an empty string.
-func (s *Service) defaultRepo(roomID string) string {
+func (s *Service) defaultRepo(roomID id.RoomID) string {
 	logger := log.WithFields(log.Fields{
 		"room_id":     roomID,
 		"bot_user_id": s.ServiceUserID(),
@@ -707,7 +766,7 @@ func (s *Service) defaultRepo(roomID string) string {
 	return defaultRepo
 }
 
-func (s *Service) githubClientFor(userID string, allowUnauth bool) *gogithub.Client {
+func (s *Service) githubClientFor(userID id.UserID, allowUnauth bool) *gogithub.Client {
 	token, err := getTokenForUser(s.RealmID, userID)
 	if err != nil {
 		log.WithFields(log.Fields{
@@ -725,7 +784,7 @@ func (s *Service) githubClientFor(userID string, allowUnauth bool) *gogithub.Cli
 	}
 }
 
-func getTokenForUser(realmID, userID string) (string, error) {
+func getTokenForUser(realmID string, userID id.UserID) (string, error) {
 	realm, err := database.GetServiceDB().LoadAuthRealm(realmID)
 	if err != nil {
 		return "", err
@@ -750,7 +809,7 @@ func getTokenForUser(realmID, userID string) (string, error) {
 }
 
 func init() {
-	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
+	types.RegisterService(func(serviceID string, serviceUserID id.UserID, webhookEndpointURL string) types.Service {
 		return &Service{
 			DefaultService: types.NewDefaultService(serviceID, serviceUserID, ServiceType),
 		}

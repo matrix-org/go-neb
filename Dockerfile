@@ -1,7 +1,11 @@
 # Build go-neb
 FROM golang:1.14-alpine as builder
 
-RUN apk add --no-cache -t build-deps git gcc musl-dev go
+RUN apk add --no-cache -t build-deps git gcc musl-dev go make g++
+
+RUN git clone https://gitlab.matrix.org/matrix-org/olm.git /tmp/libolm \
+    && cd /tmp/libolm \
+    && make install
 
 COPY . /tmp/go-neb
 WORKDIR /tmp/go-neb
@@ -22,7 +26,11 @@ ENV BIND_ADDRESS=:4050 \
     GID=1337
 
 COPY --from=builder /tmp/go-neb/go-neb /usr/local/bin/go-neb
+# Copy libolm.so
+COPY --from=builder /usr/local/lib/* /usr/local/lib/
+
 RUN apk add --no-cache \
+      libstdc++ \
       ca-certificates \
       su-exec \
       s6

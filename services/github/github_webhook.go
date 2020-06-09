@@ -1,6 +1,7 @@
 package github
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"sort"
@@ -11,8 +12,10 @@ import (
 	"github.com/matrix-org/go-neb/services/github/client"
 	"github.com/matrix-org/go-neb/services/github/webhook"
 	"github.com/matrix-org/go-neb/types"
-	"github.com/matrix-org/gomatrix"
 	log "github.com/sirupsen/logrus"
+	"maunium.net/go/mautrix"
+	"maunium.net/go/mautrix/event"
+	"maunium.net/go/mautrix/id"
 )
 
 // WebhookServiceType of the Github Webhook service.
@@ -45,12 +48,12 @@ type WebhookService struct {
 	types.DefaultService
 	webhookEndpointURL string
 	// The user ID to create/delete webhooks as.
-	ClientUserID string
+	ClientUserID id.UserID
 	// The ID of an existing "github" realm. This realm will be used to obtain
 	// the Github credentials of the ClientUserID.
 	RealmID string
 	// A map from Matrix room ID to Github "owner/repo"-style repositories.
-	Rooms map[string]struct {
+	Rooms map[id.RoomID]struct {
 		// A map of "owner/repo"-style repositories to the events to listen for.
 		Repos map[string]struct { // owner/repo => { events: ["push","issue","pull_request"] }
 			// The webhook events to listen for. Currently supported:
@@ -79,7 +82,7 @@ type WebhookService struct {
 //
 // If the "owner/repo" string doesn't exist in this Service config, then the webhook will be deleted from
 // Github.
-func (s *WebhookService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *gomatrix.Client) {
+func (s *WebhookService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *mautrix.Client) {
 	evType, repo, msg, err := webhook.OnReceiveRequest(req, s.SecretToken)
 	if err != nil {
 		w.WriteHeader(err.Code)
@@ -108,7 +111,7 @@ func (s *WebhookService) OnReceiveWebhook(w http.ResponseWriter, req *http.Reque
 					"message": msg,
 					"room_id": roomID,
 				}).Print("Sending notification to room")
-				if _, e := cli.SendMessageEvent(roomID, "m.room.message", msg); e != nil {
+				if _, e := cli.SendMessageEvent(roomID, event.EventMessage, msg); e != nil {
 					logger.WithError(e).WithField("room_id", roomID).Print(
 						"Failed to send notification to room.")
 				}
@@ -143,7 +146,7 @@ func (s *WebhookService) OnReceiveWebhook(w http.ResponseWriter, req *http.Reque
 //
 // Hooks can get out of sync if a user manually deletes a hook in the Github UI. In this case, toggling the repo configuration will
 // force NEB to recreate the hook.
-func (s *WebhookService) Register(oldService types.Service, client *gomatrix.Client) error {
+func (s *WebhookService) Register(oldService types.Service, client *mautrix.Client) error {
 	if s.RealmID == "" || s.ClientUserID == "" {
 		return fmt.Errorf("RealmID and ClientUserID is required")
 	}
@@ -249,9 +252,9 @@ func (s *WebhookService) PostRegister(oldService types.Service) {
 	}
 }
 
-func (s *WebhookService) joinWebhookRooms(client *gomatrix.Client) error {
+func (s *WebhookService) joinWebhookRooms(client *mautrix.Client) error {
 	for roomID := range s.Rooms {
-		if _, err := client.JoinRoom(roomID, "", nil); err != nil {
+		if _, err := client.JoinRoom(roomID.String(), "", nil); err != nil {
 			// TODO: Leave the rooms we successfully joined?
 			return err
 		}
@@ -300,7 +303,7 @@ func (s *WebhookService) createHook(cli *gogithub.Client, ownerRepo string) erro
 		cfg["secret"] = s.SecretToken
 	}
 	events := []string{"push", "pull_request", "issues", "issue_comment", "pull_request_review_comment"}
-	_, res, err := cli.Repositories.CreateHook(owner, repo, &gogithub.Hook{
+	_, res, err := cli.Repositories.CreateHook(context.Background(), owner, repo, &gogithub.Hook{
 		Name:   &name,
 		Config: cfg,
 		Events: events,
@@ -338,7 +341,7 @@ func (s *WebhookService) deleteHook(owner, repo string) error {
 
 	// Get a list of webhooks for this owner/repo and find the one which has the
 	// same endpoint URL which is what github uses to determine equivalence.
-	hooks, _, err := cli.Repositories.ListHooks(owner, repo, nil)
+	hooks, _, err := cli.Repositories.ListHooks(context.Background(), owner, repo, nil)
 	if err != nil {
 		return err
 	}
@@ -362,7 +365,7 @@ func (s *WebhookService) deleteHook(owner, repo string) error {
 		return fmt.Errorf("Failed to find hook with endpoint: %s", s.webhookEndpointURL)
 	}
 
-	_, err = cli.Repositories.DeleteHook(owner, repo, *hook.ID)
+	_, err = cli.Repositories.DeleteHook(context.Background(), owner, repo, *hook.ID)
 	return err
 }
 
@@ -427,7 +430,7 @@ func difference(a, b []string) (onlyA, onlyB []string) {
 	}
 }
 
-func (s *WebhookService) githubClientFor(userID string, allowUnauth bool) *gogithub.Client {
+func (s *WebhookService) githubClientFor(userID id.UserID, allowUnauth bool) *gogithub.Client {
 	token, err := getTokenForUser(s.RealmID, userID)
 	if err != nil {
 		log.WithFields(log.Fields{
@@ -462,7 +465,7 @@ func (s *WebhookService) loadRealm() (types.AuthRealm, error) {
 }
 
 func init() {
-	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
+	types.RegisterService(func(serviceID string, serviceUserID id.UserID, webhookEndpointURL string) types.Service {
 		return &WebhookService{
 			DefaultService:     types.NewDefaultService(serviceID, serviceUserID, WebhookServiceType),
 			webhookEndpointURL: webhookEndpointURL,

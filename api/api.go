@@ -12,6 +12,8 @@ import (
 	"encoding/json"
 	"errors"
 	"net/url"
+
+	"maunium.net/go/mautrix/id"
 )
 
 // ConfigureAuthRealmRequest is a request to /configureAuthRealm
@@ -32,7 +34,7 @@ type RequestAuthSessionRequest struct {
 	RealmID string
 	// The Matrix user ID requesting the auth session. If the auth is successful,
 	// this user ID will be associated with the third-party credentials obtained.
-	UserID string
+	UserID id.UserID
 	// AuthRealm specific config information. See the docs for the auth realm you're interested in.
 	Config json.RawMessage
 }
@@ -47,7 +49,7 @@ type ConfigureServiceRequest struct {
 	Type string
 	// The user ID of the configured client that this service will use to communicate with Matrix.
 	// The user MUST already be configured.
-	UserID string
+	UserID id.UserID
 	// Service-specific config information. See the docs for the service you're interested in.
 	Config json.RawMessage
 }
@@ -56,7 +58,7 @@ type ConfigureServiceRequest struct {
 // Go-NEB can drive it. It forms the HTTP body to /configureClient requests.
 type ClientConfig struct {
 	// The matrix User ID to connect with. E.g. @alice:matrix.org
-	UserID string
+	UserID id.UserID
 	// A URL with the host and port of the matrix server. E.g. https://matrix.org:8448
 	HomeserverURL string
 	// The matrix access token to authenticate the requests with.
@@ -81,7 +83,7 @@ type ClientConfig struct {
 type Session struct {
 	SessionID string
 	RealmID   string
-	UserID    string
+	UserID    id.UserID
 	Config    json.RawMessage
 }
 

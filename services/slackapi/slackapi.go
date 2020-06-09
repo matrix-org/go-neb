@@ -5,8 +5,10 @@ import (
 	"strings"
 
 	"github.com/matrix-org/go-neb/types"
-	"github.com/matrix-org/gomatrix"
 	log "github.com/sirupsen/logrus"
+	"maunium.net/go/mautrix"
+	"maunium.net/go/mautrix/event"
+	"maunium.net/go/mautrix/id"
 )
 
 // ServiceType of the Slack API service
@@ -26,16 +28,16 @@ type Service struct {
 	types.DefaultService
 	webhookEndpointURL string
 	// The URL which should be given to an outgoing slack webhook - Populated by Go-NEB after Service registration.
-	WebhookURL  string `json:"webhook_url"`
-	RoomID      string `json:"room_id"`
-	MessageType string `json:"message_type"`
+	WebhookURL  string            `json:"webhook_url"`
+	RoomID      id.RoomID         `json:"room_id"`
+	MessageType event.MessageType `json:"message_type"`
 }
 
 // OnReceiveWebhook receives requests from a slack outgoing webhook and possibly sends requests
 // to Matrix as a result.
 //
 // This requires that the WebhookURL is given to an outgoing slack webhook (see https://api.slack.com/outgoing-webhooks)
-func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *gomatrix.Client) {
+func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *mautrix.Client) {
 	segments := strings.Split(req.URL.Path, "/")
 
 	if len(segments) < 2 {
@@ -45,7 +47,7 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 
 	messageType := s.MessageType
 	if messageType == "" {
-		messageType = "m.text"
+		messageType = event.MsgText
 	}
 	roomID := s.RoomID
 
@@ -64,15 +66,15 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 	}
 	htmlMessage.MsgType = messageType
 	cli.SendMessageEvent(
-		roomID, "m.room.message", htmlMessage,
+		roomID, event.EventMessage, htmlMessage,
 	)
 	w.WriteHeader(200)
 }
 
 // Register joins the configured room and sets the public WebhookURL
-func (s *Service) Register(oldService types.Service, client *gomatrix.Client) error {
+func (s *Service) Register(oldService types.Service, client *mautrix.Client) error {
 	s.WebhookURL = s.webhookEndpointURL
-	if _, err := client.JoinRoom(s.RoomID, "", nil); err != nil {
+	if _, err := client.JoinRoom(s.RoomID.String(), "", nil); err != nil {
 		log.WithFields(log.Fields{
 			log.ErrorKey: err,
 			"room_id":    s.RoomID,
@@ -83,7 +85,7 @@ func (s *Service) Register(oldService types.Service, client *gomatrix.Client) er
 }
 
 func init() {
-	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
+	types.RegisterService(func(serviceID string, serviceUserID id.UserID, webhookEndpointURL string) types.Service {
 		return &Service{
 			DefaultService:     types.NewDefaultService(serviceID, serviceUserID, ServiceType),
 			webhookEndpointURL: webhookEndpointURL,

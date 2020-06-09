@@ -12,8 +12,10 @@ import (
 
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/types"
-	"github.com/matrix-org/gomatrix"
 	log "github.com/sirupsen/logrus"
+	"maunium.net/go/mautrix"
+	mevt "maunium.net/go/mautrix/event"
+	"maunium.net/go/mautrix/id"
 )
 
 // ServiceType of the Travis-CI service.
@@ -54,7 +56,7 @@ type Service struct {
 	// The URL which should be added to .travis.yml - Populated by Go-NEB after Service registration.
 	WebhookURL string `json:"webhook_url"`
 	// A map from Matrix room ID to Github-style owner/repo repositories.
-	Rooms map[string]struct {
+	Rooms map[id.RoomID]struct {
 		// A map of "owner/repo" to configuration information
 		Repos map[string]struct {
 			// The template string to use when creating notifications.
@@ -178,7 +180,7 @@ func outputForTemplate(travisTmpl string, tmpl map[string]string) (out string) {
 //        webhooks: http://go-neb-endpoint.com/notifications
 //
 // See https://docs.travis-ci.com/user/notifications#Webhook-notifications for more information.
-func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *gomatrix.Client) {
+func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *mautrix.Client) {
 	if err := req.ParseForm(); err != nil {
 		log.WithError(err).Error("Failed to read incoming Travis-CI webhook form")
 		w.WriteHeader(400)
@@ -222,7 +224,7 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 			if ownerRepo != whForRepo {
 				continue
 			}
-			msg := gomatrix.TextMessage{
+			msg := mevt.MessageEventContent{
 				Body:    outputForTemplate(repoData.Template, tmplData),
 				MsgType: "m.notice",
 			}
@@ -231,7 +233,7 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 				"message": msg,
 				"room_id": roomID,
 			}).Print("Sending Travis-CI notification to room")
-			if _, e := cli.SendMessageEvent(roomID, "m.room.message", msg); e != nil {
+			if _, e := cli.SendMessageEvent(roomID, mevt.EventMessage, msg); e != nil {
 				logger.WithError(e).WithField("room_id", roomID).Print(
 					"Failed to send Travis-CI notification to room.")
 			}
@@ -241,7 +243,7 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 }
 
 // Register makes sure the Config information supplied is valid.
-func (s *Service) Register(oldService types.Service, client *gomatrix.Client) error {
+func (s *Service) Register(oldService types.Service, client *mautrix.Client) error {
 	s.WebhookURL = s.webhookEndpointURL
 	for _, roomData := range s.Rooms {
 		for repo := range roomData.Repos {
@@ -273,9 +275,9 @@ func (s *Service) PostRegister(oldService types.Service) {
 	}
 }
 
-func (s *Service) joinRooms(client *gomatrix.Client) {
+func (s *Service) joinRooms(client *mautrix.Client) {
 	for roomID := range s.Rooms {
-		if _, err := client.JoinRoom(roomID, "", nil); err != nil {
+		if _, err := client.JoinRoom(roomID.String(), "", nil); err != nil {
 			log.WithFields(log.Fields{
 				log.ErrorKey: err,
 				"room_id":    roomID,
@@ -286,7 +288,7 @@ func (s *Service) joinRooms(client *gomatrix.Client) {
 }
 
 func init() {
-	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
+	types.RegisterService(func(serviceID string, serviceUserID id.UserID, webhookEndpointURL string) types.Service {
 		return &Service{
 			DefaultService:     types.NewDefaultService(serviceID, serviceUserID, ServiceType),
 			webhookEndpointURL: webhookEndpointURL,

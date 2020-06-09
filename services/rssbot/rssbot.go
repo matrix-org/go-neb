@@ -16,10 +16,12 @@ import (
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/polling"
 	"github.com/matrix-org/go-neb/types"
-	"github.com/matrix-org/gomatrix"
 	"github.com/mmcdole/gofeed"
 	"github.com/prometheus/client_golang/prometheus"
 	log "github.com/sirupsen/logrus"
+	"maunium.net/go/mautrix"
+	mevt "maunium.net/go/mautrix/event"
+	"maunium.net/go/mautrix/id"
 )
 
 // ServiceType of the RSS Bot service
@@ -81,7 +83,7 @@ type Service struct {
 		// Optional. The time to wait between polls. If this is less than minPollingIntervalSeconds, it is ignored.
 		PollIntervalMins int `json:"poll_interval_mins"`
 		// The list of rooms to send feed updates into. This cannot be empty.
-		Rooms []string `json:"rooms"`
+		Rooms []id.RoomID `json:"rooms"`
 		// True if rss bot is unable to poll this feed. This is populated by Go-NEB. Use /getService to
 		// retrieve this value.
 		IsFailing bool `json:"is_failing"`
@@ -100,7 +102,7 @@ type Service struct {
 }
 
 // Register will check the liveness of each RSS feed given. If all feeds check out okay, no error is returned.
-func (s *Service) Register(oldService types.Service, client *gomatrix.Client) error {
+func (s *Service) Register(oldService types.Service, client *mautrix.Client) error {
 	if len(s.Feeds) == 0 {
 		// this is an error UNLESS the old service had some feeds in which case they are deleting us :(
 		var numOldFeeds int
@@ -129,8 +131,8 @@ func (s *Service) Register(oldService types.Service, client *gomatrix.Client) er
 	return nil
 }
 
-func (s *Service) joinRooms(client *gomatrix.Client) {
-	roomSet := make(map[string]bool)
+func (s *Service) joinRooms(client *mautrix.Client) {
+	roomSet := make(map[id.RoomID]bool)
 	for _, feedInfo := range s.Feeds {
 		for _, roomID := range feedInfo.Rooms {
 			roomSet[roomID] = true
@@ -138,7 +140,7 @@ func (s *Service) joinRooms(client *gomatrix.Client) {
 	}
 
 	for roomID := range roomSet {
-		if _, err := client.JoinRoom(roomID, "", nil); err != nil {
+		if _, err := client.JoinRoom(roomID.String(), "", nil); err != nil {
 			log.WithFields(log.Fields{
 				log.ErrorKey: err,
 				"room_id":    roomID,
@@ -173,7 +175,7 @@ func (s *Service) PostRegister(oldService types.Service) {
 //   - Else if there is a Title field, use it as the GUID.
 //
 // Returns a timestamp representing when this Service should have OnPoll called again.
-func (s *Service) OnPoll(cli *gomatrix.Client) time.Time {
+func (s *Service) OnPoll(cli *mautrix.Client) time.Time {
 	logger := log.WithFields(log.Fields{
 		"service_id":   s.ServiceID(),
 		"service_type": s.ServiceType(),
@@ -406,7 +408,7 @@ func (s *Service) newItems(feedURL string, allItems []*gofeed.Item) (items []gof
 	return
 }
 
-func (s *Service) sendToRooms(cli *gomatrix.Client, feedURL string, feed *gofeed.Feed, item gofeed.Item) error {
+func (s *Service) sendToRooms(cli *mautrix.Client, feedURL string, feed *gofeed.Feed, item gofeed.Item) error {
 	logger := log.WithFields(log.Fields{
 		"feed_url": feedURL,
 		"title":    item.Title,
@@ -414,14 +416,14 @@ func (s *Service) sendToRooms(cli *gomatrix.Client, feedURL string, feed *gofeed
 	})
 	logger.Info("Sending new feed item")
 	for _, roomID := range s.Feeds[feedURL].Rooms {
-		if _, err := cli.SendMessageEvent(roomID, "m.room.message", itemToHTML(feed, item)); err != nil {
+		if _, err := cli.SendMessageEvent(roomID, mevt.EventMessage, itemToHTML(feed, item)); err != nil {
 			logger.WithError(err).WithField("room_id", roomID).Error("Failed to send to room")
 		}
 	}
 	return nil
 }
 
-func itemToHTML(feed *gofeed.Feed, item gofeed.Item) gomatrix.HTMLMessage {
+func itemToHTML(feed *gofeed.Feed, item gofeed.Item) mevt.MessageEventContent {
 	// If an item does not have a title, try using the feed's title instead
 	// Create a new variable instead of mutating that which is passed in
 	itemTitle := item.Title
@@ -442,11 +444,11 @@ func itemToHTML(feed *gofeed.Feed, item gofeed.Item) gomatrix.HTMLMessage {
 				html.EscapeString(item.Author.Email))
 		}
 	}
-	return gomatrix.HTMLMessage{
+	return mevt.MessageEventContent{
 		Body: fmt.Sprintf("%s: %s ( %s )",
 			html.EscapeString(feed.Title), html.EscapeString(itemTitle), html.EscapeString(item.Link)),
 		MsgType:       "m.notice",
-		Format:        "org.matrix.custom.html",
+		Format:        mevt.FormatHTML,
 		FormattedBody: fmtBody,
 		// <strong>FeedTitle</strong>:
 		// <br>
@@ -532,7 +534,7 @@ func init() {
 	cachingClient = &http.Client{
 		Transport: userAgentRoundTripper{httpcache.NewTransport(lruCache)},
 	}
-	types.RegisterService(func(serviceID, serviceUserID, webhookEndpointURL string) types.Service {
+	types.RegisterService(func(serviceID string, serviceUserID id.UserID, webhookEndpointURL string) types.Service {
 		r := &Service{
 			DefaultService: types.NewDefaultService(serviceID, serviceUserID, ServiceType),
 		}

@@ -13,7 +13,8 @@ import (
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/testutils"
 	"github.com/matrix-org/go-neb/types"
-	"github.com/matrix-org/gomatrix"
+	"maunium.net/go/mautrix"
+	mevt "maunium.net/go/mautrix/event"
 )
 
 var roomID = "!testroom:id"
@@ -22,13 +23,13 @@ func TestGithubWebhook(t *testing.T) {
 	database.SetServiceDB(&database.NopStorage{})
 
 	// Intercept message sending to Matrix and mock responses
-	msgs := []gomatrix.TextMessage{}
+	msgs := []mevt.MessageEventContent{}
 	matrixTrans := struct{ testutils.MockTransport }{}
 	matrixTrans.RT = func(req *http.Request) (*http.Response, error) {
 		if !strings.Contains(req.URL.String(), "/send/m.room.message") {
 			return nil, fmt.Errorf("Unhandled URL: %s", req.URL.String())
 		}
-		var msg gomatrix.TextMessage
+		var msg mevt.MessageEventContent
 		if err := json.NewDecoder(req.Body).Decode(&msg); err != nil {
 			return nil, fmt.Errorf("Failed to decode request JSON: %s", err)
 		}
@@ -38,7 +39,7 @@ func TestGithubWebhook(t *testing.T) {
 			Body:       ioutil.NopCloser(bytes.NewBufferString(`{"event_id":"$yup:event"}`)),
 		}, nil
 	}
-	matrixCli, _ := gomatrix.NewClient("https://hyrule", "@ghwebhook:hyrule", "its_a_secret")
+	matrixCli, _ := mautrix.NewClient("https://hyrule", "@ghwebhook:hyrule", "its_a_secret")
 	matrixCli.Client = &http.Client{Transport: matrixTrans}
 
 	// create the service

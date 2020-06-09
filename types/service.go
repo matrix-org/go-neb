@@ -8,14 +8,15 @@ import (
 	"strings"
 	"time"
 
-	"github.com/matrix-org/gomatrix"
+	"maunium.net/go/mautrix"
+	"maunium.net/go/mautrix/id"
 )
 
 // BotOptions for a given bot user in a given room
 type BotOptions struct {
-	RoomID      string
-	UserID      string
-	SetByUserID string
+	RoomID      id.RoomID
+	UserID      id.UserID
+	SetByUserID id.UserID
 	Options     map[string]interface{}
 }
 
@@ -23,25 +24,25 @@ type BotOptions struct {
 type Poller interface {
 	// OnPoll is called when the poller should poll. Return the timestamp when you want to be polled again.
 	// Return 0 to never be polled again.
-	OnPoll(client *gomatrix.Client) time.Time
+	OnPoll(client *mautrix.Client) time.Time
 }
 
 // A Service is the configuration for a bot service.
 type Service interface {
 	// Return the user ID of this service.
-	ServiceUserID() string
+	ServiceUserID() id.UserID
 	// Return an opaque ID used to identify this service.
 	ServiceID() string
 	// Return the type of service. This string MUST NOT change.
 	ServiceType() string
-	Commands(cli *gomatrix.Client) []Command
-	Expansions(cli *gomatrix.Client) []Expansion
-	OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *gomatrix.Client)
+	Commands(cli *mautrix.Client) []Command
+	Expansions(cli *mautrix.Client) []Expansion
+	OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *mautrix.Client)
 	// A lifecycle function which is invoked when the service is being registered. The old service, if one exists, is provided,
 	// along with a Client instance for ServiceUserID(). If this function returns an error, the service will not be registered
 	// or persisted to the database, and the user's request will fail. This can be useful if you depend on external factors
 	// such as registering webhooks.
-	Register(oldService Service, client *gomatrix.Client) error
+	Register(oldService Service, client *mautrix.Client) error
 	// A lifecycle function which is invoked after the service has been successfully registered and persisted to the database.
 	// This function is invoked within the critical section for configuring services, guaranteeing that there will not be
 	// concurrent modifications to this service whilst this function executes. This lifecycle hook should be used to clean
@@ -52,12 +53,12 @@ type Service interface {
 // DefaultService NO-OPs the implementation of optional Service interface methods. Feel free to override them.
 type DefaultService struct {
 	id            string
-	serviceUserID string
+	serviceUserID id.UserID
 	serviceType   string
 }
 
 // NewDefaultService creates a new service with implementations for ServiceID(), ServiceType() and ServiceUserID()
-func NewDefaultService(serviceID, serviceUserID, serviceType string) DefaultService {
+func NewDefaultService(serviceID string, serviceUserID id.UserID, serviceType string) DefaultService {
 	return DefaultService{serviceID, serviceUserID, serviceType}
 }
 
@@ -70,7 +71,7 @@ func (s *DefaultService) ServiceID() string {
 // ServiceUserID returns the user ID that the service sends events as. In order for this to return the
 // service user ID, DefaultService MUST have been initialised by NewDefaultService, the zero-initialiser
 // is NOT enough.
-func (s *DefaultService) ServiceUserID() string {
+func (s *DefaultService) ServiceUserID() id.UserID {
 	return s.serviceUserID
 }
 
@@ -82,23 +83,23 @@ func (s *DefaultService) ServiceType() string {
 }
 
 // Commands returns no commands.
-func (s *DefaultService) Commands(cli *gomatrix.Client) []Command {
+func (s *DefaultService) Commands(cli *mautrix.Client) []Command {
 	return []Command{}
 }
 
 // Expansions returns no expansions.
-func (s *DefaultService) Expansions(cli *gomatrix.Client) []Expansion {
+func (s *DefaultService) Expansions(cli *mautrix.Client) []Expansion {
 	return []Expansion{}
 }
 
 // Register does nothing and returns no error.
-func (s *DefaultService) Register(oldService Service, client *gomatrix.Client) error { return nil }
+func (s *DefaultService) Register(oldService Service, client *mautrix.Client) error { return nil }
 
 // PostRegister does nothing.
 func (s *DefaultService) PostRegister(oldService Service) {}
 
 // OnReceiveWebhook does nothing but 200 OK the request.
-func (s *DefaultService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *gomatrix.Client) {
+func (s *DefaultService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *mautrix.Client) {
 	w.WriteHeader(200) // Do nothing
 }
 
@@ -120,11 +121,11 @@ func BaseURL(u string) error {
 	return nil
 }
 
-var servicesByType = map[string]func(string, string, string) Service{}
+var servicesByType = map[string]func(string, id.UserID, string) Service{}
 var serviceTypesWhichPoll = map[string]bool{}
 
 // RegisterService registers a factory for creating Service instances.
-func RegisterService(factory func(string, string, string) Service) {
+func RegisterService(factory func(string, id.UserID, string) Service) {
 	s := factory("", "", "")
 	servicesByType[s.ServiceType()] = factory
 
@@ -143,7 +144,7 @@ func PollingServiceTypes() (types []string) {
 
 // CreateService creates a Service of the given type and serviceID.
 // Returns an error if the Service couldn't be created.
-func CreateService(serviceID, serviceType, serviceUserID string, serviceJSON []byte) (Service, error) {
+func CreateService(serviceID, serviceType string, serviceUserID id.UserID, serviceJSON []byte) (Service, error) {
 	f := servicesByType[serviceType]
 	if f == nil {
 		return nil, errors.New("Unknown service type: " + serviceType)

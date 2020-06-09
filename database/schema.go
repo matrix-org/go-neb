@@ -8,6 +8,7 @@ import (
 
 	"github.com/matrix-org/go-neb/api"
 	"github.com/matrix-org/go-neb/types"
+	"maunium.net/go/mautrix/id"
 )
 
 const schemaSQL = `
@@ -66,7 +67,7 @@ const selectMatrixClientConfigSQL = `
 SELECT client_json FROM matrix_clients WHERE user_id = $1
 `
 
-func selectMatrixClientConfigTxn(txn *sql.Tx, userID string) (config api.ClientConfig, err error) {
+func selectMatrixClientConfigTxn(txn *sql.Tx, userID id.UserID) (config api.ClientConfig, err error) {
 	var configJSON []byte
 	err = txn.QueryRow(selectMatrixClientConfigSQL, userID).Scan(&configJSON)
 	if err != nil {
@@ -135,7 +136,7 @@ const updateNextBatchSQL = `
 UPDATE matrix_clients SET next_batch = $1 WHERE user_id = $2
 `
 
-func updateNextBatchTxn(txn *sql.Tx, userID, nextBatch string) error {
+func updateNextBatchTxn(txn *sql.Tx, userID id.UserID, nextBatch string) error {
 	_, err := txn.Exec(updateNextBatchSQL, nextBatch, userID)
 	return err
 }
@@ -144,7 +145,7 @@ const selectNextBatchSQL = `
 SELECT next_batch FROM matrix_clients WHERE user_id = $1
 `
 
-func selectNextBatchTxn(txn *sql.Tx, userID string) (string, error) {
+func selectNextBatchTxn(txn *sql.Tx, userID id.UserID) (string, error) {
 	var nextBatch string
 	row := txn.QueryRow(selectNextBatchSQL, userID)
 	if err := row.Scan(&nextBatch); err != nil {
@@ -160,7 +161,7 @@ SELECT service_type, service_user_id, service_json FROM services
 
 func selectServiceTxn(txn *sql.Tx, serviceID string) (types.Service, error) {
 	var serviceType string
-	var serviceUserID string
+	var serviceUserID id.UserID
 	var serviceJSON []byte
 	row := txn.QueryRow(selectServiceSQL, serviceID)
 	if err := row.Scan(&serviceType, &serviceUserID, &serviceJSON); err != nil {
@@ -210,7 +211,7 @@ const selectServicesForUserSQL = `
 SELECT service_id, service_type, service_json FROM services WHERE service_user_id=$1 ORDER BY service_id
 `
 
-func selectServicesForUserTxn(txn *sql.Tx, userID string) (srvs []types.Service, err error) {
+func selectServicesForUserTxn(txn *sql.Tx, userID id.UserID) (srvs []types.Service, err error) {
 	rows, err := txn.Query(selectServicesForUserSQL, userID)
 	if err != nil {
 		return
@@ -246,7 +247,7 @@ func selectServicesByTypeTxn(txn *sql.Tx, serviceType string) (srvs []types.Serv
 	for rows.Next() {
 		var s types.Service
 		var serviceID string
-		var serviceUserID string
+		var serviceUserID id.UserID
 		var serviceJSON []byte
 		if err = rows.Scan(&serviceID, &serviceUserID, &serviceJSON); err != nil {
 			return
@@ -369,7 +370,7 @@ const deleteAuthSessionSQL = `
 DELETE FROM auth_sessions WHERE realm_id=$1 AND user_id=$2
 `
 
-func deleteAuthSessionTxn(txn *sql.Tx, realmID, userID string) error {
+func deleteAuthSessionTxn(txn *sql.Tx, realmID string, userID id.UserID) error {
 	_, err := txn.Exec(deleteAuthSessionSQL, realmID, userID)
 	return err
 }
@@ -380,7 +381,7 @@ SELECT session_id, realm_type, realm_json, session_json FROM auth_sessions
 	WHERE auth_sessions.realm_id = $1 AND auth_sessions.user_id = $2
 `
 
-func selectAuthSessionByUserTxn(txn *sql.Tx, realmID, userID string) (types.AuthSession, error) {
+func selectAuthSessionByUserTxn(txn *sql.Tx, realmID string, userID id.UserID) (types.AuthSession, error) {
 	var id string
 	var realmType string
 	var realmJSON []byte
@@ -409,12 +410,12 @@ SELECT user_id, realm_type, realm_json, session_json FROM auth_sessions
 	WHERE auth_sessions.realm_id = $1 AND auth_sessions.session_id = $2
 `
 
-func selectAuthSessionByIDTxn(txn *sql.Tx, realmID, id string) (types.AuthSession, error) {
-	var userID string
+func selectAuthSessionByIDTxn(txn *sql.Tx, realmID, sid string) (types.AuthSession, error) {
+	var userID id.UserID
 	var realmType string
 	var realmJSON []byte
 	var sessionJSON []byte
-	row := txn.QueryRow(selectAuthSessionByIDSQL, realmID, id)
+	row := txn.QueryRow(selectAuthSessionByIDSQL, realmID, sid)
 	if err := row.Scan(&userID, &realmType, &realmJSON, &sessionJSON); err != nil {
 		return nil, err
 	}
@@ -422,7 +423,7 @@ func selectAuthSessionByIDTxn(txn *sql.Tx, realmID, id string) (types.AuthSessio
 	if err != nil {
 		return nil, err
 	}
-	session := realm.AuthSession(id, userID, realmID)
+	session := realm.AuthSession(sid, userID, realmID)
 	if session == nil {
 		return nil, fmt.Errorf("Cannot create session for given realm")
 	}
@@ -454,7 +455,7 @@ const selectBotOptionsSQL = `
 SELECT bot_options_json, set_by_user_id FROM bot_options WHERE user_id = $1 AND room_id = $2
 `
 
-func selectBotOptionsTxn(txn *sql.Tx, userID, roomID string) (opts types.BotOptions, err error) {
+func selectBotOptionsTxn(txn *sql.Tx, userID id.UserID, roomID id.RoomID) (opts types.BotOptions, err error) {
 	var optionsJSON []byte
 	err = txn.QueryRow(selectBotOptionsSQL, userID, roomID).Scan(&optionsJSON, &opts.SetByUserID)
 	if err != nil {

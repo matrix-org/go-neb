@@ -5,21 +5,22 @@ import (
 
 	"github.com/matrix-org/go-neb/api"
 	"github.com/matrix-org/go-neb/database"
-	"github.com/matrix-org/gomatrix"
 	log "github.com/sirupsen/logrus"
+	"maunium.net/go/mautrix"
+	"maunium.net/go/mautrix/id"
 )
 
-// NEBStore implements the gomatrix.Storer interface.
+// NEBStore implements the mautrix.Storer interface.
 //
 // It persists the next batch token in the database, and includes a ClientConfig for the client.
 type NEBStore struct {
-	gomatrix.InMemoryStore
+	mautrix.InMemoryStore
 	Database     database.Storer
 	ClientConfig api.ClientConfig
 }
 
 // SaveNextBatch saves to the database.
-func (s *NEBStore) SaveNextBatch(userID, nextBatch string) {
+func (s *NEBStore) SaveNextBatch(userID id.UserID, nextBatch string) {
 	if err := s.Database.UpdateNextBatch(userID, nextBatch); err != nil {
 		log.WithFields(log.Fields{
 			log.ErrorKey: err,
@@ -30,7 +31,7 @@ func (s *NEBStore) SaveNextBatch(userID, nextBatch string) {
 }
 
 // LoadNextBatch loads from the database.
-func (s *NEBStore) LoadNextBatch(userID string) string {
+func (s *NEBStore) LoadNextBatch(userID id.UserID) string {
 	token, err := s.Database.LoadNextBatch(userID)
 	if err != nil {
 		log.WithFields(log.Fields{
