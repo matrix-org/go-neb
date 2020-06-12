@@ -347,6 +347,7 @@ func (c *Clients) newClient(config api.ClientConfig) (*mautrix.Client, error) {
 		return nil, err
 	}
 	client.Client = c.httpClient
+	client.DeviceID = config.DeviceID
 	syncer := client.Syncer.(*mautrix.DefaultSyncer)
 	nebStore := &matrix.NEBStore{
 		InMemoryStore: *mautrix.NewInMemoryStore(),
