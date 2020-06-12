@@ -23,7 +23,7 @@ type Service struct {
 // Responds with a notice of "some message".
 func (e *Service) Commands(cli *mautrix.Client) []types.Command {
 	return []types.Command{
-		types.Command{
+		{
 			Path: []string{"echo"},
 			Command: func(roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
 				return &mevt.MessageEventContent{
