@@ -75,13 +75,9 @@ func (botClient *BotClient) SendMessageEvent(content interface{}, roomID id.Room
 			return err
 		} else if sess == nil || sess.Expired() || !sess.Shared {
 			// No error but valid, shared session does not exist
-			membs, err := botClient.client.JoinedMembers(roomID)
+			memberIDs, err := botClient.stateStore.GetJoinedMembers(roomID)
 			if err != nil {
 				return err
-			}
-			memberIDs := make([]id.UserID, 0, len(membs.Joined))
-			for member := range membs.Joined {
-				memberIDs = append(memberIDs, member)
 			}
 			// Share group session with room members
 			if err = olmMachine.ShareGroupSession(roomID, memberIDs); err != nil {

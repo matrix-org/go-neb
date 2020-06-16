@@ -1,6 +1,8 @@
 package clients
 
 import (
+	"errors"
+
 	"maunium.net/go/mautrix"
 	"maunium.net/go/mautrix/event"
 	"maunium.net/go/mautrix/id"
@@ -51,4 +53,27 @@ func (ss *NebStateStore) UpdateStateStore(resp *mautrix.RespSync) {
 			}
 		}
 	}
+}
+
+// GetJoinedMembers returns a list of members that are currently in a room.
+func (ss *NebStateStore) GetJoinedMembers(roomID id.RoomID) ([]id.UserID, error) {
+	joinedMembers := make([]id.UserID, 0)
+	room := ss.Storer.LoadRoom(roomID)
+	if room == nil {
+		return nil, errors.New("unknown roomID")
+	}
+	memberEvents := room.State[event.StateMember]
+	if memberEvents == nil {
+		return nil, errors.New("no state member events found")
+	}
+	for stateKey, stateEvent := range memberEvents {
+		if stateEvent == nil {
+			continue
+		}
+		stateEvent.Content.ParseRaw(event.StateMember)
+		if stateEvent.Content.AsMember().Membership == event.MembershipJoin {
+			joinedMembers = append(joinedMembers, id.UserID(stateKey))
+		}
+	}
+	return joinedMembers, nil
 }
