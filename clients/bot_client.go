@@ -22,7 +22,9 @@ type BotClient struct {
 
 // InitOlmMachine initializes a BotClient's internal OlmMachine given a client object and a Neb store,
 // which will be used to store room information.
-func (botClient *BotClient) InitOlmMachine(client *mautrix.Client, nebStore *matrix.NEBStore) error {
+func (botClient *BotClient) InitOlmMachine(client *mautrix.Client, nebStore *matrix.NEBStore,
+	cryptoStore crypto.Store) error {
+
 	gobStore, err := crypto.NewGobStore("crypto.gob")
 	if err != nil {
 		return err

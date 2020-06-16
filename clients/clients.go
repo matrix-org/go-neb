@@ -358,7 +358,7 @@ func (c *Clients) initClient(botClient *BotClient) error {
 	// TODO: Check that the access token is valid for the userID by peforming
 	// a request against the server.
 
-	if err = botClient.InitOlmMachine(client, nebStore); err != nil {
+	if err = botClient.InitOlmMachine(client, nebStore, c.db); err != nil {
 		return err
 	}
 

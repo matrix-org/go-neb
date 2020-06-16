@@ -3,11 +3,14 @@ package database
 import (
 	"github.com/matrix-org/go-neb/api"
 	"github.com/matrix-org/go-neb/types"
+	"maunium.net/go/mautrix/crypto"
 	"maunium.net/go/mautrix/id"
 )
 
 // Storer is the interface which needs to be conformed to in order to persist Go-NEB data
 type Storer interface {
+	crypto.Store
+
 	StoreMatrixClientConfig(config api.ClientConfig) (oldConfig api.ClientConfig, err error)
 	LoadMatrixClientConfigs() (configs []api.ClientConfig, err error)
 	LoadMatrixClientConfig(userID id.UserID) (config api.ClientConfig, err error)
@@ -137,5 +140,100 @@ func (s *NopStorage) StoreBotOptions(opts types.BotOptions) (oldOpts types.BotOp
 
 // InsertFromConfig NOP
 func (s *NopStorage) InsertFromConfig(cfg *api.ConfigFile) error {
+	return nil
+}
+
+// PutAccount NOP
+func (s *NopStorage) PutAccount(*crypto.OlmAccount) error {
+	return nil
+}
+
+// GetAccount NOP
+func (s *NopStorage) GetAccount() (*crypto.OlmAccount, error) {
+	return nil, nil
+}
+
+// HasSession NOP
+func (s *NopStorage) HasSession(id.SenderKey) bool {
+	return false
+}
+
+// GetSessions NOP
+func (s *NopStorage) GetSessions(id.SenderKey) (crypto.OlmSessionList, error) {
+	return nil, nil
+}
+
+// GetLatestSession NOP
+func (s *NopStorage) GetLatestSession(id.SenderKey) (*crypto.OlmSession, error) {
+	return nil, nil
+}
+
+// AddSession NOP
+func (s *NopStorage) AddSession(id.SenderKey, *crypto.OlmSession) error {
+	return nil
+}
+
+// UpdateSession NOP
+func (s *NopStorage) UpdateSession(id.SenderKey, *crypto.OlmSession) error {
+	return nil
+}
+
+// PutGroupSession NOP
+func (s *NopStorage) PutGroupSession(id.RoomID, id.SenderKey, id.SessionID, *crypto.InboundGroupSession) error {
+	return nil
+}
+
+// GetGroupSession NOP
+func (s *NopStorage) GetGroupSession(id.RoomID, id.SenderKey, id.SessionID) (*crypto.InboundGroupSession, error) {
+	return nil, nil
+}
+
+// AddOutboundGroupSession NOP
+func (s *NopStorage) AddOutboundGroupSession(*crypto.OutboundGroupSession) error {
+	return nil
+}
+
+// UpdateOutboundGroupSession NOP
+func (s *NopStorage) UpdateOutboundGroupSession(*crypto.OutboundGroupSession) error {
+	return nil
+}
+
+// GetOutboundGroupSession NOP
+func (s *NopStorage) GetOutboundGroupSession(id.RoomID) (*crypto.OutboundGroupSession, error) {
+	return nil, nil
+}
+
+// RemoveOutboundGroupSession NOP
+func (s *NopStorage) RemoveOutboundGroupSession(id.RoomID) error {
+	return nil
+}
+
+// ValidateMessageIndex NOP
+func (s *NopStorage) ValidateMessageIndex(senderKey id.SenderKey, sessionID id.SessionID, eventID id.EventID, index uint, timestamp int64) bool {
+	return false
+}
+
+// GetDevices NOP
+func (s *NopStorage) GetDevices(id.UserID) (map[id.DeviceID]*crypto.DeviceIdentity, error) {
+	return nil, nil
+}
+
+// GetDevice NOP
+func (s *NopStorage) GetDevice(id.UserID, id.DeviceID) (*crypto.DeviceIdentity, error) {
+	return nil, nil
+}
+
+// PutDevices NOP
+func (s *NopStorage) PutDevices(id.UserID, map[id.DeviceID]*crypto.DeviceIdentity) error {
+	return nil
+}
+
+// FilterTrackedUsers NOP
+func (s *NopStorage) FilterTrackedUsers([]id.UserID) []id.UserID {
+	return nil
+}
+
+// Flush NOP
+func (s *NopStorage) Flush() error {
 	return nil
 }

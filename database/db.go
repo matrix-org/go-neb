@@ -8,6 +8,7 @@ import (
 
 	"github.com/matrix-org/go-neb/api"
 	"github.com/matrix-org/go-neb/types"
+	"maunium.net/go/mautrix/crypto"
 	"maunium.net/go/mautrix/id"
 )
 
@@ -324,6 +325,101 @@ func (d *ServiceDB) InsertFromConfig(cfg *api.ConfigFile) error {
 	}
 
 	// Do not insert services yet, they require more work to set up.
+	return nil
+}
+
+// PutAccount NOP
+func (d *ServiceDB) PutAccount(*crypto.OlmAccount) error {
+	return nil
+}
+
+// GetAccount NOP
+func (d *ServiceDB) GetAccount() (*crypto.OlmAccount, error) {
+	return nil, nil
+}
+
+// HasSession NOP
+func (d *ServiceDB) HasSession(id.SenderKey) bool {
+	return false
+}
+
+// GetSessions NOP
+func (d *ServiceDB) GetSessions(id.SenderKey) (crypto.OlmSessionList, error) {
+	return nil, nil
+}
+
+// GetLatestSession NOP
+func (d *ServiceDB) GetLatestSession(id.SenderKey) (*crypto.OlmSession, error) {
+	return nil, nil
+}
+
+// AddSession NOP
+func (d *ServiceDB) AddSession(id.SenderKey, *crypto.OlmSession) error {
+	return nil
+}
+
+// UpdateSession NOP
+func (d *ServiceDB) UpdateSession(id.SenderKey, *crypto.OlmSession) error {
+	return nil
+}
+
+// PutGroupSession NOP
+func (d *ServiceDB) PutGroupSession(id.RoomID, id.SenderKey, id.SessionID, *crypto.InboundGroupSession) error {
+	return nil
+}
+
+// GetGroupSession NOP
+func (d *ServiceDB) GetGroupSession(id.RoomID, id.SenderKey, id.SessionID) (*crypto.InboundGroupSession, error) {
+	return nil, nil
+}
+
+// AddOutboundGroupSession NOP
+func (d *ServiceDB) AddOutboundGroupSession(*crypto.OutboundGroupSession) error {
+	return nil
+}
+
+// UpdateOutboundGroupSession NOP
+func (d *ServiceDB) UpdateOutboundGroupSession(*crypto.OutboundGroupSession) error {
+	return nil
+}
+
+// GetOutboundGroupSession NOP
+func (d *ServiceDB) GetOutboundGroupSession(id.RoomID) (*crypto.OutboundGroupSession, error) {
+	return nil, nil
+}
+
+// RemoveOutboundGroupSession NOP
+func (d *ServiceDB) RemoveOutboundGroupSession(id.RoomID) error {
+	return nil
+}
+
+// ValidateMessageIndex NOP
+func (d *ServiceDB) ValidateMessageIndex(senderKey id.SenderKey, sessionID id.SessionID, eventID id.EventID, index uint, timestamp int64) bool {
+	return false
+}
+
+// GetDevices NOP
+func (d *ServiceDB) GetDevices(id.UserID) (map[id.DeviceID]*crypto.DeviceIdentity, error) {
+	return nil, nil
+}
+
+// GetDevice NOP
+func (d *ServiceDB) GetDevice(id.UserID, id.DeviceID) (*crypto.DeviceIdentity, error) {
+	return nil, nil
+}
+
+// PutDevices NOP
+func (d *ServiceDB) PutDevices(id.UserID, map[id.DeviceID]*crypto.DeviceIdentity) error {
+	return nil
+}
+
+// FilterTrackedUsers NOP
+func (d *ServiceDB) FilterTrackedUsers([]id.UserID) []id.UserID {
+	return nil
+}
+
+// Flush NOP
+func (d *ServiceDB) Flush() error {
 	return nil
 }
 
