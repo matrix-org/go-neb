@@ -16,7 +16,6 @@ import (
 	shellwords "github.com/mattn/go-shellwords"
 	log "github.com/sirupsen/logrus"
 	"maunium.net/go/mautrix"
-	"maunium.net/go/mautrix/crypto"
 	mevt "maunium.net/go/mautrix/event"
 	"maunium.net/go/mautrix/id"
 )
@@ -27,7 +26,7 @@ type Clients struct {
 	httpClient *http.Client
 	dbMutex    sync.Mutex
 	mapMutex   sync.Mutex
-	clients    map[id.UserID]clientEntry
+	clients    map[id.UserID]BotClient
 }
 
 // New makes a new collection of matrix clients
@@ -35,7 +34,7 @@ func New(db database.Storer, cli *http.Client) *Clients {
 	clients := &Clients{
 		db:         db,
 		httpClient: cli,
-		clients:    make(map[id.UserID]clientEntry), // user_id => clientEntry
+		clients:    make(map[id.UserID]BotClient), // user_id => BotClient
 	}
 	return clients
 }
@@ -72,25 +71,19 @@ func (c *Clients) Start() error {
 	return nil
 }
 
-type clientEntry struct {
-	config     api.ClientConfig
-	client     *mautrix.Client
-	olmMachine *crypto.OlmMachine
-}
-
-func (c *Clients) getClient(userID id.UserID) clientEntry {
+func (c *Clients) getClient(userID id.UserID) BotClient {
 	c.mapMutex.Lock()
 	defer c.mapMutex.Unlock()
 	return c.clients[userID]
 }
 
-func (c *Clients) setClient(client clientEntry) {
+func (c *Clients) setClient(client BotClient) {
 	c.mapMutex.Lock()
 	defer c.mapMutex.Unlock()
 	c.clients[client.config.UserID] = client
 }
 
-func (c *Clients) loadClientFromDB(userID id.UserID) (entry clientEntry, err error) {
+func (c *Clients) loadClientFromDB(userID id.UserID) (entry BotClient, err error) {
 	c.dbMutex.Lock()
 	defer c.dbMutex.Unlock()
 
@@ -114,7 +107,7 @@ func (c *Clients) loadClientFromDB(userID id.UserID) (entry clientEntry, err err
 	return
 }
 
-func (c *Clients) updateClientInDB(newConfig api.ClientConfig) (new clientEntry, old clientEntry, err error) {
+func (c *Clients) updateClientInDB(newConfig api.ClientConfig) (new, old BotClient, err error) {
 	c.dbMutex.Lock()
 	defer c.dbMutex.Unlock()
 
@@ -157,13 +150,13 @@ func (c *Clients) updateClientInDB(newConfig api.ClientConfig) (new clientEntry,
 	return
 }
 
-func (c *Clients) onMessageEvent(client *mautrix.Client, event *mevt.Event) {
-	services, err := c.db.LoadServicesForUser(client.UserID)
+func (c *Clients) onMessageEvent(botClient *BotClient, event *mevt.Event) {
+	services, err := c.db.LoadServicesForUser(botClient.client.UserID)
 	if err != nil {
 		log.WithFields(log.Fields{
 			log.ErrorKey:      err,
 			"room_id":         event.RoomID,
-			"service_user_id": client.UserID,
+			"service_user_id": botClient.client.UserID,
 		}).Warn("Error loading services")
 	}
 
@@ -198,51 +191,22 @@ func (c *Clients) onMessageEvent(client *mautrix.Client, event *mevt.Event) {
 				args = strings.Split(body[1:], " ")
 			}
 
-			if response := runCommandForService(service.Commands(client), event, args); response != nil {
+			if response := runCommandForService(service.Commands(botClient.client), event, args); response != nil {
 				responses = append(responses, response)
 			}
 		} else { // message isn't a command, it might need expanding
-			expansions := runExpansionsForService(service.Expansions(client), event, body)
+			expansions := runExpansionsForService(service.Expansions(botClient.client), event, body)
 			responses = append(responses, expansions...)
 		}
 	}
 
 	for _, content := range responses {
-		evtType := mevt.EventMessage
-		curClient := c.clients[client.UserID]
-		olmMachine := curClient.olmMachine
-		if olmMachine.StateStore.IsEncrypted(event.RoomID) {
-			fmt.Println(event.RoomID, "is enc")
-			if sess, err := olmMachine.CryptoStore.GetOutboundGroupSession(event.RoomID); err != nil {
-				fmt.Println("Error getting outbound", err)
-			} else if sess == nil {
-				if membs, err := client.JoinedMembers(event.RoomID); err != nil {
-					fmt.Println(err)
-				} else {
-					memberIDs := make([]id.UserID, 0, len(membs.Joined))
-					for member := range membs.Joined {
-						memberIDs = append(memberIDs, member)
-					}
-					if err = olmMachine.ShareGroupSession(event.RoomID, memberIDs); err != nil {
-						fmt.Println(err)
-					}
-				}
-			}
-			msgContent := mevt.Content{Parsed: content}
-			if enc, err := olmMachine.EncryptMegolmEvent(event.RoomID, mevt.EventMessage, msgContent); err != nil {
-				fmt.Println("error encoding", err)
-			} else {
-				content = enc
-				evtType = mevt.EventEncrypted
-			}
-		}
-		if _, err := client.SendMessageEvent(event.RoomID, evtType, content); err != nil {
+		if err := botClient.SendMessageEvent(content, event.RoomID); err != nil {
 			log.WithFields(log.Fields{
-				log.ErrorKey: err,
-				"room_id":    event.RoomID,
-				"user_id":    event.Sender,
-				"content":    content,
-			}).Print("Failed to send command response")
+				"room_id": event.RoomID,
+				"content": content,
+				"sender":  event.Sender,
+			}).WithError(err).Error("Failed to send command response")
 		}
 	}
 }
@@ -371,8 +335,8 @@ func (c *Clients) onRoomMemberEvent(client *mautrix.Client, event *mevt.Event) {
 	}
 }
 
-func (c *Clients) initClient(clientEntry *clientEntry) error {
-	config := clientEntry.config
+func (c *Clients) initClient(botClient *BotClient) error {
+	config := botClient.config
 	client, err := mautrix.NewClient(config.HomeserverURL, config.UserID, config.AccessToken)
 	if err != nil {
 		return err
@@ -380,6 +344,8 @@ func (c *Clients) initClient(clientEntry *clientEntry) error {
 
 	client.Client = c.httpClient
 	client.DeviceID = config.DeviceID
+	botClient.client = client
+
 	syncer := client.Syncer.(*mautrix.DefaultSyncer)
 
 	nebStore := &matrix.NEBStore{
@@ -392,12 +358,18 @@ func (c *Clients) initClient(clientEntry *clientEntry) error {
 	// TODO: Check that the access token is valid for the userID by peforming
 	// a request against the server.
 
+	if err = botClient.InitOlmMachine(client, nebStore); err != nil {
+		return err
+	}
+
+	botClient.Register(syncer)
+
 	syncer.OnEventType(mevt.EventMessage, func(_ mautrix.EventSource, event *mevt.Event) {
-		c.onMessageEvent(client, event)
+		c.onMessageEvent(botClient, event)
 	})
 
 	syncer.OnEventType(mevt.Type{Type: "m.room.bot.options", Class: mevt.UnknownEventType}, func(_ mautrix.EventSource, event *mevt.Event) {
-		c.onBotOptionsEvent(client, event)
+		c.onBotOptionsEvent(botClient.client, event)
 	})
 
 	if config.AutoJoinRooms {
@@ -406,8 +378,47 @@ func (c *Clients) initClient(clientEntry *clientEntry) error {
 		})
 	}
 
+	// When receiving an encrypted event, attempt to decrypt it using the BotClient's capabilities.
+	// If successfully decrypted propagate the decrypted event to the clients.
+	syncer.OnEventType(mevt.EventEncrypted, func(source mautrix.EventSource, evt *mevt.Event) {
+		if err := evt.Content.ParseRaw(mevt.EventEncrypted); err != nil {
+			log.WithError(err).Error("Failed to parse encrypted message")
+			return
+		}
+		encContent := evt.Content.AsEncrypted()
+		decrypted, err := botClient.DecryptMegolmEvent(evt)
+		if err != nil {
+			log.WithFields(log.Fields{
+				"user_id":    config.UserID,
+				"device_id":  encContent.DeviceID,
+				"session_id": encContent.SessionID,
+				"sender_key": encContent.SenderKey,
+			}).WithError(err).Error("Failed to decrypt message")
+		} else {
+			if decrypted.Type == mevt.EventMessage {
+				err = decrypted.Content.ParseRaw(mevt.EventMessage)
+				if err != nil {
+					log.WithError(err).Error("Could not parse decrypted message event")
+				} else {
+					c.onMessageEvent(botClient, decrypted)
+				}
+			}
+			log.WithFields(log.Fields{
+				"type":      evt.Type,
+				"sender":    evt.Sender,
+				"room_id":   evt.RoomID,
+				"state_key": evt.StateKey,
+			}).Trace("Decrypted event successfully")
+		}
+	})
+
+	// Ignore events before neb's join event.
+	eventIgnorer := mautrix.OldEventIgnorer{UserID: config.UserID}
+	eventIgnorer.Register(syncer)
+
 	log.WithFields(log.Fields{
 		"user_id":         config.UserID,
+		"device_id":       config.DeviceID,
 		"sync":            config.Sync,
 		"auto_join_rooms": config.AutoJoinRooms,
 		"since":           nebStore.LoadNextBatch(config.UserID),
@@ -429,54 +440,6 @@ func (c *Clients) initClient(clientEntry *clientEntry) error {
 			}
 		}()
 	}
-
-	clientEntry.client = client
-
-	gobStore, err := crypto.NewGobStore("crypto.gob")
-	if err != nil {
-		return err
-	}
-
-	stateStore := StateStore{&nebStore.InMemoryStore}
-	olmMachine := crypto.NewOlmMachine(client, CryptoMachineLogger{}, gobStore, &stateStore)
-	olmMachine.Load()
-	clientEntry.olmMachine = olmMachine
-
-	syncer.OnSync(stateStore.UpdateStateStore)
-	// Process sync response with olm machine
-	syncer.OnSync(func(resp *mautrix.RespSync, since string) bool {
-		olmMachine.ProcessSyncResponse(resp, since)
-		if err := olmMachine.CryptoStore.Flush(); err != nil {
-			fmt.Println("cryptostore flush err", err)
-		}
-		return true
-	})
-
-	syncer.OnEventType(mevt.StateMember, func(_ mautrix.EventSource, evt *mevt.Event) {
-		olmMachine.HandleMemberEvent(evt)
-	})
-
-	syncer.OnEventType(mevt.EventEncrypted, func(source mautrix.EventSource, evt *mevt.Event) {
-		evt.Content.ParseRaw(mevt.EventEncrypted)
-		evt, err := olmMachine.DecryptMegolmEvent(evt)
-		if err != nil {
-			fmt.Println("decryption err", err)
-		} else {
-			if evt.Type == mevt.EventMessage {
-				err = evt.Content.ParseRaw(mevt.EventMessage)
-				if err != nil {
-					fmt.Println("parsing msg err", err)
-				} else {
-					c.onMessageEvent(client, evt)
-				}
-			}
-			fmt.Println("decrypted type", evt.Type)
-		}
-	})
-
-	// Ignore events before neb's join event.
-	eventIgnorer := mautrix.OldEventIgnorer{UserID: config.UserID}
-	eventIgnorer.Register(syncer)
 
 	return nil
 }

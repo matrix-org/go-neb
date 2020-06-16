@@ -261,7 +261,7 @@ func (s *Service) Commands(cli *mautrix.Client) []types.Command {
 // be chosen arbitrarily.
 func (s *Service) Expansions(cli *mautrix.Client) []types.Expansion {
 	return []types.Expansion{
-		types.Expansion{
+		{
 			Regexp: issueKeyRegex,
 			Expand: func(roomID id.RoomID, userID id.UserID, issueKeyGroups []string) interface{} {
 				return s.expandIssue(roomID, userID, issueKeyGroups)

@@ -76,6 +76,7 @@ func TestCommandParsing(t *testing.T) {
 	clients := New(&store, cli)
 	mxCli, _ := mautrix.NewClient("https://someplace.somewhere", "@service:user", "token")
 	mxCli.Client = cli
+	botClient := BotClient{client: mxCli}
 
 	for _, input := range commandParseTests {
 		executedCmdArgs = []string{}
@@ -94,7 +95,7 @@ func TestCommandParsing(t *testing.T) {
 			RoomID:  "!foo:bar",
 			Content: content,
 		}
-		clients.onMessageEvent(mxCli, &event)
+		clients.onMessageEvent(&botClient, &event)
 		if !reflect.DeepEqual(executedCmdArgs, input.expectArgs) {
 			t.Errorf("TestCommandParsing want %s, got %s", input.expectArgs, executedCmdArgs)
 		}
