@@ -40,13 +40,13 @@ func New(db database.Storer, cli *http.Client) *Clients {
 }
 
 // Client gets a client for the userID
-func (c *Clients) Client(userID id.UserID) (*mautrix.Client, error) {
+func (c *Clients) Client(userID id.UserID) (*BotClient, error) {
 	entry := c.getClient(userID)
-	if entry.client != nil {
-		return entry.client, nil
+	if entry.Client != nil {
+		return &entry, nil
 	}
 	entry, err := c.loadClientFromDB(userID)
-	return entry.client, err
+	return &entry, err
 }
 
 // Update updates the config for a matrix client
@@ -88,7 +88,7 @@ func (c *Clients) loadClientFromDB(userID id.UserID) (entry BotClient, err error
 	defer c.dbMutex.Unlock()
 
 	entry = c.getClient(userID)
-	if entry.client != nil {
+	if entry.Client != nil {
 		return
 	}
 
@@ -112,7 +112,7 @@ func (c *Clients) updateClientInDB(newConfig api.ClientConfig) (new, old BotClie
 	defer c.dbMutex.Unlock()
 
 	old = c.getClient(newConfig.UserID)
-	if old.client != nil && old.config == newConfig {
+	if old.Client != nil && old.config == newConfig {
 		// Already have a client with that config.
 		new = old
 		return
@@ -126,7 +126,7 @@ func (c *Clients) updateClientInDB(newConfig api.ClientConfig) (new, old BotClie
 
 	// set the new display name if they differ
 	if old.config.DisplayName != new.config.DisplayName {
-		if err := new.client.SetDisplayName(new.config.DisplayName); err != nil {
+		if err := new.SetDisplayName(new.config.DisplayName); err != nil {
 			// whine about it but don't stop: this isn't fatal.
 			log.WithFields(log.Fields{
 				log.ErrorKey:  err,
@@ -137,12 +137,12 @@ func (c *Clients) updateClientInDB(newConfig api.ClientConfig) (new, old BotClie
 	}
 
 	if old.config, err = c.db.StoreMatrixClientConfig(new.config); err != nil {
-		new.client.StopSync()
+		new.StopSync()
 		return
 	}
 
-	if old.client != nil {
-		old.client.StopSync()
+	if old.Client != nil {
+		old.Client.StopSync()
 		return
 	}
 
@@ -151,12 +151,12 @@ func (c *Clients) updateClientInDB(newConfig api.ClientConfig) (new, old BotClie
 }
 
 func (c *Clients) onMessageEvent(botClient *BotClient, event *mevt.Event) {
-	services, err := c.db.LoadServicesForUser(botClient.client.UserID)
+	services, err := c.db.LoadServicesForUser(botClient.UserID)
 	if err != nil {
 		log.WithFields(log.Fields{
 			log.ErrorKey:      err,
 			"room_id":         event.RoomID,
-			"service_user_id": botClient.client.UserID,
+			"service_user_id": botClient.UserID,
 		}).Warn("Error loading services")
 	}
 
@@ -191,17 +191,17 @@ func (c *Clients) onMessageEvent(botClient *BotClient, event *mevt.Event) {
 				args = strings.Split(body[1:], " ")
 			}
 
-			if response := runCommandForService(service.Commands(botClient.client), event, args); response != nil {
+			if response := runCommandForService(service.Commands(botClient), event, args); response != nil {
 				responses = append(responses, response)
 			}
 		} else { // message isn't a command, it might need expanding
-			expansions := runExpansionsForService(service.Expansions(botClient.client), event, body)
+			expansions := runExpansionsForService(service.Expansions(botClient), event, body)
 			responses = append(responses, expansions...)
 		}
 	}
 
 	for _, content := range responses {
-		if err := botClient.SendMessageEvent(content, event.RoomID); err != nil {
+		if _, err := botClient.SendMessageEvent(event.RoomID, mevt.EventMessage, content); err != nil {
 			log.WithFields(log.Fields{
 				"room_id": event.RoomID,
 				"content": content,
@@ -344,7 +344,7 @@ func (c *Clients) initClient(botClient *BotClient) error {
 
 	client.Client = c.httpClient
 	client.DeviceID = config.DeviceID
-	botClient.client = client
+	botClient.Client = client
 
 	syncer := client.Syncer.(*mautrix.DefaultSyncer)
 
@@ -369,7 +369,7 @@ func (c *Clients) initClient(botClient *BotClient) error {
 	})
 
 	syncer.OnEventType(mevt.Type{Type: "m.room.bot.options", Class: mevt.UnknownEventType}, func(_ mautrix.EventSource, event *mevt.Event) {
-		c.onBotOptionsEvent(botClient.client, event)
+		c.onBotOptionsEvent(botClient.Client, event)
 	})
 
 	if config.AutoJoinRooms {

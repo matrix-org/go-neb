@@ -14,8 +14,8 @@ import (
 // It can be used for sending messages and retrieving information about the rooms that
 // the client has joined.
 type BotClient struct {
+	*mautrix.Client
 	config     api.ClientConfig
-	client     *mautrix.Client
 	olmMachine *crypto.OlmMachine
 	stateStore *NebStateStore
 }
@@ -68,34 +68,31 @@ func (botClient *BotClient) DecryptMegolmEvent(evt *mevt.Event) (*mevt.Event, er
 // SendMessageEvent sends the given content to the given room ID using this BotClient as a message event.
 // If the target room has enabled encryption, a megolm session is created if one doesn't already exist
 // and the message is sent after being encrypted.
-func (botClient *BotClient) SendMessageEvent(content interface{}, roomID id.RoomID) error {
-	evtType := mevt.EventMessage
+func (botClient *BotClient) SendMessageEvent(roomID id.RoomID, evtType mevt.Type, content interface{},
+	extra ...mautrix.ReqSendEvent) (*mautrix.RespSendEvent, error) {
+
 	olmMachine := botClient.olmMachine
 	if olmMachine.StateStore.IsEncrypted(roomID) {
 		// Check if there is already a megolm session
 		if sess, err := olmMachine.CryptoStore.GetOutboundGroupSession(roomID); err != nil {
-			return err
+			return nil, err
 		} else if sess == nil || sess.Expired() || !sess.Shared {
 			// No error but valid, shared session does not exist
 			memberIDs, err := botClient.stateStore.GetJoinedMembers(roomID)
 			if err != nil {
-				return err
+				return nil, err
 			}
 			// Share group session with room members
 			if err = olmMachine.ShareGroupSession(roomID, memberIDs); err != nil {
-				return err
+				return nil, err
 			}
 		}
-		msgContent := mevt.Content{Parsed: content}
-		enc, err := olmMachine.EncryptMegolmEvent(roomID, mevt.EventMessage, msgContent)
+		enc, err := olmMachine.EncryptMegolmEvent(roomID, mevt.EventMessage, content)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		content = enc
 		evtType = mevt.EventEncrypted
 	}
-	if _, err := botClient.client.SendMessageEvent(roomID, evtType, content); err != nil {
-		return err
-	}
-	return nil
+	return botClient.Client.SendMessageEvent(roomID, evtType, content, extra...)
 }

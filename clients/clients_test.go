@@ -30,7 +30,7 @@ type MockService struct {
 	commands []types.Command
 }
 
-func (s *MockService) Commands(cli *mautrix.Client) []types.Command {
+func (s *MockService) Commands(cli types.MatrixClient) []types.Command {
 	return s.commands
 }
 
@@ -76,7 +76,7 @@ func TestCommandParsing(t *testing.T) {
 	clients := New(&store, cli)
 	mxCli, _ := mautrix.NewClient("https://someplace.somewhere", "@service:user", "token")
 	mxCli.Client = cli
-	botClient := BotClient{client: mxCli}
+	botClient := BotClient{Client: mxCli}
 
 	for _, input := range commandParseTests {
 		executedCmdArgs = []string{}

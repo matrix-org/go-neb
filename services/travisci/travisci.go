@@ -13,7 +13,6 @@ import (
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/types"
 	log "github.com/sirupsen/logrus"
-	"maunium.net/go/mautrix"
 	mevt "maunium.net/go/mautrix/event"
 	"maunium.net/go/mautrix/id"
 )
@@ -180,7 +179,7 @@ func outputForTemplate(travisTmpl string, tmpl map[string]string) (out string) {
 //        webhooks: http://go-neb-endpoint.com/notifications
 //
 // See https://docs.travis-ci.com/user/notifications#Webhook-notifications for more information.
-func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *mautrix.Client) {
+func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli types.MatrixClient) {
 	if err := req.ParseForm(); err != nil {
 		log.WithError(err).Error("Failed to read incoming Travis-CI webhook form")
 		w.WriteHeader(400)
@@ -243,7 +242,7 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 }
 
 // Register makes sure the Config information supplied is valid.
-func (s *Service) Register(oldService types.Service, client *mautrix.Client) error {
+func (s *Service) Register(oldService types.Service, client types.MatrixClient) error {
 	s.WebhookURL = s.webhookEndpointURL
 	for _, roomData := range s.Rooms {
 		for repo := range roomData.Repos {
@@ -275,13 +274,12 @@ func (s *Service) PostRegister(oldService types.Service) {
 	}
 }
 
-func (s *Service) joinRooms(client *mautrix.Client) {
+func (s *Service) joinRooms(client types.MatrixClient) {
 	for roomID := range s.Rooms {
 		if _, err := client.JoinRoom(roomID.String(), "", nil); err != nil {
 			log.WithFields(log.Fields{
 				log.ErrorKey: err,
 				"room_id":    roomID,
-				"user_id":    client.UserID,
 			}).Error("Failed to join room")
 		}
 	}

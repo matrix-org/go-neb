@@ -13,7 +13,6 @@ import (
 	"github.com/matrix-org/go-neb/services/github/webhook"
 	"github.com/matrix-org/go-neb/types"
 	log "github.com/sirupsen/logrus"
-	"maunium.net/go/mautrix"
 	"maunium.net/go/mautrix/event"
 	"maunium.net/go/mautrix/id"
 )
@@ -82,7 +81,7 @@ type WebhookService struct {
 //
 // If the "owner/repo" string doesn't exist in this Service config, then the webhook will be deleted from
 // Github.
-func (s *WebhookService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *mautrix.Client) {
+func (s *WebhookService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli types.MatrixClient) {
 	evType, repo, msg, err := webhook.OnReceiveRequest(req, s.SecretToken)
 	if err != nil {
 		w.WriteHeader(err.Code)
@@ -146,7 +145,7 @@ func (s *WebhookService) OnReceiveWebhook(w http.ResponseWriter, req *http.Reque
 //
 // Hooks can get out of sync if a user manually deletes a hook in the Github UI. In this case, toggling the repo configuration will
 // force NEB to recreate the hook.
-func (s *WebhookService) Register(oldService types.Service, client *mautrix.Client) error {
+func (s *WebhookService) Register(oldService types.Service, client types.MatrixClient) error {
 	if s.RealmID == "" || s.ClientUserID == "" {
 		return fmt.Errorf("RealmID and ClientUserID is required")
 	}
@@ -252,7 +251,7 @@ func (s *WebhookService) PostRegister(oldService types.Service) {
 	}
 }
 
-func (s *WebhookService) joinWebhookRooms(client *mautrix.Client) error {
+func (s *WebhookService) joinWebhookRooms(client types.MatrixClient) error {
 	for roomID := range s.Rooms {
 		if _, err := client.JoinRoom(roomID.String(), "", nil); err != nil {
 			// TODO: Leave the rooms we successfully joined?

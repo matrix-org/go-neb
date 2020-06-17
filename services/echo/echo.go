@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/matrix-org/go-neb/types"
-	"maunium.net/go/mautrix"
 	mevt "maunium.net/go/mautrix/event"
 	"maunium.net/go/mautrix/id"
 )
@@ -21,7 +20,7 @@ type Service struct {
 // Commands supported:
 //    !echo some message
 // Responds with a notice of "some message".
-func (e *Service) Commands(cli *mautrix.Client) []types.Command {
+func (e *Service) Commands(cli types.MatrixClient) []types.Command {
 	return []types.Command{
 		{
 			Path: []string{"echo"},

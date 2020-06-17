@@ -22,7 +22,6 @@ import (
 	"github.com/matrix-org/go-neb/services/github/client"
 	"github.com/matrix-org/go-neb/types"
 	log "github.com/sirupsen/logrus"
-	"maunium.net/go/mautrix"
 	mevt "maunium.net/go/mautrix/event"
 	"maunium.net/go/mautrix/id"
 )
@@ -563,7 +562,7 @@ func (s *Service) expandCommit(roomID id.RoomID, userID id.UserID, owner, repo, 
 // Responds with the outcome of the issue comment creation request. This command requires
 // a Github account to be linked to the Matrix user ID issuing the command. If there
 // is no link, it will return a Starter Link instead.
-func (s *Service) Commands(cli *mautrix.Client) []types.Command {
+func (s *Service) Commands(cli types.MatrixClient) []types.Command {
 	return []types.Command{
 		{
 			Path: []string{"github", "search"},
@@ -632,7 +631,7 @@ func (s *Service) Commands(cli *mautrix.Client) []types.Command {
 // it will also expand strings of the form:
 //   #12
 // using the default repository.
-func (s *Service) Expansions(cli *mautrix.Client) []types.Expansion {
+func (s *Service) Expansions(cli types.MatrixClient) []types.Expansion {
 	return []types.Expansion{
 		types.Expansion{
 			Regexp: ownerRepoIssueRegex,
@@ -718,7 +717,7 @@ func (s *Service) Expansions(cli *mautrix.Client) []types.Expansion {
 }
 
 // Register makes sure that the given realm ID maps to a github realm.
-func (s *Service) Register(oldService types.Service, client *mautrix.Client) error {
+func (s *Service) Register(oldService types.Service, client types.MatrixClient) error {
 	if s.RealmID == "" {
 		return fmt.Errorf("RealmID is required")
 	}

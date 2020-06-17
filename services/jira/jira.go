@@ -21,7 +21,6 @@ import (
 	"github.com/matrix-org/go-neb/services/utils"
 	"github.com/matrix-org/go-neb/types"
 	log "github.com/sirupsen/logrus"
-	"maunium.net/go/mautrix"
 	mevt "maunium.net/go/mautrix/event"
 	"maunium.net/go/mautrix/id"
 )
@@ -76,7 +75,7 @@ type Service struct {
 
 // Register ensures that the given realm IDs are valid JIRA realms and registers webhooks
 // with those JIRA endpoints.
-func (s *Service) Register(oldService types.Service, client *mautrix.Client) error {
+func (s *Service) Register(oldService types.Service, client types.MatrixClient) error {
 	// We only ever make 1 JIRA webhook which listens for all projects and then filter
 	// on receive. So we simply need to know if we need to make a webhook or not. We
 	// need to do this for each unique realm.
@@ -242,7 +241,7 @@ func (s *Service) expandIssue(roomID id.RoomID, userID id.UserID, issueKeyGroups
 // same project key, which project is chosen is undefined. If there
 // is no JIRA account linked to the Matrix user ID, it will return a Starter Link
 // if there is a known public project with that project key.
-func (s *Service) Commands(cli *mautrix.Client) []types.Command {
+func (s *Service) Commands(cli types.MatrixClient) []types.Command {
 	return []types.Command{
 		types.Command{
 			Path: []string{"jira", "create"},
@@ -259,7 +258,7 @@ func (s *Service) Commands(cli *mautrix.Client) []types.Command {
 // to map the project key to a realm, and subsequently the JIRA endpoint to hit.
 // If there are multiple projects with the same project key in the Service Config, one will
 // be chosen arbitrarily.
-func (s *Service) Expansions(cli *mautrix.Client) []types.Expansion {
+func (s *Service) Expansions(cli types.MatrixClient) []types.Expansion {
 	return []types.Expansion{
 		{
 			Regexp: issueKeyRegex,
@@ -271,7 +270,7 @@ func (s *Service) Expansions(cli *mautrix.Client) []types.Expansion {
 }
 
 // OnReceiveWebhook receives requests from JIRA and possibly sends requests to Matrix as a result.
-func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *mautrix.Client) {
+func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli types.MatrixClient) {
 	eventProjectKey, event, httpErr := webhook.OnReceiveRequest(req)
 	if httpErr != nil {
 		log.Print("Failed to handle JIRA webhook")

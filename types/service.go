@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"maunium.net/go/mautrix"
+	"maunium.net/go/mautrix/event"
 	"maunium.net/go/mautrix/id"
 )
 
@@ -24,7 +25,18 @@ type BotOptions struct {
 type Poller interface {
 	// OnPoll is called when the poller should poll. Return the timestamp when you want to be polled again.
 	// Return 0 to never be polled again.
-	OnPoll(client *mautrix.Client) time.Time
+	OnPoll(client MatrixClient) time.Time
+}
+
+// MatrixClient represents an object that can communicate with a Matrix server in certain ways that services require.
+type MatrixClient interface {
+	// Join a room by ID or alias. Content can optionally specify the request body.
+	JoinRoom(roomIDorAlias, serverName string, content interface{}) (resp *mautrix.RespJoinRoom, err error)
+	// Send a message event to a room.
+	SendMessageEvent(roomID id.RoomID, eventType event.Type, contentJSON interface{},
+		extra ...mautrix.ReqSendEvent) (resp *mautrix.RespSendEvent, err error)
+	// Upload an HTTP URL.
+	UploadLink(link string) (*mautrix.RespMediaUpload, error)
 }
 
 // A Service is the configuration for a bot service.
@@ -35,14 +47,14 @@ type Service interface {
 	ServiceID() string
 	// Return the type of service. This string MUST NOT change.
 	ServiceType() string
-	Commands(cli *mautrix.Client) []Command
-	Expansions(cli *mautrix.Client) []Expansion
-	OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *mautrix.Client)
+	Commands(cli MatrixClient) []Command
+	Expansions(cli MatrixClient) []Expansion
+	OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli MatrixClient)
 	// A lifecycle function which is invoked when the service is being registered. The old service, if one exists, is provided,
 	// along with a Client instance for ServiceUserID(). If this function returns an error, the service will not be registered
 	// or persisted to the database, and the user's request will fail. This can be useful if you depend on external factors
 	// such as registering webhooks.
-	Register(oldService Service, client *mautrix.Client) error
+	Register(oldService Service, client MatrixClient) error
 	// A lifecycle function which is invoked after the service has been successfully registered and persisted to the database.
 	// This function is invoked within the critical section for configuring services, guaranteeing that there will not be
 	// concurrent modifications to this service whilst this function executes. This lifecycle hook should be used to clean
@@ -83,23 +95,23 @@ func (s *DefaultService) ServiceType() string {
 }
 
 // Commands returns no commands.
-func (s *DefaultService) Commands(cli *mautrix.Client) []Command {
+func (s *DefaultService) Commands(cli MatrixClient) []Command {
 	return []Command{}
 }
 
 // Expansions returns no expansions.
-func (s *DefaultService) Expansions(cli *mautrix.Client) []Expansion {
+func (s *DefaultService) Expansions(cli MatrixClient) []Expansion {
 	return []Expansion{}
 }
 
 // Register does nothing and returns no error.
-func (s *DefaultService) Register(oldService Service, client *mautrix.Client) error { return nil }
+func (s *DefaultService) Register(oldService Service, cli MatrixClient) error { return nil }
 
 // PostRegister does nothing.
 func (s *DefaultService) PostRegister(oldService Service) {}
 
 // OnReceiveWebhook does nothing but 200 OK the request.
-func (s *DefaultService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *mautrix.Client) {
+func (s *DefaultService) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli MatrixClient) {
 	w.WriteHeader(200) // Do nothing
 }
 

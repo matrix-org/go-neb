@@ -13,7 +13,6 @@ import (
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/types"
 	log "github.com/sirupsen/logrus"
-	"maunium.net/go/mautrix"
 	mevt "maunium.net/go/mautrix/event"
 	"maunium.net/go/mautrix/id"
 )
@@ -78,7 +77,7 @@ type WebhookNotification struct {
 }
 
 // OnReceiveWebhook receives requests from Alertmanager and sends requests to Matrix as a result.
-func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *mautrix.Client) {
+func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli types.MatrixClient) {
 	decoder := json.NewDecoder(req.Body)
 	var notif WebhookNotification
 	if err := decoder.Decode(&notif); err != nil {
@@ -144,7 +143,7 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 }
 
 // Register makes sure the Config information supplied is valid.
-func (s *Service) Register(oldService types.Service, client *mautrix.Client) error {
+func (s *Service) Register(oldService types.Service, client types.MatrixClient) error {
 	s.WebhookURL = s.webhookEndpointURL
 	for _, templates := range s.Rooms {
 		// validate that we have at least a plain text template
@@ -191,13 +190,12 @@ func (s *Service) PostRegister(oldService types.Service) {
 	}
 }
 
-func (s *Service) joinRooms(client *mautrix.Client) {
+func (s *Service) joinRooms(client types.MatrixClient) {
 	for roomID := range s.Rooms {
 		if _, err := client.JoinRoom(roomID.String(), "", nil); err != nil {
 			log.WithFields(log.Fields{
 				log.ErrorKey: err,
 				"room_id":    roomID,
-				"user_id":    client.UserID,
 			}).Error("Failed to join room")
 		}
 	}

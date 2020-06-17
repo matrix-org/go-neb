@@ -12,7 +12,6 @@ import (
 	"github.com/jaytaylor/html2text"
 	"github.com/matrix-org/go-neb/types"
 	log "github.com/sirupsen/logrus"
-	"maunium.net/go/mautrix"
 	mevt "maunium.net/go/mautrix/event"
 	"maunium.net/go/mautrix/id"
 )
@@ -51,7 +50,7 @@ type Service struct {
 // Commands supported:
 //    !wikipedia some_search_query_without_quotes
 // Responds with a suitable article extract and link to the referenced page into the same room as the command.
-func (s *Service) Commands(client *mautrix.Client) []types.Command {
+func (s *Service) Commands(client types.MatrixClient) []types.Command {
 	return []types.Command{
 		{
 			Path: []string{"wikipedia"},
@@ -70,7 +69,7 @@ func usageMessage() *mevt.MessageEventContent {
 	}
 }
 
-func (s *Service) cmdWikipediaSearch(client *mautrix.Client, roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
+func (s *Service) cmdWikipediaSearch(client types.MatrixClient, roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
 	// Check for query text
 	if len(args) < 1 {
 		return usageMessage(), nil

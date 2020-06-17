@@ -6,7 +6,6 @@ import (
 
 	"github.com/matrix-org/go-neb/types"
 	log "github.com/sirupsen/logrus"
-	"maunium.net/go/mautrix"
 	"maunium.net/go/mautrix/event"
 	"maunium.net/go/mautrix/id"
 )
@@ -37,7 +36,7 @@ type Service struct {
 // to Matrix as a result.
 //
 // This requires that the WebhookURL is given to an outgoing slack webhook (see https://api.slack.com/outgoing-webhooks)
-func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli *mautrix.Client) {
+func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli types.MatrixClient) {
 	segments := strings.Split(req.URL.Path, "/")
 
 	if len(segments) < 2 {
@@ -72,13 +71,12 @@ func (s *Service) OnReceiveWebhook(w http.ResponseWriter, req *http.Request, cli
 }
 
 // Register joins the configured room and sets the public WebhookURL
-func (s *Service) Register(oldService types.Service, client *mautrix.Client) error {
+func (s *Service) Register(oldService types.Service, client types.MatrixClient) error {
 	s.WebhookURL = s.webhookEndpointURL
 	if _, err := client.JoinRoom(s.RoomID.String(), "", nil); err != nil {
 		log.WithFields(log.Fields{
 			log.ErrorKey: err,
 			"room_id":    s.RoomID,
-			"user_id":    client.UserID,
 		}).Error("Failed to join room")
 	}
 	return nil
