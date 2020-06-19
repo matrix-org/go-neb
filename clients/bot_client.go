@@ -2,6 +2,7 @@ package clients
 
 import (
 	"github.com/matrix-org/go-neb/api"
+	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/matrix"
 	log "github.com/sirupsen/logrus"
 	"maunium.net/go/mautrix"
@@ -22,18 +23,32 @@ type BotClient struct {
 
 // InitOlmMachine initializes a BotClient's internal OlmMachine given a client object and a Neb store,
 // which will be used to store room information.
-func (botClient *BotClient) InitOlmMachine(client *mautrix.Client, nebStore *matrix.NEBStore,
-	cryptoStore crypto.Store) error {
+func (botClient *BotClient) InitOlmMachine(client *mautrix.Client, nebStore *matrix.NEBStore) (err error) {
 
-	gobStore, err := crypto.NewGobStore("crypto.gob")
-	if err != nil {
-		return err
+	var cryptoStore crypto.Store
+	cryptoLogger := CryptoMachineLogger{}
+	if sdb, ok := database.GetServiceDB().(*database.ServiceDB); ok {
+		// Create an SQL crypto store based on the ServiceDB used
+		db, dialect := sdb.GetSQLDb()
+		sqlCryptoStore := crypto.NewSQLCryptoStore(db, dialect, client.DeviceID, []byte(client.DeviceID.String()), cryptoLogger)
+		// Try to create the tables if they are missing
+		if err = sqlCryptoStore.CreateTables(); err != nil {
+			return
+		}
+		cryptoStore = sqlCryptoStore
+		cryptoLogger.Debug("Using SQL backend as the crypto store")
+	} else {
+		cryptoStore, err = crypto.NewGobStore(client.DeviceID.String() + ".gob")
+		if err != nil {
+			return
+		}
+		cryptoLogger.Debug("Using gob storage as the crypto store")
 	}
 
 	botClient.stateStore = &NebStateStore{&nebStore.InMemoryStore}
-	olmMachine := crypto.NewOlmMachine(client, CryptoMachineLogger{}, gobStore, botClient.stateStore)
+	olmMachine := crypto.NewOlmMachine(client, cryptoLogger, cryptoStore, botClient.stateStore)
 	if err = olmMachine.Load(); err != nil {
-		return nil
+		return
 	}
 	botClient.olmMachine = olmMachine
 
