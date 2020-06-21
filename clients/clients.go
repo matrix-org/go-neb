@@ -362,6 +362,7 @@ func (c *Clients) initClient(botClient *BotClient) error {
 		return err
 	}
 
+	// Register sync callback for maintaining the state store and Olm machine state
 	botClient.Register(syncer)
 
 	syncer.OnEventType(mevt.EventMessage, func(_ mautrix.EventSource, event *mevt.Event) {
@@ -426,6 +427,14 @@ func (c *Clients) initClient(botClient *BotClient) error {
 
 	if config.Sync {
 		go func() {
+			// Get the state store up to date
+			resp, err := botClient.SyncRequest(30000, "", "", true, mevt.PresenceOnline)
+			if err != nil {
+				log.WithError(err).Error("Error performing initial sync")
+				return
+			}
+			botClient.stateStore.UpdateStateStore(resp)
+
 			for {
 				if e := client.Sync(); e != nil {
 					log.WithFields(log.Fields{

@@ -139,7 +139,7 @@ func insertServicesFromConfig(clis *clients.Clients, serviceReqs []api.Configure
 }
 
 func loadDatabase(databaseType, databaseURL, configYAML string) (*database.ServiceDB, error) {
-	if configYAML != "" {
+	if databaseType == "" && databaseURL == "" {
 		databaseType = "sqlite3"
 		databaseURL = ":memory:?_busy_timeout=5000"
 	}
