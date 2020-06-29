@@ -12,7 +12,6 @@ import (
 
 	"github.com/matrix-org/go-neb/types"
 	log "github.com/sirupsen/logrus"
-	"maunium.net/go/mautrix"
 	mevt "maunium.net/go/mautrix/event"
 	"maunium.net/go/mautrix/id"
 )
@@ -116,7 +115,7 @@ type Service struct {
 // Commands supported:
 //    !imgur some_search_query_without_quotes
 // Responds with a suitable image into the same room as the command.
-func (s *Service) Commands(client *mautrix.Client) []types.Command {
+func (s *Service) Commands(client types.MatrixClient) []types.Command {
 	return []types.Command{
 		{
 			Path: []string{"imgur", "help"},
@@ -142,7 +141,7 @@ func usageMessage() *mevt.MessageEventContent {
 }
 
 // Search Imgur for a relevant image and upload it to matrix
-func (s *Service) cmdImgSearch(client *mautrix.Client, roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
+func (s *Service) cmdImgSearch(client types.MatrixClient, roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
 	// Check for query text
 	if len(args) < 1 {
 		return usageMessage(), nil

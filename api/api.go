@@ -63,6 +63,8 @@ type ClientConfig struct {
 	HomeserverURL string
 	// The matrix access token to authenticate the requests with.
 	AccessToken string
+	// The device ID for this access token.
+	DeviceID id.DeviceID
 	// True to start a sync stream for this user, making this a "syncing client". If false, no
 	// /sync goroutine will be created and this client won't listen for new events from Matrix. For services
 	// which only SEND events into Matrix, it may be desirable to set Sync to false to reduce the

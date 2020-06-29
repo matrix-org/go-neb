@@ -23,7 +23,7 @@ require (
 	github.com/json-iterator/go v1.1.9 // indirect
 	github.com/julienschmidt/httprouter v1.2.0 // indirect
 	github.com/kr/pretty v0.1.0 // indirect
-	github.com/lib/pq v1.3.0
+	github.com/lib/pq v1.7.0
 	github.com/matrix-org/dugong v0.0.0-20180820122854-51a565b5666b
 	github.com/matrix-org/util v0.0.0-20190711121626-527ce5ddefc7
 	github.com/mattn/go-shellwords v1.0.10
@@ -45,12 +45,11 @@ require (
 	github.com/sirupsen/logrus v1.4.2
 	github.com/ssor/bom v0.0.0-20170718123548-6386211fdfcf // indirect
 	golang.org/dl v0.0.0-20200601221412-a954fa24b3e5 // indirect
-	golang.org/x/net v0.0.0-20200505041828-1ed23360d12c
+	golang.org/x/net v0.0.0-20200602114024-627f9648deb9
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 	golang.org/x/tools v0.0.0-20200311090712-aafaee8bce8c // indirect
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6 // indirect
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
-	gopkg.in/yaml.v2 v2.2.8
-	maunium.net/go/gomuks v0.1.0
-	maunium.net/go/mautrix v0.4.7
+	gopkg.in/yaml.v2 v2.3.0
+	maunium.net/go/mautrix v0.5.5
 )

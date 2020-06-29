@@ -13,7 +13,8 @@ import (
 
 // A ServiceDB stores the configuration for the services
 type ServiceDB struct {
-	db *sql.DB
+	db      *sql.DB
+	dialect string
 }
 
 // A single global instance of the service DB.
@@ -44,7 +45,7 @@ func Open(databaseType, databaseURL string) (serviceDB *ServiceDB, err error) {
 		// https://github.com/mattn/go-sqlite3/issues/274
 		db.SetMaxOpenConns(1)
 	}
-	serviceDB = &ServiceDB{db: db}
+	serviceDB = &ServiceDB{db: db, dialect: databaseType}
 	return
 }
 
@@ -325,6 +326,11 @@ func (d *ServiceDB) InsertFromConfig(cfg *api.ConfigFile) error {
 
 	// Do not insert services yet, they require more work to set up.
 	return nil
+}
+
+// GetSQLDb retrieves the SQL database instance of a ServiceDB and the dialect it uses (sqlite3 or postgres).
+func (d *ServiceDB) GetSQLDb() (*sql.DB, string) {
+	return d.db, d.dialect
 }
 
 func runTransaction(db *sql.DB, fn func(txn *sql.Tx) error) (err error) {

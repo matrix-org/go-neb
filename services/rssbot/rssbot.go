@@ -19,7 +19,6 @@ import (
 	"github.com/mmcdole/gofeed"
 	"github.com/prometheus/client_golang/prometheus"
 	log "github.com/sirupsen/logrus"
-	"maunium.net/go/mautrix"
 	mevt "maunium.net/go/mautrix/event"
 	"maunium.net/go/mautrix/id"
 )
@@ -102,7 +101,7 @@ type Service struct {
 }
 
 // Register will check the liveness of each RSS feed given. If all feeds check out okay, no error is returned.
-func (s *Service) Register(oldService types.Service, client *mautrix.Client) error {
+func (s *Service) Register(oldService types.Service, client types.MatrixClient) error {
 	if len(s.Feeds) == 0 {
 		// this is an error UNLESS the old service had some feeds in which case they are deleting us :(
 		var numOldFeeds int
@@ -131,7 +130,7 @@ func (s *Service) Register(oldService types.Service, client *mautrix.Client) err
 	return nil
 }
 
-func (s *Service) joinRooms(client *mautrix.Client) {
+func (s *Service) joinRooms(client types.MatrixClient) {
 	roomSet := make(map[id.RoomID]bool)
 	for _, feedInfo := range s.Feeds {
 		for _, roomID := range feedInfo.Rooms {
@@ -144,7 +143,6 @@ func (s *Service) joinRooms(client *mautrix.Client) {
 			log.WithFields(log.Fields{
 				log.ErrorKey: err,
 				"room_id":    roomID,
-				"user_id":    client.UserID,
 			}).Error("Failed to join room")
 		}
 	}
@@ -175,7 +173,7 @@ func (s *Service) PostRegister(oldService types.Service) {
 //   - Else if there is a Title field, use it as the GUID.
 //
 // Returns a timestamp representing when this Service should have OnPoll called again.
-func (s *Service) OnPoll(cli *mautrix.Client) time.Time {
+func (s *Service) OnPoll(cli types.MatrixClient) time.Time {
 	logger := log.WithFields(log.Fields{
 		"service_id":   s.ServiceID(),
 		"service_type": s.ServiceType(),
@@ -408,7 +406,7 @@ func (s *Service) newItems(feedURL string, allItems []*gofeed.Item) (items []gof
 	return
 }
 
-func (s *Service) sendToRooms(cli *mautrix.Client, feedURL string, feed *gofeed.Feed, item gofeed.Item) error {
+func (s *Service) sendToRooms(cli types.MatrixClient, feedURL string, feed *gofeed.Feed, item gofeed.Item) error {
 	logger := log.WithFields(log.Fields{
 		"feed_url": feedURL,
 		"title":    item.Title,

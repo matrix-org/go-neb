@@ -93,7 +93,7 @@ func TestNotify(t *testing.T) {
 	}
 }
 
-func buildTestClient(msgs *[]mevt.MessageEventContent) *mautrix.Client {
+func buildTestClient(msgs *[]mevt.MessageEventContent) types.MatrixClient {
 	matrixTrans := struct{ testutils.MockTransport }{}
 	matrixTrans.RT = func(req *http.Request) (*http.Response, error) {
 		if !strings.Contains(req.URL.String(), "/send/m.room.message") {

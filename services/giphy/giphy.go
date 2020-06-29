@@ -11,7 +11,6 @@ import (
 
 	"github.com/matrix-org/go-neb/types"
 	log "github.com/sirupsen/logrus"
-	"maunium.net/go/mautrix"
 	"maunium.net/go/mautrix/event"
 	mevt "maunium.net/go/mautrix/event"
 	"maunium.net/go/mautrix/id"
@@ -61,7 +60,7 @@ type Service struct {
 // Commands supported:
 //   !giphy some search query without quotes
 // Responds with a suitable GIF into the same room as the command.
-func (s *Service) Commands(client *mautrix.Client) []types.Command {
+func (s *Service) Commands(client types.MatrixClient) []types.Command {
 	return []types.Command{
 		types.Command{
 			Path: []string{"giphy"},
@@ -72,7 +71,7 @@ func (s *Service) Commands(client *mautrix.Client) []types.Command {
 	}
 }
 
-func (s *Service) cmdGiphy(client *mautrix.Client, roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
+func (s *Service) cmdGiphy(client types.MatrixClient, roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
 	// only 1 arg which is the text to search for.
 	query := strings.Join(args, " ")
 	gifResult, err := s.searchGiphy(query)

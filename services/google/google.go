@@ -13,7 +13,6 @@ import (
 
 	"github.com/matrix-org/go-neb/types"
 	log "github.com/sirupsen/logrus"
-	"maunium.net/go/mautrix"
 	mevt "maunium.net/go/mautrix/event"
 	"maunium.net/go/mautrix/id"
 )
@@ -70,7 +69,7 @@ type Service struct {
 // Commands supported:
 //    !google image some_search_query_without_quotes
 // Responds with a suitable image into the same room as the command.
-func (s *Service) Commands(client *mautrix.Client) []types.Command {
+func (s *Service) Commands(client types.MatrixClient) []types.Command {
 	return []types.Command{
 		{
 			Path: []string{"google", "image"},
@@ -101,7 +100,8 @@ func usageMessage() *mevt.MessageEventContent {
 	}
 }
 
-func (s *Service) cmdGoogleImgSearch(client *mautrix.Client, roomID id.RoomID, userID id.UserID, args []string) (interface{}, error) {
+func (s *Service) cmdGoogleImgSearch(client types.MatrixClient, roomID id.RoomID, userID id.UserID,
+	args []string) (interface{}, error) {
 
 	if len(args) < 1 {
 		return usageMessage(), nil
