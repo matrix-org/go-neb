@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"strings"
 	"sync"
-	"time"
 
 	"github.com/matrix-org/go-neb/api"
 	"github.com/matrix-org/go-neb/database"
@@ -344,6 +343,9 @@ func (c *Clients) initClient(botClient *BotClient) error {
 
 	client.Client = c.httpClient
 	client.DeviceID = config.DeviceID
+	if client.DeviceID == "" {
+		log.Warn("Device ID is not set which will result in E2E encryption/decryption not working")
+	}
 	botClient.Client = client
 
 	syncer := client.Syncer.(*mautrix.DefaultSyncer)
@@ -426,28 +428,7 @@ func (c *Clients) initClient(botClient *BotClient) error {
 	}).Info("Created new client")
 
 	if config.Sync {
-		go func() {
-			// Get the state store up to date
-			resp, err := botClient.SyncRequest(30000, "", "", true, mevt.PresenceOnline)
-			if err != nil {
-				log.WithError(err).Error("Error performing initial sync")
-				return
-			}
-			botClient.stateStore.UpdateStateStore(resp)
-
-			for {
-				if e := client.Sync(); e != nil {
-					log.WithFields(log.Fields{
-						log.ErrorKey: e,
-						"user_id":    config.UserID,
-					}).Error("Fatal Sync() error")
-					time.Sleep(10 * time.Second)
-				} else {
-					log.WithField("user_id", config.UserID).Info("Stopping Sync()")
-					return
-				}
-			}
-		}()
+		go botClient.Sync()
 	}
 
 	return nil

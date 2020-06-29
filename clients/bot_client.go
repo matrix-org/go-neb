@@ -1,6 +1,8 @@
 package clients
 
 import (
+	"time"
+
 	"github.com/matrix-org/go-neb/api"
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/matrix"
@@ -38,7 +40,11 @@ func (botClient *BotClient) InitOlmMachine(client *mautrix.Client, nebStore *mat
 		cryptoStore = sqlCryptoStore
 		cryptoLogger.Debug("Using SQL backend as the crypto store")
 	} else {
-		cryptoStore, err = crypto.NewGobStore(client.DeviceID.String() + ".gob")
+		deviceID := client.DeviceID.String()
+		if deviceID == "" {
+			deviceID = "_empty_device_id"
+		}
+		cryptoStore, err = crypto.NewGobStore(deviceID + ".gob")
 		if err != nil {
 			return
 		}
@@ -110,4 +116,28 @@ func (botClient *BotClient) SendMessageEvent(roomID id.RoomID, evtType mevt.Type
 		evtType = mevt.EventEncrypted
 	}
 	return botClient.Client.SendMessageEvent(roomID, evtType, content, extra...)
+}
+
+// Sync loops to keep syncing the client with the homeserver by calling the /sync endpoint.
+func (botClient *BotClient) Sync() {
+	// Get the state store up to date
+	resp, err := botClient.SyncRequest(30000, "", "", true, mevt.PresenceOnline)
+	if err != nil {
+		log.WithError(err).Error("Error performing initial sync")
+		return
+	}
+	botClient.stateStore.UpdateStateStore(resp)
+
+	for {
+		if e := botClient.Client.Sync(); e != nil {
+			log.WithFields(log.Fields{
+				log.ErrorKey: e,
+				"user_id":    botClient.config.UserID,
+			}).Error("Fatal Sync() error")
+			time.Sleep(10 * time.Second)
+		} else {
+			log.WithField("user_id", botClient.config.UserID).Info("Stopping Sync()")
+			return
+		}
+	}
 }
