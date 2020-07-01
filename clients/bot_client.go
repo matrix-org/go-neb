@@ -32,7 +32,7 @@ func (botClient *BotClient) InitOlmMachine(client *mautrix.Client, nebStore *mat
 	if sdb, ok := database.GetServiceDB().(*database.ServiceDB); ok {
 		// Create an SQL crypto store based on the ServiceDB used
 		db, dialect := sdb.GetSQLDb()
-		sqlCryptoStore := crypto.NewSQLCryptoStore(db, dialect, client.DeviceID, []byte(client.DeviceID.String()), cryptoLogger)
+		sqlCryptoStore := crypto.NewSQLCryptoStore(db, dialect, client.DeviceID, []byte(client.DeviceID.String()+"pickle"), cryptoLogger)
 		// Try to create the tables if they are missing
 		if err = sqlCryptoStore.CreateTables(); err != nil {
 			return
