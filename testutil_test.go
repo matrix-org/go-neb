@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 
 	"maunium.net/go/mautrix/id"
 )
@@ -30,14 +31,19 @@ func newMatrixTripper() *matrixTripper {
 
 func (rt *matrixTripper) RoundTrip(req *http.Request) (*http.Response, error) {
 	key := req.Method + " " + req.URL.Path
-	h := rt.handlers[key]
-	if h == nil {
-		panic(fmt.Sprintf(
-			"RoundTrip: Unhandled request: %s\nHandlers: %d",
-			key, len(rt.handlers),
-		))
+	if handler, ok := rt.handlers[key]; ok {
+		return handler(req)
 	}
-	return h(req)
+	for strMatch, handler := range rt.handlers {
+		// try to match key with wildcard handlers
+		if strMatch[len(strMatch)-1] == '*' && strings.HasPrefix(key, strMatch[:len(strMatch)-1]) {
+			return handler(req)
+		}
+	}
+	panic(fmt.Sprintf(
+		"RoundTrip: Unhandled request: %s\nHandlers: %d",
+		key, len(rt.handlers),
+	))
 }
 
 func (rt *matrixTripper) Handle(method, path string, handler func(req *http.Request) (*http.Response, error)) {
