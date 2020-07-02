@@ -16,49 +16,7 @@ import (
 	mevt "maunium.net/go/mautrix/event"
 )
 
-func TestConfigureClient(t *testing.T) {
-	mux := http.NewServeMux()
-	mxTripper := newMatrixTripper()
-	setup(envVars{
-		BaseURL:      "http://go.neb",
-		DatabaseType: "sqlite3",
-		DatabaseURL:  ":memory:",
-	}, mux, &http.Client{
-		Transport: mxTripper,
-	})
-
-	mxTripper.ClearHandlers()
-	mockWriter := httptest.NewRecorder()
-	syncChan := make(chan string)
-	mxTripper.HandlePOSTFilter("@link:hyrule")
-	mxTripper.Handle("GET", "/_matrix/client/r0/sync",
-		func(req *http.Request) (*http.Response, error) {
-			syncChan <- "sync"
-			return newResponse(200, `{
-				"next_batch":"11_22_33_44",
-				"rooms": {}
-			}`), nil
-		},
-	)
-
-	mockReq, _ := http.NewRequest("POST", "http://go.neb/admin/configureClient", bytes.NewBufferString(`
-	{
-		"UserID":"@link:hyrule",
-		"HomeserverURL":"http://hyrule.loz",
-		"AccessToken":"dangeroustogoalone",
-		"Sync":true,
-		"AutoJoinRooms":true
-	}`))
-	mux.ServeHTTP(mockWriter, mockReq)
-	expectCode := 200
-	if mockWriter.Code != expectCode {
-		t.Errorf("TestConfigureClient wanted HTTP status %d, got %d", expectCode, mockWriter.Code)
-	}
-
-	<-syncChan
-}
-
-func TestRespondToEcho(t *testing.T) {
+func setupMockServer() (*http.ServeMux, *matrixTripper, *httptest.ResponseRecorder, chan string) {
 	mux := http.NewServeMux()
 	mxTripper := newMatrixTripper()
 	setup(envVars{
@@ -75,10 +33,37 @@ func TestRespondToEcho(t *testing.T) {
 	mxTripper.HandlePOSTFilter("@link:hyrule")
 	mxTripper.Handle("GET", "/_matrix/client/r0/sync",
 		func(req *http.Request) (*http.Response, error) {
+			if _, ok := req.URL.Query()["since"]; !ok {
+				return newResponse(200, `{"next_batch":"11_22_33_44", "rooms": {}}`), nil
+			}
 			reqBody := <-reqChan
 			return newResponse(200, reqBody), nil
 		},
 	)
+	return mux, mxTripper, mockWriter, reqChan
+}
+
+func TestConfigureClient(t *testing.T) {
+	mux, _, mockWriter, _ := setupMockServer()
+
+	mockReq, _ := http.NewRequest("POST", "http://go.neb/admin/configureClient", bytes.NewBufferString(`
+	{
+		"UserID":"@link:hyrule",
+		"HomeserverURL":"http://hyrule.loz",
+		"AccessToken":"dangeroustogoalone",
+		"Sync":true,
+		"AutoJoinRooms":true
+	}`))
+	mux.ServeHTTP(mockWriter, mockReq)
+	expectCode := 200
+	if mockWriter.Code != expectCode {
+		t.Errorf("TestConfigureClient wanted HTTP status %d, got %d", expectCode, mockWriter.Code)
+	}
+}
+
+func TestRespondToEcho(t *testing.T) {
+	mux, mxTripper, mockWriter, reqChan := setupMockServer()
+
 	mxTripper.Handle("POST", "/_matrix/client/r0/keys/upload", func(req *http.Request) (*http.Response, error) {
 		return newResponse(200, `{}`), nil
 	})
@@ -118,10 +103,6 @@ func TestRespondToEcho(t *testing.T) {
 		"Config": {}
 	}`))
 	mux.ServeHTTP(mockWriter, serviceConfigReq)
-
-	// get the initial syncs out of the way
-	reqChan <- `{"next_batch":"11_22_33_44", "rooms": {}}`
-	reqChan <- `{"next_batch":"11_22_33_44", "rooms": {}}`
 
 	// send neb an invite to a room
 	reqChan <- `{
@@ -176,26 +157,7 @@ func TestRespondToEcho(t *testing.T) {
 }
 
 func TestEncryptedRespondToEcho(t *testing.T) {
-	mux := http.NewServeMux()
-	mxTripper := newMatrixTripper()
-	setup(envVars{
-		BaseURL:      "http://go.neb",
-		DatabaseType: "sqlite3",
-		DatabaseURL:  ":memory:",
-	}, mux, &http.Client{
-		Transport: mxTripper,
-	})
-
-	mxTripper.ClearHandlers()
-	mockWriter := httptest.NewRecorder()
-	reqChan := make(chan string)
-	mxTripper.HandlePOSTFilter("@link:hyrule")
-	mxTripper.Handle("GET", "/_matrix/client/r0/sync",
-		func(req *http.Request) (*http.Response, error) {
-			reqBody := <-reqChan
-			return newResponse(200, reqBody), nil
-		},
-	)
+	mux, mxTripper, mockWriter, reqChan := setupMockServer()
 
 	// create the two accounts, inbound and outbound sessions, both the bot and mock ones
 	accountMock := olm.NewAccount()
@@ -262,10 +224,6 @@ func TestEncryptedRespondToEcho(t *testing.T) {
 		"Config": {}
 	}`))
 	mux.ServeHTTP(mockWriter, serviceConfigReq)
-
-	// get the initial syncs out of the way
-	reqChan <- `{"next_batch":"11_22_33_44", "rooms": {}}`
-	reqChan <- `{"next_batch":"11_22_33_44", "rooms": {}}`
 
 	// send neb an invite to a room
 	reqChan <- `{
