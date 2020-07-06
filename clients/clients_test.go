@@ -89,6 +89,7 @@ func TestCommandParsing(t *testing.T) {
 		} else {
 			content.VeryRaw = veryRaw
 		}
+		content.ParseRaw(mevt.EventMessage)
 		event := mevt.Event{
 			Type:    mevt.EventMessage,
 			Sender:  "@someone:somewhere",
