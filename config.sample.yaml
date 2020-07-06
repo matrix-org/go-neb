@@ -21,6 +21,7 @@
 clients:
   - UserID: "@goneb:localhost"
     AccessToken: "MDASDASJDIASDJASDAFGFRGER"
+    DeviceID: "DEVICE1"
     HomeserverURL: "http://localhost:8008"
     Sync: true
     AutoJoinRooms: true
@@ -28,6 +29,7 @@ clients:
 
   - UserID: "@another_goneb:localhost"
     AccessToken: "MDASDASJDIASDJASDAFGFRGER"
+    DeviceID: "DEVICE2"
     HomeserverURL: "http://localhost:8008"
     Sync: false
     AutoJoinRooms: false
