@@ -1,6 +1,7 @@
 package clients
 
 import (
+	"errors"
 	"sync"
 	"time"
 
@@ -213,4 +214,25 @@ func (botClient *BotClient) OnCancel(cancelledByUs bool, reason string, reasonCo
 
 // OnSuccess is called when a SAS verification is successful.
 func (botClient *BotClient) OnSuccess() {
+}
+
+// InvalidateRoomSession invalidates the outbound group session for the given room.
+func (botClient *BotClient) InvalidateRoomSession(roomID id.RoomID) (id.SessionID, error) {
+	outbound, err := botClient.olmMachine.CryptoStore.GetOutboundGroupSession(roomID)
+	if err != nil {
+		return "", err
+	}
+	if outbound == nil {
+		return "", errors.New("No group session found for this room")
+	}
+	return outbound.ID(), botClient.olmMachine.CryptoStore.RemoveOutboundGroupSession(roomID)
+}
+
+// StartSASVerification starts a new SAS verification with the given user and device ID and returns the transaction ID if successful.
+func (botClient *BotClient) StartSASVerification(userID id.UserID, deviceID id.DeviceID) (string, error) {
+	device, err := botClient.olmMachine.GetOrFetchDevice(userID, deviceID)
+	if err != nil {
+		return "", err
+	}
+	return botClient.olmMachine.NewSimpleSASVerificationWith(device, botClient)
 }

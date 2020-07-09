@@ -21,6 +21,7 @@ import (
 	_ "github.com/matrix-org/go-neb/realms/jira"
 
 	_ "github.com/matrix-org/go-neb/services/alertmanager"
+	_ "github.com/matrix-org/go-neb/services/cryptotest"
 	_ "github.com/matrix-org/go-neb/services/echo"
 	_ "github.com/matrix-org/go-neb/services/giphy"
 	_ "github.com/matrix-org/go-neb/services/github"
