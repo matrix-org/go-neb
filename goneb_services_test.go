@@ -14,6 +14,7 @@ import (
 	"maunium.net/go/mautrix/crypto"
 	"maunium.net/go/mautrix/crypto/olm"
 	mevt "maunium.net/go/mautrix/event"
+	"maunium.net/go/mautrix/id"
 )
 
 func setupMockServer() (*http.ServeMux, *matrixTripper, *httptest.ResponseRecorder, chan string) {
@@ -164,13 +165,14 @@ func TestEncryptedRespondToEcho(t *testing.T) {
 	accountBot := olm.NewAccount()
 	signingKeyMock, identityKeyMock := accountMock.IdentityKeys()
 	signingKeyBot, identityKeyBot := accountBot.IdentityKeys()
-	ogsBot := crypto.NewOutboundGroupSession("!greatdekutree:hyrule")
+	// encryptionEvtContent := &mevt.EncryptionEventContent{Algorithm: "m.megolm.v1.aes-sha2"}
+	ogsBot := crypto.NewOutboundGroupSession("!greatdekutree:hyrule", nil)
 	ogsBot.Shared = true
 	igsMock, err := crypto.NewInboundGroupSession(identityKeyBot, signingKeyBot, "!greatdekutree:hyrule", ogsBot.Internal.Key())
 	if err != nil {
 		t.Errorf("Error creating mock IGS: %v", err)
 	}
-	ogsMock := crypto.NewOutboundGroupSession("!greatdekutree:hyrule")
+	ogsMock := crypto.NewOutboundGroupSession("!greatdekutree:hyrule", nil)
 	ogsMock.Shared = true
 	igsBot, err := crypto.NewInboundGroupSession(identityKeyMock, signingKeyMock, "!greatdekutree:hyrule", ogsMock.Internal.Key())
 	if err != nil {
@@ -279,7 +281,7 @@ func TestEncryptedRespondToEcho(t *testing.T) {
 
 	// DB is initialized, store the megolm sessions from before for the bot to be able to decrypt and encrypt
 	sqlDB, dialect := database.GetServiceDB().(*database.ServiceDB).GetSQLDb()
-	cryptoStore := crypto.NewSQLCryptoStore(sqlDB, dialect, "mastersword", []byte("masterswordpickle"), clients.CryptoMachineLogger{})
+	cryptoStore := crypto.NewSQLCryptoStore(sqlDB, dialect, "@link:hyrule-mastersword", "mastersword", []byte("masterswordpickle"), clients.CryptoMachineLogger{})
 	if err := cryptoStore.AddOutboundGroupSession(ogsBot); err != nil {
 		t.Errorf("Error storing bot OGS: %v", err)
 	}
@@ -287,6 +289,14 @@ func TestEncryptedRespondToEcho(t *testing.T) {
 	if err := cryptoStore.PutGroupSession("!greatdekutree:hyrule", identityKeyMock, igsBot.ID(), igsBot); err != nil {
 		t.Errorf("Error storing bot IGS: %v", err)
 	}
+	cryptoStore.PutDevices("@navi:hyrule", map[id.DeviceID]*crypto.DeviceIdentity{
+		"NAVI": {
+			UserID:      "@navi:hyrule",
+			DeviceID:    "NAVI",
+			IdentityKey: identityKeyMock,
+			SigningKey:  signingKeyMock,
+		},
+	})
 
 	plaintext := `{"room_id":"!greatdekutree:hyrule","type":"m.room.message","content":{"body":"!echo save zelda","msgtype":"m.text"}}`
 	ciphertext, err := ogsMock.Encrypt([]byte(plaintext))
@@ -305,7 +315,8 @@ func TestEncryptedRespondToEcho(t *testing.T) {
 						"algorithm":"m.megolm.v1.aes-sha2",
 						"sender_key":"%s",
 						"ciphertext":"%s",
-						"session_id":"%s"
+						"session_id":"%s",
+						"device_id": "NAVI"
 					},
 					"origin_server_ts": 10000,
 					"unsigned": {"age": 100},

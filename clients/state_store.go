@@ -15,6 +15,20 @@ type NebStateStore struct {
 	Storer *mautrix.InMemoryStore
 }
 
+// GetEncryptionEvent returns the encryption event for a room.
+func (ss *NebStateStore) GetEncryptionEvent(roomID id.RoomID) *event.EncryptionEventContent {
+	room := ss.Storer.LoadRoom(roomID)
+	if room == nil {
+		return nil
+	}
+	if evts, ok := room.State[event.StateEncryption]; ok {
+		if evt, ok := evts[""]; ok {
+			return evt.Content.AsEncryption()
+		}
+	}
+	return nil
+}
+
 // IsEncrypted returns whether a room has been encrypted.
 func (ss *NebStateStore) IsEncrypted(roomID id.RoomID) bool {
 	room := ss.Storer.LoadRoom(roomID)
