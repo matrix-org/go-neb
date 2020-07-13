@@ -159,10 +159,6 @@ func (c *Clients) onMessageEvent(botClient *BotClient, event *mevt.Event) {
 		}).Warn("Error loading services")
 	}
 
-	if err := event.Content.ParseRaw(mevt.EventMessage); err != nil {
-		return
-	}
-
 	message := event.Content.AsMessage()
 	body := message.Body
 
@@ -307,9 +303,6 @@ func (c *Clients) onBotOptionsEvent(client *mautrix.Client, event *mevt.Event) {
 }
 
 func (c *Clients) onRoomMemberEvent(client *mautrix.Client, event *mevt.Event) {
-	if err := event.Content.ParseRaw(mevt.StateMember); err != nil {
-		return
-	}
 	if event.StateKey == nil || *event.StateKey != client.UserID.String() {
 		return // not our member event
 	}
@@ -384,10 +377,6 @@ func (c *Clients) initClient(botClient *BotClient) error {
 	// When receiving an encrypted event, attempt to decrypt it using the BotClient's capabilities.
 	// If successfully decrypted propagate the decrypted event to the clients.
 	syncer.OnEventType(mevt.EventEncrypted, func(source mautrix.EventSource, evt *mevt.Event) {
-		if err := evt.Content.ParseRaw(mevt.EventEncrypted); err != nil {
-			log.WithError(err).Error("Failed to parse encrypted message")
-			return
-		}
 		encContent := evt.Content.AsEncrypted()
 		decrypted, err := botClient.DecryptMegolmEvent(evt)
 		if err != nil {
@@ -399,12 +388,7 @@ func (c *Clients) initClient(botClient *BotClient) error {
 			}).WithError(err).Error("Failed to decrypt message")
 		} else {
 			if decrypted.Type == mevt.EventMessage {
-				err = decrypted.Content.ParseRaw(mevt.EventMessage)
-				if err != nil {
-					log.WithError(err).Error("Could not parse decrypted message event")
-				} else {
-					c.onMessageEvent(botClient, decrypted)
-				}
+				c.onMessageEvent(botClient, decrypted)
 			}
 			log.WithFields(log.Fields{
 				"type":      evt.Type,

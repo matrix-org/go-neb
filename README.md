@@ -26,13 +26,28 @@ go build github.com/matrix-org/go-neb
 BIND_ADDRESS=:4050 DATABASE_TYPE=sqlite3 DATABASE_URL=go-neb.db?_busy_timeout=5000 BASE_URL=http://localhost:4050 ./go-neb
 ```
 
-Get a Matrix user ID and access token and give it to Go-NEB:
+Get a Matrix user ID and access token. You can do this, for example, with the following curl command by replacing the user ID, password and Synapse URL with your own.
+
+```bash
+curl -X POST --header 'Content-Type: application/json' -d '{
+    "identifier": { "type": "m.id.user", "user": "nebUsername" },
+    "password": "nebPassword",
+    "type": "m.login.password"
+}' 'http://localhost:8008/_matrix/client/r0/login'
+```
+
+This is preferable to, for example, logging in via Riot and copying the access token and device ID from there, as then Riot will have uploaded its own device keys which Go-NEB won't have access to causing it to be unable to create encryption sessions.
+
+The response of this command will be a JSON object with an access token and device ID.
+
+Then, give the values to Go-NEB:
 
 ```bash
 curl -X POST localhost:4050/admin/configureClient --data-binary '{
     "UserID": "@goneb:localhost",
     "HomeserverURL": "http://localhost:8008",
     "AccessToken": "<access_token>",
+    "DeviceID": "<DEVICEID>",
     "Sync": true,
     "AutoJoinRooms": true,
     "DisplayName": "My Bot"
