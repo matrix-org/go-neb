@@ -80,6 +80,18 @@ type ClientConfig struct {
 	DisplayName string
 }
 
+// A IncomingDecimalSAS contains the decimal SAS as displayed on another device. The SAS consists of three numbers.
+type IncomingDecimalSAS struct {
+	// The matrix User ID of the user that Neb uses in the verification process. E.g. @alice:matrix.org
+	UserID id.UserID
+	// The three numbers that the SAS consists of.
+	SAS [3]uint
+	// The matrix User ID of the other user whose device is being verified.
+	OtherUserID id.UserID
+	// The matrix Device ID of the other device that is being verified.
+	OtherDeviceID id.DeviceID
+}
+
 // Session contains the complete auth session information for a given user on a given realm.
 // They are created for use with ConfigFile.
 type Session struct {
@@ -128,6 +140,14 @@ func (c *ClientConfig) Check() error {
 	}
 	if _, err := url.Parse(c.HomeserverURL); err != nil {
 		return err
+	}
+	return nil
+}
+
+// Check that the received SAS data contains the correct fields.
+func (c *IncomingDecimalSAS) Check() error {
+	if c.UserID == "" || c.OtherUserID == "" || c.OtherDeviceID == "" {
+		return errors.New(`Must supply a "UserID", an "OtherUserID", and an "OtherDeviceID"`)
 	}
 	return nil
 }

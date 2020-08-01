@@ -189,6 +189,8 @@ func setup(e envVars, mux *http.ServeMux, matrixClient *http.Client) {
 	rh := &handlers.RealmRedirect{db}
 	mux.HandleFunc("/realms/redirects/", prometheus.InstrumentHandlerFunc("realmRedirectHandler", util.Protect(rh.Handle)))
 
+	mux.Handle("/verifySAS", prometheus.InstrumentHandler("verifySAS", util.MakeJSONAPI(&handlers.VerifySAS{matrixClients})))
+
 	// Read exclusively from the config file if one was supplied.
 	// Otherwise, add HTTP listeners for new Services/Sessions/Clients/etc.
 	if e.ConfigFile != "" {

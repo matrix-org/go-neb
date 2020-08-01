@@ -1,6 +1,7 @@
 package clients
 
 import (
+	"sync"
 	"time"
 
 	"github.com/matrix-org/go-neb/api"
@@ -9,6 +10,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"maunium.net/go/mautrix"
 	"maunium.net/go/mautrix/crypto"
+	"maunium.net/go/mautrix/event"
 	mevt "maunium.net/go/mautrix/event"
 	"maunium.net/go/mautrix/id"
 )
@@ -18,9 +20,10 @@ import (
 // the client has joined.
 type BotClient struct {
 	*mautrix.Client
-	config     api.ClientConfig
-	olmMachine *crypto.OlmMachine
-	stateStore *NebStateStore
+	config          api.ClientConfig
+	olmMachine      *crypto.OlmMachine
+	stateStore      *NebStateStore
+	verificationSAS *sync.Map
 }
 
 // InitOlmMachine initializes a BotClient's internal OlmMachine given a client object and a Neb store,
@@ -54,6 +57,9 @@ func (botClient *BotClient) InitOlmMachine(client *mautrix.Client, nebStore *mat
 
 	botClient.stateStore = &NebStateStore{&nebStore.InMemoryStore}
 	olmMachine := crypto.NewOlmMachine(client, cryptoLogger, cryptoStore, botClient.stateStore)
+	olmMachine.AcceptVerificationFrom = func(_ string, _ *crypto.DeviceIdentity) (crypto.VerificationRequestResponse, crypto.VerificationHooks) {
+		return crypto.AcceptRequest, botClient
+	}
 	if err = olmMachine.Load(); err != nil {
 		return
 	}
@@ -141,4 +147,70 @@ func (botClient *BotClient) Sync() {
 			return
 		}
 	}
+}
+
+// VerifySASMatch returns whether the received SAS matches the SAS that the bot generated.
+// It retrieves the SAS of the other device from the bot client's SAS sync map, where it was stored by the `SubmitDecimalSAS` function.
+func (botClient *BotClient) VerifySASMatch(otherDevice *crypto.DeviceIdentity, sas crypto.SASData) bool {
+	log.WithFields(log.Fields{
+		"otherUser":   otherDevice.UserID,
+		"otherDevice": otherDevice.DeviceID,
+	}).Infof("Waiting for SAS")
+	if sas.Type() != event.SASDecimal {
+		log.Warnf("Unsupported SAS type: %v", sas.Type())
+		return false
+	}
+	key := otherDevice.UserID.String() + ":" + otherDevice.DeviceID.String()
+	sasChan, loaded := botClient.verificationSAS.LoadOrStore(key, make(chan crypto.DecimalSASData))
+	if !loaded {
+		// if we created the chan, delete it after the timeout duration
+		defer botClient.verificationSAS.Delete(key)
+	}
+	select {
+	case otherSAS := <-sasChan.(chan crypto.DecimalSASData):
+		ourSAS := sas.(crypto.DecimalSASData)
+		log.WithFields(log.Fields{
+			"otherUser":   otherDevice.UserID,
+			"otherDevice": otherDevice.DeviceID,
+		}).Warnf("Our SAS: %v, Received SAS: %v, Match: %v", ourSAS, otherSAS, ourSAS == otherSAS)
+		return ourSAS == otherSAS
+	case <-time.After(botClient.olmMachine.DefaultSASTimeout):
+		log.Warnf("Timed out while waiting for SAS from device %v", otherDevice.DeviceID)
+	}
+	return false
+}
+
+// SubmitDecimalSAS stores the received decimal SAS from another device to compare to the local one.
+// It stores the SAS in the bot client's SAS sync map to be retrieved from the `VerifySASMatch` function.
+func (botClient *BotClient) SubmitDecimalSAS(otherUser id.UserID, otherDevice id.DeviceID, sas crypto.DecimalSASData) {
+	key := otherUser.String() + ":" + otherDevice.String()
+	sasChan, loaded := botClient.verificationSAS.LoadOrStore(key, make(chan crypto.DecimalSASData))
+	go func() {
+		if !loaded {
+			// if we created the chan, delete it after the timeout duration
+			defer botClient.verificationSAS.Delete(key)
+		}
+		// insert to channel in goroutine to avoid blocking if we are not expecting a SAS for this user/device right now
+		select {
+		case sasChan.(chan crypto.DecimalSASData) <- crypto.DecimalSASData(sas):
+		case <-time.After(botClient.olmMachine.DefaultSASTimeout):
+			log.Warnf("Timed out while trying to send SAS for device %v", otherDevice)
+		}
+	}()
+}
+
+// VerificationMethods returns the supported SAS verification methods.
+// As a bot we only support decimal as it's easier to understand.
+func (botClient *BotClient) VerificationMethods() []crypto.VerificationMethod {
+	return []crypto.VerificationMethod{
+		crypto.VerificationMethodDecimal{},
+	}
+}
+
+// OnCancel is called when a SAS verification is canceled.
+func (botClient *BotClient) OnCancel(cancelledByUs bool, reason string, reasonCode event.VerificationCancelCode) {
+}
+
+// OnSuccess is called when a SAS verification is successful.
+func (botClient *BotClient) OnSuccess() {
 }

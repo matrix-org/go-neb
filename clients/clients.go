@@ -340,6 +340,7 @@ func (c *Clients) initClient(botClient *BotClient) error {
 		log.Warn("Device ID is not set which will result in E2E encryption/decryption not working")
 	}
 	botClient.Client = client
+	botClient.verificationSAS = &sync.Map{}
 
 	syncer := client.Syncer.(*mautrix.DefaultSyncer)
 
