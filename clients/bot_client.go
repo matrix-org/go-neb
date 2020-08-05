@@ -9,6 +9,7 @@ import (
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/matrix"
 	log "github.com/sirupsen/logrus"
+	"golang.org/x/net/context"
 	"maunium.net/go/mautrix"
 	"maunium.net/go/mautrix/crypto"
 	"maunium.net/go/mautrix/event"
@@ -235,4 +236,50 @@ func (botClient *BotClient) StartSASVerification(userID id.UserID, deviceID id.D
 		return "", err
 	}
 	return botClient.olmMachine.NewSimpleSASVerificationWith(device, botClient)
+}
+
+// SendRoomKeyRequest sends a room key request to another device.
+func (botClient *BotClient) SendRoomKeyRequest(userID id.UserID, deviceID id.DeviceID, roomID id.RoomID,
+	senderKey id.SenderKey, sessionID id.SessionID, timeout time.Duration) (chan bool, error) {
+
+	ctx, _ := context.WithTimeout(context.Background(), timeout)
+	return botClient.olmMachine.RequestRoomKey(ctx, userID, deviceID, roomID, senderKey, sessionID)
+}
+
+// ForwardRoomKeyToDevice sends a room key to another device.
+func (botClient *BotClient) ForwardRoomKeyToDevice(userID id.UserID, deviceID id.DeviceID, roomID id.RoomID, senderKey id.SenderKey,
+	sessionID id.SessionID) error {
+
+	device, err := botClient.olmMachine.GetOrFetchDevice(userID, deviceID)
+	if err != nil {
+		return err
+	}
+
+	igs, err := botClient.olmMachine.CryptoStore.GetGroupSession(roomID, senderKey, sessionID)
+	if err != nil {
+		return err
+	} else if igs == nil {
+		return errors.New("Group session not found")
+	}
+
+	exportedKey, err := igs.Internal.Export(igs.Internal.FirstKnownIndex())
+	if err != nil {
+		return err
+	}
+
+	forwardedRoomKey := event.Content{
+		Parsed: &event.ForwardedRoomKeyEventContent{
+			RoomKeyEventContent: event.RoomKeyEventContent{
+				Algorithm:  id.AlgorithmMegolmV1,
+				RoomID:     igs.RoomID,
+				SessionID:  igs.ID(),
+				SessionKey: exportedKey,
+			},
+			SenderKey:          senderKey,
+			ForwardingKeyChain: igs.ForwardingChains,
+			SenderClaimedKey:   igs.SigningKey,
+		},
+	}
+
+	return botClient.olmMachine.SendEncryptedToDevice(device, forwardedRoomKey)
 }

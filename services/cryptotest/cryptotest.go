@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 	"strconv"
+	"time"
 
 	"github.com/matrix-org/go-neb/clients"
 	"github.com/matrix-org/go-neb/types"
@@ -49,6 +50,8 @@ func (s *Service) handleEventMessage(source mautrix.EventSource, evt *mevt.Event
 // Commands supported:
 //    !crypto_response random_string
 // Responds with a notice of "some message".
+// TODO details here
+// TODO each cmd when called incorrectly (wrong # of args) should also show a msg
 func (s *Service) Commands(cli types.MatrixClient) []types.Command {
 	botClient := cli.(*clients.BotClient)
 	return []types.Command{
@@ -156,6 +159,81 @@ func (s *Service) Commands(cli types.MatrixClient) []types.Command {
 					return mevt.MessageEventContent{
 						MsgType: mevt.MsgText,
 						Body:    fmt.Sprintf("Read SAS code from user %v device %v: %v", userID, deviceID, decimalSAS),
+					}, nil
+				}
+				return nil, nil
+			},
+		},
+		{
+			Path: []string{"request_my_room_key"},
+			Command: func(roomID id.RoomID, userID id.UserID, arguments []string) (interface{}, error) {
+				if s.inRoom(roomID) && len(arguments) == 3 {
+					deviceID := id.DeviceID(arguments[0])
+					senderKey := id.SenderKey(arguments[1])
+					sessionID := id.SessionID(arguments[2])
+					receivedChan, err := botClient.SendRoomKeyRequest(userID, deviceID, roomID, senderKey, sessionID, time.Minute)
+					if err != nil {
+						log.WithFields(log.Fields{
+							"user_id":    userID,
+							"device_id":  deviceID,
+							"sender_key": senderKey,
+							"session_id": sessionID,
+						}).WithError(err).Error("Error requesting room key")
+						return mevt.MessageEventContent{
+							MsgType: mevt.MsgText,
+							Body:    fmt.Sprintf("Error requesting room key for session %v: %v", sessionID, err),
+						}, nil
+					}
+					go func() {
+						var result string
+						received := <-receivedChan
+						if received {
+							result = "Key received successfully!"
+						} else {
+							result = "Key was not received in the time limit"
+						}
+						content := mevt.MessageEventContent{
+							MsgType: mevt.MsgText,
+							Body:    fmt.Sprintf("Room key request for session %v result: %v", sessionID, result),
+						}
+						if _, err := botClient.SendMessageEvent(roomID, mevt.EventMessage, content); err != nil {
+							log.WithFields(log.Fields{
+								"room_id": roomID,
+								"content": content,
+							}).WithError(err).Error("Failed to send room key request result to room")
+						}
+					}()
+					return mevt.MessageEventContent{
+						MsgType: mevt.MsgText,
+						Body:    fmt.Sprintf("Sent room key request for session %v to device %v", sessionID, deviceID),
+					}, nil
+				}
+				return nil, nil
+			},
+		},
+		{
+			Path: []string{"forward_me_room_key"},
+			Command: func(roomID id.RoomID, userID id.UserID, arguments []string) (interface{}, error) {
+				if s.inRoom(roomID) && len(arguments) == 3 {
+					deviceID := id.DeviceID(arguments[0])
+					senderKey := id.SenderKey(arguments[1])
+					sessionID := id.SessionID(arguments[2])
+					err := botClient.ForwardRoomKeyToDevice(userID, deviceID, roomID, senderKey, sessionID)
+					if err != nil {
+						log.WithFields(log.Fields{
+							"user_id":    userID,
+							"device_id":  deviceID,
+							"sender_key": senderKey,
+							"session_id": sessionID,
+						}).WithError(err).Error("Error forwarding room key")
+						return mevt.MessageEventContent{
+							MsgType: mevt.MsgText,
+							Body:    fmt.Sprintf("Error forwarding room key for session %v: %v", sessionID, err),
+						}, nil
+					}
+					return mevt.MessageEventContent{
+						MsgType: mevt.MsgText,
+						Body:    fmt.Sprintf("Forwarded room key for session %v to device %v", sessionID, deviceID),
 					}, nil
 				}
 				return nil, nil
