@@ -202,7 +202,7 @@ Before submitting pull requests, please read the [Matrix.org contribution guidel
 # Developing
 
 This project depends on `libolm` for the end-to-end encryption. Therefore,
-you need to install `libolm2` and `libolm-dev` on Ubuntu / `libolm-devel` on
+you need to install `libolm3` and `libolm-dev` on Ubuntu / `libolm-devel` on
 CentOS to be able to build and run it.
 
 There's a bunch more tools this project uses when developing in order to do
