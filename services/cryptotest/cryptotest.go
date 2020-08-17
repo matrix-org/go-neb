@@ -1,5 +1,5 @@
-// Package echo implements a Service which echoes back !commands.
-package echo
+// Package cryptotest implements a Service which provides several commands for testing the e2e functionalities of other devices.
+package cryptotest
 
 import (
 	"fmt"
@@ -16,7 +16,7 @@ import (
 	"maunium.net/go/mautrix/id"
 )
 
-// ServiceType of the Echo service
+// ServiceType of the Cryptotest service
 const ServiceType = "cryptotest"
 
 var expectedString map[id.RoomID]string
