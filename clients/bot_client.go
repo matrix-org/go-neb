@@ -241,7 +241,7 @@ func (botClient *BotClient) VerificationMethods() []crypto.VerificationMethod {
 // OnCancel is called when a SAS verification is canceled.
 func (botClient *BotClient) OnCancel(cancelledByUs bool, reason string, reasonCode event.VerificationCancelCode) {
 	atomic.AddInt32(&botClient.ongoingVerificationCount, -1)
-	log.Trace("Verification cancelled with reason: %v", reason)
+	log.Tracef("Verification cancelled with reason: %v", reason)
 }
 
 // OnSuccess is called when a SAS verification is successful.
