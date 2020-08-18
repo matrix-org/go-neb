@@ -4,6 +4,7 @@ import (
 	"errors"
 	"regexp"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/matrix-org/go-neb/api"
@@ -18,15 +19,20 @@ import (
 	"maunium.net/go/mautrix/id"
 )
 
+// maximumVerifications is the number of maximum ongoing SAS verifications at a time.
+// After this limit we start ignoring verification requests.
+const maximumVerifications = 100
+
 // BotClient represents one of the bot's sessions, with a specific User and Device ID.
 // It can be used for sending messages and retrieving information about the rooms that
 // the client has joined.
 type BotClient struct {
 	*mautrix.Client
-	config          api.ClientConfig
-	olmMachine      *crypto.OlmMachine
-	stateStore      *NebStateStore
-	verificationSAS *sync.Map
+	config                   api.ClientConfig
+	olmMachine               *crypto.OlmMachine
+	stateStore               *NebStateStore
+	verificationSAS          *sync.Map
+	ongoingVerificationCount int32
 }
 
 // InitOlmMachine initializes a BotClient's internal OlmMachine given a client object and a Neb store,
@@ -73,7 +79,12 @@ func (botClient *BotClient) InitOlmMachine(client *mautrix.Client, nebStore *mat
 	olmMachine.AcceptVerificationFrom = func(_ string, otherDevice *crypto.DeviceIdentity) (crypto.VerificationRequestResponse, crypto.VerificationHooks) {
 		for _, regex := range regexes {
 			if regex.MatchString(otherDevice.UserID.String()) {
+				if atomic.LoadInt32(&botClient.ongoingVerificationCount) >= maximumVerifications {
+					cryptoLogger.Trace("User ID %v matches regex %v but we are currently at maximum verifications, ignoring...", otherDevice.UserID, regex)
+					return crypto.IgnoreRequest, botClient
+				}
 				cryptoLogger.Trace("User ID %v matches regex %v, accepting SAS request", otherDevice.UserID, regex)
+				atomic.AddInt32(&botClient.ongoingVerificationCount, 1)
 				return crypto.AcceptRequest, botClient
 			}
 		}
@@ -229,10 +240,14 @@ func (botClient *BotClient) VerificationMethods() []crypto.VerificationMethod {
 
 // OnCancel is called when a SAS verification is canceled.
 func (botClient *BotClient) OnCancel(cancelledByUs bool, reason string, reasonCode event.VerificationCancelCode) {
+	atomic.AddInt32(&botClient.ongoingVerificationCount, -1)
+	log.Trace("Verification cancelled with reason: %v", reason)
 }
 
 // OnSuccess is called when a SAS verification is successful.
 func (botClient *BotClient) OnSuccess() {
+	atomic.AddInt32(&botClient.ongoingVerificationCount, -1)
+	log.Trace("Verification was successful")
 }
 
 // InvalidateRoomSession invalidates the outbound group session for the given room.
