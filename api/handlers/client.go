@@ -100,11 +100,11 @@ func (s *VerifySAS) OnIncomingRequest(req *http.Request) util.JSONResponse {
 
 	var body api.IncomingDecimalSAS
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
-		return util.MessageResponse(400, "Error parsing request JSON")
+		return util.MessageResponse(400, "Error parsing request JSON: "+err.Error())
 	}
 
 	if err := body.Check(); err != nil {
-		return util.MessageResponse(400, "Error parsing client config")
+		return util.MessageResponse(400, "Request error: "+err.Error())
 	}
 
 	client, err := s.Clients.Client(body.UserID)

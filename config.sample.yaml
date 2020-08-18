@@ -26,6 +26,7 @@ clients:
     Sync: true
     AutoJoinRooms: true
     DisplayName: "Go-NEB!"
+    AcceptVerificationFromUsers: [":localhost:8008"]
 
   - UserID: "@another_goneb:localhost"
     AccessToken: "MDASDASJDIASDJASDAFGFRGER"
@@ -34,6 +35,7 @@ clients:
     Sync: false
     AutoJoinRooms: false
     DisplayName: "Go-NEB!"
+    AcceptVerificationFromUsers: ["^@admin:localhost:8008$"]
 
 # The list of realms which Go-NEB is aware of.
 # Delete or modify this list as appropriate.

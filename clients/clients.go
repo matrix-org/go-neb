@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"reflect"
 	"strings"
 	"sync"
 
@@ -111,7 +112,7 @@ func (c *Clients) updateClientInDB(newConfig api.ClientConfig) (new, old BotClie
 	defer c.dbMutex.Unlock()
 
 	old = c.getClient(newConfig.UserID)
-	if old.Client != nil && old.config == newConfig {
+	if old.Client != nil && reflect.DeepEqual(old.config, newConfig) {
 		// Already have a client with that config.
 		new = old
 		return

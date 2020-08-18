@@ -2,6 +2,7 @@ package clients
 
 import (
 	"errors"
+	"regexp"
 	"sync"
 	"time"
 
@@ -59,8 +60,25 @@ func (botClient *BotClient) InitOlmMachine(client *mautrix.Client, nebStore *mat
 
 	botClient.stateStore = &NebStateStore{&nebStore.InMemoryStore}
 	olmMachine := crypto.NewOlmMachine(client, cryptoLogger, cryptoStore, botClient.stateStore)
-	olmMachine.AcceptVerificationFrom = func(_ string, _ *crypto.DeviceIdentity) (crypto.VerificationRequestResponse, crypto.VerificationHooks) {
-		return crypto.AcceptRequest, botClient
+
+	regexes := make([]*regexp.Regexp, 0, len(botClient.config.AcceptVerificationFromUsers))
+	for _, userRegex := range botClient.config.AcceptVerificationFromUsers {
+		regex, err := regexp.Compile(userRegex)
+		if err != nil {
+			cryptoLogger.Error("Error compiling regex %v: %v", userRegex, err)
+		} else {
+			regexes = append(regexes, regex)
+		}
+	}
+	olmMachine.AcceptVerificationFrom = func(_ string, otherDevice *crypto.DeviceIdentity) (crypto.VerificationRequestResponse, crypto.VerificationHooks) {
+		for _, regex := range regexes {
+			if regex.MatchString(otherDevice.UserID.String()) {
+				cryptoLogger.Trace("User ID %v matches regex %v, accepting SAS request", otherDevice.UserID, regex)
+				return crypto.AcceptRequest, botClient
+			}
+		}
+		cryptoLogger.Trace("User ID %v does not match any regex, rejecting SAS request", otherDevice.UserID)
+		return crypto.RejectRequest, botClient
 	}
 	if err = olmMachine.Load(); err != nil {
 		return

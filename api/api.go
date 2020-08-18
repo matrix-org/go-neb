@@ -78,11 +78,15 @@ type ClientConfig struct {
 	// The desired display name for this client.
 	// This does not automatically set the display name for this client. See /configureClient.
 	DisplayName string
+	// A list of regexes that control which users are allowed to start a SAS verification with this client.
+	// When a user starts a new SAS verification with us, their user ID has to match one of these regexes
+	// for the verification process to start.
+	AcceptVerificationFromUsers []string
 }
 
 // A IncomingDecimalSAS contains the decimal SAS as displayed on another device. The SAS consists of three numbers.
 type IncomingDecimalSAS struct {
-	// The matrix User ID of the user that Neb uses in the verification process. E.g. @alice:matrix.org
+	// The matrix User ID of the user that Neb uses in the verification process. E.g. @neb:localhost
 	UserID id.UserID
 	// The three numbers that the SAS consists of.
 	SAS [3]uint
