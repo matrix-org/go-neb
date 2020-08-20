@@ -13,6 +13,7 @@ Go-NEB is a [Matrix](https://matrix.org) bot written in Go. It is the successor 
     * [Configuring clients](#configuring-clients)
     * [Configuring services](#configuring-services)
     * [Configuring realms](#configuring-realms)
+    * [SAS verification](#sas-verification)
  * [Developing](#developing)
     * [Architecture](#architecture)
     * [API Docs](#viewing-the-api-docs)
@@ -178,6 +179,22 @@ Authentication via the config file:
  - [Github](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/realms/github/index.html#Session)
  - [JIRA](https://matrix-org.github.io/go-neb/pkg/github.com/matrix-org/go-neb/realms/jira/index.html#Session)
 
+## SAS verification
+Go-NEB supports SAS verification using the decimal method. Another user can start a verification transaction with Go-NEB using their client, and it will be accepted. In order to confirm the devices, the 3 SAS integers must then be sent to Go-NEB, to the endpoint '/verifySAS' so that it can mark the device as trusted.
+
+For example, if your user ID is `@user:localhost` and your device ID is `ABCD`, you start a SAS verification with Go-NEB and get the SAS "1111 2222 3333". You can perform the following curl request to let Go-NEB know the SAS integers so that it can match them with its own:
+
+```bash
+curl -X POST --header 'Content-Type: application/json' -d '{
+    "UserID": "@neb:localhost",
+    "OtherUserID": "@user:localhost",
+    "OtherDeviceID": "ABCD",
+    "SAS": [1111,2222,3333]
+}' 'http://localhost:4050/verifySAS'
+```
+
+If the SAS match and you also confirm that via the other device's client, the verification should finish successfully.
+
 # Contributing
 
 Before submitting pull requests, please read the [Matrix.org contribution guidelines](https://github.com/matrix-org/synapse/blob/develop/CONTRIBUTING.md#sign-off) regarding sign-off of your work.
@@ -185,7 +202,7 @@ Before submitting pull requests, please read the [Matrix.org contribution guidel
 # Developing
 
 This project depends on `libolm` for the end-to-end encryption. Therefore,
-you need to install `libolm2` and `libolm-dev` on Ubuntu / `libolm-devel` on
+you need to install `libolm3` and `libolm-dev` on Ubuntu / `libolm-devel` on
 CentOS to be able to build and run it.
 
 There's a bunch more tools this project uses when developing in order to do

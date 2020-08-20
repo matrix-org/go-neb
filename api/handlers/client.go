@@ -7,6 +7,7 @@ import (
 	"github.com/matrix-org/go-neb/api"
 	"github.com/matrix-org/go-neb/clients"
 	"github.com/matrix-org/util"
+	"maunium.net/go/mautrix/crypto"
 )
 
 // ConfigureClient represents an HTTP handler capable of processing /admin/configureClient requests.
@@ -65,5 +66,57 @@ func (s *ConfigureClient) OnIncomingRequest(req *http.Request) util.JSONResponse
 			OldClient api.ClientConfig
 			NewClient api.ClientConfig
 		}{oldClient, body},
+	}
+}
+
+// VerifySAS represents an HTTP handler capable of processing /verifySAS requests.
+type VerifySAS struct {
+	Clients *clients.Clients
+}
+
+// OnIncomingRequest handles POST requests to /verifySAS. The JSON object provided
+// is of type "api.IncomingDecimalSAS".
+//
+// The request should contain the three decimal SAS numbers as displayed on the other device that is being verified,
+// as well as that device's user and device ID.
+// It should also contain the user ID that Go-NEB's client is using.
+//
+// Request:
+//  POST /verifySAS
+//  {
+//      "UserID": "@my_bot:localhost", // Neb's user ID
+//      "OtherUserID": "@user:localhost", // User ID of device we're verifying with
+//      "OtherDeviceID": "ABCDEFG", // Device ID of device we're verifying with
+//      "SAS": [1111, 2222, 3333] // SAS displayed on device we're verifying with
+//  }
+//
+// Response:
+//  HTTP/1.1 200 OK
+//  {}
+func (s *VerifySAS) OnIncomingRequest(req *http.Request) util.JSONResponse {
+	if req.Method != "POST" {
+		return util.MessageResponse(405, "Unsupported Method")
+	}
+
+	var body api.IncomingDecimalSAS
+	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
+		return util.MessageResponse(400, "Error parsing request JSON: "+err.Error())
+	}
+
+	if err := body.Check(); err != nil {
+		return util.MessageResponse(400, "Request error: "+err.Error())
+	}
+
+	client, err := s.Clients.Client(body.UserID)
+	if err != nil {
+		util.GetLogger(req.Context()).WithError(err).WithField("body", body).Error("Failed to load client")
+		return util.MessageResponse(500, "Error storing SAS")
+	}
+
+	client.SubmitDecimalSAS(body.OtherUserID, body.OtherDeviceID, crypto.DecimalSASData(body.SAS))
+
+	return util.JSONResponse{
+		Code: 200,
+		JSON: struct{}{},
 	}
 }

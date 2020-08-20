@@ -4,11 +4,14 @@ import (
 	"fmt"
 	"net/http"
 	"reflect"
+	"sync"
 	"testing"
+	"time"
 
 	"github.com/matrix-org/go-neb/database"
 	"github.com/matrix-org/go-neb/types"
 	"maunium.net/go/mautrix"
+	"maunium.net/go/mautrix/crypto"
 	mevt "maunium.net/go/mautrix/event"
 	"maunium.net/go/mautrix/id"
 )
@@ -102,4 +105,49 @@ func TestCommandParsing(t *testing.T) {
 		}
 	}
 
+}
+
+func TestSASVerificationHandling(t *testing.T) {
+	botClient := BotClient{verificationSAS: &sync.Map{}}
+	botClient.olmMachine = &crypto.OlmMachine{
+		DefaultSASTimeout: time.Minute,
+	}
+	otherUserID := id.UserID("otherUser")
+	otherDeviceID := id.DeviceID("otherDevice")
+	otherDevice := &crypto.DeviceIdentity{
+		UserID:   otherUserID,
+		DeviceID: otherDeviceID,
+	}
+	botClient.SubmitDecimalSAS(otherUserID, otherDeviceID, crypto.DecimalSASData([3]uint{4, 5, 6}))
+	matched := botClient.VerifySASMatch(otherDevice, crypto.DecimalSASData([3]uint{1, 2, 3}))
+	if matched {
+		t.Error("SAS matched when they shouldn't have")
+	}
+
+	botClient.SubmitDecimalSAS(otherUserID, otherDeviceID, crypto.DecimalSASData([3]uint{1, 2, 3}))
+	matched = botClient.VerifySASMatch(otherDevice, crypto.DecimalSASData([3]uint{1, 2, 3}))
+	if !matched {
+		t.Error("Expected SAS to match but they didn't")
+	}
+
+	botClient.SubmitDecimalSAS(otherUserID+"wrong", otherDeviceID, crypto.DecimalSASData([3]uint{4, 5, 6}))
+	finished := make(chan bool)
+	go func() {
+		matched := botClient.VerifySASMatch(otherDevice, crypto.DecimalSASData([3]uint{1, 2, 3}))
+		finished <- true
+		if !matched {
+			t.Error("SAS didn't match when it should have (receiving SAS after calling verification func)")
+		}
+	}()
+	select {
+	case <-finished:
+		t.Error("Verification finished before receiving the SAS from the correct user")
+	default:
+	}
+	botClient.SubmitDecimalSAS(otherUserID, otherDeviceID, crypto.DecimalSASData([3]uint{1, 2, 3}))
+	select {
+	case <-finished:
+	case <-time.After(10 * time.Second):
+		t.Error("Verification did not finish after receiving the SAS from the correct user")
+	}
 }

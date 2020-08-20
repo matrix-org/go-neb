@@ -21,6 +21,7 @@ import (
 	_ "github.com/matrix-org/go-neb/realms/jira"
 
 	_ "github.com/matrix-org/go-neb/services/alertmanager"
+	_ "github.com/matrix-org/go-neb/services/cryptotest"
 	_ "github.com/matrix-org/go-neb/services/echo"
 	_ "github.com/matrix-org/go-neb/services/giphy"
 	_ "github.com/matrix-org/go-neb/services/github"
@@ -188,6 +189,8 @@ func setup(e envVars, mux *http.ServeMux, matrixClient *http.Client) {
 	mux.HandleFunc("/services/hooks/", prometheus.InstrumentHandlerFunc("webhookHandler", util.Protect(wh.Handle)))
 	rh := &handlers.RealmRedirect{db}
 	mux.HandleFunc("/realms/redirects/", prometheus.InstrumentHandlerFunc("realmRedirectHandler", util.Protect(rh.Handle)))
+
+	mux.Handle("/verifySAS", prometheus.InstrumentHandler("verifySAS", util.MakeJSONAPI(&handlers.VerifySAS{matrixClients})))
 
 	// Read exclusively from the config file if one was supplied.
 	// Otherwise, add HTTP listeners for new Services/Sessions/Clients/etc.

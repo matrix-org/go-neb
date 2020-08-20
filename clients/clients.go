@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"reflect"
 	"strings"
 	"sync"
 
@@ -111,7 +112,7 @@ func (c *Clients) updateClientInDB(newConfig api.ClientConfig) (new, old BotClie
 	defer c.dbMutex.Unlock()
 
 	old = c.getClient(newConfig.UserID)
-	if old.Client != nil && old.config == newConfig {
+	if old.Client != nil && reflect.DeepEqual(old.config, newConfig) {
 		// Already have a client with that config.
 		new = old
 		return
@@ -340,6 +341,7 @@ func (c *Clients) initClient(botClient *BotClient) error {
 		log.Warn("Device ID is not set which will result in E2E encryption/decryption not working")
 	}
 	botClient.Client = client
+	botClient.verificationSAS = &sync.Map{}
 
 	syncer := client.Syncer.(*mautrix.DefaultSyncer)
 

@@ -4,8 +4,9 @@ language: go
 go:
  - 1.14
 install:
+ - echo 'deb http://archive.ubuntu.com/ubuntu/ focal universe' | sudo tee -a /etc/apt/sources.list
  - sudo apt-get update
- - sudo apt-get -y install libolm2 libolm-dev
+ - sudo apt-get -y install libolm3 libolm-dev
  - go get golang.org/x/lint/golint
  - go get github.com/fzipp/gocyclo
 
