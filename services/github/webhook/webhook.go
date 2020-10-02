@@ -156,7 +156,7 @@ func pullRequestHTMLMessage(p github.PullRequestEvent) string {
 		actionTarget = fmt.Sprintf(" to %s", *p.PullRequest.Assignee.Login)
 	}
 
-	var prAction = *p.Action
+	prAction := *p.Action
 	if prAction == "closed" && *p.PullRequest.Merged {
 		prAction = "merged"
 	}
