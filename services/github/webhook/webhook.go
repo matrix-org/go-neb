@@ -155,11 +155,17 @@ func pullRequestHTMLMessage(p github.PullRequestEvent) string {
 	if p.PullRequest.Assignee != nil && p.PullRequest.Assignee.Login != nil {
 		actionTarget = fmt.Sprintf(" to %s", *p.PullRequest.Assignee.Login)
 	}
+
+	prAction := *p.Action
+	if prAction == "closed" && *p.PullRequest.Merged {
+		prAction = "merged"
+	}
+
 	return fmt.Sprintf(
 		"[<u>%s</u>] %s %s <b>pull request #%d</b>: %s [%s]%s - %s",
 		html.EscapeString(*p.Repo.FullName),
 		html.EscapeString(*p.Sender.Login),
-		html.EscapeString(*p.Action),
+		html.EscapeString(prAction),
 		*p.Number,
 		html.EscapeString(*p.PullRequest.Title),
 		html.EscapeString(*p.PullRequest.State),
