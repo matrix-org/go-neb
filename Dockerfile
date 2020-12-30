@@ -10,7 +10,7 @@ RUN git clone https://gitlab.matrix.org/matrix-org/olm.git /tmp/libolm \
 COPY . /tmp/go-neb
 WORKDIR /tmp/go-neb
 RUN go get golang.org/x/lint/golint \
-    && go get github.com/fzipp/gocyclo \
+    && go get github.com/fzipp/gocyclo/cmd/gocyclo \
     && go build github.com/matrix-org/go-neb
 
 # Ensures we're lint-free
