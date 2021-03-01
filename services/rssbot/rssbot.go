@@ -215,7 +215,10 @@ func (s *Service) OnPoll(cli types.MatrixClient) time.Time {
 					"feed_url":   u,
 					log.ErrorKey: err,
 					"item":       item,
-				}).Error("Failed to send item to room")
+				}).Error("Failed to send item to room due to 429; aborting further sends")
+				// no point continuing if we errored due to a 429 - we'll just hit the rate limit
+				// again and again
+				break
 			}
 		}
 	}
@@ -415,7 +418,12 @@ func (s *Service) sendToRooms(cli types.MatrixClient, feedURL string, feed *gofe
 	logger.Info("Sending new feed item")
 	for _, roomID := range s.Feeds[feedURL].Rooms {
 		if _, err := cli.SendMessageEvent(roomID, mevt.EventMessage, itemToHTML(feed, item)); err != nil {
-			logger.WithError(err).WithField("room_id", roomID).Error("Failed to send to room")
+			if err.code = 429  {
+				return err
+			}
+			else {
+				logger.WithError(err).WithField("room_id", roomID).Error("Failed to send to room")
+			}
 		}
 	}
 	return nil
