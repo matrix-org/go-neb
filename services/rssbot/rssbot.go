@@ -418,7 +418,7 @@ func (s *Service) sendToRooms(cli types.MatrixClient, feedURL string, feed *gofe
 	logger.Info("Sending new feed item")
 	for _, roomID := range s.Feeds[feedURL].Rooms {
 		if _, err := cli.SendMessageEvent(roomID, mevt.EventMessage, itemToHTML(feed, item)); err != nil {
-			if err.code == 429  {
+			if err.Code == 429  {
 				return err
 			} else {
 				logger.WithError(err).WithField("room_id", roomID).Error("Failed to send to room")
