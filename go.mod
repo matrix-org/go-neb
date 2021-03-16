@@ -3,7 +3,6 @@ module github.com/matrix-org/go-neb
 go 1.14
 
 require (
-	github.com/PuerkitoBio/goquery v1.5.1 // indirect
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
 	github.com/alecthomas/units v0.0.0-20190717042225-c3de453c63f4 // indirect
 	github.com/andygrunwald/go-jira v1.11.0
@@ -51,5 +50,6 @@ require (
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6 // indirect
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/yaml.v2 v2.3.0
+	layeh.com/gumble v0.0.0-20200818122324-146f9205029b
 	maunium.net/go/mautrix v0.7.0
 )
