@@ -1,0 +1,34 @@
+name: CI
+on:
+  pull_request:
+    paths:
+      - '**.go'
+    branches:
+      - master
+  push:
+    paths:
+      - '**.go'
+    branches:
+      - master
+    tags-ignore:
+      - '**'
+
+jobs:
+  test:
+    name: Run the tests
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Setup Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: '~1.16.4'
+    - name: Install libolm
+      run: sudo apt-get -y install libolm3 libolm-dev
+    - name: Install linters
+      run: |
+        go install honnef.co/go/tools/cmd/staticcheck@latest
+        go install github.com/fzipp/gocyclo/cmd/gocyclo@latest
+    - name: Lint and test
+      run: sh ./hooks/pre-commit

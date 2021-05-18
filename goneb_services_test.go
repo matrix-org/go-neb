@@ -103,6 +103,7 @@ func TestRespondToEcho(t *testing.T) {
 		"UserID": "@link:hyrule",
 		"Config": {}
 	}`))
+
 	mux.ServeHTTP(mockWriter, serviceConfigReq)
 
 	// send neb an invite to a room
