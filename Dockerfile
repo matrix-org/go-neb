@@ -1,5 +1,5 @@
 # Build go-neb
-FROM golang:1.14-alpine as builder
+FROM golang:1.16-alpine as builder
 
 RUN apk add --no-cache -t build-deps git gcc musl-dev go make g++
 
@@ -17,7 +17,7 @@ RUN go get golang.org/x/lint/golint \
 RUN /tmp/go-neb/hooks/pre-commit
 
 # Run go-neb
-FROM alpine:3.7
+FROM alpine:3.13
 
 ENV BIND_ADDRESS=:4050 \
     DATABASE_TYPE=sqlite3 \
