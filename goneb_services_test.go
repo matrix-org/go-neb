@@ -184,6 +184,10 @@ func TestEncryptedRespondToEcho(t *testing.T) {
 		return newResponse(200, `{}`), nil
 	})
 
+	mxTripper.Handle("POST", "/_matrix/client/r0/keys/query", func(req *http.Request) (*http.Response, error) {
+		return newResponse(200, `{}`), nil
+	})
+
 	var joinedRoom string
 	var joinedRoomBody []byte
 	mxTripper.Handle("POST", "/_matrix/client/r0/join/*", func(req *http.Request) (*http.Response, error) {

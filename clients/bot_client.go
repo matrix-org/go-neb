@@ -76,7 +76,7 @@ func (botClient *BotClient) InitOlmMachine(client *mautrix.Client, nebStore *mat
 			regexes = append(regexes, regex)
 		}
 	}
-	olmMachine.AcceptVerificationFrom = func(_ string, otherDevice *crypto.DeviceIdentity) (crypto.VerificationRequestResponse, crypto.VerificationHooks) {
+	olmMachine.AcceptVerificationFrom = func(_ string, otherDevice *crypto.DeviceIdentity, _ id.RoomID) (crypto.VerificationRequestResponse, crypto.VerificationHooks) {
 		for _, regex := range regexes {
 			if regex.MatchString(otherDevice.UserID.String()) {
 				if atomic.LoadInt32(&botClient.ongoingVerificationCount) >= maximumVerifications {
@@ -159,7 +159,7 @@ func (botClient *BotClient) SendMessageEvent(roomID id.RoomID, evtType mevt.Type
 // Sync loops to keep syncing the client with the homeserver by calling the /sync endpoint.
 func (botClient *BotClient) Sync() {
 	// Get the state store up to date
-	resp, err := botClient.SyncRequest(30000, "", "", true, mevt.PresenceOnline)
+	resp, err := botClient.SyncRequest(30000, "", "", true, mevt.PresenceOnline, context.TODO())
 	if err != nil {
 		log.WithError(err).Error("Error performing initial sync")
 		return
@@ -314,5 +314,5 @@ func (botClient *BotClient) ForwardRoomKeyToDevice(userID id.UserID, deviceID id
 		},
 	}
 
-	return botClient.olmMachine.SendEncryptedToDevice(device, forwardedRoomKey)
+	return botClient.olmMachine.SendEncryptedToDevice(device, mevt.ToDeviceForwardedRoomKey, forwardedRoomKey)
 }
