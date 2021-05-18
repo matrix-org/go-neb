@@ -14,7 +14,6 @@ import (
 	"golang.org/x/net/context"
 	"maunium.net/go/mautrix"
 	"maunium.net/go/mautrix/crypto"
-	"maunium.net/go/mautrix/event"
 	mevt "maunium.net/go/mautrix/event"
 	"maunium.net/go/mautrix/id"
 )
@@ -57,6 +56,7 @@ func (botClient *BotClient) InitOlmMachine(client *mautrix.Client, nebStore *mat
 		if deviceID == "" {
 			deviceID = "_empty_device_id"
 		}
+		//lint:ignore SA1019 old code, unsure what happens when we change it
 		cryptoStore, err = crypto.NewGobStore(deviceID + ".gob")
 		if err != nil {
 			return
@@ -187,7 +187,7 @@ func (botClient *BotClient) VerifySASMatch(otherDevice *crypto.DeviceIdentity, s
 		"otherUser":   otherDevice.UserID,
 		"otherDevice": otherDevice.DeviceID,
 	}).Infof("Waiting for SAS")
-	if sas.Type() != event.SASDecimal {
+	if sas.Type() != mevt.SASDecimal {
 		log.Warnf("Unsupported SAS type: %v", sas.Type())
 		return false
 	}
@@ -239,7 +239,7 @@ func (botClient *BotClient) VerificationMethods() []crypto.VerificationMethod {
 }
 
 // OnCancel is called when a SAS verification is canceled.
-func (botClient *BotClient) OnCancel(cancelledByUs bool, reason string, reasonCode event.VerificationCancelCode) {
+func (botClient *BotClient) OnCancel(cancelledByUs bool, reason string, reasonCode mevt.VerificationCancelCode) {
 	atomic.AddInt32(&botClient.ongoingVerificationCount, -1)
 	log.Tracef("Verification cancelled with reason: %v", reason)
 }
@@ -300,9 +300,9 @@ func (botClient *BotClient) ForwardRoomKeyToDevice(userID id.UserID, deviceID id
 		return err
 	}
 
-	forwardedRoomKey := event.Content{
-		Parsed: &event.ForwardedRoomKeyEventContent{
-			RoomKeyEventContent: event.RoomKeyEventContent{
+	forwardedRoomKey := mevt.Content{
+		Parsed: &mevt.ForwardedRoomKeyEventContent{
+			RoomKeyEventContent: mevt.RoomKeyEventContent{
 				Algorithm:  id.AlgorithmMegolmV1,
 				RoomID:     igs.RoomID,
 				SessionID:  igs.ID(),

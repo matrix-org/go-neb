@@ -168,7 +168,7 @@ func (s *ConfigureService) createService(req *http.Request) (types.Service, *uti
 
 // GetService represents an HTTP handler which can process /admin/getService requests.
 type GetService struct {
-	Db *database.ServiceDB
+	DB *database.ServiceDB
 }
 
 // OnIncomingRequest handles POST requests to /admin/getService.
@@ -205,7 +205,7 @@ func (h *GetService) OnIncomingRequest(req *http.Request) util.JSONResponse {
 		return util.MessageResponse(400, `Must supply a "ID"`)
 	}
 
-	srv, err := h.Db.LoadService(body.ID)
+	srv, err := h.DB.LoadService(body.ID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return util.MessageResponse(404, `Service not found`)

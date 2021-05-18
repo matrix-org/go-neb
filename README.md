@@ -212,8 +212,8 @@ things like linting. Some of them are bundled with go (fmt and vet) but some
 are not. You should install the ones which are not:
 
 ```bash
-go get golang.org/x/lint/golint
-go get github.com/fzipp/gocyclo
+go install honnef.co/go/tools/cmd/staticcheck@latest
+go install github.com/fzipp/gocyclo/cmd/gocyclo@latest
 ```
 
 You can then install the pre-commit hook:

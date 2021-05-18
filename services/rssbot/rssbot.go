@@ -243,21 +243,21 @@ func incrementMetrics(urlStr string, err error) {
 
 func (s *Service) nextTimestamp() time.Time {
 	// return the earliest next poll ts
-	var earliestNextTs int64
+	var earliestNextTS int64
 	for _, feedInfo := range s.Feeds {
-		if earliestNextTs == 0 || feedInfo.NextPollTimestampSecs < earliestNextTs {
-			earliestNextTs = feedInfo.NextPollTimestampSecs
+		if earliestNextTS == 0 || feedInfo.NextPollTimestampSecs < earliestNextTS {
+			earliestNextTS = feedInfo.NextPollTimestampSecs
 		}
 	}
 
 	// Don't allow times in the past. Set a min re-poll threshold of 60s to avoid
 	// tight-looping on feeds which 500.
 	now := time.Now().Unix()
-	if earliestNextTs <= now {
-		earliestNextTs = now + 60
+	if earliestNextTS <= now {
+		earliestNextTS = now + 60
 	}
 
-	return time.Unix(earliestNextTs, 0)
+	return time.Unix(earliestNextTS, 0)
 }
 
 // Query the given feed, update relevant timestamps and return NEW items
@@ -291,9 +291,9 @@ func (s *Service) queryFeed(feedURL string) (*gofeed.Feed, []gofeed.Item, error)
 	now := time.Now().Unix() // Second resolution
 
 	// Work out when to next poll this feed
-	nextPollTsSec := now + minPollingIntervalSeconds
+	nextPollTSSec := now + minPollingIntervalSeconds
 	if s.Feeds[feedURL].PollIntervalMins > int(minPollingIntervalSeconds/60) {
-		nextPollTsSec = now + int64(s.Feeds[feedURL].PollIntervalMins*60)
+		nextPollTSSec = now + int64(s.Feeds[feedURL].PollIntervalMins*60)
 	}
 	// TODO: Handle the 'sy' Syndication extension to control update interval.
 	// See http://www.feedforall.com/syndication.htm and http://web.resource.org/rss/1.0/modules/syndication/
@@ -323,7 +323,7 @@ func (s *Service) queryFeed(feedURL string) (*gofeed.Feed, []gofeed.Item, error)
 	}
 
 	// Update the service config to persist the new times
-	f.NextPollTimestampSecs = nextPollTsSec
+	f.NextPollTimestampSecs = nextPollTSSec
 	f.FeedUpdatedTimestampSecs = now
 	f.RecentGUIDs = guids
 	f.IsFailing = false

@@ -118,10 +118,10 @@ func pollLoop(service types.Service, ts int64) {
 }
 
 // setPollStartTime clobbers the current poll time
-func setPollStartTime(service types.Service, startTs int64) {
+func setPollStartTime(service types.Service, startTS int64) {
 	pollMutex.Lock()
 	defer pollMutex.Unlock()
-	startPollTime[service.ServiceID()] = startTs
+	startPollTime[service.ServiceID()] = startTS
 }
 
 // pollTimeChanged returns true if the poll start time for this service ID is different to the one supplied.
