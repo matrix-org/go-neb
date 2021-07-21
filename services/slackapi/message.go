@@ -37,7 +37,7 @@ type slackAttachment struct {
 	TextRendered template.HTML
 
 	MrkdwnIn []string `json:"mrkdwn_in"`
-	Ts       *int64   `json:"ts"`
+	TS       *int64   `json:"ts"`
 }
 
 type slackMessage struct {
@@ -86,7 +86,7 @@ var netClient = &http.Client{
 }
 
 // TODO: What does this do?
-var linkRegex, _ = regexp.Compile("<([^|]+)(\\|([^>]+))?>")
+var linkRegex, _ = regexp.Compile(`<([^|]+)(\|([^>]+))?>`)
 
 func getSlackMessage(req http.Request) (message slackMessage, err error) {
 	ct := req.Header.Get("Content-Type")
@@ -197,7 +197,7 @@ func renderSlackAttachment(attachment *slackAttachment) {
 
 func slackMessageToHTMLMessage(message slackMessage) (html mevt.MessageEventContent, err error) {
 	text := linkifyString(message.Text)
-	if message.Mrkdwn == nil || *message.Mrkdwn == true {
+	if message.Mrkdwn == nil || *message.Mrkdwn {
 		message.TextRendered = template.HTML(blackfriday.MarkdownBasic([]byte(text)))
 	}
 

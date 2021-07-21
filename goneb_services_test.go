@@ -103,6 +103,7 @@ func TestRespondToEcho(t *testing.T) {
 		"UserID": "@link:hyrule",
 		"Config": {}
 	}`))
+
 	mux.ServeHTTP(mockWriter, serviceConfigReq)
 
 	// send neb an invite to a room
@@ -180,6 +181,10 @@ func TestEncryptedRespondToEcho(t *testing.T) {
 	}
 
 	mxTripper.Handle("POST", "/_matrix/client/r0/keys/upload", func(req *http.Request) (*http.Response, error) {
+		return newResponse(200, `{}`), nil
+	})
+
+	mxTripper.Handle("POST", "/_matrix/client/r0/keys/query", func(req *http.Request) (*http.Response, error) {
 		return newResponse(200, `{}`), nil
 	})
 

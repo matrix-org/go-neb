@@ -20,7 +20,7 @@ Go-NEB is a [Matrix](https://matrix.org) bot written in Go. It is the successor 
 
 # Quick Start
 
-Clone and run (Requires Go 1.14+):
+Clone and run (Requires Go 1.16+):
 
 ```bash
 go build github.com/matrix-org/go-neb
@@ -101,7 +101,9 @@ Invite the bot user into a Matrix room and type `!echo hello world`. It will rep
 
 
 # Installing
-Go-NEB is built using Go 1.14+. Once you have installed Go, run the following commands:
+
+Go-NEB is built using Go 1.16+. Once you have installed Go, run the following commands:
+
 ```bash
 # Clone the go-neb repository
 git clone https://github.com/matrix-org/go-neb
@@ -210,8 +212,8 @@ things like linting. Some of them are bundled with go (fmt and vet) but some
 are not. You should install the ones which are not:
 
 ```bash
-go get golang.org/x/lint/golint
-go get github.com/fzipp/gocyclo
+go install honnef.co/go/tools/cmd/staticcheck@latest
+go install github.com/fzipp/gocyclo/cmd/gocyclo@latest
 ```
 
 You can then install the pre-commit hook:

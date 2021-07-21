@@ -1,5 +1,5 @@
 # Build go-neb
-FROM golang:1.14-alpine as builder
+FROM golang:1.16-alpine as builder
 
 RUN apk add --no-cache -t build-deps git gcc musl-dev go make g++
 
@@ -9,15 +9,15 @@ RUN git clone https://gitlab.matrix.org/matrix-org/olm.git /tmp/libolm \
 
 COPY . /tmp/go-neb
 WORKDIR /tmp/go-neb
-RUN go get golang.org/x/lint/golint \
-    && go get github.com/fzipp/gocyclo/cmd/gocyclo \
+RUN go install honnef.co/go/tools/cmd/staticcheck@latest \
+    && go install github.com/fzipp/gocyclo/cmd/gocyclo@latest \
     && go build github.com/matrix-org/go-neb
 
 # Ensures we're lint-free
 RUN /tmp/go-neb/hooks/pre-commit
 
 # Run go-neb
-FROM alpine:3.7
+FROM alpine:3.13
 
 ENV BIND_ADDRESS=:4050 \
     DATABASE_TYPE=sqlite3 \

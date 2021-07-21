@@ -1,6 +1,8 @@
 package client
 
 import (
+	"context"
+
 	"github.com/google/go-github/github"
 	"golang.org/x/oauth2"
 )
@@ -46,6 +48,6 @@ func New(token string) *github.Client {
 			&oauth2.Token{AccessToken: token},
 		)
 	}
-	httpCli := oauth2.NewClient(oauth2.NoContext, tokenSource)
+	httpCli := oauth2.NewClient(context.TODO(), tokenSource)
 	return github.NewClient(httpCli)
 }

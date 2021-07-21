@@ -1,5 +1,7 @@
 package main
 
+//lint:file-ignore SA1019 need to fix our prometheus package usage
+
 import (
 	"encoding/json"
 	"fmt"

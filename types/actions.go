@@ -33,7 +33,7 @@ func (command *Command) Matches(arguments []string) bool {
 		return false
 	}
 	for i, segment := range command.Path {
-		if strings.ToLower(segment) != strings.ToLower(arguments[i]) {
+		if !strings.EqualFold(segment, arguments[i]) {
 			return false
 		}
 	}

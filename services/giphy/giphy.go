@@ -11,7 +11,6 @@ import (
 
 	"github.com/matrix-org/go-neb/types"
 	log "github.com/sirupsen/logrus"
-	"maunium.net/go/mautrix/event"
 	mevt "maunium.net/go/mautrix/event"
 	"maunium.net/go/mautrix/id"
 )
@@ -93,7 +92,7 @@ func (s *Service) cmdGiphy(client types.MatrixClient, roomID id.RoomID, userID i
 	}
 
 	return mevt.MessageEventContent{
-		MsgType: event.MsgImage,
+		MsgType: mevt.MsgImage,
 		Body:    gifResult.Slug,
 		URL:     resUpload.ContentURI.CUString(),
 		Info: &mevt.FileInfo{

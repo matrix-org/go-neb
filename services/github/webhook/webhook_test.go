@@ -1518,6 +1518,7 @@ func TestParseGithubEvent(t *testing.T) {
 		if outRepo == nil {
 			t.Errorf("ParseGithubEvent(%s) => Repo is nil", gh.eventType)
 		}
+		//lint:ignore SA5011 caught by the previous check
 		if *outRepo.FullName != gh.outFullRepo {
 			t.Errorf("ParseGithubEvent(%s) => Repo: Want %s got %s", gh.eventType, gh.outFullRepo, *outRepo.FullName)
 		}

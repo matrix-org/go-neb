@@ -368,37 +368,6 @@ func (s *WebhookService) deleteHook(owner, repo string) error {
 	return err
 }
 
-func sameRepos(a *WebhookService, b *WebhookService) bool {
-	getRepos := func(s *WebhookService) []string {
-		r := make(map[string]bool)
-		for _, roomConfig := range s.Rooms {
-			for ownerRepo := range roomConfig.Repos {
-				r[ownerRepo] = true
-			}
-		}
-		var rs []string
-		for k := range r {
-			rs = append(rs, k)
-		}
-		return rs
-	}
-	aRepos := getRepos(a)
-	bRepos := getRepos(b)
-
-	if len(aRepos) != len(bRepos) {
-		return false
-	}
-
-	sort.Strings(aRepos)
-	sort.Strings(bRepos)
-	for i := 0; i < len(aRepos); i++ {
-		if aRepos[i] != bRepos[i] {
-			return false
-		}
-	}
-	return true
-}
-
 // difference returns the elements that are only in the first list and
 // the elements that are only in the second. As a side-effect this sorts
 // the input lists in-place.

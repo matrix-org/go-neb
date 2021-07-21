@@ -18,7 +18,7 @@ import (
 
 // RequestAuthSession represents an HTTP handler capable of processing /admin/requestAuthSession requests.
 type RequestAuthSession struct {
-	Db *database.ServiceDB
+	DB *database.ServiceDB
 }
 
 // OnIncomingRequest handles POST requests to /admin/requestAuthSession. The HTTP body MUST be
@@ -60,7 +60,7 @@ func (h *RequestAuthSession) OnIncomingRequest(req *http.Request) util.JSONRespo
 		return util.MessageResponse(400, err.Error())
 	}
 
-	realm, err := h.Db.LoadAuthRealm(body.RealmID)
+	realm, err := h.DB.LoadAuthRealm(body.RealmID)
 	if err != nil {
 		logger.WithError(err).Info("Failed to LoadAuthRealm")
 		return util.MessageResponse(400, "Unknown RealmID")
@@ -82,7 +82,7 @@ func (h *RequestAuthSession) OnIncomingRequest(req *http.Request) util.JSONRespo
 
 // RemoveAuthSession represents an HTTP handler capable of processing /admin/removeAuthSession requests.
 type RemoveAuthSession struct {
-	Db *database.ServiceDB
+	DB *database.ServiceDB
 }
 
 // OnIncomingRequest handles POST requests to /admin/removeAuthSession.
@@ -119,12 +119,12 @@ func (h *RemoveAuthSession) OnIncomingRequest(req *http.Request) util.JSONRespon
 		return util.MessageResponse(400, `Must supply a "UserID", a "RealmID"`)
 	}
 
-	_, err := h.Db.LoadAuthRealm(body.RealmID)
+	_, err := h.DB.LoadAuthRealm(body.RealmID)
 	if err != nil {
 		return util.MessageResponse(400, "Unknown RealmID")
 	}
 
-	if err := h.Db.RemoveAuthSession(body.RealmID, body.UserID); err != nil {
+	if err := h.DB.RemoveAuthSession(body.RealmID, body.UserID); err != nil {
 		logger.WithError(err).Error("Failed to RemoveAuthSession")
 		return util.MessageResponse(500, "Failed to remove auth session")
 	}
@@ -137,7 +137,7 @@ func (h *RemoveAuthSession) OnIncomingRequest(req *http.Request) util.JSONRespon
 
 // RealmRedirect represents an HTTP handler which can process incoming redirects for auth realms.
 type RealmRedirect struct {
-	Db *database.ServiceDB
+	DB *database.ServiceDB
 }
 
 // Handle requests for an auth realm.
@@ -158,7 +158,7 @@ func (rh *RealmRedirect) Handle(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	realm, err := rh.Db.LoadAuthRealm(realmID)
+	realm, err := rh.DB.LoadAuthRealm(realmID)
 	if err != nil {
 		log.WithError(err).WithField("realm_id", realmID).Print("Failed to load realm")
 		w.WriteHeader(404)
@@ -172,7 +172,7 @@ func (rh *RealmRedirect) Handle(w http.ResponseWriter, req *http.Request) {
 
 // ConfigureAuthRealm represents an HTTP handler capable of processing /admin/configureAuthRealm requests.
 type ConfigureAuthRealm struct {
-	Db *database.ServiceDB
+	DB *database.ServiceDB
 }
 
 // OnIncomingRequest handles POST requests to /admin/configureAuthRealm. The JSON object
@@ -222,7 +222,7 @@ func (h *ConfigureAuthRealm) OnIncomingRequest(req *http.Request) util.JSONRespo
 		return util.MessageResponse(400, "Error registering auth realm")
 	}
 
-	oldRealm, err := h.Db.StoreAuthRealm(realm)
+	oldRealm, err := h.DB.StoreAuthRealm(realm)
 	if err != nil {
 		logger.WithError(err).Error("Failed to StoreAuthRealm")
 		return util.MessageResponse(500, "Error storing realm")
@@ -241,7 +241,7 @@ func (h *ConfigureAuthRealm) OnIncomingRequest(req *http.Request) util.JSONRespo
 
 // GetSession represents an HTTP handler capable of processing /admin/getSession requests.
 type GetSession struct {
-	Db *database.ServiceDB
+	DB *database.ServiceDB
 }
 
 // OnIncomingRequest handles POST requests to /admin/getSession.
@@ -287,7 +287,7 @@ func (h *GetSession) OnIncomingRequest(req *http.Request) util.JSONResponse {
 		return util.MessageResponse(400, `Must supply a "RealmID" and "UserID"`)
 	}
 
-	session, err := h.Db.LoadAuthSessionByUser(body.RealmID, body.UserID)
+	session, err := h.DB.LoadAuthSessionByUser(body.RealmID, body.UserID)
 	if err != nil && err != sql.ErrNoRows {
 		logger.WithError(err).WithField("body", body).Error("Failed to LoadAuthSessionByUser")
 		return util.MessageResponse(500, `Failed to load session`)
