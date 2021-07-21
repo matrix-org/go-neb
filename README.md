@@ -1,5 +1,5 @@
 # Go-NEB
-[![Build Status](https://travis-ci.org/matrix-org/go-neb.svg?branch=master)](https://travis-ci.org/matrix-org/go-neb)
+[![Build Status](https://github.com/matrix-org/go-neb/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/matrix-org/go-neb/actions/workflows/ci.yaml)
 
 Go-NEB is a [Matrix](https://matrix.org) bot written in Go. It is the successor to [Matrix-NEB](https://github.com/matrix-org/Matrix-NEB), the original Matrix bot written in Python.
 
