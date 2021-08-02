@@ -338,8 +338,8 @@ func (c *Clients) onRoomMemberEvent(client *BotClient, event *mevt.Event) {
 			client.LeaveRoom(rID)
 			return
 		}
-		var pl = plContent.Users[event.Sender.String()]
-		if pl == 0 {
+		var pl, userExists = plContent.Users[event.Sender.String()]
+		if !userExists {
 			pl = plContent.UsersDefault
 		}
 		if pl < client.config.MinimumPowerLevel {
