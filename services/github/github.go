@@ -7,6 +7,7 @@ package github
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -50,16 +51,19 @@ var ownerRepoRegex = regexp.MustCompile(`^([A-z0-9-_.]+)/([A-z0-9-_.]+)$`)
 //
 // Before you can set up a Github Service, you need to set up a Github Realm.
 //
-// You can set a "default repository" for a Matrix room by sending a `m.room.bot.options` state event
+// You can set optional config for a Matrix room by sending a `m.room.bot.options` state event
 // which has the following `content`:
 //
 //  {
 //    "github": {
-//      "default_repo": "owner/repo"
+//      // The default repository to use for this room; this allows "owner/repo" to be omitted
+//      // when creating/expanding issues.
+//      "default_repo": "owner/repo",
+//
+//      // Comma-separated Github labels to attach to any issue created by this bot in this room.
+//      "new_issue_labels": "bot-label-1, bot-label-2"
 //    }
 //  }
-//
-// This will allow the "owner/repo" to be omitted when creating/expanding issues.
 //
 // Example request:
 //   {
@@ -203,9 +207,12 @@ func (s *Service) cmdGithubCreate(roomID id.RoomID, userID id.UserID, args []str
 		title = &joinedTitle
 	}
 
+	labels := s.newIssueLabels(roomID)
+
 	issue, res, err := cli.Issues.Create(context.Background(), ownerRepoGroups[1], ownerRepoGroups[2], &gogithub.IssueRequest{
-		Title: title,
-		Body:  desc,
+		Title:  title,
+		Body:   desc,
+		Labels: &labels,
 	})
 	if err != nil {
 		log.WithField("err", err).Print("Failed to create issue")
@@ -735,24 +742,37 @@ func (s *Service) Register(oldService types.Service, client types.MatrixClient) 
 	return nil
 }
 
+func (s *Service) loadBotOptions(roomID id.RoomID, logger *log.Entry) (result map[string]interface{}, err error) {
+	opts, err := database.GetServiceDB().LoadBotOptions(s.ServiceUserID(), roomID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			logger.Info("no bot options")
+			return make(map[string]interface{}), nil
+		} else {
+			err := errors.New("Failed to load bot options")
+			logger.WithError(err).Error(err)
+			return nil, err
+		}
+	}
+	// Expect opts to look like:
+	// { github: { default_repo: $OWNER_REPO } }
+	ghOpts, ok := opts.Options["github"].(map[string]interface{})
+	if !ok {
+		err = fmt.Errorf("Failed to cast bot options as github options")
+		logger.WithField("options", opts.Options).Error(err)
+		return nil, err
+	}
+	return ghOpts, nil
+}
+
 // defaultRepo returns the default repo for the given room, or an empty string.
 func (s *Service) defaultRepo(roomID id.RoomID) string {
 	logger := log.WithFields(log.Fields{
 		"room_id":     roomID,
 		"bot_user_id": s.ServiceUserID(),
 	})
-	opts, err := database.GetServiceDB().LoadBotOptions(s.ServiceUserID(), roomID)
+	ghOpts, err := s.loadBotOptions(roomID, logger)
 	if err != nil {
-		if err != sql.ErrNoRows {
-			logger.WithError(err).Error("Failed to load bot options")
-		}
-		return ""
-	}
-	// Expect opts to look like:
-	// { github: { default_repo: $OWNER_REPO } }
-	ghOpts, ok := opts.Options["github"].(map[string]interface{})
-	if !ok {
-		logger.WithField("options", opts.Options).Error("Failed to cast bot options as github options")
 		return ""
 	}
 	defaultRepo, ok := ghOpts["default_repo"].(string)
@@ -763,6 +783,22 @@ func (s *Service) defaultRepo(roomID id.RoomID) string {
 		return ""
 	}
 	return defaultRepo
+}
+
+func (s *Service) newIssueLabels(roomID id.RoomID) []string {
+	logger := log.WithFields(log.Fields{
+		"room_id":     roomID,
+		"bot_user_id": s.ServiceUserID(),
+	})
+	ghOpts, err := s.loadBotOptions(roomID, logger)
+	if err != nil {
+		return make([]string, 0)
+	}
+	newIssueLabels, ok := ghOpts["new_issue_labels"].(string)
+	if !ok {
+		return make([]string, 0)
+	}
+	return strings.Split(newIssueLabels, ",")
 }
 
 func (s *Service) githubClientFor(userID id.UserID, allowUnauth bool) *gogithub.Client {
