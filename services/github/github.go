@@ -60,8 +60,8 @@ var ownerRepoRegex = regexp.MustCompile(`^([A-z0-9-_.]+)/([A-z0-9-_.]+)$`)
 //      // when creating/expanding issues.
 //      "default_repo": "owner/repo",
 //
-//      // Comma-separated Github labels to attach to any issue created by this bot in this room.
-//      "new_issue_labels": "bot-label-1, bot-label-2"
+//      // Array of Github labels to attach to any issue created by this bot in this room.
+//      "new_issue_labels": ["bot-label-1", "bot-label-2"]
 //    }
 //  }
 //
@@ -794,11 +794,15 @@ func (s *Service) newIssueLabels(roomID id.RoomID) []string {
 	if err != nil {
 		return make([]string, 0)
 	}
-	newIssueLabels, ok := ghOpts["new_issue_labels"].(string)
+	newIssueLabels, ok := ghOpts["new_issue_labels"].([]interface{})
 	if !ok {
 		return make([]string, 0)
 	}
-	return strings.Split(newIssueLabels, ",")
+	newIssueLabelsUnboxed := make([]string, 0)
+	for _, s := range newIssueLabels {
+		newIssueLabelsUnboxed = append(newIssueLabelsUnboxed, s.(string))
+	}
+	return newIssueLabelsUnboxed
 }
 
 func (s *Service) githubClientFor(userID id.UserID, allowUnauth bool) *gogithub.Client {
