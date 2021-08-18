@@ -16,7 +16,6 @@ import (
 	shellwords "github.com/mattn/go-shellwords"
 	log "github.com/sirupsen/logrus"
 	"maunium.net/go/mautrix"
-	"maunium.net/go/mautrix/event"
 	mevt "maunium.net/go/mautrix/event"
 	"maunium.net/go/mautrix/id"
 )
@@ -345,14 +344,11 @@ func (c *Clients) initClient(botClient *BotClient) error {
 	botClient.verificationSAS = &sync.Map{}
 
 	syncer := client.Syncer.(*mautrix.DefaultSyncer)
-	syncer.ParseErrorHandler = func(evt *event.Event, err error) bool {
+	syncer.ParseErrorHandler = func(evt *mevt.Event, err error) bool {
 		// Events of type m.room.bot.options will be flagged as errors as this isn't an event type
 		// recognised by the Syncer, but we need to process them so the bot can accept options
 		// through this event (see onBotOptionsEvent)
-		if evt.Type.Type == "m.room.bot.options" {
-			return true
-		}
-		return false
+		return evt.Type.Type == "m.room.bot.options"
 	}
 
 	nebStore := &matrix.NEBStore{
