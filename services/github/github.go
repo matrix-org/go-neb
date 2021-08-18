@@ -755,7 +755,12 @@ func (s *Service) loadBotOptions(roomID id.RoomID, logger *log.Entry) (result ma
 		}
 	}
 	// Expect opts to look like:
-	// { github: { default_repo: $OWNER_REPO } }
+	// {
+	//   github: {
+	//      default_repo: $OWNER_REPO,
+	//      new_issue_labels: [ "label1", .. ]
+	//   }
+	// }
 	ghOpts, ok := opts.Options["github"].(map[string]interface{})
 	if !ok {
 		err = fmt.Errorf("Failed to cast bot options as github options")
