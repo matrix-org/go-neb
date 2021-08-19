@@ -3,11 +3,15 @@ on:
   pull_request:
     paths:
       - '**.go'
+      - 'go.mod'
+      - 'go.sum'
     branches:
       - master
   push:
     paths:
       - '**.go'
+      - 'go.mod'
+      - 'go.sum'
     branches:
       - master
     tags-ignore:
