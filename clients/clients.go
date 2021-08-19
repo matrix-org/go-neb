@@ -330,9 +330,9 @@ func (c *Clients) onRoomMemberEvent(client *mautrix.Client, event *mevt.Event) {
 
 type BotOptionsContent struct {
 	Github struct {
-		DefaultRepo    string `json:"default_repo,omitempty"`
-		NewIssueLabels string `json:"new_issue_labels,omitempty"`
-	}
+		DefaultRepo    string   `json:"default_repo,omitempty"`
+		NewIssueLabels []string `json:"new_issue_labels,omitempty"`
+	} `json:"github"`
 }
 
 func (c *Clients) initClient(botClient *BotClient) error {
