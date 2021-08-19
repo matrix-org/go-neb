@@ -328,6 +328,13 @@ func (c *Clients) onRoomMemberEvent(client *mautrix.Client, event *mevt.Event) {
 	}
 }
 
+type BotOptionsContent struct {
+	Github struct {
+		DefaultRepo    string `json:"default_repo,omitempty"`
+		NewIssueLabels string `json:"new_issue_labels,omitempty"`
+	}
+}
+
 func (c *Clients) initClient(botClient *BotClient) error {
 	config := botClient.config
 	client, err := mautrix.NewClient(config.HomeserverURL, config.UserID, config.AccessToken)
@@ -344,12 +351,10 @@ func (c *Clients) initClient(botClient *BotClient) error {
 	botClient.verificationSAS = &sync.Map{}
 
 	syncer := client.Syncer.(*mautrix.DefaultSyncer)
-	syncer.ParseErrorHandler = func(evt *mevt.Event, err error) bool {
-		// Events of type m.room.bot.options will be flagged as errors as this isn't an event type
-		// recognised by the Syncer, but we need to process them so the bot can accept options
-		// through this event (see onBotOptionsEvent)
-		return evt.Type.Type == "m.room.bot.options"
-	}
+
+	// Add m.room.bot.options to mautrix's TypeMap so that it parses it as a valid event
+	var StateBotOptions = mevt.Type{Type: "m.room.bot.options", Class: mevt.StateEventType}
+	mevt.TypeMap[StateBotOptions] = reflect.TypeOf(&BotOptionsContent{})
 
 	nebStore := &matrix.NEBStore{
 		InMemoryStore: *mautrix.NewInMemoryStore(),
