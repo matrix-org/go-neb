@@ -1,11 +1,12 @@
 # Build go-neb
 FROM golang:1.18-alpine as builder
 
-RUN apk add --no-cache -t build-deps git gcc musl-dev go make g++
+RUN apk add --no-cache -t build-deps git gcc musl-dev go make cmake g++
 
 RUN git clone https://gitlab.matrix.org/matrix-org/olm.git /tmp/libolm \
     && cd /tmp/libolm \
-    && make install
+    && cmake . -Bbuild \
+    && cmake --build build --target install
 
 COPY . /tmp/go-neb
 WORKDIR /tmp/go-neb
