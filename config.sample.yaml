@@ -163,6 +163,31 @@ services:
       # Each room will get the notification with the alert rendered with the given template
       rooms:
         "!someroomid:domain.tld":
-          text_template: "{{range .Alerts -}} [{{ .Status }}] {{index .Labels \"alertname\" }}: {{index .Annotations \"description\"}} {{ end -}}"
-          html_template: "{{range .Alerts -}}  {{ $severity := index .Labels \"severity\" }}    {{ if eq .Status \"firing\" }}      {{ if eq $severity \"critical\"}}        <font color='red'><b>[FIRING - CRITICAL]</b></font>      {{ else if eq $severity \"warning\"}}        <font color='orange'><b>[FIRING - WARNING]</b></font>      {{ else }}        <b>[FIRING - {{ $severity }}]</b>      {{ end }}    {{ else }}      <font color='green'><b>[RESOLVED]</b></font>    {{ end }}  {{ index .Labels \"alertname\"}} : {{ index .Annotations \"description\"}}   <a href=\"{{ .GeneratorURL }}\">source</a><br/>{{end -}}"
+          text_template: >
+            {{range .Alerts -}}
+              {{- $severity := index .Labels "severity" -}}
+              {{- if eq .Status "firing" -}}
+                {{- if eq $severity "critical" -}}     [CRITICAL]
+                {{- else if eq $severity "warning" -}} [WARNING]
+                {{- else if eq $severity "info" -}}    [INFO]
+                {{- else -}}                           [{{ if $severity }}{{ $severity }}{{ else }}FIRING{{ end }}]
+                {{- end -}}
+              {{- else -}}                             [RESOLVED]
+              {{- end }} {{ index .Labels "alertname" -}}
+              {{- if index .Annotations "description" -}}: {{ index .Annotations "description" -}}{{- end }}
+            {{ end -}}
+          html_template: >
+            {{range .Alerts -}}
+              {{- $severity := index .Labels "severity" -}}
+              {{- if eq .Status "firing" -}}
+                {{- if eq $severity "critical" -}}     <font data-mx-color="#ffffff" data-mx-bg-color="#ff0000"><b>[CRITICAL]</b></font>
+                {{- else if eq $severity "warning" -}} <font data-mx-color="#ffa500"><b>[WARNING]</b></font>
+                {{- else if eq $severity "info" -}}    <font data-mx-color="#17a2b8"><b>[INFO]</b></font>
+                {{- else -}}                           <b>[{{ if $severity }}{{ $severity }}{{ else }}FIRING{{ end }}]</b>
+                {{- end -}}
+              {{- else -}}                             <font data-mx-color="#008000"><b>[RESOLVED]</b></font>
+              {{- end }} {{ index .Labels "alertname" -}}
+              {{- if index .Annotations "description" -}}: {{ index .Annotations "description" -}}{{- end -}}
+              {{-  if .GeneratorURL }} (<a href="{{ .GeneratorURL }}">source</a>)<br/>{{- end }}
+            {{ end -}}
           msg_type: "m.text"  # Must be either `m.text` or `m.notice`
