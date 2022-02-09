@@ -25,7 +25,9 @@ ENV BIND_ADDRESS=:4050 \
     UID=1337 \
     GID=1337
     
-HEALTHCHECK --interval=5s --timeout=3s CMD wget -qS -O /dev/null localhost${BIND_ADDRESS}/test | awk -F':' '$1 ~ / Status$/ { print $2 ~ /200 OK/ }'
+HEALTHCHECK --interval=5s --timeout=3s \
+    CMD wget -qS -O /dev/null localhost${BIND_ADDRESS}/test \
+        | awk -F':' '$1 ~ / Status$/ { print $2 ~ /200 OK/ }' || exit 1
 
 COPY --from=builder /tmp/go-neb/go-neb /usr/local/bin/go-neb
 # Copy libolm.so
