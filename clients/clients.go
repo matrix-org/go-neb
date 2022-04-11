@@ -2,6 +2,7 @@ package clients
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"reflect"
@@ -287,11 +288,22 @@ func (c *Clients) onBotOptionsEvent(client *mautrix.Client, event *mevt.Event) {
 		return
 	}
 	// these options fully clobber what was there previously.
+
+	var options types.BotOptionsContent
+	if err := json.Unmarshal(event.Content.VeryRaw, &options); err != nil {
+		log.WithFields(log.Fields{
+			log.ErrorKey:     err,
+			"room_id":        event.RoomID,
+			"bot_user_id":    client.UserID,
+			"set_by_user_id": event.Sender,
+		}).Error("Failed to parse bot options")
+	}
+
 	opts := types.BotOptions{
 		UserID:      client.UserID,
 		RoomID:      event.RoomID,
 		SetByUserID: event.Sender,
-		Options:     event.Content.Raw,
+		Options:     options,
 	}
 	if _, err := c.db.StoreBotOptions(opts); err != nil {
 		log.WithFields(log.Fields{
@@ -328,13 +340,6 @@ func (c *Clients) onRoomMemberEvent(client *mautrix.Client, event *mevt.Event) {
 	}
 }
 
-type BotOptionsContent struct {
-	Github struct {
-		DefaultRepo    string   `json:"default_repo,omitempty"`
-		NewIssueLabels []string `json:"new_issue_labels,omitempty"`
-	} `json:"github"`
-}
-
 func (c *Clients) initClient(botClient *BotClient) error {
 	config := botClient.config
 	client, err := mautrix.NewClient(config.HomeserverURL, config.UserID, config.AccessToken)
@@ -354,7 +359,7 @@ func (c *Clients) initClient(botClient *BotClient) error {
 
 	// Add m.room.bot.options to mautrix's TypeMap so that it parses it as a valid event
 	var StateBotOptions = mevt.Type{Type: "m.room.bot.options", Class: mevt.StateEventType}
-	mevt.TypeMap[StateBotOptions] = reflect.TypeOf(&BotOptionsContent{})
+	mevt.TypeMap[StateBotOptions] = reflect.TypeOf(&types.BotOptionsContent{})
 
 	nebStore := &matrix.NEBStore{
 		InMemoryStore: *mautrix.NewInMemoryStore(),

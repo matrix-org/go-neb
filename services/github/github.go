@@ -76,6 +76,11 @@ type Service struct {
 	RealmID string
 }
 
+type Options struct {
+	DefaultRepo    string   `json:"default_repo,omitempty"`
+	NewIssueLabels []string `json:"new_issue_labels,omitempty"`
+}
+
 func (s *Service) requireGithubClientFor(userID id.UserID) (cli *gogithub.Client, resp interface{}, err error) {
 	cli = s.githubClientFor(userID, false)
 	if cli == nil {
