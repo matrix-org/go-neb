@@ -4,7 +4,6 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
-	"github.com/matrix-org/go-neb/services/github"
 	"net/http"
 	"strings"
 	"time"
@@ -14,8 +13,13 @@ import (
 	"maunium.net/go/mautrix/id"
 )
 
+type GithubOptions struct {
+	DefaultRepo    string   `json:"default_repo,omitempty"`
+	NewIssueLabels []string `json:"new_issue_labels,omitempty"`
+}
+
 type BotOptionsContent struct {
-	Github github.Options `json:"github"`
+	Github GithubOptions `json:"github"`
 }
 
 // BotOptions for a given bot user in a given room
@@ -23,7 +27,7 @@ type BotOptions struct {
 	RoomID      id.RoomID
 	UserID      id.UserID
 	SetByUserID id.UserID
-	Options     BotOptionsContent
+	Options     *BotOptionsContent
 }
 
 // Poller represents a thing which can poll. Services should implement this method signature to support polling.

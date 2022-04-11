@@ -2,7 +2,6 @@ package clients
 
 import (
 	"database/sql"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"reflect"
@@ -289,21 +288,11 @@ func (c *Clients) onBotOptionsEvent(client *mautrix.Client, event *mevt.Event) {
 	}
 	// these options fully clobber what was there previously.
 
-	var options types.BotOptionsContent
-	if err := json.Unmarshal(event.Content.VeryRaw, &options); err != nil {
-		log.WithFields(log.Fields{
-			log.ErrorKey:     err,
-			"room_id":        event.RoomID,
-			"bot_user_id":    client.UserID,
-			"set_by_user_id": event.Sender,
-		}).Error("Failed to parse bot options")
-	}
-
 	opts := types.BotOptions{
 		UserID:      client.UserID,
 		RoomID:      event.RoomID,
 		SetByUserID: event.Sender,
-		Options:     options,
+		Options:     event.Content.Parsed.(*types.BotOptionsContent),
 	}
 	if _, err := c.db.StoreBotOptions(opts); err != nil {
 		log.WithFields(log.Fields{
@@ -340,6 +329,8 @@ func (c *Clients) onRoomMemberEvent(client *mautrix.Client, event *mevt.Event) {
 	}
 }
 
+var StateBotOptionsEvent = mevt.Type{Type: "m.room.bot.options", Class: mevt.StateEventType}
+
 func (c *Clients) initClient(botClient *BotClient) error {
 	config := botClient.config
 	client, err := mautrix.NewClient(config.HomeserverURL, config.UserID, config.AccessToken)
@@ -356,10 +347,10 @@ func (c *Clients) initClient(botClient *BotClient) error {
 	botClient.verificationSAS = &sync.Map{}
 
 	syncer := client.Syncer.(*mautrix.DefaultSyncer)
+	syncer.ParseEventContent = true
 
 	// Add m.room.bot.options to mautrix's TypeMap so that it parses it as a valid event
-	var StateBotOptions = mevt.Type{Type: "m.room.bot.options", Class: mevt.StateEventType}
-	mevt.TypeMap[StateBotOptions] = reflect.TypeOf(&types.BotOptionsContent{})
+	mevt.TypeMap[StateBotOptionsEvent] = reflect.TypeOf(types.BotOptionsContent{})
 
 	nebStore := &matrix.NEBStore{
 		InMemoryStore: *mautrix.NewInMemoryStore(),
@@ -382,7 +373,7 @@ func (c *Clients) initClient(botClient *BotClient) error {
 		c.onMessageEvent(botClient, event)
 	})
 
-	syncer.OnEventType(mevt.Type{Type: "m.room.bot.options", Class: mevt.StateEventType}, func(_ mautrix.EventSource, event *mevt.Event) {
+	syncer.OnEventType(StateBotOptionsEvent, func(_ mautrix.EventSource, event *mevt.Event) {
 		c.onBotOptionsEvent(botClient.Client, event)
 	})
 

@@ -76,11 +76,6 @@ type Service struct {
 	RealmID string
 }
 
-type Options struct {
-	DefaultRepo    string   `json:"default_repo,omitempty"`
-	NewIssueLabels []string `json:"new_issue_labels,omitempty"`
-}
-
 func (s *Service) requireGithubClientFor(userID id.UserID) (cli *gogithub.Client, resp interface{}, err error) {
 	cli = s.githubClientFor(userID, false)
 	if cli == nil {
@@ -176,9 +171,18 @@ func (s *Service) cmdGithubCreate(roomID id.RoomID, userID id.UserID, args []str
 	// Look for a default if the first arg doesn't look like an owner/repo
 	ownerRepoGroups := ownerRepoRegex.FindStringSubmatch(args[0])
 
+	logger := log.WithFields(log.Fields{
+		"room_id":     roomID,
+		"bot_user_id": s.ServiceUserID(),
+	})
+	options, err := s.loadBotOptions(roomID, logger)
+	if err != nil {
+		return nil, err
+	}
+
 	if len(ownerRepoGroups) == 0 {
 		// look for a default repo
-		defaultRepo := s.defaultRepo(roomID)
+		defaultRepo := options.DefaultRepo
 		if defaultRepo == "" {
 			return &mevt.MessageEventContent{
 				MsgType: mevt.MsgNotice,
@@ -212,12 +216,10 @@ func (s *Service) cmdGithubCreate(roomID id.RoomID, userID id.UserID, args []str
 		title = &joinedTitle
 	}
 
-	labels := s.newIssueLabels(roomID)
-
 	issue, res, err := cli.Issues.Create(context.Background(), ownerRepoGroups[1], ownerRepoGroups[2], &gogithub.IssueRequest{
 		Title:  title,
 		Body:   desc,
-		Labels: &labels,
+		Labels: &options.NewIssueLabels,
 	})
 	if err != nil {
 		log.WithField("err", err).Print("Failed to create issue")
@@ -747,16 +749,16 @@ func (s *Service) Register(oldService types.Service, client types.MatrixClient) 
 	return nil
 }
 
-func (s *Service) loadBotOptions(roomID id.RoomID, logger *log.Entry) (result map[string]interface{}, err error) {
+func (s *Service) loadBotOptions(roomID id.RoomID, logger *log.Entry) (result types.GithubOptions, err error) {
 	opts, err := database.GetServiceDB().LoadBotOptions(s.ServiceUserID(), roomID)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			logger.Info("no bot options")
-			return make(map[string]interface{}), nil
+			logger.Info("no bot options specified - using defaults")
+			return types.GithubOptions{}, nil
 		} else {
 			err := errors.New("Failed to load bot options")
 			logger.WithError(err).Error(err)
-			return nil, err
+			return types.GithubOptions{}, err
 		}
 	}
 	// Expect opts to look like:
@@ -766,13 +768,7 @@ func (s *Service) loadBotOptions(roomID id.RoomID, logger *log.Entry) (result ma
 	//      new_issue_labels: [ "label1", .. ]
 	//   }
 	// }
-	ghOpts, ok := opts.Options["github"].(map[string]interface{})
-	if !ok {
-		err = fmt.Errorf("Failed to cast bot options as github options")
-		logger.WithField("options", opts.Options).Error(err)
-		return nil, err
-	}
-	return ghOpts, nil
+	return opts.Options.Github, nil
 }
 
 // defaultRepo returns the default repo for the given room, or an empty string.
@@ -781,38 +777,9 @@ func (s *Service) defaultRepo(roomID id.RoomID) string {
 		"room_id":     roomID,
 		"bot_user_id": s.ServiceUserID(),
 	})
-	ghOpts, err := s.loadBotOptions(roomID, logger)
-	if err != nil {
-		return ""
-	}
-	defaultRepo, ok := ghOpts["default_repo"].(string)
-	if !ok {
-		logger.WithField("default_repo", ghOpts["default_repo"]).Error(
-			"Failed to cast default repo as a string",
-		)
-		return ""
-	}
-	return defaultRepo
-}
-
-func (s *Service) newIssueLabels(roomID id.RoomID) []string {
-	logger := log.WithFields(log.Fields{
-		"room_id":     roomID,
-		"bot_user_id": s.ServiceUserID(),
-	})
-	ghOpts, err := s.loadBotOptions(roomID, logger)
-	if err != nil {
-		return make([]string, 0)
-	}
-	newIssueLabels, ok := ghOpts["new_issue_labels"].([]interface{})
-	if !ok {
-		return make([]string, 0)
-	}
-	newIssueLabelsUnboxed := make([]string, 0)
-	for _, s := range newIssueLabels {
-		newIssueLabelsUnboxed = append(newIssueLabelsUnboxed, s.(string))
-	}
-	return newIssueLabelsUnboxed
+	// ignore any errors, we treat it the same as no options and log inside the method
+	ghOpts, _ := s.loadBotOptions(roomID, logger)
+	return ghOpts.DefaultRepo
 }
 
 func (s *Service) githubClientFor(userID id.UserID, allowUnauth bool) *gogithub.Client {
