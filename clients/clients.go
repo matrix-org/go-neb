@@ -287,11 +287,12 @@ func (c *Clients) onBotOptionsEvent(client *mautrix.Client, event *mevt.Event) {
 		return
 	}
 	// these options fully clobber what was there previously.
+
 	opts := types.BotOptions{
 		UserID:      client.UserID,
 		RoomID:      event.RoomID,
 		SetByUserID: event.Sender,
-		Options:     event.Content.Raw,
+		Options:     event.Content.Parsed.(*types.BotOptionsContent),
 	}
 	if _, err := c.db.StoreBotOptions(opts); err != nil {
 		log.WithFields(log.Fields{
@@ -328,6 +329,8 @@ func (c *Clients) onRoomMemberEvent(client *mautrix.Client, event *mevt.Event) {
 	}
 }
 
+var StateBotOptionsEvent = mevt.Type{Type: "m.room.bot.options", Class: mevt.StateEventType}
+
 func (c *Clients) initClient(botClient *BotClient) error {
 	config := botClient.config
 	client, err := mautrix.NewClient(config.HomeserverURL, config.UserID, config.AccessToken)
@@ -344,6 +347,10 @@ func (c *Clients) initClient(botClient *BotClient) error {
 	botClient.verificationSAS = &sync.Map{}
 
 	syncer := client.Syncer.(*mautrix.DefaultSyncer)
+	syncer.ParseEventContent = true
+
+	// Add m.room.bot.options to mautrix's TypeMap so that it parses it as a valid event
+	mevt.TypeMap[StateBotOptionsEvent] = reflect.TypeOf(types.BotOptionsContent{})
 
 	nebStore := &matrix.NEBStore{
 		InMemoryStore: *mautrix.NewInMemoryStore(),
@@ -366,7 +373,7 @@ func (c *Clients) initClient(botClient *BotClient) error {
 		c.onMessageEvent(botClient, event)
 	})
 
-	syncer.OnEventType(mevt.Type{Type: "m.room.bot.options", Class: mevt.UnknownEventType}, func(_ mautrix.EventSource, event *mevt.Event) {
+	syncer.OnEventType(StateBotOptionsEvent, func(_ mautrix.EventSource, event *mevt.Event) {
 		c.onBotOptionsEvent(botClient.Client, event)
 	})
 

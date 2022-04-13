@@ -13,12 +13,21 @@ import (
 	"maunium.net/go/mautrix/id"
 )
 
+type GithubOptions struct {
+	DefaultRepo    string   `json:"default_repo,omitempty"`
+	NewIssueLabels []string `json:"new_issue_labels,omitempty"`
+}
+
+type BotOptionsContent struct {
+	Github GithubOptions `json:"github"`
+}
+
 // BotOptions for a given bot user in a given room
 type BotOptions struct {
 	RoomID      id.RoomID
 	UserID      id.UserID
 	SetByUserID id.UserID
-	Options     map[string]interface{}
+	Options     *BotOptionsContent
 }
 
 // Poller represents a thing which can poll. Services should implement this method signature to support polling.
