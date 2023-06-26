@@ -1,5 +1,5 @@
 # Build go-neb
-FROM golang:1.18-alpine as builder
+FROM golang:1.19-alpine as builder
 
 RUN apk add --no-cache -t build-deps git gcc musl-dev go make g++
 
