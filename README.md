@@ -1,3 +1,8 @@
+# ⚠️ Discontinued
+
+Go-NEB has been discontinued and won't recieve any updates or support. [matrix-hookshot](https://github.com/matrix-org/matrix-hookshot) is the spiritual successor 
+to Go-NEB and supports migrating RSS and GitHub integrations. Other options are also available from [matrix.org](https://matrix.org/ecosystem/integrations/).
+
 # Go-NEB
 [![Build Status](https://github.com/matrix-org/go-neb/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/matrix-org/go-neb/actions/workflows/ci.yaml)
 
