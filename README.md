@@ -1,22 +1,40 @@
+# ⚠️ Discontinued
+
+Go-NEB has been discontinued and won't recieve any updates or support. [matrix-hookshot](https://github.com/matrix-org/matrix-hookshot) is the spiritual successor 
+to Go-NEB and supports migrating RSS and GitHub integrations. Other options are also available from [matrix.org](https://matrix.org/ecosystem/integrations/).
+`
+
 # Go-NEB
 [![Build Status](https://github.com/matrix-org/go-neb/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/matrix-org/go-neb/actions/workflows/ci.yaml)
 
 Go-NEB is a [Matrix](https://matrix.org) bot written in Go. It is the successor to [Matrix-NEB](https://github.com/matrix-org/Matrix-NEB), the original Matrix bot written in Python.
 
 # Table of Contents
- * [Quick Start](#quick-start)
-    * [Features](#features)
- * [Installing](#installing)
- * [Running](#running)
-    * [Configuration file](#configuration-file)
- * [API](#api)
-    * [Configuring clients](#configuring-clients)
-    * [Configuring services](#configuring-services)
-    * [Configuring realms](#configuring-realms)
-    * [SAS verification](#sas-verification)
- * [Developing](#developing)
-    * [Architecture](#architecture)
-    * [API Docs](#viewing-the-api-docs)
+- [⚠️ Discontinued](#️-discontinued)
+- [Go-NEB](#go-neb)
+- [Table of Contents](#table-of-contents)
+- [Quick Start](#quick-start)
+  - [Features](#features)
+    - [Github](#github)
+    - [JIRA](#jira)
+    - [Giphy](#giphy)
+    - [Guggy](#guggy)
+    - [RSS Bot](#rss-bot)
+    - [Travis CI](#travis-ci)
+    - [Alertmanager](#alertmanager)
+- [Installing](#installing)
+- [Running](#running)
+  - [Configuration file](#configuration-file)
+- [API](#api)
+  - [Configuring Clients](#configuring-clients)
+  - [Configuring Services](#configuring-services)
+  - [Configuring Realms](#configuring-realms)
+  - [SAS verification](#sas-verification)
+- [Contributing](#contributing)
+- [Developing](#developing)
+  - [Architecture](#architecture)
+  - [Viewing the API docs](#viewing-the-api-docs)
+  - [Docker image](#docker-image)
 
 # Quick Start
 
