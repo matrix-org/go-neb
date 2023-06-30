@@ -442,6 +442,11 @@ func itemToHTML(feed *gofeed.Feed, item gofeed.Item) mevt.MessageEventContent {
 				html.EscapeString(item.Author.Email))
 		}
 	}
+
+	if item.Description != "" {
+		fmtBody += fmt.Sprintf("<br>%s", html.EscapeString(item.Description))
+	}
+
 	return mevt.MessageEventContent{
 		Body: fmt.Sprintf("%s: %s ( %s )",
 			html.EscapeString(feed.Title), html.EscapeString(itemTitle), html.EscapeString(item.Link)),
