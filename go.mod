@@ -36,5 +36,5 @@ require (
 	golang.org/x/sys v0.0.0-20220408201424-a24fb2fb8a0f // indirect
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/yaml.v2 v2.3.0
-	maunium.net/go/mautrix v0.9.12
+	maunium.net/go/mautrix v0.9.15
 )
