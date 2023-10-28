@@ -304,7 +304,7 @@ func (c *Clients) onBotOptionsEvent(client *mautrix.Client, event *mevt.Event) {
 	}
 }
 
-func (c *Clients) onRoomMemberEvent(client *mautrix.Client, event *mevt.Event) {
+func (c *Clients) onRoomMemberEvent(client *BotClient, event *mevt.Event) {
 	if event.StateKey == nil || *event.StateKey != client.UserID.String() {
 		return // not our member event
 	}
@@ -317,14 +317,35 @@ func (c *Clients) onRoomMemberEvent(client *mautrix.Client, event *mevt.Event) {
 		})
 		logger.Print("Accepting invite from user")
 
-		content := struct {
+		inviteContent := struct {
 			Inviter id.UserID `json:"inviter"`
 		}{event.Sender}
 
-		if _, err := client.JoinRoom(event.RoomID.String(), "", content); err != nil {
+		if _, err := client.JoinRoom(event.RoomID.String(), "", inviteContent); err != nil {
 			logger.WithError(err).Print("Failed to join room")
-		} else {
-			logger.Print("Joined room")
+			return
+		}
+		logger.Print("Joined room")
+		var rID = id.RoomID(event.RoomID.String())
+		var plContent struct {
+			Users        map[string]int `json:"users"`
+			UsersDefault int
+		}
+		if client.config.MinimumPowerLevel == 0 {
+			return
+		}
+		if err := client.StateEvent(rID, mevt.StatePowerLevels, "", &plContent); err != nil {
+			logger.WithError(err).Print("Failed to get powerlevels from room")
+			client.LeaveRoom(rID)
+			return
+		}
+		var pl, userExists = plContent.Users[event.Sender.String()]
+		if !userExists {
+			pl = plContent.UsersDefault
+		}
+		if pl < client.config.MinimumPowerLevel {
+			logger.Warningln("User tried to invite the bot without the required PLs, ignoring")
+			client.LeaveRoom(rID)
 		}
 	}
 }
@@ -379,7 +400,7 @@ func (c *Clients) initClient(botClient *BotClient) error {
 
 	if config.AutoJoinRooms {
 		syncer.OnEventType(mevt.StateMember, func(_ mautrix.EventSource, event *mevt.Event) {
-			c.onRoomMemberEvent(client, event)
+			c.onRoomMemberEvent(botClient, event)
 		})
 	}
 

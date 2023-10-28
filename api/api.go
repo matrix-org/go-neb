@@ -82,6 +82,8 @@ type ClientConfig struct {
 	// When a user starts a new SAS verification with us, their user ID has to match one of these regexes
 	// for the verification process to start.
 	AcceptVerificationFromUsers []string
+	// The minimum required powerlevel to honour an invite request
+	MinimumPowerLevel int
 }
 
 // A IncomingDecimalSAS contains the decimal SAS as displayed on another device. The SAS consists of three numbers.
