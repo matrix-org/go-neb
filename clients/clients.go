@@ -55,6 +55,15 @@ func (c *Clients) Update(config api.ClientConfig) (api.ClientConfig, error) {
 	return old.config, err
 }
 
+type MautrixLogger struct{}
+
+func (d *MautrixLogger) Debugfln(message string, args ...interface{}) {
+	log.Debugf(message, args...)
+}
+func (d *MautrixLogger) Warnfln(message string, args ...interface{}) {
+	log.Warnf(message, args...)
+}
+
 // Start listening on client /sync streams
 func (c *Clients) Start() error {
 	configs, err := c.db.LoadMatrixClientConfigs()
@@ -338,6 +347,7 @@ func (c *Clients) initClient(botClient *BotClient) error {
 		return err
 	}
 
+	client.Logger = &MautrixLogger{}
 	client.Client = c.httpClient
 	client.DeviceID = config.DeviceID
 	if client.DeviceID == "" {
