@@ -31,9 +31,8 @@ require (
 	github.com/russross/blackfriday v1.5.2
 	github.com/sirupsen/logrus v1.4.2
 	github.com/ssor/bom v0.0.0-20170718123548-6386211fdfcf // indirect
-	golang.org/x/net v0.0.0-20210220033124-5f55cee0dc0d
+	golang.org/x/net v0.7.0
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
-	golang.org/x/sys v0.0.0-20220408201424-a24fb2fb8a0f // indirect
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/yaml.v2 v2.3.0
 	maunium.net/go/mautrix v0.9.12
